@@ -67,6 +67,35 @@ class OandaAPI:
             print(f"Error getting instrument candles: {error}")
             return None
 
+    def get_candles(self, instrument, granularity, count=None, start=None, end=None):
+        """Get candle data for an instrument
+
+        Args:
+        instrument (str): The instrument name e.g. 'EUR_USD'
+        granularity (str): The candlestick granularity (M1, M5, M15, M30, H1, H4, D)
+        count (int): Number of candles to retrieve
+        start (str): Start time in RFC3339 format
+        end (str): End time in RFC3339 format
+        """
+        try:
+            params = {"granularity": granularity}
+            if count:
+                params["count"] = count
+            if start:
+                params["from"] = start
+            if end:
+                params["to"] = end
+
+            r = instruments.InstrumentsCandles(instrument=instrument, params=params)
+            response = self.client.request(r)
+
+            if response and "candles" in response:
+                return response["candles"]
+            return []
+        except Exception as error:
+            print(f"Error getting candles: {error}")
+            return None
+
     def get_current_price(self, instrument):
         """Get the current price for an instrument"""
         try:

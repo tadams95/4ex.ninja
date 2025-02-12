@@ -23,4 +23,15 @@ SELL = -1
 BUY = 1
 NONE = 0
 
+# Granularity settings
+GRANULARITIES = {
+    "M1": 60,  # 1 minute
+    "M5": 300,  # 5 minutes
+    "M15": 900,  # 15 minutes
+    "M30": 1800,  # 30 minutes
+    "H1": 3600,  # 1 hour
+    "H4": 14400,  # 4 hours
+    "D": 86400,  # 1 day
+}
+
 MONGO_CONNECTION_STRING = os.getenv("MONGO_CONNECTION_STRING")
