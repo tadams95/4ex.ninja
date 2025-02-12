@@ -2,6 +2,7 @@ from oandapyV20 import API
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
+import oandapyV20.endpoints.instruments as instruments
 from config.settings import API_KEY, ACCOUNT_ID, PRACTICE_URL, SECURE_HEADER
 import requests
 
@@ -43,4 +44,24 @@ class OandaAPI:
             return response["account"]
         except Exception as error:
             print(f"Error getting account summary: {error}")
+            return None
+
+    def get_instruments(self):
+        """Get list of available trading instruments"""
+        try:
+            r = accounts.AccountInstruments(accountID=self.account_id)
+            response = self.client.request(r)
+            return response["instruments"]
+        except Exception as error:
+            print(f"Error getting instruments: {error}")
+            return None
+
+    def get_instrument_candles(self, instrument, params: None):
+        """Get historical candlestick data for an instrument"""
+        try:
+            r = instruments.InstrumentsCandles(instrument=instrument, params=params)
+            response = self.client.request(r)
+            return response["candles"]
+        except Exception as error:
+            print(f"Error getting instrument candles: {error}")
             return None
