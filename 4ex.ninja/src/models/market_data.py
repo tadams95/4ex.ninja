@@ -69,31 +69,28 @@ class MarketData:
                 # convert time only if it is a string
                 if isinstance(candle["time"], str):
                     cleaned_time = self._clean_timestamp(candle["time"])
-                    candle["time"] = datetime.strptime(cleaned_time, self.date_format)
+                    # Parse timestamp and make it timezone-aware
+                    parsed_time = datetime.strptime(cleaned_time, self.date_format)
+                    candle["time"] = parsed_time.replace(tzinfo=timezone.utc)
                 collection.update_one(
                     {"time": candle["time"]}, {"$set": candle}, upsert=True
                 )
             except Exception as error:
                 print(f"Error storing candle data: {error}")
-                print(f"Problematic candle: {candle["time"]}")
+                print(f"Problematic candle: {candle['time']}")
                 continue
 
     def get_candles(
         self, instrument, granularity, start_date=None, end_date=None, count=None
     ):
-        """Get historical candle data
-
-        Args:
-            instrument (str): The trading pair (e.g. 'EUR_USD')
-            granularity (str): Time frame (M1, M5, M15, M30, H1, H4, D)
-            start_date (datetime): Start date for historical data
-            end_date (datetime): End date for historical data
-            count (int): Number of candles to return (ignored if start_date and end_date are provided)
-        """
+        """Get historical candle data with timezone-aware timestamps"""
         collection = self.db[f"{instrument}_{granularity}"]
 
         query = {}
         if start_date and end_date:
+            # Ensure dates are timezone-aware
+            start_date = start_date.replace(tzinfo=timezone.utc)
+            end_date = end_date.replace(tzinfo=timezone.utc)
             query["time"] = {"$gte": start_date, "$lte": end_date}
 
         cursor = collection.find(query).sort("time", DESCENDING)
