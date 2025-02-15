@@ -1,6 +1,11 @@
+from enum import Enum
 from datetime import datetime, timezone, timedelta
 from src.strategies.trend_follow_strat import TrendFollowingStrategy
 import pandas as pd
+
+from src.strategies.base_strategy import SignalType
+
+# Don't need to test this, just a demo
 
 
 def test_strategy():
@@ -11,21 +16,44 @@ def test_strategy():
     end_date = pd.Timestamp.now(tz="UTC")
     start_date = end_date - pd.Timedelta(days=180)
 
-    # Prepare data and ensure datetime objects are timezone-aware
     strategy.prepare_data(start_date.to_pydatetime(), end_date.to_pydatetime())
 
-    # Generate signal using timezone-aware datetime
-    signal = strategy.generate_signal(end_date.to_pydatetime())
-    print(f"Signal: {signal}")
+    h1_timestamps = strategy.data["H1"].index
 
-    # Print some debug info
-    print("\nDebug Information:")
-    print(f"Start Date: {start_date}")
-    print(f"End Date: {end_date}")
-    if "H1" in strategy.data:
-        print(f"H1 Data Index Type: {strategy.data['H1'].index.dtype}")
-        print(f"First H1 Timestamp: {strategy.data['H1'].index[0]}")
-        print(f"Last H1 Timestamp: {strategy.data['H1'].index[-1]}")
+    print("\nAnalyzing signals across all H1 candles...")
+    buy_signals = 0
+    sell_signals = 0
+
+    for timestamp in h1_timestamps[-5000:]:  # Analyze more candles
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.tz_localize("UTC")
+
+        signal = strategy.generate_signal(timestamp)
+
+        # Compare using SignalType enum directly
+        if signal.type == SignalType.BUY:
+            buy_signals += 1
+            print(f"\n🟢 BUY Signal at {timestamp}:")
+            print(f"Entry: {signal.price:.5f}")
+            print(f"Stop Loss: {signal.stop_loss:.5f}")
+            print(f"Take Profit: {signal.take_profit:.5f}")
+            print("-" * 50)
+
+        elif signal.type == SignalType.SELL:
+            sell_signals += 1
+            print(f"\n🔴 SELL Signal at {timestamp}:")
+            print(f"Entry: {signal.price:.5f}")
+            print(f"Stop Loss: {signal.stop_loss:.5f}")
+            print(f"Take Profit: {signal.take_profit:.5f}")
+            print("-" * 50)
+
+    # Print summary
+    print("\nStrategy Analysis Summary:")
+    print(f"Period: {start_date} to {end_date}")
+    print(f"Total H1 candles analyzed: {len(h1_timestamps)}")
+    print(f"Total BUY signals: {buy_signals}")
+    print(f"Total SELL signals: {sell_signals}")
+    print(f"Total signals generated: {buy_signals + sell_signals}")
 
 
 if __name__ == "__main__":
