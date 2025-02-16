@@ -1,0 +1,47 @@
+# Summary of EUR/USD Daily MA Strategy Analysis
+
+### Initial Strategy
+- Used inverted MA crossover (20/10 SMA) for mean reversion
+- Initial backtest showed promising results but was unrealistic
+- Win rate around 66.5%, total pips: 4787.0
+
+### Realistic Backtest Implementation
+1. **Added Risk Management**
+   - ATR-based stops and targets
+   - Spread costs (1 pip)
+   - Next-bar execution
+   - Trailing stops
+
+2. **Parameter Optimization**
+   - Best performing combination:
+     - Take Profit: 1.0 ATR
+     - Stop Loss: 0.4 ATR
+     - Trail ATR: 0.3
+     - Trail Activation: 0.2
+   - Results:
+     - Total Pips: 2623.21
+     - Win Rate: 48.78%
+     - Sharpe Ratio: 4.62
+     - Max Drawdown: 236.33 pips
+
+### Key Findings
+1. **Trade Management Impact**
+   - Trailing stops improved overall performance
+   - Reduced max drawdown significantly
+   - Maintained good risk-adjusted returns (Sharpe > 3)
+
+2. **Exit Type Distribution**
+   - Stop Loss: ~47% of trades
+   - Take Profit: ~37% of trades
+   - Trailing Stop: ~16% of trades
+
+3. **Risk-Adjusted Performance**
+   - Profit Factor: 1.73
+   - Consistent positive returns
+   - Manageable drawdowns
+
+### Conclusion
+The inverted MA strategy shows promise as a mean reversion system, 
+especially with proper risk management and trailing stops. 
+The realistic implementation, while showing lower absolute returns than the initial backtest, 
+demonstrates more robust and sustainable performance metrics.
