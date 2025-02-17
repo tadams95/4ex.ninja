@@ -1,0 +1,179 @@
+(200, 20)
+Realistic Backtest Results:
+Total Trades: 14
+Total Pips: 405.3
+Average Pips per Trade: 29.0
+Win Rate: 42.9%
+Sharpe Ratio: 4.43
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+sl: 8 trades (0.0% win rate)
+tp: 6 trades (100.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 2.07
+Maximum Drawdown: 124.0 pips
+------------------------------------------------------------
+
+(150, 30)
+Realistic Backtest Results:
+Total Trades: 17
+Total Pips: 321.4
+Average Pips per Trade: 18.9
+Win Rate: 35.3%
+Sharpe Ratio: 2.35
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+sl: 11 trades (0.0% win rate)
+tp: 6 trades (100.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 1.49
+Maximum Drawdown: 414.0 pips
+------------------------------------------------------------
+
+(20, 10)
+Realistic Backtest Results:
+Total Trades: 138
+Total Pips: 1173.8
+Average Pips per Trade: 8.5
+Win Rate: 40.6%
+Sharpe Ratio: 1.68
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+sl: 82 trades (0.0% win rate)
+tp: 56 trades (100.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 1.26
+Maximum Drawdown: 841.3 pips
+------------------------------------------------------------
+
+(120, 50)
+Realistic Backtest Results:
+Total Trades: 21
+Total Pips: 1170.9
+Average Pips per Trade: 55.8
+Win Rate: 57.1%
+Sharpe Ratio: 7.94
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+tp: 12 trades (100.0% win rate)
+sl: 9 trades (0.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 3.69
+Maximum Drawdown: 93.8 pips
+------------------------------------------------------------
+
+(50, 70)
+Realistic Backtest Results:
+Total Trades: 42
+Total Pips: 578.8
+Average Pips per Trade: 13.8
+Win Rate: 45.2%
+Sharpe Ratio: 2.68
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+sl: 23 trades (0.0% win rate)
+tp: 19 trades (100.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 1.44
+Maximum Drawdown: 388.2 pips
+------------------------------------------------------------
+
+(10, 80)
+Realistic Backtest Results:
+Total Trades: 39
+Total Pips: 1680.1
+Average Pips per Trade: 43.1
+Win Rate: 59.0%
+Sharpe Ratio: 6.99
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+tp: 23 trades (100.0% win rate)
+sl: 16 trades (0.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 2.75
+Maximum Drawdown: 224.1 pips
+------------------------------------------------------------
+
+(20, 80)
+Realistic Backtest Results:
+Total Trades: 33
+Total Pips: 594.7
+Average Pips per Trade: 18.0
+Win Rate: 42.4%
+Sharpe Ratio: 3.23
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+sl: 19 trades (0.0% win rate)
+tp: 14 trades (100.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 1.60
+Maximum Drawdown: 253.2 pips
+------------------------------------------------------------
+
+(20, 90)
+Realistic Backtest Results:
+Total Trades: 27
+Total Pips: 661.6
+Average Pips per Trade: 24.5
+Win Rate: 40.7%
+Sharpe Ratio: 3.78
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+sl: 16 trades (0.0% win rate)
+tp: 11 trades (100.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 1.86
+Maximum Drawdown: 309.4 pips
+------------------------------------------------------------
+
+(20, 110)
+Realistic Backtest Results:
+Total Trades: 23
+Total Pips: 591.3
+Average Pips per Trade: 25.7
+Win Rate: 47.8%
+Sharpe Ratio: 3.95
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+sl: 12 trades (0.0% win rate)
+tp: 11 trades (100.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 1.87
+Maximum Drawdown: 246.3 pips
+------------------------------------------------------------
