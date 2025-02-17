@@ -1,0 +1,44 @@
+(10,70)
+Realistic Backtest Results:
+Total Trades: 323
+Total Pips: 3420.8
+Average Pips per Trade: 10.6
+Win Rate: 44.9%
+Sharpe Ratio: 3.24
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+sl: 178 trades (0.0% win rate)
+tp: 144 trades (100.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 1.66
+Maximum Drawdown: 298.7 pips
+------------------------------------------------------------
+
+Analysis of GBP/JPY H4 (10,70) MA Strategy Results
+
+Performance Metrics
+Total Trades: 323 (High frequency)
+Total Pips: 3,420.8 (Strong overall performance)
+Average Pips/Trade: 10.6 (Good profit per trade)
+Win Rate: 44.9% (Decent, near 50%)
+Sharpe Ratio: 3.24 (Excellent risk-adjusted returns)
+
+Trade Distribution
+Stop Losses: 178 trades (55.1%)
+Take Profits: 144 trades (44.9%)
+TP/SL Ratio: 0.81 (Balanced distribution)
+
+Risk Metrics
+Profit Factor: 1.66 (Strong risk-reward)
+Maximum Drawdown: 298.7 pips (Manageable risk)
+
+Key Strengths
+High Sharpe ratio indicates consistent returns
+Strong profit factor shows good risk management
+Reasonable drawdown relative to total profits
+High trade frequency provides more opportunities
+
