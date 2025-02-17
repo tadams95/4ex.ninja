@@ -1,0 +1,41 @@
+
+
+(10, 20)
+Realistic Backtest Results:
+Total Trades: 130
+Total Pips: 2150.0
+Average Pips per Trade: 16.5
+Win Rate: 45.4%
+Sharpe Ratio: 3.61
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+sl: 71 trades (0.0% win rate)
+tp: 59 trades (100.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 1.70
+Maximum Drawdown: 237.8 pips
+------------------------------------------------------------
+
+(10, 110)
+Realistic Backtest Results:
+Total Trades: 31
+Total Pips: 879.8
+Average Pips per Trade: 28.4
+Win Rate: 48.4%
+Sharpe Ratio: 5.31
+
+Exit Analysis:
+----------------------------------------
+Exit Type Distribution:
+sl: 16 trades (0.0% win rate)
+tp: 15 trades (100.0% win rate)
+
+Risk Metrics:
+----------------------------------------
+Profit Factor: 2.25
+Maximum Drawdown: 181.0 pips
+------------------------------------------------------------
