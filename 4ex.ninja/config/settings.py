@@ -23,6 +23,18 @@ SELL = -1
 BUY = 1
 NONE = 0
 
+# Instruments
+INSTRUMENTS = [
+    "AUD_USD",
+    "EUR_GBP",
+    "EUR_USD",
+    "GBP_JPY",
+    "GBP_USD",
+    "NZD_USD",
+    "USD_CAD",
+    "USD_JPY",
+]
+
 # Granularity settings
 GRANULARITIES = {
     "M1": 60,  # 1 minute
