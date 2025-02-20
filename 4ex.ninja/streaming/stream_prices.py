@@ -3,9 +3,8 @@ import datetime
 from pymongo import MongoClient
 import oandapyV20
 from oandapyV20.endpoints import instruments
-from src.models.market_data import MarketData
+
 from config.settings import MONGO_CONNECTION_STRING, API_KEY, ACCOUNT_ID, INSTRUMENTS
-from src.models.market_data import MarketData
 
 
 class PriceStreamer:
@@ -25,10 +24,9 @@ class PriceStreamer:
             self.collections[instrument] = {
                 "H4": self.db[f"{instrument}_H4"],
                 "D": self.db[f"{instrument}_D"],
-                "M1": self.db[f"{instrument}_M1"],
             }
 
-    async def fetch_candles(self, instrument, granularity="M1", count=10):
+    async def fetch_candles(self, instrument, granularity="M1", count=20):
         try:
             params = {"count": count, "granularity": granularity, "price": "M"}
             request = instruments.InstrumentsCandles(
@@ -43,56 +41,91 @@ class PriceStreamer:
             print(f"Error fetching candles for {instrument} {granularity}: {str(e)}")
             return []
 
-    async def stream_1_min_candles(self, instrument_list, timeframes=["M1"]):
-        """Stream 1 minute candles"""
+    async def stream_H4_candles(self, instrument_list):
+        """Stream H4 candles"""
         while True:
             try:
                 for instrument in instrument_list:
-                    for timeframe in timeframes:
-                        candles = await self.fetch_candles(
-                            instrument, granularity=timeframe
-                        )
+                    candles = await self.fetch_candles(instrument, granularity="H4")
 
-                        # Process and save all completed candles
-                        if candles:
-                            for candle in candles:
-                                candle_data = {
-                                    "instrument": instrument,
-                                    "time": candle["time"],
-                                    "open": float(candle["mid"]["o"]),
-                                    "high": float(candle["mid"]["h"]),
-                                    "low": float(candle["mid"]["l"]),
-                                    "close": float(candle["mid"]["c"]),
-                                    "volume": int(candle["volume"]),
-                                    "complete": candle["complete"],
-                                }
+                    if candles:
+                        for candle in candles:
+                            candle_data = {
+                                "instrument": instrument,
+                                "time": candle["time"],
+                                "open": float(candle["mid"]["o"]),
+                                "high": float(candle["mid"]["h"]),
+                                "low": float(candle["mid"]["l"]),
+                                "close": float(candle["mid"]["c"]),
+                                "volume": int(candle["volume"]),
+                                "complete": candle["complete"],
+                            }
 
-                                # Only save completed candles
-                                if candle_data["complete"]:
-                                    # Add timestamp for debugging
-                                    print(
-                                        f"Processing {instrument} {timeframe} at {datetime.datetime.now(datetime.timezone.utc)}"
-                                    )
+                            if candle_data["complete"]:
+                                print(
+                                    f"Processing {instrument} H4 at {datetime.datetime.now(datetime.timezone.utc)}"
+                                )
+                                result = self.collections[instrument]["H4"].insert_one(
+                                    candle_data
+                                )
+                                print(
+                                    f"Saved {instrument} H4 candle with id: {result.inserted_id}"
+                                )
 
-                                    # Insert as new document
-                                    result = self.collections[instrument][
-                                        timeframe
-                                    ].insert_one(candle_data)
-
-                                    print(
-                                        f"Saved {instrument} {timeframe} candle with id: {result.inserted_id}"
-                                    )
-
-                # Sleep after processing all instruments
-                await asyncio.sleep(60)
+                # Sleep for 4 hours (14400 seconds)
+                await asyncio.sleep(14400)
 
             except Exception as e:
-                print(f"Error in streaming loop: {str(e)}")
-                # Continue running even if there's an error
+                print(f"Error in H4 streaming loop: {str(e)}")
                 await asyncio.sleep(5)
+
+    async def stream_D_candles(self, instrument_list):
+        """Stream Daily candles"""
+        while True:
+            try:
+                for instrument in instrument_list:
+                    candles = await self.fetch_candles(instrument, granularity="D")
+
+                    if candles:
+                        for candle in candles:
+                            candle_data = {
+                                "instrument": instrument,
+                                "time": candle["time"],
+                                "open": float(candle["mid"]["o"]),
+                                "high": float(candle["mid"]["h"]),
+                                "low": float(candle["mid"]["l"]),
+                                "close": float(candle["mid"]["c"]),
+                                "volume": int(candle["volume"]),
+                                "complete": candle["complete"],
+                            }
+
+                            if candle_data["complete"]:
+                                print(
+                                    f"Processing {instrument} D at {datetime.datetime.now(datetime.timezone.utc)}"
+                                )
+                                result = self.collections[instrument]["D"].insert_one(
+                                    candle_data
+                                )
+                                print(
+                                    f"Saved {instrument} D candle with id: {result.inserted_id}"
+                                )
+
+                # Sleep for 24 hours (86400 seconds)
+                await asyncio.sleep(86400)
+
+            except Exception as e:
+                print(f"Error in Daily streaming loop: {str(e)}")
+                await asyncio.sleep(5)
+
+    async def run_all_streams(self, instrument_list):
+        """Run both H4 and D streams concurrently"""
+        await asyncio.gather(
+            self.stream_H4_candles(instrument_list),
+            self.stream_D_candles(instrument_list),
+        )
 
 
 if __name__ == "__main__":
     streamer = PriceStreamer()
-    instrument_list = INSTRUMENTS  # This is your list of instrument strings
-    asyncio.run(streamer.stream_1_min_candles(instrument_list))
+    instrument_list = INSTRUMENTS
+    asyncio.run(streamer.run_all_streams(instrument_list))
