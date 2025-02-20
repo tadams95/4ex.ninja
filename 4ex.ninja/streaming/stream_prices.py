@@ -26,7 +26,9 @@ class PriceStreamer:
                 "D": self.db[f"{instrument}_D"],
             }
 
-    async def fetch_candles(self, instrument, granularity="M1", count=20):
+    async def fetch_candles(
+        self, instrument: str, granularity: str, count: int = 20
+    ) -> list:
         try:
             params = {"count": count, "granularity": granularity, "price": "M"}
             request = instruments.InstrumentsCandles(
