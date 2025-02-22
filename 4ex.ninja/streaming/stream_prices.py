@@ -3,31 +3,23 @@ import datetime
 from pymongo import MongoClient
 import oandapyV20
 from oandapyV20.endpoints import instruments
-
 from config.settings import MONGO_CONNECTION_STRING, API_KEY, ACCOUNT_ID, INSTRUMENTS
 
 
 class PriceStreamer:
     def __init__(self):
         self.client = MongoClient(
-            MONGO_CONNECTION_STRING,
-            tls=True,
-            tlsAllowInvalidCertificates=True,  # For development only
-            # tlsCAFile='/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja/config/global-bundle.pem'
+            MONGO_CONNECTION_STRING, tls=True, tlsAllowInvalidCertificates=True
         )
         self.db = self.client["streamed_prices"]
         self.oanda_client = oandapyV20.API(access_token=API_KEY)
-
-        # Initialize collections dictionary
-        self.collections = {}
-        for instrument in INSTRUMENTS:
-            self.collections[instrument] = {
-                "H4": self.db[f"{instrument}_H4"],
-                "D": self.db[f"{instrument}_D"],
-            }
+        self.collections = {
+            inst: {"H4": self.db[f"{inst}_H4"], "D": self.db[f"{inst}_D"]}
+            for inst in INSTRUMENTS
+        }
 
     async def fetch_candles(
-        self, instrument: str, granularity: str, count: int = 200
+        self, instrument: str, granularity: str, count: int = 2
     ) -> list:
         try:
             params = {"count": count, "granularity": granularity, "price": "M"}
@@ -37,90 +29,78 @@ class PriceStreamer:
             response = await asyncio.get_event_loop().run_in_executor(
                 None, self.oanda_client.request, request
             )
-            # print(f"Raw response for {instrument} {granularity}: {response}")
             return response.get("candles", [])
         except Exception as e:
-            print(f"Error fetching candles for {instrument} {granularity}: {str(e)}")
+            print(f"Error fetching {instrument} {granularity}: {e}")
             return []
 
     async def stream_H4_candles(self, instrument_list):
-        """Stream H4 candles"""
         while True:
             try:
                 for instrument in instrument_list:
-                    candles = await self.fetch_candles(instrument, granularity="H4")
-
+                    candles = await self.fetch_candles(instrument, "H4", count=2)
                     if candles:
                         for candle in candles:
-                            candle_data = {
-                                "instrument": instrument,
-                                "time": candle["time"],
-                                "open": float(candle["mid"]["o"]),
-                                "high": float(candle["mid"]["h"]),
-                                "low": float(candle["mid"]["l"]),
-                                "close": float(candle["mid"]["c"]),
-                                "volume": int(candle["volume"]),
-                                "complete": candle["complete"],
-                            }
-
-                            if candle_data["complete"]:
+                            if candle["complete"]:
+                                candle_data = {
+                                    "instrument": instrument,
+                                    "time": candle["time"],
+                                    "mid": {
+                                        "o": candle["mid"]["o"],
+                                        "h": candle["mid"]["h"],
+                                        "l": candle["mid"]["l"],
+                                        "c": candle["mid"]["c"],
+                                    },
+                                    "volume": int(candle["volume"]),
+                                    "complete": True,
+                                }
+                                self.collections[instrument]["H4"].update_one(
+                                    {"time": candle_data["time"]},
+                                    {"$set": candle_data},
+                                    upsert=True,
+                                )
                                 print(
-                                    f"Processing {instrument} H4 at {datetime.datetime.now(datetime.timezone.utc)}"
+                                    f"Saved {instrument} H4 at {datetime.datetime.now(datetime.timezone.utc)}"
                                 )
-                                result = self.collections[instrument]["H4"].insert_one(
-                                    candle_data
-                                )
-                                print(
-                                    f"Saved {instrument} H4 candle with id: {result.inserted_id}"
-                                )
-
-                # Sleep for 4 hours (14400 seconds)
-                await asyncio.sleep(14400)
-
+                await asyncio.sleep(14400)  # 4 hours
             except Exception as e:
-                print(f"Error in H4 streaming loop: {str(e)}")
-                await asyncio.sleep(5)
+                print(f"H4 stream error: {e}")
+                await asyncio.sleep(300)  # 5 min retry
 
     async def stream_D_candles(self, instrument_list):
-        """Stream Daily candles"""
         while True:
             try:
                 for instrument in instrument_list:
-                    candles = await self.fetch_candles(instrument, granularity="D")
-
+                    candles = await self.fetch_candles(instrument, "D", count=1)
                     if candles:
                         for candle in candles:
-                            candle_data = {
-                                "instrument": instrument,
-                                "time": candle["time"],
-                                "open": float(candle["mid"]["o"]),
-                                "high": float(candle["mid"]["h"]),
-                                "low": float(candle["mid"]["l"]),
-                                "close": float(candle["mid"]["c"]),
-                                "volume": int(candle["volume"]),
-                                "complete": candle["complete"],
-                            }
-
-                            if candle_data["complete"]:
+                            if candle["complete"]:
+                                candle_data = {
+                                    "instrument": instrument,
+                                    "time": candle["time"],
+                                    "mid": {
+                                        "o": candle["mid"]["o"],
+                                        "h": candle["mid"]["h"],
+                                        "l": candle["mid"]["l"],
+                                        "c": candle["mid"]["c"],
+                                    },
+                                    "volume": int(candle["volume"]),
+                                    "complete": True,
+                                }
+                                self.collections[instrument]["D"].update_one(
+                                    {"time": candle_data["time"]},
+                                    {"$set": candle_data},
+                                    upsert=True,
+                                )
                                 print(
-                                    f"Processing {instrument} D at {datetime.datetime.now(datetime.timezone.utc)}"
+                                    f"Saved {instrument} D at {datetime.datetime.now(datetime.timezone.utc)}"
                                 )
-                                result = self.collections[instrument]["D"].insert_one(
-                                    candle_data
-                                )
-                                print(
-                                    f"Saved {instrument} D candle with id: {result.inserted_id}"
-                                )
-
-                # Sleep for 24 hours (86400 seconds)
-                await asyncio.sleep(86400)
-
+                await asyncio.sleep(86400)  # 24 hours
             except Exception as e:
-                print(f"Error in Daily streaming loop: {str(e)}")
-                await asyncio.sleep(5)
+                print(f"D stream error: {e}")
+                await asyncio.sleep(300)  # 5 min retry
 
     async def run_all_streams(self, instrument_list):
-        """Run both H4 and D streams concurrently"""
         await asyncio.gather(
             self.stream_H4_candles(instrument_list),
             self.stream_D_candles(instrument_list),
@@ -129,5 +109,4 @@ class PriceStreamer:
 
 if __name__ == "__main__":
     streamer = PriceStreamer()
-    instrument_list = INSTRUMENTS
-    asyncio.run(streamer.run_all_streams(instrument_list))
+    asyncio.run(streamer.run_all_streams(INSTRUMENTS))
