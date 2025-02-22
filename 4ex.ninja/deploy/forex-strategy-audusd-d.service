@@ -1,0 +1,15 @@
+[Unit]
+Description=Forex Trading Strategy Service
+After=network.target
+
+[Service]
+Type=simple
+User=forex
+WorkingDirectory=/home/forex/4ex.ninja
+Environment=PYTHONPATH=/home/forex/4ex.ninja
+ExecStart=/home/forex/4ex.ninja/venv/bin/python /home/forex/4ex.ninja/scripts/run_strategy.py
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

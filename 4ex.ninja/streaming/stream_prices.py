@@ -27,7 +27,7 @@ class PriceStreamer:
             }
 
     async def fetch_candles(
-        self, instrument: str, granularity: str, count: int = 20
+        self, instrument: str, granularity: str, count: int = 200
     ) -> list:
         try:
             params = {"count": count, "granularity": granularity, "price": "M"}
