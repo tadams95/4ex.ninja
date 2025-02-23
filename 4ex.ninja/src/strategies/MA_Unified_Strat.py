@@ -15,7 +15,6 @@ client = MongoClient(
 )
 db = client["streamed_prices"]
 
-
 # Logging setup
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -93,7 +92,6 @@ class MovingAverageCrossStrategy:
                 & (df["fast_ma"].shift(1) >= df["slow_ma"].shift(1)),
                 "signal",
             ] = -1
-
             df["stop_loss"] = pd.NA
             df["take_profit"] = pd.NA
             buy_signals = df["signal"] == 1
@@ -110,7 +108,6 @@ class MovingAverageCrossStrategy:
             df.loc[sell_signals, "take_profit"] = df["close"] - (
                 df["atr"] * self.tp_atr_multiplier
             )
-
             df["risk_reward_ratio"] = pd.NA
             df.loc[buy_signals, "risk_reward_ratio"] = (
                 df["take_profit"] - df["close"]
@@ -118,7 +115,6 @@ class MovingAverageCrossStrategy:
             df.loc[sell_signals, "risk_reward_ratio"] = (
                 df["close"] - df["take_profit"]
             ) / (df["stop_loss"] - df["close"])
-
             for index, row in df.iterrows():
                 if row["signal"] != 0 and not self.validate_signal(
                     row["signal"], row["atr"], row["risk_reward_ratio"]
@@ -168,9 +164,10 @@ class MovingAverageCrossStrategy:
                 df = pd.DataFrame(list(self.collection.find(query).sort("time", 1)))
                 if not df.empty:
                     df.set_index("time", inplace=True)
-                    df[["open", "high", "low", "close"]] = df["mid"].apply(pd.Series)[
-                        ["o", "h", "l", "c"]
-                    ]
+                    # Use float fields directly
+                    df = df[["open", "high", "low", "close"]]
+                    # Remove duplicate timestamps, keep last
+                    df = df[~df.index.duplicated(keep="last")]
                     df = self.calculate_signals(df)
                     for index, row in df[df["signal"] != 0].iterrows():
                         signal_data = self.generate_trade_dict(row)

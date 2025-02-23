@@ -17,6 +17,7 @@ class PriceStreamer:
             inst: {"H4": self.db[f"{inst}_H4"], "D": self.db[f"{inst}_D"]}
             for inst in INSTRUMENTS
         }
+        self.initial_fetch_done = {"H4": False, "D": False}  # Track initial fetch
 
     async def fetch_candles(
         self, instrument: str, granularity: str, count: int = 2
@@ -37,8 +38,9 @@ class PriceStreamer:
     async def stream_H4_candles(self, instrument_list):
         while True:
             try:
+                count = 200 if not self.initial_fetch_done["H4"] else 2
                 for instrument in instrument_list:
-                    candles = await self.fetch_candles(instrument, "H4", count=2)
+                    candles = await self.fetch_candles(instrument, "H4", count=count)
                     if candles:
                         for candle in candles:
                             if candle["complete"]:
@@ -62,16 +64,18 @@ class PriceStreamer:
                                 print(
                                     f"Saved {instrument} H4 at {datetime.datetime.now(datetime.timezone.utc)}"
                                 )
+                self.initial_fetch_done["H4"] = True  # Mark initial fetch done
                 await asyncio.sleep(14400)  # 4 hours
             except Exception as e:
                 print(f"H4 stream error: {e}")
-                await asyncio.sleep(300)  # 5 min retry
+                await asyncio.sleep(300)
 
     async def stream_D_candles(self, instrument_list):
         while True:
             try:
+                count = 200 if not self.initial_fetch_done["D"] else 1
                 for instrument in instrument_list:
-                    candles = await self.fetch_candles(instrument, "D", count=1)
+                    candles = await self.fetch_candles(instrument, "D", count=count)
                     if candles:
                         for candle in candles:
                             if candle["complete"]:
@@ -95,10 +99,11 @@ class PriceStreamer:
                                 print(
                                     f"Saved {instrument} D at {datetime.datetime.now(datetime.timezone.utc)}"
                                 )
+                self.initial_fetch_done["D"] = True  # Mark initial fetch done
                 await asyncio.sleep(86400)  # 24 hours
             except Exception as e:
                 print(f"D stream error: {e}")
-                await asyncio.sleep(300)  # 5 min retry
+                await asyncio.sleep(300)
 
     async def run_all_streams(self, instrument_list):
         await asyncio.gather(
