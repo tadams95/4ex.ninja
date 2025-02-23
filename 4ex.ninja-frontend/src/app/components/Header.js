@@ -13,6 +13,9 @@ export default function Header() {
               <Link href="/">Home</Link>
             </li>
             <li>
+              <Link href="/about">About</Link>
+            </li>
+            <li>
               <Link href="/feed">Feed</Link>
             </li>
           </ul>
