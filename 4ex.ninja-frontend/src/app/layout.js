@@ -1,13 +1,8 @@
 import "./globals.css";
-import { Monda } from "next/font/google";
+
 import { Exo } from "next/font/google";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-
-const monda = Monda({
-  subsets: ["latin"],
-  weight: ["400", "700"], // Available weights for Monda
-});
 
 const exo = Exo({
   subsets: ["latin"],
