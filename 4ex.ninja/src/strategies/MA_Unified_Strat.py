@@ -9,13 +9,11 @@ from decimal import Decimal
 from typing import Dict, Optional
 from config.strat_settings import STRATEGIES
 
-# MongoDB client (single instance)
 client = MongoClient(
-    MONGO_CONNECTION_STRING, tls=True, tlsAllowInvalidCertificates=True  # Dev only
+    MONGO_CONNECTION_STRING, tls=True, tlsAllowInvalidCertificates=True
 )
 db = client["streamed_prices"]
 
-# Logging setup
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -164,9 +162,28 @@ class MovingAverageCrossStrategy:
                 df = pd.DataFrame(list(self.collection.find(query).sort("time", 1)))
                 if not df.empty:
                     df.set_index("time", inplace=True)
-                    # Use float fields directly
-                    df = df[["open", "high", "low", "close"]]
-                    # Remove duplicate timestamps, keep last
+                    # Handle mixed mid formats
+                    if (
+                        "open" in df.columns and df["open"].notna().any()
+                    ):  # Use OHLC if present
+                        df = df[["open", "high", "low", "close"]]
+                    elif "mid" in df.columns:  # Fallback to mid
+                        if isinstance(df["mid"].iloc[0], dict):  # Mid is dict
+                            df["open"] = df["mid"].apply(lambda x: float(x["o"]))
+                            df["high"] = df["mid"].apply(lambda x: float(x["h"]))
+                            df["low"] = df["mid"].apply(lambda x: float(x["l"]))
+                            df["close"] = df["mid"].apply(lambda x: float(x["c"]))
+                            df = df[["open", "high", "low", "close"]]
+                        else:  # Mid is float (old data)
+                            logging.warning(
+                                f"{self.pair} {self.timeframe} has float mid, skipping"
+                            )
+                            continue
+                    else:
+                        logging.warning(
+                            f"{self.pair} {self.timeframe} missing OHLC/mid, skipping"
+                        )
+                        continue
                     df = df[~df.index.duplicated(keep="last")]
                     df = self.calculate_signals(df)
                     for index, row in df[df["signal"] != 0].iterrows():
@@ -178,11 +195,11 @@ class MovingAverageCrossStrategy:
                     logging.info(
                         f"Processed {self.pair} {self.timeframe} at {datetime.now(timezone.utc)}"
                     )
-                del df  # Free memory
+                del df
                 await asyncio.sleep(self.sleep_seconds)
             except Exception as e:
                 logging.error(f"Error monitoring {self.pair}: {e}")
-                await asyncio.sleep(900)  # 15 min retry
+                await asyncio.sleep(900)
 
 
 async def run_strategies():
