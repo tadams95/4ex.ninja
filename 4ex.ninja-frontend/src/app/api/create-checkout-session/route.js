@@ -37,8 +37,8 @@ export async function POST() {
         },
       ],
       mode: "subscription",
-      success_url: `${process.env.NEXT_PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL}/`,
+      success_url: `https://${process.env.NEXT_PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `https://${process.env.NEXT_PUBLIC_URL}/`,
     });
 
     // Return successful response
