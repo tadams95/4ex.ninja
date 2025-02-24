@@ -1,15 +1,43 @@
+"use client";
+import { motion } from "framer-motion";
 import SubscribeButton from "./components/SubscribeButton";
+import CurrencyTicker from "./components/CurrencyTicker";
 
 export default function Home() {
   return (
-    // Add min-h-screen for full height and flex with centering classes
-    <div className="min-h-screen flex items-center justify-center bg-black">
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="text-4xl font-bold mb-6">Welcome to 4ex.ninja</h1>
-        <p className="mb-4">
-          Get access to premium forex signals and boost your trading strategy.
-        </p>
-        <SubscribeButton />
+    <div className="min-h-screen flex flex-col bg-black text-white">
+      <CurrencyTicker />
+      <div className="flex-1 flex items-center justify-center">
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.h1
+              className="text-4xl font-bold mb-6"
+              whileHover={{ scale: 1.05 }}
+            >
+              Welcome to 4ex.ninja
+            </motion.h1>
+            <motion.p
+              className="mb-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Get access to premium forex signals and boost your trading
+              strategy.
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              <SubscribeButton />
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
