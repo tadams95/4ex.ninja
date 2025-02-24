@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is not defined");
-}
+// Validate and initialize Stripe with better error handling
+const getStripeInstance = () => {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key || typeof key !== "string") {
+    throw new Error("Invalid or missing STRIPE_SECRET_KEY");
+  }
+  return new Stripe(key, {
+    apiVersion: "2023-10-16",
+  });
+};
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16", // Updated to latest version
-});
+const stripe = getStripeInstance();
 
 export async function POST() {
   try {
@@ -17,6 +22,7 @@ export async function POST() {
       "STRIPE_PRICE_ID",
       "NEXT_PUBLIC_URL",
     ];
+
     for (const envVar of requiredEnvVars) {
       if (!process.env[envVar]) {
         console.error(`Missing ${envVar}`);
@@ -27,7 +33,6 @@ export async function POST() {
       }
     }
 
-    // Create Stripe session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -41,7 +46,6 @@ export async function POST() {
       cancel_url: `https://${process.env.NEXT_PUBLIC_URL}/`,
     });
 
-    // Return successful response
     return NextResponse.json({ id: session.id });
   } catch (error) {
     console.error("Stripe session creation error:", error);
