@@ -7,8 +7,8 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <CurrencyTicker />
-      <div className="flex-1 flex items-center justify-center">
-        <div className="container mx-auto px-4 text-center">
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className="container mx-auto max-w-2xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -21,7 +21,7 @@ export default function Home() {
               Welcome to 4ex.ninja
             </motion.h1>
             <motion.p
-              className="mb-4"
+              className="mb-4 text-lg"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
