@@ -1,28 +1,24 @@
 "use client";
+
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 const pairs = [
   { pair: "EUR/USD", value: "1.0921" },
   { pair: "GBP/USD", value: "1.2634" },
-  { pair: "USD/JPY", value: "148.05" },
-  { pair: "USD/CHF", value: "0.8645" },
-  { pair: "EUR/GBP", value: "0.8645" },
-  { pair: "EUR/JPY", value: "121.45" },
-  { pair: "EUR/CHF", value: "1.0634" },
-  { pair: "USD/CAD", value: "1.3921" },
-  { pair: "AUD/USD", value: "0.6412" },
-  { pair: "NZD/USD", value: "0.6012" },
-  { pair: "GBP/JPY", value: "187.45" },
-  { pair: "GBP/CHF", value: "1.0921" },
-  { pair: "AUD/JPY", value: "68.45" },
-  { pair: "AUD/NZD", value: "1.0921" },
-  { pair: "NZD/JPY", value: "68.45" },
-  { pair: "EUR/AUD", value: "1.0921" },
-  { pair: "EUR/NZD", value: "1.0921" },
-  { pair: "AUD/CHF", value: "1.0921" },
-  { pair: "NZD/CHF", value: "1.0921" },
-  { pair: "CHF/JPY", value: "1.0921" },
+  { pair: "USD/JPY", value: "107.23" },
+  { pair: "USD/CHF", value: "0.9612" },
+  { pair: "EUR/GBP", value: "0.8641" },
+  { pair: "EUR/JPY", value: "117.23" },
+  { pair: "GBP/JPY", value: "135.23" },
+  { pair: "USD/CAD", value: "1.3634" },
+  { pair: "AUD/USD", value: "0.6923" },
+  { pair: "NZD/USD", value: "0.6423" },
+  { pair: "EUR/CHF", value: "0.9723" },
+  { pair: "AUD/CAD", value: "0.9134" },
+  { pair: "GBP/CHF", value: "1.1234" },
+  { pair: "USD/SEK", value: "10.4521" },
+  { pair: "USD/NOK", value: "10.2341" },
 ];
 
 export default function CurrencyTicker() {
@@ -31,25 +27,41 @@ export default function CurrencyTicker() {
   const [containerWidth, setContainerWidth] = useState(0);
 
   useEffect(() => {
-    const updatePrices = () => {
-      setPrices((prev) =>
-        prev.map((p) => {
-          const newValue = (
-            Number.parseFloat(p.value) +
-            (Math.random() - 0.5) * 0.001
-          ).toFixed(4);
-          const isIncreased =
-            Number.parseFloat(newValue) > Number.parseFloat(p.value);
-          return {
-            ...p,
-            value: newValue,
-            increased: isIncreased,
-          };
-        })
-      );
-    };
+    // Using Finnhub WebSocket for streaming prices
+    const socket = new WebSocket(
+      "wss://ws.finnhub.io?token=cutvmf1r01qv6ijkok70cutvmf1r01qv6ijkok7g"
+    );
 
-    const interval = setInterval(updatePrices, 2000);
+    socket.addEventListener("open", () => {
+      // Finnhub uses symbols like "OANDA:EUR_USD" so adjust accordingly if needed.
+      pairs.forEach(({ pair }) => {
+        const symbol = "OANDA:" + pair.replace("/", "_");
+        socket.send(JSON.stringify({ type: "subscribe", symbol }));
+      });
+    });
+
+    socket.addEventListener("message", (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "trade") {
+        // Find updates for the pairs
+        data.data.forEach((trade) => {
+          // Convert symbol back if needed: "OANDA:EUR_USD" -> "EUR/USD"
+          const pair = trade.s.split(":")[1].replace("_", "/");
+          setPrices((prev) =>
+            prev.map((p) => {
+              if (p.pair === pair) {
+                // Optional: You can see if the new price increased or decreased.
+                const newValue = trade.p.toFixed(4);
+                const isIncreased =
+                  Number.parseFloat(newValue) > Number.parseFloat(p.value);
+                return { ...p, value: newValue, increased: isIncreased };
+              }
+              return p;
+            })
+          );
+        });
+      }
+    });
 
     const updateContainerWidth = () => {
       if (containerRef.current) {
@@ -61,7 +73,7 @@ export default function CurrencyTicker() {
     window.addEventListener("resize", updateContainerWidth);
 
     return () => {
-      clearInterval(interval);
+      socket.close();
       window.removeEventListener("resize", updateContainerWidth);
     };
   }, []);
