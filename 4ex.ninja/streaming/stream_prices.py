@@ -47,14 +47,18 @@ class PriceStreamer:
                                 candle_data = {
                                     "instrument": instrument,
                                     "time": candle["time"],
+                                    "open": float(candle["mid"]["o"]),
+                                    "high": float(candle["mid"]["h"]),
+                                    "low": float(candle["mid"]["l"]),
+                                    "close": float(candle["mid"]["c"]),
+                                    "volume": int(candle["volume"]),
+                                    "complete": candle["complete"],
                                     "mid": {
                                         "o": candle["mid"]["o"],
                                         "h": candle["mid"]["h"],
                                         "l": candle["mid"]["l"],
                                         "c": candle["mid"]["c"],
                                     },
-                                    "volume": int(candle["volume"]),
-                                    "complete": True,
                                 }
                                 self.collections[instrument]["H4"].update_one(
                                     {"time": candle_data["time"]},
@@ -82,14 +86,18 @@ class PriceStreamer:
                                 candle_data = {
                                     "instrument": instrument,
                                     "time": candle["time"],
+                                    "open": float(candle["mid"]["o"]),
+                                    "high": float(candle["mid"]["h"]),
+                                    "low": float(candle["mid"]["l"]),
+                                    "close": float(candle["mid"]["c"]),
+                                    "volume": int(candle["volume"]),
+                                    "complete": candle["complete"],
                                     "mid": {
                                         "o": candle["mid"]["o"],
                                         "h": candle["mid"]["h"],
                                         "l": candle["mid"]["l"],
                                         "c": candle["mid"]["c"],
                                     },
-                                    "volume": int(candle["volume"]),
-                                    "complete": True,
                                 }
                                 self.collections[instrument]["D"].update_one(
                                     {"time": candle_data["time"]},
