@@ -12,7 +12,9 @@ from config.strat_settings import STRATEGIES
 client = MongoClient(
     MONGO_CONNECTION_STRING, tls=True, tlsAllowInvalidCertificates=True
 )
-db = client["streamed_prices"]
+# db = client["streamed_prices"]
+price_db = client["streamed_prices"]
+signals_db = client["signals"]
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -35,8 +37,10 @@ class MovingAverageCrossStrategy:
     ):
         self.pair = pair
         self.timeframe = timeframe
-        self.collection = db[f"{pair}_{timeframe}"]
-        self.signals_collection = db[f"{pair}_{timeframe}_signals"]
+
+        self.collection = price_db[f"{pair}_{timeframe}"]
+
+        self.signals_collection = signals_db["trades"]
         self.slow_ma = slow_ma
         self.fast_ma = fast_ma
         self.atr_period = atr_period
