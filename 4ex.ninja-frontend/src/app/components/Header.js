@@ -1,11 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Header() {
+  const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
+  
   // Check screen size on component mount and resize
   useEffect(() => {
     const checkScreenSize = () => {
@@ -67,9 +69,9 @@ export default function Header() {
             ${
               isMobile
                 ? "flex flex-col absolute right-0 top-16 bg-black p-4 w-48 shadow-lg z-50"
-                : "flex space-x-4"
+                : "flex space-x-4 items-center"
             } 
-            md:flex md:space-x-4 md:static md:shadow-none md:p-0 md:w-auto
+            md:flex md:items-center md:space-x-4 md:static md:shadow-none md:p-0 md:w-auto
           `}
           >
             <li className="py-2 md:py-0">
@@ -85,14 +87,55 @@ export default function Header() {
                 About
               </Link>
             </li>
-            <li className="py-2 md:py-0">
-              <Link
-                href="/feed"
-                onClick={() => isMobile && setIsMenuOpen(false)}
-              >
-                Feed
-              </Link>
-            </li>
+            {/* Only show feed link if authenticated */}
+            {status === "authenticated" && (
+              <li className="py-2 md:py-0">
+                <Link
+                  href="/feed"
+                  onClick={() => isMobile && setIsMenuOpen(false)}
+                >
+                  Signals
+                </Link>
+              </li>
+            )}
+            
+            {/* Authentication links */}
+            {status === "authenticated" ? (
+              <>
+                <li className="py-2 md:py-0">
+                  <Link
+                    href="/account"
+                    onClick={() => isMobile && setIsMenuOpen(false)}
+                    className="text-green-400"
+                  >
+                    Account
+                  </Link>
+                </li>
+                <li className="py-2 md:py-0">
+                  <button
+                    onClick={() => {
+                      signOut({ callbackUrl: '/' });
+                      isMobile && setIsMenuOpen(false);
+                    }}
+                    className="text-red-400"
+                  >
+                    Sign Out
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="py-2 md:py-0">
+                  <Link
+                    href="/login"
+                    onClick={() => isMobile && setIsMenuOpen(false)}
+                    className="bg-green-700 hover:bg-green-800 px-4 py-1 rounded"
+                  >
+                    Log in
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </div>
