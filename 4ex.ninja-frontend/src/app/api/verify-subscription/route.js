@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { hash } from "bcryptjs";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { MongoClient } from "mongodb";
+import crypto from "crypto";
 
 // Initialize Stripe
 const getStripeInstance = () => {
@@ -18,7 +16,28 @@ const getStripeInstance = () => {
 
 const stripe = getStripeInstance();
 
+// MongoDB connection
+const getMongoClient = async () => {
+  const uri = process.env.MONGO_CONNECTION_STRING;
+  if (!uri) {
+    throw new Error("Missing MongoDB connection string");
+  }
+  
+  const client = new MongoClient(uri);
+  await client.connect();
+  return client;
+};
+
+// Simple password hashing without bcryptjs
+const hashPassword = (password) => {
+  return crypto
+    .createHash('sha256')
+    .update(password)
+    .digest('hex');
+};
+
 export async function POST(request) {
+  let client;
   try {
     const { sessionId } = await request.json();
     
@@ -48,24 +67,29 @@ export async function POST(request) {
       return NextResponse.json({ error: "Customer information missing" }, { status: 400 });
     }
     
+    // Connect to MongoDB
+    client = await getMongoClient();
+    const db = client.db("4ex-ninja");
+    const usersCollection = db.collection("User");
+    
     // Check if user already exists
     const email = customer.email;
-    let user = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await usersCollection.findOne({ email });
     
-    if (!user) {
+    if (!existingUser) {
       // Generate a random password
       const generatedPassword = Math.random().toString(36).slice(-8);
-      const hashedPassword = await hash(generatedPassword, 12);
+      const hashedPassword = hashPassword(generatedPassword);
       
       // Create a new user
-      user = await prisma.user.create({
-        data: {
-          email,
-          password: hashedPassword,
-          stripeCustomerId: customerId,
-          isActive: true, // Active subscription
-          subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
-        },
+      await usersCollection.insertOne({
+        email,
+        password: hashedPassword,
+        stripeCustomerId: customerId,
+        isActive: true,
+        subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+        createdAt: new Date(),
+        updatedAt: new Date()
       });
       
       // Return both email and generated password for auto login
@@ -77,22 +101,20 @@ export async function POST(request) {
     }
     
     // If user exists, update their subscription status
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        isActive: true,
-        subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-      }
-    });
-    
-    // We don't know the user's password, so we need to set a temporary one for auto-login
     const tempPassword = Math.random().toString(36).slice(-8);
-    const hashedPassword = await hash(tempPassword, 12);
+    const hashedPassword = hashPassword(tempPassword);
     
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { password: hashedPassword }
-    });
+    await usersCollection.updateOne(
+      { email },
+      { 
+        $set: {
+          isActive: true,
+          password: hashedPassword,
+          subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          updatedAt: new Date()
+        }
+      }
+    );
     
     return NextResponse.json({ 
       email, 
@@ -103,5 +125,9 @@ export async function POST(request) {
   } catch (error) {
     console.error("Verification error:", error);
     return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 }
