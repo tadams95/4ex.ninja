@@ -15,7 +15,7 @@ export async function POST(request) {
     }
     
     // Connect to database
-    const uri = "mongodb+srv://tyrelle:dcvsniTYFG9ojCgn@cluster0.6h6fdf2.mongodb.net/?retryWrites=true&w=majority";
+    const uri = process.env.MONGO_CONNECTION_STRING;
     const client = new MongoClient(uri);
     await client.connect();
     const db = client.db("4ex_users"); // Changed to a dedicated users database
