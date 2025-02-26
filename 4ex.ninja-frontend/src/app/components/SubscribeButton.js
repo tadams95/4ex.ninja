@@ -67,7 +67,7 @@ export default function SubscribeButton() {
       disabled={loading}
       className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded"
     >
-      Subcribe
+      {loading ? "Processing..." : "Start 1-Month Free Trial"}
     </button>
   );
 }

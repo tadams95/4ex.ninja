@@ -42,6 +42,9 @@ export async function POST() {
         },
       ],
       mode: "subscription",
+      subscription_data: {
+        trial_period_days: 30,
+      },
       success_url: `https://${process.env.NEXT_PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `https://${process.env.NEXT_PUBLIC_URL}/`,
     });
