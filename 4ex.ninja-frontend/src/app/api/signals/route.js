@@ -5,28 +5,33 @@ import { MongoClient } from "mongodb";
 const uri = process.env.MONGO_CONNECTION_STRING;
 
 // Create MongoDB client with proper options
-const client = new MongoClient(uri, {
-  // Add these options to help with connection issues
-  connectTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-  maxPoolSize: 10,
-  retryWrites: true,
-});
-
-// Connection cache
+let client = null;
 let cachedClient = null;
 let cachedDb = null;
 
 async function connectToDatabase() {
+  // Check for cached connection first
   if (cachedClient && cachedDb) {
     return { client: cachedClient, db: cachedDb };
   }
 
+  // Validate connection string
   if (!uri) {
-    throw new Error("MongoDB connection string is not defined");
+    // Instead of throwing an error, return a helpful response
+    return { error: "MongoDB connection string is not defined" };
   }
 
   try {
+    // Initialize client only if not already initialized
+    if (!client) {
+      client = new MongoClient(uri, {
+        connectTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+        maxPoolSize: 10,
+        retryWrites: true,
+      });
+    }
+
     await client.connect();
     const db = client.db("signals");
 
@@ -36,7 +41,7 @@ async function connectToDatabase() {
     return { client, db };
   } catch (error) {
     console.error("MongoDB connection error:", error);
-    throw new Error(`Unable to connect to MongoDB: ${error.message}`);
+    return { error: `Unable to connect to MongoDB: ${error.message}` };
   }
 }
 
@@ -46,8 +51,22 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get("limit") || "20");
 
-    // Connect to MongoDB
-    const { db } = await connectToDatabase();
+    // Connect to MongoDB - handle connection errors
+    const connection = await connectToDatabase();
+    if (connection.error) {
+      console.error("Connection error:", connection.error);
+      return NextResponse.json(
+        {
+          signals: [],
+          error: connection.error,
+          message: "Database connection issue",
+          isEmpty: true,
+        },
+        { status: 500 }
+      );
+    }
+
+    const { db } = connection;
     const collection = db.collection("trades");
 
     // Check if collection exists and has documents
@@ -88,7 +107,12 @@ export async function GET(request) {
   } catch (error) {
     console.error("Database Error:", error);
     return NextResponse.json(
-      { error: "Failed to fetch signals from database" },
+      {
+        signals: [],
+        error: error.message,
+        message: "Failed to fetch signals from database",
+        isEmpty: true,
+      },
       { status: 500 }
     );
   }
