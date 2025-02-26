@@ -9,6 +9,8 @@ export default function SignalsPage() {
   const [error, setError] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
 
+  // this is just a test
+
   useEffect(() => {
     async function fetchSignals() {
       try {
