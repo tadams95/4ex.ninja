@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_CONNECTION_STRING")
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  password      String
+  name          String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  subscriptionId String?
+  subscription  Subscription?
+  active        Boolean   @default(false)
+}
+
+model Subscription {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String    @unique @db.ObjectId
+  user          User      @relation(fields: [userId], references: [id])
+  stripeCustomerId String?
+  stripeSubscriptionId String?
+  status        String    @default("inactive") // active, inactive, trial
+  planType      String    @default("monthly")
+  startDate     DateTime  @default(now())
+  endDate       DateTime?
+  trialEnd      DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Signal {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  instrument    String
+  timeframe     String
+  signal        Int       // 1 for buy, -1 for sell
+  close         Float
+  slow_ma       Float
+  fast_ma       Float
+  stop_loss     Float?
+  take_profit   Float?
+  sl_pips       Float?
+  tp_pips       Float?
+  atr           Float?
+  risk_reward_ratio Float?
+  time          DateTime
+  created_at    DateTime  @default(now())
+}
