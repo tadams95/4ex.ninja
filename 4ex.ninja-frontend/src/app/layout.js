@@ -3,7 +3,7 @@ import "./globals.css";
 import { Exo } from "next/font/google";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { AuthProvider } from "./components/AuthProvider";
+import Providers from "./components/Providers";
 
 const exo = Exo({
   subsets: ["latin"],
@@ -19,13 +19,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={exo.className}>
-        <AuthProvider>
+        <Providers>
           <div className="flex flex-col min-h-screen bg-black">
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer />
           </div>
-        </AuthProvider>
+        </Providers>
       </body>
     </html>
   );

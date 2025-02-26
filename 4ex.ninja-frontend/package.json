@@ -22,6 +22,10 @@
     "stripe": "^17.6.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie": "^0.6.0",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/ms": "^2.1.0",
     "postcss": "^8",
     "prisma": "^6.4.1",
     "tailwindcss": "^3.4.1"
