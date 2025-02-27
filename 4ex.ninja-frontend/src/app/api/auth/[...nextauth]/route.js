@@ -71,56 +71,56 @@ async function authenticateUser(credentials) {
   }
 }
 
-// Create NextAuth options object
-const authOptions = {
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "email@example.com",
-        },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials) return null;
+// // Create NextAuth options object
+// const authOptions = {
+//   providers: [
+//     CredentialsProvider({
+//       name: "Credentials",
+//       credentials: {
+//         email: {
+//           label: "Email",
+//           type: "email",
+//           placeholder: "email@example.com",
+//         },
+//         password: { label: "Password", type: "password" },
+//       },
+//       async authorize(credentials) {
+//         if (!credentials) return null;
 
-        // Added debug logs
-        console.log("Attempting to authenticate user:", credentials.email);
+//         // Added debug logs
+//         console.log("Attempting to authenticate user:", credentials.email);
 
-        return await authenticateUser(credentials);
-      },
-    }),
-  ],
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.subscriptionEnds = user.subscriptionEnds;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session?.user) {
-        session.user.id = token.id;
-        session.user.subscriptionEnds = token.subscriptionEnds;
-      }
-      return session;
-    },
-  },
-  pages: {
-    signIn: "/login",
-    error: "/login",
-  },
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
-  debug: process.env.NODE_ENV === "development",
-  secret: process.env.NEXTAUTH_SECRET,
-};
+//         return await authenticateUser(credentials);
+//       },
+//     }),
+//   ],
+//   callbacks: {
+//     async jwt({ token, user }) {
+//       if (user) {
+//         token.id = user.id;
+//         token.subscriptionEnds = user.subscriptionEnds;
+//       }
+//       return token;
+//     },
+//     async session({ session, token }) {
+//       if (session?.user) {
+//         session.user.id = token.id;
+//         session.user.subscriptionEnds = token.subscriptionEnds;
+//       }
+//       return session;
+//     },
+//   },
+//   pages: {
+//     signIn: "/login",
+//     error: "/login",
+//   },
+//   session: {
+//     strategy: "jwt",
+//     maxAge: 30 * 24 * 60 * 60, // 30 days
+//   },
+//   debug: process.env.NODE_ENV === "development",
+//   secret: process.env.NEXTAUTH_SECRET,
+// };
 
 import { authOptions } from "./auth-options";
 
