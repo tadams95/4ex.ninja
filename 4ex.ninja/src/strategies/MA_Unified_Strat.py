@@ -1,7 +1,6 @@
 import pandas as pd
 from config.settings import MONGO_CONNECTION_STRING
 from pymongo import MongoClient
-import numpy as np
 import asyncio
 import logging
 from datetime import datetime, timezone, timedelta
@@ -9,10 +8,10 @@ from decimal import Decimal
 from typing import Dict, Optional
 from config.strat_settings import STRATEGIES
 
+# Set up database connections
 client = MongoClient(
     MONGO_CONNECTION_STRING, tls=True, tlsAllowInvalidCertificates=True
 )
-# db = client["streamed_prices"]
 price_db = client["streamed_prices"]
 signals_db = client["signals"]
 
@@ -34,12 +33,11 @@ class MovingAverageCrossStrategy:
         min_atr_value: float,
         min_rr_ratio: float,
         sleep_seconds: int,
+        min_candles: int,
     ):
         self.pair = pair
         self.timeframe = timeframe
-
         self.collection = price_db[f"{pair}_{timeframe}"]
-
         self.signals_collection = signals_db["trades"]
         self.slow_ma = slow_ma
         self.fast_ma = fast_ma
@@ -49,11 +47,13 @@ class MovingAverageCrossStrategy:
         self.min_atr_value = min_atr_value
         self.min_rr_ratio = min_rr_ratio
         self.sleep_seconds = sleep_seconds
+        self.min_candles = min_candles
         self.is_jpy_pair = pair.endswith("JPY")
 
     def validate_signal(
         self, signal: int, atr: float, risk_reward_ratio: float
     ) -> bool:
+        """Validate if a signal meets the minimum criteria."""
         try:
             return (
                 signal != 0
@@ -65,6 +65,7 @@ class MovingAverageCrossStrategy:
             return False
 
     def calculate_atr(self, df: pd.DataFrame) -> pd.Series:
+        """Calculate Average True Range."""
         try:
             high = df["high"]
             low = df["low"]
@@ -78,135 +79,195 @@ class MovingAverageCrossStrategy:
             return pd.Series(index=df.index)
 
     def calculate_signals(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Calculate trading signals based on moving average crossovers."""
         try:
-            df = df.copy()
+            # Create an explicit copy to avoid SettingWithCopyWarning
+            df = df.copy(deep=True)
+
+            # Calculate moving averages and ATR
             df["slow_ma"] = df["close"].rolling(window=self.slow_ma).mean()
             df["fast_ma"] = df["close"].rolling(window=self.fast_ma).mean()
             df["atr"] = self.calculate_atr(df)
             df["signal"] = 0
-            df.loc[
-                (df["fast_ma"] > df["slow_ma"])
-                & (df["fast_ma"].shift(1) <= df["slow_ma"].shift(1)),
-                "signal",
-            ] = 1
-            df.loc[
-                (df["fast_ma"] < df["slow_ma"])
-                & (df["fast_ma"].shift(1) >= df["slow_ma"].shift(1)),
-                "signal",
-            ] = -1
+
+            # Determine crossovers
+            buy_crossover = (df["fast_ma"] > df["slow_ma"]) & (
+                df["fast_ma"].shift(1) <= df["slow_ma"].shift(1)
+            )
+            sell_crossover = (df["fast_ma"] < df["slow_ma"]) & (
+                df["fast_ma"].shift(1) >= df["slow_ma"].shift(1)
+            )
+            df.loc[buy_crossover, "signal"] = 1
+            df.loc[sell_crossover, "signal"] = -1
+
+            # Calculate stop loss and take profit
             df["stop_loss"] = pd.NA
             df["take_profit"] = pd.NA
-            buy_signals = df["signal"] == 1
-            sell_signals = df["signal"] == -1
-            df.loc[buy_signals, "stop_loss"] = df["close"] - (
-                df["atr"] * self.sl_atr_multiplier
-            )
-            df.loc[buy_signals, "take_profit"] = df["close"] + (
-                df["atr"] * self.tp_atr_multiplier
-            )
-            df.loc[sell_signals, "stop_loss"] = df["close"] + (
-                df["atr"] * self.sl_atr_multiplier
-            )
-            df.loc[sell_signals, "take_profit"] = df["close"] - (
-                df["atr"] * self.tp_atr_multiplier
-            )
             df["risk_reward_ratio"] = pd.NA
+
+            # For buy signals
+            buy_signals = df["signal"] == 1
+            df.loc[buy_signals, "stop_loss"] = df.loc[buy_signals, "close"] - (
+                df.loc[buy_signals, "atr"] * self.sl_atr_multiplier
+            )
+            df.loc[buy_signals, "take_profit"] = df.loc[buy_signals, "close"] + (
+                df.loc[buy_signals, "atr"] * self.tp_atr_multiplier
+            )
+            # Calculate risk/reward for buy signals
             df.loc[buy_signals, "risk_reward_ratio"] = (
-                df["take_profit"] - df["close"]
-            ) / (df["close"] - df["stop_loss"])
+                df.loc[buy_signals, "take_profit"] - df.loc[buy_signals, "close"]
+            ) / (df.loc[buy_signals, "close"] - df.loc[buy_signals, "stop_loss"])
+
+            # For sell signals
+            sell_signals = df["signal"] == -1
+            df.loc[sell_signals, "stop_loss"] = df.loc[sell_signals, "close"] + (
+                df.loc[sell_signals, "atr"] * self.sl_atr_multiplier
+            )
+            df.loc[sell_signals, "take_profit"] = df.loc[sell_signals, "close"] - (
+                df.loc[sell_signals, "atr"] * self.tp_atr_multiplier
+            )
+            # Calculate risk/reward for sell signals
             df.loc[sell_signals, "risk_reward_ratio"] = (
-                df["close"] - df["take_profit"]
-            ) / (df["stop_loss"] - df["close"])
-            for index, row in df.iterrows():
-                if row["signal"] != 0 and not self.validate_signal(
+                df.loc[sell_signals, "close"] - df.loc[sell_signals, "take_profit"]
+            ) / (df.loc[sell_signals, "stop_loss"] - df.loc[sell_signals, "close"])
+
+            # Filter signals based on validation criteria - use a list to store invalid signals
+            invalid_indices = []
+            for index, row in df[df["signal"] != 0].iterrows():
+                if not self.validate_signal(
                     row["signal"], row["atr"], row["risk_reward_ratio"]
                 ):
-                    df.loc[index, "signal"] = 0
+                    invalid_indices.append(index)
+
+            # Set all invalid signals to 0 at once using loc
+            if invalid_indices:
+                df.loc[invalid_indices, "signal"] = 0
+
             return df
         except Exception as e:
-            logging.error(f"Error calculating signals for {self.pair}: {e}")
+            logging.error(
+                f"Error calculating signals for {self.pair}: {e}", exc_info=True
+            )
             return df
 
-    def generate_trade_dict(self, row: pd.Series) -> Optional[Dict]:
-        try:
-            close_price = Decimal(str(row["close"]))
-            stop_loss = Decimal(str(row["stop_loss"]))
-            take_profit = Decimal(str(row["take_profit"]))
-            pip_multiplier = Decimal("100") if self.is_jpy_pair else Decimal("10000")
-            sl_pips = abs(close_price - stop_loss) * pip_multiplier
-            tp_pips = abs(take_profit - close_price) * pip_multiplier
-            return {
-                "time": row.name,
-                "instrument": self.pair,
-                "timeframe": self.timeframe,
-                "close": float(row["close"]),
-                "slow_ma": float(row["slow_ma"]),
-                "fast_ma": float(row["fast_ma"]),
-                "signal": int(row["signal"]),
-                "stop_loss": float(stop_loss),
-                "take_profit": float(take_profit),
-                "sl_pips": float(sl_pips),
-                "tp_pips": float(tp_pips),
-                "atr": float(row["atr"]),
-                "risk_reward_ratio": float(row["risk_reward_ratio"]),
-                "created_at": datetime.now(timezone.utc),
-            }
-        except Exception as e:
-            logging.error(f"Error generating trade dict for {self.pair}: {e}")
-            return None
+    def parse_datetime(self, time_value) -> datetime:
+        """Parse various datetime formats to a standard datetime with timezone."""
+        if isinstance(time_value, str):
+            try:
+                # Try ISO format first
+                return datetime.fromisoformat(time_value.replace("Z", "+00:00"))
+            except ValueError:
+                try:
+                    # Fallback format
+                    return datetime.strptime(
+                        time_value, "%Y-%m-%dT%H:%M:%S.%fZ"
+                    ).replace(tzinfo=timezone.utc)
+                except ValueError:
+                    logging.warning(
+                        f"Could not parse time: {time_value}, using fallback"
+                    )
+                    return datetime.now(timezone.utc) - timedelta(days=1)
+        return time_value  # Already datetime object or None
+
+    async def process_dataframe(self, df: pd.DataFrame) -> None:
+        """Process a dataframe of price data to generate and store signals."""
+        if df.empty:
+            logging.info(f"No data found for {self.pair} {self.timeframe}")
+            return
+
+        # Set time as index
+        df.set_index("time", inplace=True)
+
+        # Prepare OHLC data - create a new DataFrame instead of modifying a view
+        df = df[["open", "high", "low", "close"]].copy(deep=True)
+
+        for col in ["open", "high", "low", "close"]:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+
+        # Clean the data
+        df = df.dropna(subset=["open", "high", "low", "close"])
+        logging.info(
+            f"After NaN removal: {len(df)} valid candles for {self.pair} {self.timeframe}"
+        )
+
+        # Remove duplicates - create a new DataFrame to avoid chain indexing
+        df = df[~df.index.duplicated(keep="last")].copy(deep=True)
+
+        # Calculate signals
+        df = self.calculate_signals(df)
+
+        # Log signal count
+        signal_count = len(df[df["signal"] != 0])
+        logging.info(f"Found {signal_count} signals for {self.pair} {self.timeframe}")
+
+        # Store valid signals
+        for index, row in df[df["signal"] != 0].iterrows():
+            signal_data = self.generate_trade_dict(row)
+            if signal_data:
+                self.signals_collection.update_one(
+                    {"time": index}, {"$set": signal_data}, upsert=True
+                )
+
+        logging.info(
+            f"Processed {self.pair} {self.timeframe} at {datetime.now(timezone.utc)}"
+        )
 
     async def monitor_prices(self):
+        """Main monitoring loop that fetches data and processes it periodically."""
+        logging.info(f"Starting monitoring for {self.pair} {self.timeframe}")
         while True:
             try:
-                last_signal = self.signals_collection.find_one(sort=[("time", -1)])
-                start_time = (
-                    last_signal["time"] - timedelta(days=30) if last_signal else None
+                # Get last signal for this pair/timeframe
+                last_signal = self.signals_collection.find_one(
+                    {"instrument": self.pair, "timeframe": self.timeframe},
+                    sort=[("time", -1)],
                 )
-                query = {"time": {"$gt": start_time}} if start_time else {}
-                df = pd.DataFrame(list(self.collection.find(query).sort("time", 1)))
-                if not df.empty:
-                    df.set_index("time", inplace=True)
-                    # Handle mixed mid formats
-                    if (
-                        "open" in df.columns and df["open"].notna().any()
-                    ):  # Use OHLC if present
-                        df = df[["open", "high", "low", "close"]]
-                    elif "mid" in df.columns:  # Fallback to mid
-                        if isinstance(df["mid"].iloc[0], dict):  # Mid is dict
-                            df["open"] = df["mid"].apply(lambda x: float(x["o"]))
-                            df["high"] = df["mid"].apply(lambda x: float(x["h"]))
-                            df["low"] = df["mid"].apply(lambda x: float(x["l"]))
-                            df["close"] = df["mid"].apply(lambda x: float(x["c"]))
-                            df = df[["open", "high", "low", "close"]]
-                        else:  # Mid is float (old data)
-                            logging.warning(
-                                f"{self.pair} {self.timeframe} has float mid, skipping"
-                            )
-                            continue
-                    else:
-                        logging.warning(
-                            f"{self.pair} {self.timeframe} missing OHLC/mid, skipping"
-                        )
-                        continue
-                    df = df[~df.index.duplicated(keep="last")]
-                    df = self.calculate_signals(df)
-                    for index, row in df[df["signal"] != 0].iterrows():
-                        signal_data = self.generate_trade_dict(row)
-                        if signal_data:
-                            self.signals_collection.update_one(
-                                {"time": index}, {"$set": signal_data}, upsert=True
-                            )
-                    logging.info(
-                        f"Processed {self.pair} {self.timeframe} at {datetime.now(timezone.utc)}"
+                logging.info(
+                    f"Last signal for {self.pair} {self.timeframe}: {last_signal['time'] if last_signal else 'None'}"
+                )
+
+                # Determine time range for query
+                if last_signal:
+                    last_signal_time = self.parse_datetime(last_signal["time"])
+                    start_time = last_signal_time - timedelta(days=30)
+                else:
+                    fallback_days = int(
+                        self.min_candles * 1.5
+                    )  # 1.5x to cover weekends/holidays
+                    start_time = datetime.now(timezone.utc) - timedelta(
+                        days=fallback_days
                     )
+                    logging.info(
+                        f"No previous signals, using fallback period of {fallback_days} days"
+                    )
+
+                # Create query and fetch data
+                query = (
+                    {"time": {"$gt": start_time.isoformat() + "Z"}}
+                    if start_time
+                    else {}
+                )
+                logging.info(f"Query for {self.pair} {self.timeframe}: {query}")
+
+                df = pd.DataFrame(list(self.collection.find(query).sort("time", 1)))
+                logging.info(
+                    f"Retrieved {len(df)} candles for {self.pair} {self.timeframe}"
+                )
+
+                # Process the dataframe
+                await self.process_dataframe(df)
+
+                # Clean up and wait for next cycle
                 del df
                 await asyncio.sleep(self.sleep_seconds)
+
             except Exception as e:
-                logging.error(f"Error monitoring {self.pair}: {e}")
-                await asyncio.sleep(900)
+                logging.error(f"Error monitoring {self.pair}: {e}", exc_info=True)
+                await asyncio.sleep(900)  # Sleep for 15 minutes on error
 
 
 async def run_strategies():
+    """Start all strategies concurrently."""
     strategies = [MovingAverageCrossStrategy(**cfg) for cfg in STRATEGIES.values()]
     tasks = [asyncio.create_task(strategy.monitor_prices()) for strategy in strategies]
     await asyncio.gather(*tasks)

@@ -11,6 +11,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 14400,  # 4 hours
+        "min_candles": 200,
     },
     "AUD_USD_D": {
         "pair": "AUD_USD",
@@ -23,6 +24,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 86400,  # 24 hours
+        "min_candles": 200,
     },
     "EUR_GBP_H4": {
         "pair": "EUR_GBP",
@@ -35,6 +37,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 14400,  # 4 hours
+        "min_candles": 200,
     },
     "EUR_GBP_D": {
         "pair": "EUR_GBP",
@@ -47,6 +50,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 86400,  # 24 hours
+        "min_candles": 200,
     },
     "EUR_USD_H4": {
         "pair": "EUR_USD",
@@ -59,6 +63,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 14400,  # 4 hours
+        "min_candles": 200,
     },
     "EUR_USD_D": {
         "pair": "EUR_USD",
@@ -71,6 +76,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 86400,  # 24 hours
+        "min_candles": 200,
     },
     "GBP_JPY_H4": {
         "pair": "GBP_JPY",
@@ -83,6 +89,7 @@ STRATEGIES = {
         "min_atr_value": 0.03,  # Adjusted for JPY pairs
         "min_rr_ratio": 1.5,
         "sleep_seconds": 14400,  # 4 hours
+        "min_candles": 200,
     },
     "GBP_JPY_D": {
         "pair": "GBP_JPY",
@@ -95,6 +102,7 @@ STRATEGIES = {
         "min_atr_value": 0.03,  # Adjusted for JPY pairs
         "min_rr_ratio": 1.5,
         "sleep_seconds": 86400,  # 24 hours
+        "min_candles": 200,
     },
     "GBP_USD_H4": {
         "pair": "GBP_USD",
@@ -107,6 +115,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 14400,  # 4 hours
+        "min_candles": 200,
     },
     "GBP_USD_D": {
         "pair": "GBP_USD",
@@ -119,6 +128,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 86400,  # 24 hours
+        "min_candles": 200,
     },
     "NZD_USD_H4": {
         "pair": "NZD_USD",
@@ -131,6 +141,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 14400,  # 4 hours
+        "min_candles": 200,
     },
     "NZD_USD_D": {
         "pair": "NZD_USD",
@@ -143,6 +154,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 86400,  # 24 hours
+        "min_candles": 200,
     },
     "USD_CAD_H4": {
         "pair": "USD_CAD",
@@ -155,6 +167,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 14400,  # 4 hours
+        "min_candles": 200,
     },
     "USD_CAD_D": {
         "pair": "USD_CAD",
@@ -167,6 +180,7 @@ STRATEGIES = {
         "min_atr_value": 0.0003,
         "min_rr_ratio": 1.5,
         "sleep_seconds": 86400,  # 24 hours
+        "min_candles": 200,
     },
     "USD_JPY_H4": {
         "pair": "USD_JPY",
@@ -179,6 +193,7 @@ STRATEGIES = {
         "min_atr_value": 0.03,  # Adjusted for JPY pairs
         "min_rr_ratio": 1.5,
         "sleep_seconds": 14400,  # 4 hours
+        "min_candles": 200,
     },
     "USD_JPY_D": {
         "pair": "USD_JPY",
@@ -191,5 +206,6 @@ STRATEGIES = {
         "min_atr_value": 0.03,  # Adjusted for JPY pairs
         "min_rr_ratio": 1.5,
         "sleep_seconds": 86400,  # 24 hours
+        "min_candles": 200,
     },
 }
