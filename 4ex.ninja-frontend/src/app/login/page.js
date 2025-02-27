@@ -23,18 +23,27 @@ export default function LoginPage() {
     setError("");
 
     try {
+      console.log("Attempting to sign in with callbackUrl:", callbackUrl);
+      
       const result = await signIn("credentials", {
         redirect: false,
         email,
         password,
+        callbackUrl,
       });
 
-      if (!result?.error) {
-        router.push(callbackUrl);
+      console.log("Sign in result:", result);
+
+      if (result?.ok && !result.error) {
+        console.log("Login successful, redirecting to:", result.url || callbackUrl);
+        // Use replace instead of push for more reliable redirects
+        router.replace(result.url || callbackUrl);
       } else {
+        console.error("Login failed:", result?.error);
         setError("Invalid email or password");
       }
     } catch (error) {
+      console.error("Login exception:", error);
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);

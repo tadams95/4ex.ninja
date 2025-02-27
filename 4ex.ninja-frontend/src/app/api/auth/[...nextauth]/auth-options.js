@@ -2,8 +2,12 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoClient } from "mongodb";
 import bcrypt from "bcryptjs";
 
-// Setup MongoDB connection
-const uri = process.env.MONGO_CONNECTION_STRING;
+// Use production Mongo URI in development if enabled
+const prodMongoUri = process.env.PROD_MONGO_CONNECTION_STRING;
+const uri =
+  process.env.NODE_ENV === "development" && process.env.USE_PROD_USERS === "true"
+    ? prodMongoUri
+    : process.env.MONGO_CONNECTION_STRING;
 
 // User authentication function
 async function authenticateUser(credentials) {
@@ -109,4 +113,18 @@ export const authOptions = {
   },
   debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
+  cookies: {
+    sessionToken: {
+      name:
+        process.env.NODE_ENV === "production"
+          ? "__Secure-next-auth.session-token"
+          : "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+  },
 };
