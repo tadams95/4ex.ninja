@@ -64,7 +64,7 @@ export default function ForgotPasswordPage() {
 
         {success ? (
           <div className="space-y-6">
-            <div className="bg-green-500/20 text-green-400 p-4 rounded-md text-center">
+            <div className="bg-green-500/20 text-green-500 p-4 rounded-md text-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-12 w-12 mx-auto mb-3"
@@ -88,7 +88,7 @@ export default function ForgotPasswordPage() {
             <div className="text-center">
               <Link
                 href="/login"
-                className="font-medium text-green-500 hover:text-green-400"
+                className="font-medium text-green-500 hover:text-green-500"
               >
                 Return to login
               </Link>
@@ -128,7 +128,7 @@ export default function ForgotPasswordPage() {
             <div className="text-center text-sm">
               <Link
                 href="/login"
-                className="font-medium text-green-500 hover:text-green-400"
+                className="font-medium text-green-500 hover:text-green-500"
               >
                 Back to sign in
               </Link>

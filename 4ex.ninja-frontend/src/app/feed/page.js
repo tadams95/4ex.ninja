@@ -142,7 +142,7 @@ function SignalsPage() {
                 <span
                   className={`px-3 py-1 rounded-full text-sm ${
                     signal.type === "BUY"
-                      ? "bg-green-500/20 text-green-400"
+                      ? "bg-green-500/20 text-green-500"
                       : "bg-red-500/20 text-red-400"
                   }`}
                 >
@@ -160,13 +160,13 @@ function SignalsPage() {
                 </div>
                 <div className="flex justify-between">
                   <p className="text-gray-300">Stop Loss:</p>
-                  <p className="font-medium text-red-400">
+                  <p className="font-medium text-red-500">
                     {signal.stopLoss} ({signal.slPips} pips)
                   </p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-gray-300">Take Profit:</p>
-                  <p className="font-medium text-green-400">
+                  <p className="font-medium text-green-500">
                     {signal.takeProfit} ({signal.tpPips} pips)
                   </p>
                 </div>

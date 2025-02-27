@@ -99,7 +99,7 @@ export default function LoginPage() {
             <div className="text-sm">
               <Link
                 href="/forgot-password"
-                className="font-medium text-green-500 hover:text-green-400"
+                className="font-medium text-green-500 hover:text-green-500"
               >
                 Forgot your password?
               </Link>
@@ -125,7 +125,7 @@ export default function LoginPage() {
           <span className="text-gray-400">Don't have an account?</span>{" "}
           <Link
             href="/register"
-            className="font-medium text-green-500 hover:text-green-400"
+            className="font-medium text-green-500 hover:text-green-500"
           >
             Register
           </Link>

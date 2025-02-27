@@ -106,7 +106,7 @@ export default function Header() {
                   <Link
                     href="/account"
                     onClick={() => isMobile && setIsMenuOpen(false)}
-                    className="text-green-400"
+                    className="text-green-500"
                   >
                     Account
                   </Link>
@@ -117,7 +117,7 @@ export default function Header() {
                       signOut({ callbackUrl: '/' });
                       isMobile && setIsMenuOpen(false);
                     }}
-                    className="text-red-400"
+                    className="text-red-500"
                   >
                     Sign Out
                   </button>

@@ -81,7 +81,7 @@ export default function RegisterPage() {
         )}
 
         {success && (
-          <div className="bg-green-500/20 text-green-400 p-3 rounded-md text-center">
+          <div className="bg-green-500/20 text-green-500 p-3 rounded-md text-center">
             Account created successfully! Redirecting to checkout...
           </div>
         )}
@@ -160,7 +160,7 @@ export default function RegisterPage() {
           <span className="text-gray-400">Already have an account?</span>{" "}
           <Link
             href="/login"
-            className="font-medium text-green-500 hover:text-green-400"
+            className="font-medium text-green-500 hover:text-green-500"
           >
             Sign in
           </Link>
