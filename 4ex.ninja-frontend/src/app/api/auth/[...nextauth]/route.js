@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoClient } from "mongodb";
+import bcrypt from "bcryptjs";
 
 // Setup MongoDB connection
 const uri = process.env.MONGO_CONNECTION_STRING;
@@ -17,19 +18,44 @@ async function authenticateUser(credentials) {
     // Find user by email
     const user = await usersCollection.findOne({ email: credentials.email });
     
-    console.log('Found user:', user);
+    console.log('Found user for authentication:', user ? user.email : 'not found');
     
-    // In a real app, you'd also hash and verify the password
-    if (user && user.password === credentials.password && user.subscriptionStatus === "active") {
-      return {
-        id: user._id.toString(),
-        name: user.name || "User",
-        email: user.email,
-        subscriptionEnds: user.subscriptionEnds,
-      };
+    if (!user) {
+      console.log('User not found');
+      return null;
     }
     
-    console.log('Authentication failed');
+    // Compare hashed passwords
+    let isValid = false;
+    
+    // First check if password is stored as hash
+    if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$')) {
+      // Password is hashed, use bcrypt compare
+      isValid = await bcrypt.compare(credentials.password, user.password);
+    } else {
+      // For backward compatibility - plain text comparison (remove this in production)
+      isValid = user.password === credentials.password;
+      console.log('WARNING: Using plain text password comparison');
+    }
+    
+    if (isValid) {
+      // Don't require subscription check during development
+      const requireSubscription = process.env.NODE_ENV === 'production';
+      
+      if ((requireSubscription && user.subscriptionStatus === "active") || !requireSubscription) {
+        return {
+          id: user._id.toString(),
+          name: user.name || "User",
+          email: user.email,
+          subscriptionEnds: user.subscriptionEnds,
+        };
+      } else {
+        console.log('Subscription inactive');
+        return null;
+      }
+    }
+    
+    console.log('Password validation failed');
     return null;
   } catch (error) {
     console.error("Authentication error:", error);
@@ -46,13 +72,13 @@ const authOptions = {
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email", placeholder: "email@example.com" },
-        password: { label: "Password", type: "password" },
+        password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
         if (!credentials) return null;
         
         // Added debug logs
-        console.log('Attempting to authenticate:', credentials.email);
+        console.log('Attempting to authenticate user:', credentials.email);
         
         return await authenticateUser(credentials);
       },
@@ -60,7 +86,6 @@ const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      // If user is found during sign in, add subscription data to the token
       if (user) {
         token.id = user.id;
         token.subscriptionEnds = user.subscriptionEnds;
@@ -68,7 +93,6 @@ const authOptions = {
       return token;
     },
     async session({ session, token }) {
-      // Make subscription data available in the client session
       if (session?.user) {
         session.user.id = token.id;
         session.user.subscriptionEnds = token.subscriptionEnds;
@@ -86,10 +110,10 @@ const authOptions = {
   },
   debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
-};
+}
 
 // Create handler
 const handler = NextAuth(authOptions);
 
-// Export named functions instead of default export
+// Export named functions
 export { handler as GET, handler as POST };
