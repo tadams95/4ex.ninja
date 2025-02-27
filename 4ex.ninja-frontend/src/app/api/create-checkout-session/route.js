@@ -33,6 +33,11 @@ export async function POST() {
       }
     }
 
+    // Fix the URL by removing the extra https:// if NEXT_PUBLIC_URL already has it
+    const baseUrl = process.env.NEXT_PUBLIC_URL.startsWith('http')
+      ? process.env.NEXT_PUBLIC_URL
+      : `https://${process.env.NEXT_PUBLIC_URL}`;
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -45,8 +50,8 @@ export async function POST() {
       subscription_data: {
         trial_period_days: 30,
       },
-      success_url: `https://${process.env.NEXT_PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `https://${process.env.NEXT_PUBLIC_URL}/`,
+      success_url: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/`,
     });
 
     return NextResponse.json({ id: session.id });
