@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { handleCheckout } from "@/utils/checkout-helpers";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -48,9 +49,13 @@ export default function RegisterPage() {
       // Show success message
       setSuccess(true);
 
-      // Redirect to login after 2 seconds
+      // Proceed to checkout instead of redirecting to login
       setTimeout(() => {
-        router.push("/login");
+        handleCheckout().catch(err => {
+          console.error("Checkout error after registration:", err);
+          // Fallback to login page if checkout fails
+          router.push("/login");
+        });
       }, 2000);
     } catch (err) {
       console.error("Registration error:", err);
@@ -77,7 +82,7 @@ export default function RegisterPage() {
 
         {success && (
           <div className="bg-green-500/20 text-green-400 p-3 rounded-md text-center">
-            Account created successfully! Redirecting to login...
+            Account created successfully! Redirecting to checkout...
           </div>
         )}
 
