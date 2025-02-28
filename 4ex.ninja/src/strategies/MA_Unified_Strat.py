@@ -3,7 +3,7 @@ from config.settings import MONGO_CONNECTION_STRING
 from pymongo import MongoClient
 import asyncio
 import logging
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Dict, Optional
 from config.strat_settings import STRATEGIES
@@ -15,6 +15,7 @@ client = MongoClient(
 price_db = client["streamed_prices"]
 signals_db = client["signals"]
 
+# Logging setup
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -47,19 +48,19 @@ class MovingAverageCrossStrategy:
         self.min_atr_value = min_atr_value
         self.min_rr_ratio = min_rr_ratio
         self.sleep_seconds = sleep_seconds
-        self.min_candles = min_candles
+        self.min_candles = min_candles  # Kept but unused with 200-candle fetch
         self.is_jpy_pair = pair.endswith("JPY")
 
-    def validate_signal(
-        self, signal: int, atr: float, risk_reward_ratio: float
-    ) -> bool:
+    def validate_signal(self, signal: int, atr: float, risk_reward_ratio: float) -> bool:
         """Validate if a signal meets the minimum criteria."""
         try:
-            return (
+            is_valid = (
                 signal != 0
                 and atr >= self.min_atr_value
                 and risk_reward_ratio >= self.min_rr_ratio
             )
+            logging.debug(f"Validating signal for {self.pair}: signal={signal}, atr={atr}, rr={risk_reward_ratio}, valid={is_valid}")
+            return is_valid
         except Exception as e:
             logging.error(f"Error validating signal for {self.pair}: {e}")
             return False
@@ -81,7 +82,7 @@ class MovingAverageCrossStrategy:
     def calculate_signals(self, df: pd.DataFrame) -> pd.DataFrame:
         """Calculate trading signals based on moving average crossovers."""
         try:
-            # Create an explicit copy to avoid SettingWithCopyWarning
+            # Create an explicit deep copy to avoid SettingWithCopyWarning
             df = df.copy(deep=True)
 
             # Calculate moving averages and ATR
@@ -99,6 +100,7 @@ class MovingAverageCrossStrategy:
             )
             df.loc[buy_crossover, "signal"] = 1
             df.loc[sell_crossover, "signal"] = -1
+            logging.info(f"Detected {len(df[df['signal'] != 0])} crossovers for {self.pair} {self.timeframe}")
 
             # Calculate stop loss and take profit
             df["stop_loss"] = pd.NA
@@ -113,7 +115,6 @@ class MovingAverageCrossStrategy:
             df.loc[buy_signals, "take_profit"] = df.loc[buy_signals, "close"] + (
                 df.loc[buy_signals, "atr"] * self.tp_atr_multiplier
             )
-            # Calculate risk/reward for buy signals
             df.loc[buy_signals, "risk_reward_ratio"] = (
                 df.loc[buy_signals, "take_profit"] - df.loc[buy_signals, "close"]
             ) / (df.loc[buy_signals, "close"] - df.loc[buy_signals, "stop_loss"])
@@ -126,12 +127,16 @@ class MovingAverageCrossStrategy:
             df.loc[sell_signals, "take_profit"] = df.loc[sell_signals, "close"] - (
                 df.loc[sell_signals, "atr"] * self.tp_atr_multiplier
             )
-            # Calculate risk/reward for sell signals
             df.loc[sell_signals, "risk_reward_ratio"] = (
                 df.loc[sell_signals, "close"] - df.loc[sell_signals, "take_profit"]
             ) / (df.loc[sell_signals, "stop_loss"] - df.loc[sell_signals, "close"])
 
-            # Filter signals based on validation criteria - use a list to store invalid signals
+            # Ensure numeric types after calculations
+            df["stop_loss"] = pd.to_numeric(df["stop_loss"], errors="coerce")
+            df["take_profit"] = pd.to_numeric(df["take_profit"], errors="coerce")
+            df["risk_reward_ratio"] = pd.to_numeric(df["risk_reward_ratio"], errors="coerce")
+
+            # Filter signals based on validation criteria
             invalid_indices = []
             for index, row in df[df["signal"] != 0].iterrows():
                 if not self.validate_signal(
@@ -139,35 +144,45 @@ class MovingAverageCrossStrategy:
                 ):
                     invalid_indices.append(index)
 
-            # Set all invalid signals to 0 at once using loc
             if invalid_indices:
                 df.loc[invalid_indices, "signal"] = 0
+                logging.info(f"Filtered {len(invalid_indices)} signals for {self.pair} {self.timeframe}")
 
             return df
         except Exception as e:
-            logging.error(
-                f"Error calculating signals for {self.pair}: {e}", exc_info=True
-            )
+            logging.error(f"Error calculating signals for {self.pair}: {e}", exc_info=True)
             return df
 
-    def parse_datetime(self, time_value) -> datetime:
-        """Parse various datetime formats to a standard datetime with timezone."""
-        if isinstance(time_value, str):
-            try:
-                # Try ISO format first
-                return datetime.fromisoformat(time_value.replace("Z", "+00:00"))
-            except ValueError:
-                try:
-                    # Fallback format
-                    return datetime.strptime(
-                        time_value, "%Y-%m-%dT%H:%M:%S.%fZ"
-                    ).replace(tzinfo=timezone.utc)
-                except ValueError:
-                    logging.warning(
-                        f"Could not parse time: {time_value}, using fallback"
-                    )
-                    return datetime.now(timezone.utc) - timedelta(days=1)
-        return time_value  # Already datetime object or None
+    def generate_trade_dict(self, row: pd.Series) -> Optional[Dict]:
+        """Generate a dictionary of trade data from a signal row."""
+        try:
+            close_price = Decimal(str(row["close"]))
+            stop_loss = Decimal(str(row["stop_loss"]))
+            take_profit = Decimal(str(row["take_profit"]))
+            pip_multiplier = Decimal("100") if self.is_jpy_pair else Decimal("10000")
+            sl_pips = abs(close_price - stop_loss) * pip_multiplier
+            tp_pips = abs(take_profit - close_price) * pip_multiplier
+            signal_data = {
+                "time": row.name,
+                "instrument": self.pair,
+                "timeframe": self.timeframe,
+                "close": float(row["close"]),
+                "slow_ma": float(row["slow_ma"]),
+                "fast_ma": float(row["fast_ma"]),
+                "signal": int(row["signal"]),
+                "stop_loss": float(stop_loss),
+                "take_profit": float(take_profit),
+                "sl_pips": float(sl_pips),
+                "tp_pips": float(tp_pips),
+                "atr": float(row["atr"]),
+                "risk_reward_ratio": float(row["risk_reward_ratio"]),
+                "created_at": datetime.now(timezone.utc),
+            }
+            logging.info(f"Generated signal for {self.pair} {self.timeframe}: {signal_data}")
+            return signal_data
+        except Exception as e:
+            logging.error(f"Error generating trade dict for {self.pair}: {e}", exc_info=True)
+            return None
 
     async def process_dataframe(self, df: pd.DataFrame) -> None:
         """Process a dataframe of price data to generate and store signals."""
@@ -178,19 +193,18 @@ class MovingAverageCrossStrategy:
         # Set time as index
         df.set_index("time", inplace=True)
 
-        # Prepare OHLC data - create a new DataFrame instead of modifying a view
+        # Prepare OHLC data - create a new DataFrame
         df = df[["open", "high", "low", "close"]].copy(deep=True)
 
+        # Ensure numeric types
         for col in ["open", "high", "low", "close"]:
             df[col] = pd.to_numeric(df[col], errors="coerce")
 
         # Clean the data
         df = df.dropna(subset=["open", "high", "low", "close"])
-        logging.info(
-            f"After NaN removal: {len(df)} valid candles for {self.pair} {self.timeframe}"
-        )
+        logging.info(f"After NaN removal: {len(df)} valid candles for {self.pair} {self.timeframe}")
 
-        # Remove duplicates - create a new DataFrame to avoid chain indexing
+        # Remove duplicates
         df = df[~df.index.duplicated(keep="last")].copy(deep=True)
 
         # Calculate signals
@@ -207,52 +221,16 @@ class MovingAverageCrossStrategy:
                 self.signals_collection.update_one(
                     {"time": index}, {"$set": signal_data}, upsert=True
                 )
-
-        logging.info(
-            f"Processed {self.pair} {self.timeframe} at {datetime.now(timezone.utc)}"
-        )
+                logging.info(f"Saved signal to signals.trades for {self.pair} {self.timeframe}")
 
     async def monitor_prices(self):
         """Main monitoring loop that fetches data and processes it periodically."""
         logging.info(f"Starting monitoring for {self.pair} {self.timeframe}")
         while True:
             try:
-                # Get last signal for this pair/timeframe
-                last_signal = self.signals_collection.find_one(
-                    {"instrument": self.pair, "timeframe": self.timeframe},
-                    sort=[("time", -1)],
-                )
-                logging.info(
-                    f"Last signal for {self.pair} {self.timeframe}: {last_signal['time'] if last_signal else 'None'}"
-                )
-
-                # Determine time range for query
-                if last_signal:
-                    last_signal_time = self.parse_datetime(last_signal["time"])
-                    start_time = last_signal_time - timedelta(days=30)
-                else:
-                    fallback_days = int(
-                        self.min_candles * 1.5
-                    )  # 1.5x to cover weekends/holidays
-                    start_time = datetime.now(timezone.utc) - timedelta(
-                        days=fallback_days
-                    )
-                    logging.info(
-                        f"No previous signals, using fallback period of {fallback_days} days"
-                    )
-
-                # Create query and fetch data
-                query = (
-                    {"time": {"$gt": start_time.isoformat() + "Z"}}
-                    if start_time
-                    else {}
-                )
-                logging.info(f"Query for {self.pair} {self.timeframe}: {query}")
-
-                df = pd.DataFrame(list(self.collection.find(query).sort("time", 1)))
-                logging.info(
-                    f"Retrieved {len(df)} candles for {self.pair} {self.timeframe}"
-                )
+                # Fetch last 200 candles
+                df = pd.DataFrame(list(self.collection.find().sort("time", -1).limit(200)))
+                logging.info(f"Retrieved {len(df)} candles for {self.pair} {self.timeframe}")
 
                 # Process the dataframe
                 await self.process_dataframe(df)
@@ -260,7 +238,6 @@ class MovingAverageCrossStrategy:
                 # Clean up and wait for next cycle
                 del df
                 await asyncio.sleep(self.sleep_seconds)
-
             except Exception as e:
                 logging.error(f"Error monitoring {self.pair}: {e}", exc_info=True)
                 await asyncio.sleep(900)  # Sleep for 15 minutes on error
