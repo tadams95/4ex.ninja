@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { logAuthAttempt } from "@/lib/auth-debug";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [detailedError, setDetailedError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const callbackUrl =
@@ -21,9 +23,17 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setDetailedError("");
+
+    if (!email || !password) {
+      setError("Email and password are required");
+      setLoading(false);
+      return;
+    }
 
     try {
-      console.log("Attempting to sign in with callbackUrl:", callbackUrl);
+      console.log("Auth attempt with:", { email, passwordProvided: !!password });
+      logAuthAttempt({ email, password });
       
       const result = await signIn("credentials", {
         redirect: false,
@@ -36,19 +46,34 @@ export default function LoginPage() {
 
       if (result?.ok && !result.error) {
         console.log("Login successful, redirecting to:", result.url || callbackUrl);
-        // Use replace instead of push for more reliable redirects
         router.replace(result.url || callbackUrl);
       } else {
         console.error("Login failed:", result?.error);
-        setError("Invalid email or password");
+        
+        // Map common error codes to user-friendly messages
+        switch(result?.error) {
+          case "CredentialsSignin":
+            setError("Invalid email or password");
+            setDetailedError("The credentials you provided could not be verified");
+            break;
+          default:
+            setError("Authentication failed");
+            setDetailedError(result?.error || "Unknown error");
+        }
       }
     } catch (error) {
       console.error("Login exception:", error);
-      setError("An error occurred. Please try again.");
+      setError("An unexpected error occurred");
+      setDetailedError(error.message);
     } finally {
       setLoading(false);
     }
   };
+
+  // Add debugging information to console on component mount
+  useEffect(() => {
+    console.log("Login page initialized with callback URL:", callbackUrl);
+  }, [callbackUrl]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-4">
@@ -60,8 +85,9 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <div className="bg-red-500/20 text-red-400 p-3 rounded-md text-center">
-            {error}
+          <div className="bg-red-500/20 text-red-400 p-3 rounded-md">
+            <p className="font-medium">{error}</p>
+            {detailedError && <p className="text-sm mt-1 text-red-300">{detailedError}</p>}
           </div>
         )}
 

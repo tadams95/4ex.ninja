@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function ProtectedRoute({
-  requireSubscription = false,
+  requireSubscription = true,
   children,
 }) {
   const { isAuthenticated, loading: authLoading } = useAuth();
@@ -27,6 +27,7 @@ export default function ProtectedRoute({
           
           const data = await response.json();
           setIsSubscribed(data.isSubscribed);
+          console.log("Subscription status:", data);
         } catch (error) {
           console.error("Error fetching subscription status:", error);
           // In case of error, we assume not subscribed for security
