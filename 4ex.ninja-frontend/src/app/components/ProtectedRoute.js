@@ -8,49 +8,75 @@ export default function ProtectedRoute({ requireSubscription = true, children })
   const router = useRouter();
   const { data: session, status } = useSession();
   const [verified, setVerified] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+  const [isCheckingAPI, setIsCheckingAPI] = useState(false);
 
-  // Add debugging
+  // Get subscription status directly from API for reliable data
   useEffect(() => {
-    if (session) {
-      console.log("ProtectedRoute session:", {
-        email: session.user.email,
-        requiresSubscription: requireSubscription,
-        isSubscribed: session.user.isSubscribed,
-      });
+    if (status === "authenticated" && requireSubscription && !subscriptionStatus && !isCheckingAPI) {
+      setIsCheckingAPI(true);
+      
+      fetch("/api/subscription-status")
+        .then(res => res.json())
+        .then(data => {
+          console.log("Subscription API response:", data);
+          setSubscriptionStatus(data.isSubscribed);
+        })
+        .catch(err => {
+          console.error("Error checking subscription status:", err);
+          setSubscriptionStatus(false); // Assume not subscribed on error
+        })
+        .finally(() => {
+          setIsCheckingAPI(false);
+        });
     }
-  }, [session, requireSubscription]);
+  }, [status, requireSubscription, subscriptionStatus, isCheckingAPI]);
 
+  // Make access decisions based on auth and subscription status
   useEffect(() => {
+    // Wait until auth status is determined
     if (status === "loading") return;
 
+    // Handle unauthenticated users
     if (status === "unauthenticated") {
       router.push(`/login?callbackUrl=${encodeURIComponent(window.location.href)}`);
       return;
     }
 
-    // TEMPORARY FIX: Allow all authenticated users through
-    // Remove this when subscription checking is fixed
-    if (status === "authenticated") {
-      console.log("Allowing authenticated user access (temporary fix)");
+    // Now we know user is authenticated
+    
+    // For routes that don't require subscription
+    if (!requireSubscription) {
       setVerified(true);
       return;
     }
-
-    /*
-    // This is the proper implementation to use once subscription checking is fixed
-    if (requireSubscription) {
-      if (session?.user?.isSubscribed) {
-        setVerified(true);
-      } else {
-        router.push("/pricing");
-      }
-    } else {
+    
+    // For routes that require subscription
+    
+    // First check session data
+    const sessionSubscribed = session?.user?.isSubscribed === true;
+    
+    // Then check API data (more reliable)
+    const apiSubscribed = subscriptionStatus === true;
+    
+    // If either source confirms subscription, allow access
+    if (sessionSubscribed || apiSubscribed) {
+      console.log("User is subscribed, allowing access", { 
+        sessionSubscribed, 
+        apiSubscribed 
+      });
       setVerified(true);
+    } 
+    // Only redirect if we've completed API check and user is not subscribed
+    else if (subscriptionStatus !== null) {
+      console.log("User not subscribed, redirecting to /pricing");
+      router.push("/pricing");
     }
-    */
-  }, [session, status, requireSubscription, router]);
+    // Otherwise wait for API check to complete
+  }, [session, status, requireSubscription, router, subscriptionStatus]);
 
-  if (status === "loading" || !verified) {
+  // Show loading state during auth or subscription check
+  if (status === "loading" || !verified || (requireSubscription && subscriptionStatus === null)) {
     return (
       <div className="flex justify-center items-center h-screen bg-black">
         <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
@@ -58,5 +84,6 @@ export default function ProtectedRoute({ requireSubscription = true, children })
     );
   }
 
+  // We've verified all requirements, render the protected content
   return children;
 }

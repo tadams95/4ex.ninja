@@ -25,22 +25,10 @@ export async function middleware(request) {
       url.searchParams.set("callbackUrl", path);
       return NextResponse.redirect(url);
     }
-
-    // TEMPORARY: Allow all authenticated users through
-    // Skip subscription check for now since it's not working correctly
-    console.log("Middleware bypassing subscription check");
     
-    /* DISABLED until subscription checking is fixed
-    // Check if subscription is active
-    const now = new Date();
-    const subscriptionEnds = token.subscriptionEnds 
-      ? new Date(token.subscriptionEnds) 
-      : null;
-
-    if (!subscriptionEnds || now > subscriptionEnds) {
-      return NextResponse.redirect(new URL("/pricing", request.url));
-    }
-    */
+    // Skip subscription check in middleware
+    // Let the ProtectedRoute component handle subscription checks
+    // This separation of concerns gives better UX with loading states
   }
 
   return NextResponse.next();
