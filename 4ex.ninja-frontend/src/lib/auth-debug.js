@@ -1,4 +1,3 @@
-
 /**
  * Utility functions for debugging authentication issues
  */
@@ -42,3 +41,9 @@ export async function logAuthError(error) {
   
   console.groupEnd();
 }
+
+export const logAuthDebug = (stage, data) => {
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[Auth Debug ${stage}]:`, JSON.stringify(data, null, 2));
+  }
+};

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { logAuthAttempt } from "@/lib/auth-debug";
+import { logAuthAttempt, logAuthDebug } from "@/lib/auth-debug";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -25,6 +25,12 @@ export default function LoginPage() {
     setError("");
     setDetailedError("");
 
+    logAuthDebug('environment', {
+      nodeEnv: process.env.NODE_ENV,
+      apiUrl: process.env.NEXT_PUBLIC_API_URL,
+      nextAuthUrl: process.env.NEXTAUTH_URL,
+    });
+
     if (!email || !password) {
       setError("Email and password are required");
       setLoading(false);
@@ -32,8 +38,12 @@ export default function LoginPage() {
     }
 
     try {
-      console.log("Auth attempt with:", { email, passwordProvided: !!password });
-      logAuthAttempt({ email, password });
+      logAuthDebug('pre-signin', { 
+        email,
+        hasPassword: !!password,
+        callbackUrl,
+        env: process.env.NODE_ENV
+      });
       
       const result = await signIn("credentials", {
         redirect: false,
@@ -42,27 +52,24 @@ export default function LoginPage() {
         callbackUrl,
       });
 
-      console.log("Sign in result:", result);
+      logAuthDebug('post-signin', {
+        ok: result?.ok,
+        error: result?.error,
+        url: result?.url,
+        status: result?.status
+      });
 
       if (result?.ok && !result.error) {
-        console.log("Login successful, redirecting to:", result.url || callbackUrl);
         router.replace(result.url || callbackUrl);
       } else {
-        console.error("Login failed:", result?.error);
-        
-        // Map common error codes to user-friendly messages
-        switch(result?.error) {
-          case "CredentialsSignin":
-            setError("Invalid email or password");
-            setDetailedError("The credentials you provided could not be verified");
-            break;
-          default:
-            setError("Authentication failed");
-            setDetailedError(result?.error || "Unknown error");
-        }
+        setError("Invalid email or password");
+        setDetailedError(`Auth Error: ${result?.error}. Status: ${result?.status}`);
       }
     } catch (error) {
-      console.error("Login exception:", error);
+      logAuthDebug('error', {
+        message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      });
       setError("An unexpected error occurred");
       setDetailedError(error.message);
     } finally {

@@ -33,7 +33,7 @@ export async function middleware(request) {
       : null;
 
     if (!subscriptionEnds || now > subscriptionEnds) {
-      return NextResponse.redirect(new URL("/subscribe", request.url));
+      return NextResponse.redirect(new URL("/pricing", request.url));
     }
   }
 
