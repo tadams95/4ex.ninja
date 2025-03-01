@@ -189,8 +189,8 @@ function SignalsPage() {
 // Wrap the component with ProtectedRoute
 export default function ProtectedSignalsPage() {
   return (
-    <ProtectedRoute requireSubscription={true}>
+    // <ProtectedRoute requireSubscription={false}>
       <SignalsPage />
-    </ProtectedRoute>
+    // </ProtectedRoute>
   );
 }

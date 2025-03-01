@@ -10,3 +10,6 @@ __pycache__/
 service/
 viewsignals.ipynb
 MA_Strategy.ipynb
+sigcheck/
+*.sigcheck
+sigcheck

@@ -9,6 +9,17 @@ const debug = (...args) => {
   }
 };
 
+// Helper function to ensure we always have a complete API URL
+const getApiBaseUrl = () => {
+  // First try environment variable
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl && (envUrl.startsWith('http://') || envUrl.startsWith('https://'))) {
+    return envUrl;
+  }
+  // Fallback to production URL
+  return 'https://api.4ex.ninja';
+};
+
 // Add debug output for auth API calls
 async function authenticateUser(credentials) {
   console.log('Attempting API login with:', { 
@@ -16,20 +27,20 @@ async function authenticateUser(credentials) {
     passwordProvided: !!credentials.password
   });
   
-  // Use the external API URL in development; use relative path in production.
-  const apiUrl =
-    process.env.NODE_ENV === 'development'
-      ? process.env.NEXT_PUBLIC_API_URL
-      : ""; // empty string to use relative path in production
+  // Always use complete URL
+  const apiBaseUrl = getApiBaseUrl();
+  const loginUrl = `${apiBaseUrl}/auth/login`;
+  
+  console.log('Using login URL:', loginUrl);
 
   try {
-    const response = await fetch(`${apiUrl}/auth/login`, {
+    const response = await fetch(loginUrl, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
         // Mimic production headers
         "User-Agent": "Mozilla/5.0 (compatible; ProductionApp/1.0)",
-        "Referer": process.env.NEXT_PUBLIC_URL
+        "Referer": process.env.NEXT_PUBLIC_URL || 'https://4ex-ninja.vercel.app'
       },
       body: JSON.stringify({
         email: credentials.email,
@@ -72,7 +83,7 @@ const handler = NextAuth({
           email: credentials.email,
           hasPassword: !!credentials.password,
           nodeEnv: process.env.NODE_ENV,
-          apiUrl: process.env.NEXT_PUBLIC_API_URL || process.env.API_URL,
+          apiUrl: getApiBaseUrl(), // Use our helper function here too
         });
         
         // DEVELOPMENT MODE: Bypass external API

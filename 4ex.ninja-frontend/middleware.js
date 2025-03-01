@@ -25,16 +25,9 @@ export async function middleware(request) {
       url.searchParams.set("callbackUrl", path);
       return NextResponse.redirect(url);
     }
-
-    // Check if subscription is active
-    const now = new Date();
-    const subscriptionEnds = token.subscriptionEnds 
-      ? new Date(token.subscriptionEnds) 
-      : null;
-
-    if (!subscriptionEnds || now > subscriptionEnds) {
-      return NextResponse.redirect(new URL("/pricing", request.url));
-    }
+    
+    // No longer checking subscription here
+    // This will be handled by the ProtectedRoute component which calls the API
   }
 
   return NextResponse.next();

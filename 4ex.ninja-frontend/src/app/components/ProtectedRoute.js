@@ -13,7 +13,7 @@ export default function ProtectedRoute({
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);
   const router = useRouter();
   
-  // Fetch subscription status directly from MongoDB
+  // Fetch subscription status from MongoDB
   useEffect(() => {
     const fetchSubscriptionStatus = async () => {
       if (isAuthenticated) {
@@ -27,10 +27,9 @@ export default function ProtectedRoute({
           
           const data = await response.json();
           setIsSubscribed(data.isSubscribed);
-          console.log("Subscription status:", data);
+          console.log("Subscription status from MongoDB:", data.isSubscribed);
         } catch (error) {
           console.error("Error fetching subscription status:", error);
-          // In case of error, we assume not subscribed for security
           setIsSubscribed(false);
         } finally {
           setSubscriptionLoading(false);
@@ -41,7 +40,6 @@ export default function ProtectedRoute({
     if (isAuthenticated && requireSubscription) {
       fetchSubscriptionStatus();
     } else if (isAuthenticated && !requireSubscription) {
-      // If subscription not required, skip loading
       setSubscriptionLoading(false);
     }
   }, [isAuthenticated, requireSubscription]);

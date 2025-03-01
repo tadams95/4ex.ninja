@@ -15,25 +15,28 @@ export async function GET() {
     }
 
     const { db } = await connectToDatabase();
-    // Access the users collection in the 4ex_users database
+    // Use case-insensitive email query
     const user = await db
       .collection("users")
-      .findOne({ email: session.user.email });
+      .findOne({ 
+        email: { $regex: `^${session.user.email}$`, $options: "i" } 
+      });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Check both the boolean flag and subscription expiration date
-    const hasActiveSubscription = 
-      user.isSubscribed === true || 
-      (!!user.subscriptionEnds && new Date(user.subscriptionEnds) > new Date());
+    //output user object for debugging
+    console.log("User object:", user);
+
+    // Simply use the isSubscribed boolean from MongoDB
+    const hasActiveSubscription = user.isSubscribed === true;
 
     return NextResponse.json({
       isSubscribed: hasActiveSubscription,
-      subscriptionEnds: user.subscriptionEnds || null,
-      // Include the direct database value for debugging
-      directIsSubscribedValue: user.isSubscribed
+      // Include these fields for compatibility with existing code
+      subscriptionEnds: null,
+      userEmail: user.email
     });
   } catch (error) {
     console.error("Error fetching subscription status:", error);
