@@ -1,49 +1,37 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-export default function ProtectedRoute({
-  requireSubscription = true,
-  children,
-}) {
+export default function ProtectedRoute({ requireSubscription = true, children }) {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [verified, setVerified] = useState(false);
-  
+
   useEffect(() => {
-    // Debug the session info
-    if (session) {
-      console.log("Protected Route - Session:", {
-        authenticated: status === "authenticated",
-        email: session.user.email,
-        isSubscribed: session.user.isSubscribed
-      });
-    }
-    
-    // Handle authentication check
+    // Wait until session loads
+    if (status === "loading") return;
+
     if (status === "unauthenticated") {
       router.push(`/login?callbackUrl=${encodeURIComponent(window.location.href)}`);
       return;
     }
-    
-    // Handle subscription check
-    if (status === "authenticated") {
-      if (requireSubscription && session.user.isSubscribed !== true) {
-        console.log("User not subscribed, redirecting to pricing", {
-          isSubscribed: session.user.isSubscribed
-        });
+
+    // For subscription-protected routes:
+    if (requireSubscription) {
+      // Change strict check to truthy check
+      if (session?.user?.isSubscribed) {
+        setVerified(true);
+      } else {
+        console.log("User not subscribed, redirecting to /pricing", { isSubscribed: session?.user?.isSubscribed });
         router.push("/pricing");
-        return;
       }
-      
-      // User is authenticated and has required subscription
+    } else {
       setVerified(true);
     }
   }, [session, status, requireSubscription, router]);
 
-  // Show loading state
   if (status === "loading" || !verified) {
     return (
       <div className="flex justify-center items-center h-screen bg-black">
@@ -52,6 +40,5 @@ export default function ProtectedRoute({
     );
   }
 
-  // Safe to render protected content
   return children;
 }
