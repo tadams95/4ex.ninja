@@ -23,20 +23,29 @@ export async function GET() {
       });
 
     if (!user) {
+      console.error("User not found in DB:", session.user.email);
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    //output user object for debugging
-    console.log("User object:", user);
+    // Log full user object for debugging
+    console.log("Full user object from MongoDB:", {
+      id: user._id.toString(),
+      email: user.email,
+      name: user.name,
+      isSubscribed: user.isSubscribed,
+      subscriptionStatus: typeof user.isSubscribed === 'boolean' ? 'boolean' : typeof user.isSubscribed
+    });
 
-    // Simply use the isSubscribed boolean from MongoDB
-    const hasActiveSubscription = user.isSubscribed === true;
+    // Explicitly convert to boolean in case it's stored differently
+    const hasActiveSubscription = Boolean(user.isSubscribed);
 
     return NextResponse.json({
       isSubscribed: hasActiveSubscription,
       // Include these fields for compatibility with existing code
       subscriptionEnds: null,
-      userEmail: user.email
+      userEmail: user.email,
+      // Add debug info
+      rawIsSubscribed: user.isSubscribed
     });
   } catch (error) {
     console.error("Error fetching subscription status:", error);

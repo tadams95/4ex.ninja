@@ -185,6 +185,11 @@ const handler = NextAuth({
         token.email = user.email;
         token.name = user.name;
         token.accessToken = user.token;
+        
+        // Add isSubscribed status to the token if available
+        if (user.isSubscribed !== undefined) {
+          token.isSubscribed = user.isSubscribed;
+        }
       }
       return token;
     },
@@ -192,6 +197,11 @@ const handler = NextAuth({
       if (token) {
         session.user.id = token.id;
         session.user.accessToken = token.accessToken;
+        
+        // Pass isSubscribed from token to session
+        session.user.isSubscribed = token.isSubscribed;
+        
+        console.log("Session updated with subscription status:", session.user.isSubscribed);
       }
       return session;
     },

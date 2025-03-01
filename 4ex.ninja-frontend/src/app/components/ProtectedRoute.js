@@ -3,21 +3,46 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSession } from "next-auth/react";
 
 export default function ProtectedRoute({
   requireSubscription = true,
   children,
 }) {
   const { isAuthenticated, loading: authLoading } = useAuth();
+  const { data: session } = useSession();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);
   const router = useRouter();
   
-  // Fetch subscription status from MongoDB
+  // Log session info for debugging
+  useEffect(() => {
+    if (session) {
+      console.log("Session in ProtectedRoute:", {
+        email: session.user.email,
+        isSubscribed: session.user.isSubscribed
+      });
+    }
+  }, [session]);
+  
+  // First check if subscription status is in the session
+  useEffect(() => {
+    if (session?.user?.isSubscribed !== undefined) {
+      setIsSubscribed(!!session.user.isSubscribed);
+      setSubscriptionLoading(false);
+      console.log("Using subscription status from session:", !!session.user.isSubscribed);
+    }
+  }, [session]);
+  
+  // Fetch subscription status from MongoDB as a backup
   useEffect(() => {
     const fetchSubscriptionStatus = async () => {
+      // Skip if we already have the info from session
+      if (!subscriptionLoading || session?.user?.isSubscribed !== undefined) {
+        return;
+      }
+      
       if (isAuthenticated) {
-        setSubscriptionLoading(true);
         try {
           const response = await fetch("/api/subscription-status");
           
@@ -26,8 +51,9 @@ export default function ProtectedRoute({
           }
           
           const data = await response.json();
-          setIsSubscribed(data.isSubscribed);
-          console.log("Subscription status from MongoDB:", data.isSubscribed);
+          console.log("Subscription API response:", data);
+          
+          setIsSubscribed(!!data.isSubscribed);
         } catch (error) {
           console.error("Error fetching subscription status:", error);
           setIsSubscribed(false);
@@ -37,12 +63,12 @@ export default function ProtectedRoute({
       }
     };
     
-    if (isAuthenticated && requireSubscription) {
+    if (isAuthenticated && requireSubscription && subscriptionLoading) {
       fetchSubscriptionStatus();
     } else if (isAuthenticated && !requireSubscription) {
       setSubscriptionLoading(false);
     }
-  }, [isAuthenticated, requireSubscription]);
+  }, [isAuthenticated, requireSubscription, subscriptionLoading, session]);
 
   // Handle routing based on auth and subscription status
   useEffect(() => {

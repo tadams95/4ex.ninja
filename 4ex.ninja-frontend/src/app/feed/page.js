@@ -3,8 +3,31 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import ProtectedRoute from "../components/ProtectedRoute";
+import { useSession } from "next-auth/react";
 
 function SignalsPage() {
+  const { data: session } = useSession();
+  
+  // Debug subscription status at the top level
+  useEffect(() => {
+    if (session) {
+      console.log("Feed page - session:", {
+        email: session.user.email,
+        isSubscribed: session.user.isSubscribed
+      });
+      
+      // Also check subscription status directly for debugging
+      fetch("/api/subscription-status")
+        .then(res => res.json())
+        .then(data => {
+          console.log("Feed page - subscription status check:", data);
+        })
+        .catch(err => {
+          console.error("Error checking status:", err);
+        });
+    }
+  }, [session]);
+
   const [signals, setSignals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -189,8 +212,8 @@ function SignalsPage() {
 // Wrap the component with ProtectedRoute
 export default function ProtectedSignalsPage() {
   return (
-    // <ProtectedRoute requireSubscription={false}>
+    <ProtectedRoute requireSubscription={true}>
       <SignalsPage />
-    // </ProtectedRoute>
+    </ProtectedRoute>
   );
 }
