@@ -1,130 +1,112 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import { MongoClient } from "mongodb";
+import { connectToDatabase } from "@/utils/mongodb";
 import bcrypt from "bcryptjs";
 
-// Use production Mongo URI in development if enabled
-const prodMongoUri = process.env.PROD_MONGO_CONNECTION_STRING;
-const uri =
-  process.env.NODE_ENV === "development" && process.env.USE_PROD_USERS === "true"
-    ? prodMongoUri
-    : process.env.MONGO_CONNECTION_STRING;
+// Debug logger
+const debug = (...args) => {
+  console.log('[NextAuth]:', ...args);
+};
 
-// User authentication function
-async function authenticateUser(credentials) {
-  const client = new MongoClient(uri);
-
+async function authenticateCredentials(credentials) {
   try {
-    await client.connect();
-    const db = client.db("users");
-    const usersCollection = db.collection("subscribers");
-
-    // Find user by email
-    const user = await usersCollection.findOne({ email: credentials.email });
+    // Connect to the database
+    const { db } = await connectToDatabase();
     
-    console.log('Found user for authentication:', user ? user.email : 'not found');
+    // Find the user with case-insensitive email match
+    const user = await db.collection("users").findOne({
+      email: { $regex: `^${credentials.email}$`, $options: "i" }
+    });
     
     if (!user) {
-      console.log('User not found');
+      console.log(`User not found: ${credentials.email}`);
       return null;
     }
     
-    // Compare hashed passwords
-    let isValid = false;
+    // Verify password
+    const isValid = await bcrypt.compare(credentials.password, user.password);
     
-    // First check if password is stored as hash
-    if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$')) {
-      // Password is hashed, use bcrypt compare
-      isValid = await bcrypt.compare(credentials.password, user.password);
-    } else {
-      // For backward compatibility - plain text comparison (remove this in production)
-      isValid = user.password === credentials.password;
-      console.log('WARNING: Using plain text password comparison');
+    if (!isValid) {
+      console.log(`Invalid password for user: ${credentials.email}`);
+      return null;
     }
     
-    if (isValid) {
-      // Don't require subscription check during development
-      const requireSubscription = process.env.NODE_ENV === 'production';
-      
-      if ((requireSubscription && user.subscriptionStatus === "active") || !requireSubscription) {
-        return {
-          id: user._id.toString(),
-          name: user.name || "User",
-          email: user.email,
-          subscriptionEnds: user.subscriptionEnds,
-        };
-      } else {
-        console.log('Subscription inactive');
-        return null;
-      }
-    }
+    // Log the user data (excluding password)
+    const { password, ...userWithoutPassword } = user;
+    console.log('Authentication successful:', {
+      id: user._id,
+      email: user.email,
+      isSubscribed: !!user.isSubscribed
+    });
     
-    console.log('Password validation failed');
-    return null;
+    // Return user with necessary fields
+    return {
+      id: user._id.toString(),
+      name: user.name || "",
+      email: user.email,
+      isSubscribed: !!user.isSubscribed, // Ensure boolean
+    };
   } catch (error) {
     console.error("Authentication error:", error);
     return null;
-  } finally {
-    await client.close();
   }
 }
 
-// Create and export NextAuth options object
 export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "email@example.com" },
-        password: { label: "Password", type: "password" }
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
-        if (!credentials) return null;
+      authorize: async (credentials) => {
+        // Special case for development login
+        if (process.env.NODE_ENV === "development" &&
+            credentials.email === process.env.DEV_TEST_EMAIL &&
+            credentials.password === process.env.DEV_TEST_PASSWORD) {
+          return {
+            id: "dev-user-id",
+            email: credentials.email,
+            name: "Development User",
+            isSubscribed: true, // Default to subscribed for dev user
+          };
+        }
         
-        // Added debug logs
-        console.log('Attempting to authenticate user:', credentials.email);
-        
-        return await authenticateUser(credentials);
+        return await authenticateCredentials(credentials);
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    jwt: async ({ token, user }) => {
       if (user) {
+        // When user first signs in
         token.id = user.id;
-        token.subscriptionEnds = user.subscriptionEnds;
+        token.email = user.email;
+        token.name = user.name || "";
+        token.isSubscribed = user.isSubscribed;
+        
+        console.log('JWT token created with subscription status:', user.isSubscribed);
       }
       return token;
     },
-    async session({ session, token }) {
-      if (session?.user) {
-        session.user.id = token.id;
-        session.user.subscriptionEnds = token.subscriptionEnds;
-      }
+    session: async ({ session, token }) => {
+      // Send properties to the client
+      session.user.id = token.id;
+      session.user.email = token.email;
+      session.user.name = token.name;
+      session.user.isSubscribed = token.isSubscribed;
+      
+      console.log('Session created with subscription status:', token.isSubscribed);
       return session;
     },
-  },
-  pages: {
-    signIn: "/login",
-    error: "/login",
   },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
-  cookies: {
-    sessionToken: {
-      name:
-        process.env.NODE_ENV === "production"
-          ? "__Secure-next-auth.session-token"
-          : "next-auth.session-token",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
+  pages: {
+    signIn: "/login",
   },
+  debug: process.env.NODE_ENV === "development",
 };
