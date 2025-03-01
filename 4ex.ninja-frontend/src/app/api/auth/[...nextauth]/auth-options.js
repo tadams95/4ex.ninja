@@ -87,6 +87,7 @@ export const authOptions = {
         
         console.log('JWT token created with subscription status:', user.isSubscribed);
       }
+      console.log('JWT token:', token);
       return token;
     },
     session: async ({ session, token }) => {
@@ -97,6 +98,7 @@ export const authOptions = {
       session.user.isSubscribed = token.isSubscribed;
       
       console.log('Session created with subscription status:', token.isSubscribed);
+      console.log('Session:', session);
       return session;
     },
   },

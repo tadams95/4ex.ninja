@@ -22,6 +22,7 @@ export default function ProtectedRoute({ requireSubscription = true, children })
     if (requireSubscription) {
       // Change strict check to truthy check
       if (session?.user?.isSubscribed) {
+        console.log("User is subscribed, allowing access", { isSubscribed: session.user.isSubscribed });
         setVerified(true);
       } else {
         console.log("User not subscribed, redirecting to /pricing", { isSubscribed: session?.user?.isSubscribed });
