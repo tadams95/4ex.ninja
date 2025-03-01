@@ -9,15 +9,10 @@ const debug = (...args) => {
   }
 };
 
-// Helper function to ensure we always have a complete API URL
+// Helper function for API URL - only use environment variable, no fallbacks
 const getApiBaseUrl = () => {
-  // First try environment variable
-  const envUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (envUrl && (envUrl.startsWith('http://') || envUrl.startsWith('https://'))) {
-    return envUrl;
-  }
-  // Fallback to production URL
-  return 'https://api.4ex.ninja';
+  // Only use explicit environment variable
+  return process.env.NEXT_PUBLIC_API_URL || '';
 };
 
 // Add debug output for auth API calls
@@ -27,20 +22,34 @@ async function authenticateUser(credentials) {
     passwordProvided: !!credentials.password
   });
   
-  // Always use complete URL
-  const apiBaseUrl = getApiBaseUrl();
-  const loginUrl = `${apiBaseUrl}/auth/login`;
+  // For production authentication, we'll use internal DB checking
+  // instead of trying to call an external API that doesn't exist
   
+  // Bypass external API completely in production
+  if (process.env.NODE_ENV === 'production') {
+    // This is a placeholder - we'll implement direct DB auth
+    console.log('In production - using direct DB auth instead of API');
+    // Use MongoDB directly - we'll implement below
+    return await directDbAuthentication(credentials);
+  }
+  
+  // Only in development try to use API
+  const apiBaseUrl = getApiBaseUrl();
+  if (!apiBaseUrl) {
+    throw new Error('API URL not configured');
+  }
+  
+  const loginUrl = `${apiBaseUrl}/auth/login`;
   console.log('Using login URL:', loginUrl);
 
   try {
+    // Only make API call in development
     const response = await fetch(loginUrl, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
-        // Mimic production headers
         "User-Agent": "Mozilla/5.0 (compatible; ProductionApp/1.0)",
-        "Referer": process.env.NEXT_PUBLIC_URL || 'https://4ex-ninja.vercel.app'
+        "Referer": process.env.NEXT_PUBLIC_URL || ''
       },
       body: JSON.stringify({
         email: credentials.email,
@@ -50,22 +59,56 @@ async function authenticateUser(credentials) {
     .then(logAuthResponse);
 
     if (!response.ok) {
-      // Get full error details from response text
       const errorText = await response.text();
       console.error('API login failed with status:', response.status, "Body:", errorText);
       throw new Error(`Authentication failed: ${response.status} ${errorText}`);
     }
 
     const userData = await response.json();
-    console.log('API login successful, user data:', { 
-      id: userData.user?.id || 'N/A',
-      email: userData.user?.email || 'N/A',
-      hasToken: !!userData.token
-    });
-    
     return userData;
   } catch (error) {
     await logAuthError(error);
+    throw error;
+  }
+}
+
+// Direct DB authentication for production
+async function directDbAuthentication(credentials) {
+  try {
+    const { connectToDatabase } = await import('@/utils/mongodb');
+    const { db } = await connectToDatabase();
+    const bcrypt = await import('bcryptjs');
+    
+    // Find user by email (case-insensitive)
+    const user = await db.collection('users').findOne({
+      email: { $regex: `^${credentials.email}$`, $options: 'i' }
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Verify password
+    const passwordValid = await bcrypt.compare(credentials.password, user.password);
+    
+    if (!passwordValid) {
+      throw new Error('Invalid password');
+    }
+
+    // Return user with token format expected by NextAuth
+    return {
+      success: true,
+      token: 'direct-db-auth', // Just a placeholder token
+      user: {
+        id: user._id.toString(),
+        firstName: user.name?.split(' ')[0] || '',
+        lastName: user.name?.split(' ').slice(1).join(' ') || '',
+        email: user.email,
+        isSubscribed: user.isSubscribed
+      }
+    };
+  } catch (error) {
+    console.error('Direct DB authentication error:', error);
     throw error;
   }
 }
@@ -119,6 +162,7 @@ const handler = NextAuth({
               name: `${userData.user.firstName} ${userData.user.lastName}`.trim(),
               email: userData.user.email,
               token: userData.token,
+              isSubscribed: userData.user.isSubscribed,
             };
           }
           return null;
