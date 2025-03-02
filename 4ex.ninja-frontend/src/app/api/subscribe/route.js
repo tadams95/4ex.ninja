@@ -25,7 +25,7 @@ async function connectToMongo() {
     }
 
     await mongoClient.connect();
-    const db = mongoClient.db("users");
+    const db = mongoClient.db("4ex_users");  // Updated to match the correct DB name
     return { db };
   } catch (error) {
     console.error("MongoDB connection error:", error);
@@ -62,14 +62,6 @@ export async function POST(request) {
       );
     }
 
-    // Get subscription details
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription
-    );
-
-    // Calculate subscription end date
-    const subscriptionEnds = new Date(subscription.current_period_end * 1000);
-
     // Connect to MongoDB
     const conn = await connectToMongo();
     if (conn.error) {
@@ -77,23 +69,20 @@ export async function POST(request) {
     }
 
     const { db } = conn;
-    const usersCollection = db.collection("subscribers");
+    const usersCollection = db.collection("users");  // Updated to match the correct collection name
 
     // Generate a temporary password and hash it
     const tempPassword = Math.random().toString(36).slice(-8);
     const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
-    // Create or update user
+    // Create or update user record
+    // Note: The webhook will handle the complete subscription details
     await usersCollection.updateOne(
       { email },
       {
         $set: {
           email,
-          subscriptionStatus: "active",
-          subscriptionId: subscription.id,
-          subscriptionEnds,
-          customerStripeId: session.customer,
-          password: hashedPassword, // Properly hashed now
+          password: hashedPassword,
           updatedAt: new Date(),
         },
         $setOnInsert: {
@@ -105,7 +94,7 @@ export async function POST(request) {
 
     return NextResponse.json({
       success: true,
-      message: "Subscription activated",
+      message: "User registered successfully",
       // Only return password in development, never in production
       temporaryPassword:
         process.env.NODE_ENV === "development" ? tempPassword : undefined,

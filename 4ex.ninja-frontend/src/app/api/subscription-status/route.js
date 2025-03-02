@@ -1,52 +1,54 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/auth-options"; // Import from the correct path
-import { connectToDatabase } from "@/utils/mongodb";
 import { NextResponse } from "next/server";
+import { MongoClient, ObjectId } from "mongodb";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/auth-options";
 
 export async function GET() {
   try {
+    // Get the current session to verify the user
     const session = await getServerSession(authOptions);
     
-    if (!session || !session.user) {
+    if (!session?.user?.id) {
       return NextResponse.json(
-        { error: "Authentication required" },
+        { error: "Unauthorized" },
         { status: 401 }
       );
     }
 
-    const { db } = await connectToDatabase();
-    // Use case-insensitive email query
-    const user = await db
-      .collection("users")
-      .findOne({ 
-        email: { $regex: `^${session.user.email}$`, $options: "i" } 
+    // Connect to MongoDB
+    const client = new MongoClient(process.env.MONGO_CONNECTION_STRING);
+    
+    try {
+      await client.connect();
+      const db = client.db("4ex_users");
+      const usersCollection = db.collection("users");
+      
+      // Find the user by ID
+      const user = await usersCollection.findOne({
+        _id: new ObjectId(session.user.id)
       });
 
-    if (!user) {
-      console.error("User not found in DB:", session.user.email);
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      if (!user) {
+        return NextResponse.json(
+          { error: "User not found" },
+          { status: 404 }
+        );
+      }
+
+      // Check subscription status
+      const isSubscribed = user.subscriptionStatus === "active";
+      
+      // Return subscription details
+      return NextResponse.json({
+        isSubscribed,
+        subscriptionStatus: user.subscriptionStatus || "none",
+        subscriptionId: user.subscriptionId || null,
+        subscriptionEnds: user.subscriptionEnds || null,
+        customerStripeId: user.customerStripeId || null
+      });
+    } finally {
+      await client.close();
     }
-
-    // Log full user object for debugging
-    console.log("Full user object from MongoDB:", {
-      id: user._id.toString(),
-      email: user.email,
-      name: user.name,
-      isSubscribed: user.isSubscribed,
-      subscriptionStatus: typeof user.isSubscribed === 'boolean' ? 'boolean' : typeof user.isSubscribed
-    });
-
-    // Explicitly convert to boolean in case it's stored differently
-    const hasActiveSubscription = Boolean(user.isSubscribed);
-
-    return NextResponse.json({
-      isSubscribed: hasActiveSubscription,
-      // Include these fields for compatibility with existing code
-      subscriptionEnds: null,
-      userEmail: user.email,
-      // Add debug info
-      rawIsSubscribed: user.isSubscribed
-    });
   } catch (error) {
     console.error("Error fetching subscription status:", error);
     return NextResponse.json(

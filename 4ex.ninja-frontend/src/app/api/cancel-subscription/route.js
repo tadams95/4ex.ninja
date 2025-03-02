@@ -25,10 +25,10 @@ export async function POST(request) {
     
     try {
       await client.connect();
-      const db = client.db("users");
-      const usersCollection = db.collection("subscribers");
+      const db = client.db("4ex_users");
+      const usersCollection = db.collection("users");
       
-      // Get user to check for stripeSubscriptionId
+      // Get user to check for subscriptionId
       const user = await usersCollection.findOne({ 
         _id: new ObjectId(session.user.id) 
       });
@@ -41,36 +41,41 @@ export async function POST(request) {
       }
       
       // If the user has a Stripe subscription, cancel it
-      if (user.stripeSubscriptionId) {
+      if (user.subscriptionId) {
         try {
           // Cancel at period end (doesn't immediately cancel)
-          await stripe.subscriptions.update(user.stripeSubscriptionId, {
+          await stripe.subscriptions.update(user.subscriptionId, {
             cancel_at_period_end: true
+          });
+          
+          // Update the user's subscription status
+          await usersCollection.updateOne(
+            { _id: new ObjectId(session.user.id) },
+            { 
+              $set: { 
+                subscriptionStatus: "canceled",
+                canceledAt: new Date()
+              } 
+            }
+          );
+          
+          return NextResponse.json({
+            message: "Subscription canceled successfully. You will have access until the end of your current billing period.",
+            subscriptionEnds: user.subscriptionEnds
           });
         } catch (stripeError) {
           console.error("Stripe cancellation error:", stripeError);
-          // Continue with local updates even if Stripe fails
+          return NextResponse.json(
+            { error: "Failed to cancel subscription with Stripe" },
+            { status: 500 }
+          );
         }
+      } else {
+        return NextResponse.json(
+          { error: "No active subscription found" },
+          { status: 400 }
+        );
       }
-      
-      // Update the user's subscription status
-      await usersCollection.updateOne(
-        { _id: new ObjectId(session.user.id) },
-        { 
-          $set: { 
-            subscriptionStatus: "canceled",
-            // Note: we're keeping subscriptionEnds as is, so they keep access until the end
-            canceledAt: new Date()
-          } 
-        }
-      );
-      
-      return NextResponse.json(
-        { 
-          message: "Subscription canceled successfully. You will have access until the end of your current billing period." 
-        },
-        { status: 200 }
-      );
     } finally {
       await client.close();
     }

@@ -47,10 +47,14 @@ export default function AccountPage() {
       }
 
       const data = await response.json();
-      setIsSubscribed(data.isSubscribed);
+      setIsSubscribed(data.subscriptionStatus === "active");
       setSubscriptionEnds(data.subscriptionEnds);
     } catch (error) {
       console.error("Error fetching subscription status:", error);
+      setMessage({
+        type: "error",
+        text: "Failed to load subscription details. Please refresh the page."
+      });
     } finally {
       setSubscriptionLoading(false);
     }
@@ -95,30 +99,38 @@ export default function AccountPage() {
   };
 
   const handleCancelSubscription = async () => {
+    // Add confirmation dialog
+    if (!confirm("Are you sure you want to cancel your subscription? You'll still have access until the billing period ends.")) {
+      return;
+    }
+    
     setUpdateLoading(true);
+    setMessage({ type: "", text: "" });
+    
     try {
-      // This would need to be implemented in your backend
       const response = await fetch("/api/cancel-subscription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to cancel subscription");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to cancel subscription");
       }
 
+      const data = await response.json();
       setMessage({
         type: "success",
-        text: "Your subscription has been cancelled. You will have access until the end of your current billing period.",
+        text: data.message
       });
 
-      // Refresh subscription status
+      // Refresh subscription status after cancellation
       await fetchSubscriptionStatus();
     } catch (error) {
       console.error("Error cancelling subscription:", error);
       setMessage({
         type: "error",
-        text: "Failed to cancel subscription. Please try again.",
+        text: error.message || "Failed to cancel subscription. Please try again."
       });
     } finally {
       setUpdateLoading(false);
