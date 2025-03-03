@@ -47,7 +47,7 @@ export default function AccountPage() {
       }
 
       const data = await response.json();
-      setIsSubscribed(data.subscriptionStatus === "active");
+      setIsSubscribed(data.isSubscribed);
       setSubscriptionEnds(data.subscriptionEnds);
     } catch (error) {
       console.error("Error fetching subscription status:", error);
@@ -211,6 +211,196 @@ export default function AccountPage() {
     );
   }
 
+  // Subscription Tab content rendering
+  const renderSubscriptionTab = () => {
+    return (
+      <div>
+        <h2 className="text-2xl font-bold mb-6">Subscription Details</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Subscription Status */}
+          <div className="bg-gray-900 rounded-lg p-6">
+            <h3 className="text-xl font-medium mb-4">Status</h3>
+
+            {subscriptionLoading ? (
+              <div className="flex justify-center my-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Plan</span>
+                  <span className="font-medium">4ex.ninja Access</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Status</span>
+                  <span
+                    className={`font-medium ${
+                      isSubscribed ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    {isSubscribed ? "Active" : "Inactive"}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Price</span>
+                  <span className="font-medium">$9.99/month</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Next billing date</span>
+                  <span className="font-medium">
+                    {formatDate(subscriptionEnds)}
+                  </span>
+                </div>
+
+                {subscriptionEnds && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Days remaining</span>
+                    <span className="font-medium">
+                      {getDaysRemaining(subscriptionEnds)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={handleRenewSubscription}
+                  disabled={updateLoading || subscriptionLoading}
+                  className="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-md flex-1 transition-colors disabled:opacity-50"
+                >
+                  {updateLoading ? "Processing..." : "Renew Subscription"}
+                </button>
+
+                <button
+                  onClick={handleCancelSubscription}
+                  disabled={
+                    updateLoading || subscriptionLoading || !isSubscribed
+                  }
+                  className="border border-red-500 text-red-500 hover:bg-red-500/10 py-2 px-4 rounded-md flex-1 transition-colors disabled:opacity-50"
+                >
+                  {updateLoading
+                    ? "Processing..."
+                    : "Cancel Subscription"}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Subscription Benefits */}
+          <div className="bg-gray-900 rounded-lg p-6">
+            <h3 className="text-xl font-medium mb-4">Your Benefits</h3>
+
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <svg
+                  className="w-5 h-5 text-green-500 mr-3 mt-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                <span>Real-time trading signals</span>
+              </li>
+              <li className="flex items-start">
+                <svg
+                  className="w-5 h-5 text-green-500 mr-3 mt-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                <span>Market analysis & insights</span>
+              </li>
+              <li className="flex items-start">
+                <svg
+                  className="w-5 h-5 text-green-500 mr-3 mt-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                <span>Strategy backtesting</span>
+              </li>
+              <li className="flex items-start">
+                <svg
+                  className="w-5 h-5 text-green-500 mr-3 mt-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                <span>Risk management tools</span>
+              </li>
+              <li className="flex items-start">
+                <svg
+                  className="w-5 h-5 text-green-500 mr-3 mt-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                <span>24/7 support</span>
+              </li>
+              <li className="flex items-start">
+                <svg
+                  className="w-5 h-5 text-green-500 mr-3 mt-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                <span>Trading community access</span>
+              </li>
+            </ul>
+
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <p className="text-gray-400 text-sm">
+                Need help with your subscription? Contact our support team
+                at{" "}
+                <a
+                  href="mailto:support@4ex.ninja"
+                  className="text-green-500"
+                >
+                  support@4ex.ninja
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Main content
   return (
     <div className="min-h-screen bg-black text-white py-12 px-4">
@@ -275,192 +465,7 @@ export default function AccountPage() {
         {/* Tab content */}
         <div className="bg-gray-800 rounded-xl p-6 md:p-8">
           {/* Subscription Tab */}
-          {activeTab === "subscription" && (
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Subscription Details</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Subscription Status */}
-                <div className="bg-gray-900 rounded-lg p-6">
-                  <h3 className="text-xl font-medium mb-4">Status</h3>
-
-                  {subscriptionLoading ? (
-                    <div className="flex justify-center my-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Plan</span>
-                        <span className="font-medium">4ex.ninja Access</span>
-                      </div>
-
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Status</span>
-                        <span
-                          className={`font-medium ${
-                            isSubscribed ? "text-green-500" : "text-red-500"
-                          }`}
-                        >
-                          {isSubscribed ? "Active" : "Inactive"}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Price</span>
-                        <span className="font-medium">$9.99/month</span>
-                      </div>
-
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Next billing date</span>
-                        <span className="font-medium">
-                          {formatDate(subscriptionEnds)}
-                        </span>
-                      </div>
-
-                      {subscriptionEnds && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">Days remaining</span>
-                          <span className="font-medium">
-                            {getDaysRemaining(subscriptionEnds)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="mt-6 pt-6 border-t border-gray-700">
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <button
-                        onClick={handleRenewSubscription}
-                        disabled={updateLoading || subscriptionLoading}
-                        className="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-md flex-1 transition-colors disabled:opacity-50"
-                      >
-                        {updateLoading ? "Processing..." : "Renew Subscription"}
-                      </button>
-
-                      <button
-                        onClick={handleCancelSubscription}
-                        disabled={
-                          updateLoading || subscriptionLoading || !isSubscribed
-                        }
-                        className="border border-red-500 text-red-500 hover:bg-red-500/10 py-2 px-4 rounded-md flex-1 transition-colors disabled:opacity-50"
-                      >
-                        {updateLoading
-                          ? "Processing..."
-                          : "Cancel Subscription"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Subscription Benefits */}
-                <div className="bg-gray-900 rounded-lg p-6">
-                  <h3 className="text-xl font-medium mb-4">Your Benefits</h3>
-
-                  <ul className="space-y-3">
-                    <li className="flex items-start">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-3 mt-1"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                      <span>Real-time trading signals</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-3 mt-1"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                      <span>Market analysis & insights</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-3 mt-1"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                      <span>Strategy backtesting</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-3 mt-1"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                      <span>Risk management tools</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-3 mt-1"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                      <span>24/7 support</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-3 mt-1"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                      <span>Trading community access</span>
-                    </li>
-                  </ul>
-
-                  <div className="mt-6 pt-6 border-t border-gray-700">
-                    <p className="text-gray-400 text-sm">
-                      Need help with your subscription? Contact our support team
-                      at{" "}
-                      <a
-                        href="mailto:support@4ex.ninja"
-                        className="text-green-500"
-                      >
-                        support@4ex.ninja
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          {activeTab === "subscription" && renderSubscriptionTab()}
 
           {/* Profile Tab */}
           {activeTab === "profile" && (

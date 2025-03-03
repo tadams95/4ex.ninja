@@ -35,13 +35,13 @@ export async function GET() {
         );
       }
 
-      // Check subscription status
-      const isSubscribed = user.subscriptionStatus === "active";
+      // Map isSubscribed boolean to a status string
+      const subscriptionStatus = user.isSubscribed ? "active" : "inactive";
       
       // Return subscription details
       return NextResponse.json({
-        isSubscribed,
-        subscriptionStatus: user.subscriptionStatus || "none",
+        isSubscribed: user.isSubscribed || false,
+        subscriptionStatus: subscriptionStatus,
         subscriptionId: user.subscriptionId || null,
         subscriptionEnds: user.subscriptionEnds || null,
         customerStripeId: user.customerStripeId || null
