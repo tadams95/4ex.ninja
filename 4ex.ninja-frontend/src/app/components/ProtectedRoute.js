@@ -19,7 +19,7 @@ export default function ProtectedRoute({ requireSubscription = true, children })
       fetch("/api/subscription-status")
         .then(res => res.json())
         .then(data => {
-          console.log("Subscription API response:", data);
+          // console.log("Subscription API response:", data);
           setSubscriptionStatus(data.isSubscribed);
         })
         .catch(err => {
@@ -61,15 +61,15 @@ export default function ProtectedRoute({ requireSubscription = true, children })
     
     // If either source confirms subscription, allow access
     if (sessionSubscribed || apiSubscribed) {
-      console.log("User is subscribed, allowing access", { 
-        sessionSubscribed, 
-        apiSubscribed 
-      });
+      // console.log("User is subscribed, allowing access", { 
+      //   sessionSubscribed, 
+      //   apiSubscribed 
+      // });
       setVerified(true);
     } 
     // Only redirect if we've completed API check and user is not subscribed
     else if (subscriptionStatus !== null) {
-      console.log("User not subscribed, redirecting to /pricing");
+      // console.log("User not subscribed, redirecting to /pricing");
       router.push("/pricing");
     }
     // Otherwise wait for API check to complete

@@ -6,27 +6,27 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import { useSession } from "next-auth/react";
 
 function SignalsPage() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   
-  // Debug subscription status at the top level
-  useEffect(() => {
-    if (session) {
-      console.log("Feed page - session:", {
-        email: session.user.email,
-        isSubscribed: session.user.isSubscribed
-      });
+  // // Debug subscription status at the top level
+  // useEffect(() => {
+  //   if (session) {
+  //     // console.log("Feed page - session:", {
+  //     //   email: session.user.email,
+  //     //   isSubscribed: session.user.isSubscribed
+  //     // });
       
-      // Also check subscription status directly for debugging
-      fetch("/api/subscription-status")
-        .then(res => res.json())
-        .then(data => {
-          console.log("Feed page - subscription status check:", data);
-        })
-        .catch(err => {
-          console.error("Error checking status:", err);
-        });
-    }
-  }, [session]);
+  //     // Also check subscription status directly for debugging
+  //     fetch("/api/subscription-status")
+  //       .then(res => res.json())
+  //       .then(data => {
+  //         console.log("Feed page - subscription status check:", data);
+  //       })
+  //       .catch(err => {
+  //         console.error("Error checking status:", err);
+  //       });
+  //   }
+  // }, [session]);
 
   const [crossovers, setCrossovers] = useState([]);
   const [loading, setLoading] = useState(true);
