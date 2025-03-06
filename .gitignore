@@ -13,3 +13,8 @@ MA_Strategy.ipynb
 sigcheck/
 *.sigcheck
 sigcheck
+crossovers/
+*.crossovers
+crossovers
+crossovertracker.py
+identifycrosses.ipynb

@@ -28,48 +28,46 @@ function SignalsPage() {
     }
   }, [session]);
 
-  const [signals, setSignals] = useState([]);
+  const [crossovers, setCrossovers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
 
-  // this is just a test
-
   useEffect(() => {
-    async function fetchSignals() {
+    async function fetchCrossovers() {
       try {
         setLoading(true);
         setError(null);
         setIsEmpty(false);
 
-        const response = await fetch("/api/signals");
+        const response = await fetch("/api/crossovers");
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to fetch signals");
+          throw new Error(errorData.error || "Failed to fetch crossovers");
         }
 
         const data = await response.json();
-        setSignals(data.signals || []);
+        setCrossovers(data.crossovers || []);
 
         // Check if API returned isEmpty flag
         if (data.isEmpty) {
           setIsEmpty(true);
         }
       } catch (err) {
-        console.error("Error fetching signals:", err);
+        console.error("Error fetching crossovers:", err);
         setError(
-          err.message || "Failed to load signals. Please try again later."
+          err.message || "Failed to load crossovers. Please try again later."
         );
       } finally {
         setLoading(false);
       }
     }
 
-    fetchSignals();
+    fetchCrossovers();
 
     // Optional: Set up polling to refresh signals periodically
-    const intervalId = setInterval(fetchSignals, 5 * 60 * 1000); // Every 5 minutes
+    const intervalId = setInterval(fetchCrossovers, 5 * 60 * 1000); // Every 5 minutes
 
     return () => clearInterval(intervalId);
   }, []);
@@ -119,9 +117,9 @@ function SignalsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl bg-black min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Latest Forex Signals</h1>
+      <h1 className="text-3xl font-bold mb-6">Latest MA Crossover Signals</h1>
 
-      {isEmpty || signals.length === 0 ? (
+      {isEmpty || crossovers.length === 0 ? (
         <div className="bg-gray-800 rounded-lg p-8 text-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -139,66 +137,57 @@ function SignalsPage() {
           </svg>
           <p className="text-xl font-medium mb-2">No signals available</p>
           <p className="text-gray-400">
-            Our trading system is currently watching the markets.
+            Our system is currently analyzing market movements.
             <br />
-            New signals will appear here when favorable conditions are
-            identified.
+            New MA crossover signals will appear here when they occur.
           </p>
           <p className="text-gray-500 mt-4 text-sm">
-            Signals are typically generated during active market hours.
+            Crossovers are monitored across multiple timeframes and pairs.
           </p>
         </div>
       ) : (
         <div className="space-y-4">
-          {signals.map((signal, index) => (
+          {crossovers.map((crossover, index) => (
             <motion.div
-              key={signal._id}
+              key={crossover._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
               className={`bg-gray-700 rounded-lg p-6 shadow-lg border-l-4 ${
-                signal.type === "BUY" ? "border-green-500" : "border-red-500"
+                crossover.crossoverType === "BULLISH" ? "border-green-500" : "border-red-500"
               }`}
             >
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">{signal.pair}</h2>
+                <h2 className="text-xl font-bold">{crossover.pair}</h2>
                 <span
                   className={`px-3 py-1 rounded-full text-sm ${
-                    signal.type === "BUY"
+                    crossover.crossoverType === "BULLISH"
                       ? "bg-green-500/20 text-green-500"
                       : "bg-red-500/20 text-red-400"
                   }`}
                 >
-                  {signal.type}
+                  {crossover.crossoverType}
                 </span>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <p className="text-gray-300">Timeframe:</p>
-                  <p className="font-medium">{signal.timeframe}</p>
+                  <p className="font-medium">{crossover.timeframe}</p>
                 </div>
                 <div className="flex justify-between">
-                  <p className="text-gray-300">Entry:</p>
-                  <p className="font-medium">{signal.entry}</p>
+                  <p className="text-gray-300">Price:</p>
+                  <p className="font-medium">{crossover.price}</p>
+                </div>
+                {/* <div className="flex justify-between">
+                  <p className="text-gray-300">Fast MA:</p>
+                  <p className="font-medium">{crossover.fastMA} SMA</p>
                 </div>
                 <div className="flex justify-between">
-                  <p className="text-gray-300">Stop Loss:</p>
-                  <p className="font-medium text-red-500">
-                    {signal.stopLoss} ({signal.slPips} pips)
-                  </p>
-                </div>
-                <div className="flex justify-between">
-                  <p className="text-gray-300">Take Profit:</p>
-                  <p className="font-medium text-green-500">
-                    {signal.takeProfit} ({signal.tpPips} pips)
-                  </p>
-                </div>
-                <div className="flex justify-between">
-                  <p className="text-gray-300">Risk/Reward:</p>
-                  <p className="font-medium">{signal.riskRewardRatio}</p>
-                </div>
+                  <p className="text-gray-300">Slow MA:</p>
+                  <p className="font-medium">{crossover.slowMA} SMA</p>
+                </div> */}
                 <p className="text-sm text-gray-400 mt-4">
-                  {new Date(signal.timestamp).toLocaleString()}
+                  {new Date(crossover.timestamp).toLocaleString()}
                 </p>
               </div>
             </motion.div>
