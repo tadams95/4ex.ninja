@@ -14,5 +14,5 @@ sigcheck/
 *.sigcheck
 sigcheck
 
-crossovertracker.py
+crossover_tracker.py
 identifycrosses.ipynb
