@@ -1,5 +1,5 @@
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
+  const currentYear: number = new Date().getFullYear();
 
   return (
     <footer className="bg-black border-t border-gray-800 p-6">
