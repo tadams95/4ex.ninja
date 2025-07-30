@@ -1,16 +1,16 @@
-"use client";
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
+'use client';
+import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
   const { data: session, status } = useSession();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
   // Check screen size on component mount and resize
   useEffect(() => {
-    const checkScreenSize = () => {
+    const checkScreenSize = (): void => {
       setIsMobile(window.innerWidth < 768);
     };
 
@@ -18,13 +18,13 @@ export default function Header() {
     checkScreenSize();
 
     // Add event listener
-    window.addEventListener("resize", checkScreenSize);
+    window.addEventListener('resize', checkScreenSize);
 
     // Clean up
-    return () => window.removeEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  const toggleMenu = () => {
+  const toggleMenu = (): void => {
     setIsMenuOpen(!isMenuOpen);
   };
 
@@ -43,33 +43,29 @@ export default function Header() {
         >
           <span
             className={`block w-6 h-0.5 bg-white mb-1.5 transition-all ${
-              isMenuOpen ? "rotate-45 translate-y-2" : ""
+              isMenuOpen ? 'rotate-45 translate-y-2' : ''
             }`}
           ></span>
           <span
             className={`block w-6 h-0.5 bg-white mb-1.5 transition-all ${
-              isMenuOpen ? "opacity-0" : "opacity-100"
+              isMenuOpen ? 'opacity-0' : 'opacity-100'
             }`}
           ></span>
           <span
             className={`block w-6 h-0.5 bg-white transition-all ${
-              isMenuOpen ? "-rotate-45 -translate-y-2" : ""
+              isMenuOpen ? '-rotate-45 -translate-y-2' : ''
             }`}
           ></span>
         </button>
 
         {/* Navigation - full size on desktop, expandable on mobile */}
-        <nav
-          className={`${
-            isMobile ? (isMenuOpen ? "block" : "hidden") : "block"
-          } md:block`}
-        >
+        <nav className={`${isMobile ? (isMenuOpen ? 'block' : 'hidden') : 'block'} md:block`}>
           <ul
             className={`
             ${
               isMobile
-                ? "flex flex-col absolute right-0 top-16 bg-black p-4 w-48 shadow-lg z-50"
-                : "flex space-x-4 items-center"
+                ? 'flex flex-col absolute right-0 top-16 bg-black p-4 w-48 shadow-lg z-50'
+                : 'flex space-x-4 items-center'
             } 
             md:flex md:items-center md:space-x-4 md:static md:shadow-none md:p-0 md:w-auto
           `}
@@ -80,27 +76,21 @@ export default function Header() {
               </Link>
             </li>
             <li className="py-2 md:py-0">
-              <Link
-                href="/about"
-                onClick={() => isMobile && setIsMenuOpen(false)}
-              >
+              <Link href="/about" onClick={() => isMobile && setIsMenuOpen(false)}>
                 About
               </Link>
             </li>
             {/* Only show feed link if authenticated */}
-            {status === "authenticated" && (
+            {status === 'authenticated' && (
               <li className="py-2 md:py-0">
-                <Link
-                  href="/feed"
-                  onClick={() => isMobile && setIsMenuOpen(false)}
-                >
+                <Link href="/feed" onClick={() => isMobile && setIsMenuOpen(false)}>
                   Signals
                 </Link>
               </li>
             )}
-            
+
             {/* Authentication links */}
-            {status === "authenticated" ? (
+            {status === 'authenticated' ? (
               <>
                 <li className="py-2 md:py-0">
                   <Link
