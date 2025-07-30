@@ -2,8 +2,11 @@
 
 import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { BaseComponentProps } from "@/types";
 
-export default function Providers({ children }) {
+interface ProvidersProps extends BaseComponentProps {}
+
+export default function Providers({ children }: ProvidersProps) {
   return (
     <SessionProvider>
       <AuthProvider>
