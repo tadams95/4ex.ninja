@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import ProtectedRoute from "../components/ProtectedRoute";
-import { useSession } from "next-auth/react";
+import { ApiResponse, Crossover } from '@/types';
+import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 function SignalsPage() {
   // const { data: session } = useSession();
-  
+
   // // Debug subscription status at the top level
   // useEffect(() => {
   //   if (session) {
@@ -15,7 +15,7 @@ function SignalsPage() {
   //     //   email: session.user.email,
   //     //   isSubscribed: session.user.isSubscribed
   //     // });
-      
+
   //     // Also check subscription status directly for debugging
   //     fetch("/api/subscription-status")
   //       .then(res => res.json())
@@ -28,26 +28,26 @@ function SignalsPage() {
   //   }
   // }, [session]);
 
-  const [crossovers, setCrossovers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isEmpty, setIsEmpty] = useState(false);
+  const [crossovers, setCrossovers] = useState<Crossover[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isEmpty, setIsEmpty] = useState<boolean>(false);
 
   useEffect(() => {
-    async function fetchCrossovers() {
+    async function fetchCrossovers(): Promise<void> {
       try {
         setLoading(true);
         setError(null);
         setIsEmpty(false);
 
-        const response = await fetch("/api/crossovers");
+        const response = await fetch('/api/crossovers');
 
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to fetch crossovers");
+          const errorData: ApiResponse = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch crossovers');
         }
 
-        const data = await response.json();
+        const data: ApiResponse<Crossover[]> = await response.json();
         setCrossovers(data.crossovers || []);
 
         // Check if API returned isEmpty flag
@@ -55,10 +55,10 @@ function SignalsPage() {
           setIsEmpty(true);
         }
       } catch (err) {
-        console.error("Error fetching crossovers:", err);
-        setError(
-          err.message || "Failed to load crossovers. Please try again later."
-        );
+        console.error('Error fetching crossovers:', err);
+        const errorMessage =
+          err instanceof Error ? err.message : 'Failed to load crossovers. Please try again later.';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -71,6 +71,10 @@ function SignalsPage() {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  const handleRetry = (): void => {
+    window.location.reload();
+  };
 
   if (loading) {
     return (
@@ -105,7 +109,7 @@ function SignalsPage() {
           <p className="font-medium mb-2">Error loading signals</p>
           <p className="text-sm">{error}</p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={handleRetry}
             className="mt-4 px-4 py-2 bg-red-500/30 text-red-300 rounded-md hover:bg-red-500/40 transition-colors"
           >
             Try Again
@@ -147,23 +151,23 @@ function SignalsPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {crossovers.map((crossover, index) => (
+          {crossovers.map((crossover: Crossover, index: number) => (
             <motion.div
               key={crossover._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
               className={`bg-gray-700 rounded-lg p-6 shadow-lg border-l-4 ${
-                crossover.crossoverType === "BULLISH" ? "border-green-500" : "border-red-500"
+                crossover.crossoverType === 'BULLISH' ? 'border-green-500' : 'border-red-500'
               }`}
             >
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">{crossover.pair}</h2>
                 <span
                   className={`px-3 py-1 rounded-full text-sm ${
-                    crossover.crossoverType === "BULLISH"
-                      ? "bg-green-500/20 text-green-500"
-                      : "bg-red-500/20 text-red-400"
+                    crossover.crossoverType === 'BULLISH'
+                      ? 'bg-green-500/20 text-green-500'
+                      : 'bg-red-500/20 text-red-400'
                   }`}
                 >
                   {crossover.crossoverType}
@@ -199,7 +203,7 @@ function SignalsPage() {
 }
 
 // Wrap the component with ProtectedRoute
-export default function ProtectedSignalsPage() {
+export default function ProtectedSignalsPage(): React.ReactElement {
   return (
     <ProtectedRoute requireSubscription={true}>
       <SignalsPage />
