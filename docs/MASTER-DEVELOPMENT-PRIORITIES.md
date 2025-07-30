@@ -23,7 +23,7 @@ This document provides a strategic, ordered approach to implementing all planned
   cd 4ex.ninja-frontend
   npm install -D typescript @types/react @types/node @types/react-dom
   ```
-- [ ] **Day 2-3**: Create core type definitions (`src/types/index.ts`)
+- [x] **Day 2-3**: Create core type definitions (`src/types/index.ts`)
   - User, Crossover, ApiResponse, NotificationSettings interfaces
 - [ ] **Day 4-5**: Convert critical components to TypeScript (Layout, Auth, Feed)
 - [ ] **Day 6-7**: Fix TypeScript errors and update import paths
