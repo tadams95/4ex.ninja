@@ -9,6 +9,14 @@ import json
 import logging
 from pathlib import Path
 
+# Optional YAML support
+try:
+    import yaml
+    YAML_AVAILABLE = True
+except ImportError:
+    yaml = None
+    YAML_AVAILABLE = False
+
 from .settings import Settings, AppConfig, DatabaseConfig, TradingConfig, OandaConfig
 from .environment import EnvironmentManager, Environment
 
@@ -164,14 +172,13 @@ class ConfigLoader:
         Returns:
             Configuration dictionary
         """
-        try:
-            import yaml
-
-            return yaml.safe_load(file_handle)
-        except ImportError:
+        if not YAML_AVAILABLE:
             raise ConfigurationError(
                 "PyYAML not installed - cannot load YAML configuration"
             )
+        
+        try:
+            return yaml.safe_load(file_handle)  # type: ignore
         except Exception as e:
             raise ConfigurationError(f"Failed to parse YAML configuration: {e}")
 
@@ -307,16 +314,13 @@ class ConfigLoader:
                 if format.lower() == "json":
                     json.dump(config_dict, f, indent=2, default=str)
                 elif format.lower() in ("yaml", "yml"):
-                    try:
-                        import yaml
-
-                        yaml.safe_dump(
-                            config_dict, f, indent=2, default_flow_style=False
-                        )
-                    except ImportError:
+                    if not YAML_AVAILABLE:
                         raise ConfigurationError(
                             "PyYAML not installed - cannot export YAML"
                         )
+                    yaml.safe_dump(  # type: ignore
+                        config_dict, f, indent=2, default_flow_style=False
+                    )
                 else:
                     raise ConfigurationError(f"Unsupported export format: {format}")
 
