@@ -12,6 +12,7 @@ from pathlib import Path
 # Optional YAML support
 try:
     import yaml
+
     YAML_AVAILABLE = True
 except ImportError:
     yaml = None
@@ -176,7 +177,7 @@ class ConfigLoader:
             raise ConfigurationError(
                 "PyYAML not installed - cannot load YAML configuration"
             )
-        
+
         try:
             return yaml.safe_load(file_handle)  # type: ignore
         except Exception as e:
