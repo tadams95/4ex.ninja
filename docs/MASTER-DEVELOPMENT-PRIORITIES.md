@@ -46,7 +46,7 @@ This document provides a strategic, ordered approach to implementing all planned
   mkdir -p src/{core,infrastructure,application,api}
   mkdir -p src/core/{entities,interfaces,use_cases}
   ```
-- [ ] **Day 2-3**: Create core entities (Signal, MarketData, Strategy)
+- [x] **Day 2-3**: Create core entities (Signal, MarketData, Strategy)
 - [ ] **Day 4-5**: Implement repository interfaces and dependency injection
 - [ ] **Day 6-7**: Create FastAPI application structure with health endpoints
 
