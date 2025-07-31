@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { SubscribeButtonErrorBoundary } from '@/components/error';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-export default function SubscribeButton() {
+function SubscribeButtonComponent() {
   const [loading, setLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [checkingStatus, setCheckingStatus] = useState(true);
@@ -39,7 +40,7 @@ export default function SubscribeButton() {
 
   const handleButtonClick = () => {
     setLoading(true);
-    
+
     if (!session) {
       // Not logged in - go to login
       router.push('/login');
@@ -54,11 +55,11 @@ export default function SubscribeButton() {
 
   // Decide button text based on auth and subscription status
   const getButtonText = () => {
-    if (loading) return "Loading...";
-    if (status === 'loading' || checkingStatus) return "Loading...";
-    if (!session) return "Sign In";
-    if (isSubscribed) return "Go to Feed";
-    return "Start 1-Month Free Trial";
+    if (loading) return 'Loading...';
+    if (status === 'loading' || checkingStatus) return 'Loading...';
+    if (!session) return 'Sign In';
+    if (isSubscribed) return 'Go to Feed';
+    return 'Start 1-Month Free Trial';
   };
 
   return (
@@ -69,5 +70,13 @@ export default function SubscribeButton() {
     >
       {getButtonText()}
     </button>
+  );
+}
+
+export default function SubscribeButton() {
+  return (
+    <SubscribeButtonErrorBoundary>
+      <SubscribeButtonComponent />
+    </SubscribeButtonErrorBoundary>
   );
 }

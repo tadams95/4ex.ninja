@@ -1,9 +1,10 @@
 'use client';
+import { HeaderErrorBoundary } from '@/components/error';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-export default function Header() {
+function HeaderComponent() {
   const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -130,5 +131,13 @@ export default function Header() {
         </nav>
       </div>
     </header>
+  );
+}
+
+export default function Header() {
+  return (
+    <HeaderErrorBoundary>
+      <HeaderComponent />
+    </HeaderErrorBoundary>
   );
 }

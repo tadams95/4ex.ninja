@@ -1,5 +1,6 @@
 'use client';
 
+import { ProtectedRouteErrorBoundary } from '@/components/error';
 import { BaseComponentProps, User } from '@/types';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -13,10 +14,7 @@ interface SubscriptionResponse {
   isSubscribed: boolean;
 }
 
-export default function ProtectedRoute({
-  requireSubscription = true,
-  children,
-}: ProtectedRouteProps) {
+function ProtectedRouteComponent({ requireSubscription = true, children }: ProtectedRouteProps) {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [verified, setVerified] = useState<boolean>(false);
@@ -103,4 +101,12 @@ export default function ProtectedRoute({
 
   // We've verified all requirements, render the protected content
   return children;
+}
+
+export default function ProtectedRoute(props: ProtectedRouteProps) {
+  return (
+    <ProtectedRouteErrorBoundary>
+      <ProtectedRouteComponent {...props} />
+    </ProtectedRouteErrorBoundary>
+  );
 }

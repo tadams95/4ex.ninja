@@ -10,5 +10,8 @@ export { default as AuthErrorBoundary } from './AuthErrorBoundary';
 export { default as FeedErrorBoundary } from './FeedErrorBoundary';
 export { default as PricingErrorBoundary } from './PricingErrorBoundary';
 
-// Re-export types for convenience
-export type { default as GlobalErrorBoundaryProps } from './GlobalErrorBoundary';
+// Component-specific Error Boundaries
+export { default as AuthProviderErrorBoundary } from './AuthProviderErrorBoundary';
+export { default as HeaderErrorBoundary } from './HeaderErrorBoundary';
+export { default as ProtectedRouteErrorBoundary } from './ProtectedRouteErrorBoundary';
+export { default as SubscribeButtonErrorBoundary } from './SubscribeButtonErrorBoundary';
