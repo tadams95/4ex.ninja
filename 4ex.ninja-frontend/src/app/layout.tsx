@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { Exo } from 'next/font/google';
+import { ChunkLoadErrorBoundary, GlobalErrorBoundary } from '../components/error';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Providers from './components/Providers';
@@ -23,13 +24,17 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className={exo.className}>
-        <Providers>
-          <div className="flex flex-col min-h-screen bg-black">
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </div>
-        </Providers>
+        <GlobalErrorBoundary>
+          <ChunkLoadErrorBoundary>
+            <Providers>
+              <div className="flex flex-col min-h-screen bg-black">
+                <Header />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+              </div>
+            </Providers>
+          </ChunkLoadErrorBoundary>
+        </GlobalErrorBoundary>
       </body>
     </html>
   );

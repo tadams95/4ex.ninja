@@ -64,11 +64,11 @@ This document provides a strategic, ordered approach to implementing all planned
 #### 1.3 Error Handling & Monitoring Setup
 
 ##### 1.3.1 Frontend Error Boundaries & Fallback Components
-- [ ] **Day 1**: Create core error boundary infrastructure
-  - **1.3.1.1**: Create `GlobalErrorBoundary` component for application-level errors (`src/components/error/GlobalErrorBoundary.tsx`)
-  - **1.3.1.2**: Create `PageErrorFallback` component for page-level error recovery (`src/components/error/PageErrorFallback.tsx`)
-  - **1.3.1.3**: Create `ApiErrorFallback` component for API call failures (`src/components/error/ApiErrorFallback.tsx`)
-  - **1.3.1.4**: Create `ChunkLoadErrorBoundary` for JavaScript chunk loading failures (`src/components/error/ChunkLoadErrorBoundary.tsx`)
+- [x] **Day 1**: Create core error boundary infrastructure
+  - [x] **1.3.1.1**: Create `GlobalErrorBoundary` component for application-level errors (`src/components/error/GlobalErrorBoundary.tsx`)
+  - [x] **1.3.1.2**: Create `PageErrorFallback` component for page-level error recovery (`src/components/error/PageErrorFallback.tsx`)
+  - [x] **1.3.1.3**: Create `ApiErrorFallback` component for API call failures (`src/components/error/ApiErrorFallback.tsx`)
+  - [x] **1.3.1.4**: Create `ChunkLoadErrorBoundary` for JavaScript chunk loading failures (`src/components/error/ChunkLoadErrorBoundary.tsx`)
 
 - [ ] **Day 2**: Implement critical route error boundaries
   - **1.3.2.1**: Wrap Feed page (`/feed`) with error boundary for signal loading failures
@@ -89,10 +89,10 @@ This document provides a strategic, ordered approach to implementing all planned
   - **1.3.4.4**: Implement error logging service for client-side error tracking
 
 - [ ] **Day 5**: Add error boundaries to root layout
-  - **1.3.5.1**: Integrate `GlobalErrorBoundary` in root layout (`src/app/layout.tsx`)
-  - **1.3.5.2**: Add error boundary to `Providers` component for provider initialization failures
-  - **1.3.5.3**: Add error monitoring for hydration mismatches and SSR failures
-  - **1.3.5.4**: Create error notification system for user-facing error messages
+  - [x] **1.3.5.1**: Integrate `GlobalErrorBoundary` in root layout (`src/app/layout.tsx`)
+  - [ ] **1.3.5.2**: Add error boundary to `Providers` component for provider initialization failures
+  - [ ] **1.3.5.3**: Add error monitoring for hydration mismatches and SSR failures
+  - [ ] **1.3.5.4**: Create error notification system for user-facing error messages
 
 ##### 1.3.6 Backend Error Handling & Monitoring Infrastructure
 - [ ] **Day 6**: Centralized logging configuration and structured logging setup
