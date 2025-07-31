@@ -508,3 +508,25 @@ if FASTAPI_AVAILABLE:
 
         # Replace default route class with structured logging route
         app.router.route_class = StructuredLoggingRoute
+
+else:
+    # Provide placeholder functions when FastAPI is not available
+    def setup_middleware(*args, **kwargs):
+        """Placeholder function when FastAPI is not available."""
+        raise ImportError("FastAPI is not installed. Cannot setup middleware.")
+
+    class LoggingMiddleware:
+        """Placeholder class when FastAPI is not available."""
+
+        def __init__(self, *args, **kwargs):
+            raise ImportError(
+                "FastAPI is not installed. Cannot create LoggingMiddleware."
+            )
+
+    class StructuredLoggingRoute:
+        """Placeholder class when FastAPI is not available."""
+
+        def __init__(self, *args, **kwargs):
+            raise ImportError(
+                "FastAPI is not installed. Cannot create StructuredLoggingRoute."
+            )

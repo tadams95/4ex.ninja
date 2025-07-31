@@ -36,3 +36,16 @@ ValueError: This is a test error
 2025-07-31T01:01:28.907471 [32m[INFO][0m api.test:171 log_with_context() - Context test endpoint | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro | correlation_id=c98cabbd-9125-404a-83c4-516cc0abc813 | context_test=True | correlation_verified=True
 2025-07-31T01:01:28.908073 [32m[INFO][0m api.middleware:364 _log_response() - Response: 200 for GET /test/context | taskName=Task-5 | correlation_id=c98cabbd-9125-404a-83c4-516cc0abc813 | method=GET | path=/test/context | status_code=200 | duration=0.002 | response_size=131 | content_type=application/json | user_id=None
 2025-07-31T01:01:28.908177 [32m[INFO][0m performance:408 _log_performance() - Request performance: GET /test/context | taskName=Task-5 | correlation_id=c98cabbd-9125-404a-83c4-516cc0abc813 | method=GET | path=/test/context | status_code=200 | duration=0.002 | cpu_time=0.002 | memory_delta=3.59 | user_id=None
+2025-07-31T01:15:36.487262 [32m[INFO][0m test:1 <module>() - ✅ Consolidated logging infrastructure working! | taskName=None
+2025-07-31T01:15:44.411049 [32m[INFO][0m test:1 <module>() - ✅ Infrastructure imports working! | taskName=None
+2025-07-31T01:16:15.492606 [32m[INFO][0m test.basic:36 test_basic_logging() - Basic logging test successful | taskName=None
+2025-07-31T01:16:15.495216 [33m[WARNING][0m test.basic:37 test_basic_logging() - This is a warning message | taskName=None
+2025-07-31T01:16:15.495271 [31m[ERROR][0m test.basic:38 test_basic_logging() - This is an error message | taskName=None
+2025-07-31T01:16:15.495932 [32m[INFO][0m test.context:173 log_with_context() - Context logging test | taskName=None | correlation_id=4ed51c8f-7063-4241-817e-4466cad96217 | user_id=test_user_123 | operation=test_operation | additional_data=some_value
+2025-07-31T01:16:15.601086 [33m[WARNING][0m performance:128 log_performance() - Slow operation: slow_operation took 0.105s | taskName=None | operation=slow_operation | duration=0.105 | correlation_id=4ed51c8f-7063-4241-817e-4466cad96217 | operation_type=simulation | data_processed=100
+2025-07-31T01:16:15.601322 [31m[ERROR][0m test.errors:104 log_error() - Error in failing_operation: This is a test error | taskName=None | operation=failing_operation | error=This is a test error | error_type=ValueError | correlation_id=4ed51c8f-7063-4241-817e-4466cad96217 | user_id=test_user_123 | operation_id=test_123 | input_data=invalid_input
+Traceback (most recent call last):
+  File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/test_logging_day6.py", line 109, in failing_operation
+    raise ValueError("This is a test error")
+ValueError: This is a test error
+2025-07-31T01:17:09.658252 [32m[INFO][0m consolidation.test:10 <module>() - Consolidation completed successfully! | taskName=None
