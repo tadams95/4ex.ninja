@@ -48,6 +48,17 @@ This document provides a strategic, ordered approach to implementing all planned
   ```
 - [x] **Day 2-3**: Create core entities (Signal, MarketData, Strategy)
 - [ ] **Day 4-5**: Implement repository interfaces and dependency injection
+  - **Day 4 Subtasks:**
+    - [x] **4.1**: Create base repository interface (`src/core/interfaces/repository.py`)
+    - [x] **4.2**: Create entity-specific repository interfaces (ISignalRepository, IMarketDataRepository, IStrategyRepository)
+    - [x] **4.3**: Create unit of work interface for transaction management (`src/core/interfaces/unit_of_work.py`)
+    - [x] **4.4**: Create dependency injection container interface (`src/core/interfaces/container.py`)
+  - **Day 5 Subtasks:**
+    - [ ] **5.1**: Implement MongoDB repository implementations (`src/infrastructure/repositories/`)
+    - [ ] **5.2**: Create dependency injection container with service registration (`src/infrastructure/container/`)
+    - [ ] **5.3**: Create repository factory for dynamic repository creation
+    - [ ] **5.4**: Add configuration management for database connections
+    - [ ] **5.5**: Create service layer interfaces for business logic orchestration
 - [ ] **Day 6-7**: Create FastAPI application structure with health endpoints
 
 #### 1.3 Error Handling & Monitoring Setup
