@@ -19,3 +19,8 @@ export { default as SubscribeButtonErrorBoundary } from './SubscribeButtonErrorB
 // API Error Handling Components (Day 4)
 export { default as OfflineErrorFallback } from './OfflineErrorFallback';
 export { default as RetryableError } from './RetryableError';
+
+// Root Layout Error Boundaries (Day 5)
+export { ErrorNotificationProvider, useErrorNotification } from './ErrorNotificationSystem';
+export { default as HydrationErrorBoundary } from './HydrationErrorBoundary';
+export { default as ProvidersErrorBoundary } from './ProvidersErrorBoundary';
