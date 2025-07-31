@@ -1,0 +1,105 @@
+=== ERROR at 2025-07-31T00:39:29.641649 ===
+Logger: test.basic
+Module: test_logging
+Function: test_basic_logging() at line 38
+Thread: MainThread (8538119936)
+Process: MainProcess (35511)
+Message: This is an error message
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T00:39:29.747113 ===
+Logger: test.errors
+Module: middleware
+Function: log_error() at line 146
+Thread: MainThread (8538119936)
+Process: MainProcess (35511)
+Message: Error in failing_operation: This is a test error
+Context:
+  taskName: None
+  operation: failing_operation
+  error: This is a test error
+  error_type: ValueError
+  correlation_id: c0821f20-623d-4590-a440-fbf7d2e09c8e
+  user_id: test_user_123
+  operation_id: test_123
+  input_data: invalid_input
+Exception Details:
+  Type: ValueError
+  Message: This is a test error
+  Traceback:
+    Traceback (most recent call last):
+      File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja/test_logging.py", line 108, in failing_operation
+    raise ValueError("This is a test error")
+    ValueError: This is a test error
+==================================================
+=== ERROR at 2025-07-31T00:40:58.779713 ===
+Logger: test.basic
+Module: test_logging
+Function: test_basic_logging() at line 38
+Thread: MainThread (8538119936)
+Process: MainProcess (35745)
+Message: This is an error message
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T00:40:58.885613 ===
+Logger: test.errors
+Module: middleware
+Function: log_error() at line 146
+Thread: MainThread (8538119936)
+Process: MainProcess (35745)
+Message: Error in failing_operation: This is a test error
+Context:
+  taskName: None
+  operation: failing_operation
+  error: This is a test error
+  error_type: ValueError
+  correlation_id: 2ef994a7-d2c5-40f3-b40e-1e6438d244bd
+  user_id: test_user_123
+  operation_id: test_123
+  input_data: invalid_input
+Exception Details:
+  Type: ValueError
+  Message: This is a test error
+  Traceback:
+    Traceback (most recent call last):
+      File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja/test_logging.py", line 108, in failing_operation
+    raise ValueError("This is a test error")
+    ValueError: This is a test error
+==================================================
+=== ERROR at 2025-07-31T00:46:30.153963 ===
+Logger: test.basic
+Module: test_logging
+Function: test_basic_logging() at line 38
+Thread: MainThread (8538119936)
+Process: MainProcess (38114)
+Message: This is an error message
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T00:46:30.258959 ===
+Logger: test.errors
+Module: middleware
+Function: log_error() at line 98
+Thread: MainThread (8538119936)
+Process: MainProcess (38114)
+Message: Error in failing_operation: This is a test error
+Context:
+  taskName: None
+  operation: failing_operation
+  error: This is a test error
+  error_type: ValueError
+  correlation_id: 0cc15beb-74ef-4af3-ae2b-d364f99c3f91
+  user_id: test_user_123
+  operation_id: test_123
+  input_data: invalid_input
+Exception Details:
+  Type: ValueError
+  Message: This is a test error
+  Traceback:
+    Traceback (most recent call last):
+      File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja/test_logging.py", line 108, in failing_operation
+    raise ValueError("This is a test error")
+    ValueError: This is a test error
+==================================================

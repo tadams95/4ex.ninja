@@ -1,0 +1,38 @@
+2025-07-31T00:39:29.641492 [32m[INFO][0m test.basic:36 test_basic_logging() - Basic logging test successful | taskName=None
+2025-07-31T00:39:29.641607 [33m[WARNING][0m test.basic:37 test_basic_logging() - This is a warning message | taskName=None
+2025-07-31T00:39:29.641649 [31m[ERROR][0m test.basic:38 test_basic_logging() - This is an error message | taskName=None
+2025-07-31T00:39:29.641736 [32m[INFO][0m test.context:219 log_with_context() - Context logging test | taskName=None | correlation_id=c0821f20-623d-4590-a440-fbf7d2e09c8e | user_id=test_user_123 | operation=test_operation | additional_data=some_value
+2025-07-31T00:39:29.746924 [33m[WARNING][0m performance:172 log_performance() - Slow operation: slow_operation took 0.105s | taskName=None | operation=slow_operation | duration=0.105 | correlation_id=c0821f20-623d-4590-a440-fbf7d2e09c8e | operation_type=simulation | data_processed=100
+2025-07-31T00:39:29.747113 [31m[ERROR][0m test.errors:146 log_error() - Error in failing_operation: This is a test error | taskName=None | operation=failing_operation | error=This is a test error | error_type=ValueError | correlation_id=c0821f20-623d-4590-a440-fbf7d2e09c8e | user_id=test_user_123 | operation_id=test_123 | input_data=invalid_input
+Traceback (most recent call last):
+  File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja/test_logging.py", line 108, in failing_operation
+    raise ValueError("This is a test error")
+ValueError: This is a test error
+2025-07-31T00:40:58.778977 [32m[INFO][0m test.basic:36 test_basic_logging() - Basic logging test successful | taskName=None
+2025-07-31T00:40:58.779657 [33m[WARNING][0m test.basic:37 test_basic_logging() - This is a warning message | taskName=None
+2025-07-31T00:40:58.779713 [31m[ERROR][0m test.basic:38 test_basic_logging() - This is an error message | taskName=None
+2025-07-31T00:40:58.780254 [32m[INFO][0m test.context:219 log_with_context() - Context logging test | taskName=None | correlation_id=2ef994a7-d2c5-40f3-b40e-1e6438d244bd | user_id=test_user_123 | operation=test_operation | additional_data=some_value
+2025-07-31T00:40:58.885390 [33m[WARNING][0m performance:172 log_performance() - Slow operation: slow_operation took 0.105s | taskName=None | operation=slow_operation | duration=0.105 | correlation_id=2ef994a7-d2c5-40f3-b40e-1e6438d244bd | operation_type=simulation | data_processed=100
+2025-07-31T00:40:58.885613 [31m[ERROR][0m test.errors:146 log_error() - Error in failing_operation: This is a test error | taskName=None | operation=failing_operation | error=This is a test error | error_type=ValueError | correlation_id=2ef994a7-d2c5-40f3-b40e-1e6438d244bd | user_id=test_user_123 | operation_id=test_123 | input_data=invalid_input
+Traceback (most recent call last):
+  File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja/test_logging.py", line 108, in failing_operation
+    raise ValueError("This is a test error")
+ValueError: This is a test error
+2025-07-31T00:46:30.153430 [32m[INFO][0m test.basic:36 test_basic_logging() - Basic logging test successful | taskName=None
+2025-07-31T00:46:30.153919 [33m[WARNING][0m test.basic:37 test_basic_logging() - This is a warning message | taskName=None
+2025-07-31T00:46:30.153963 [31m[ERROR][0m test.basic:38 test_basic_logging() - This is an error message | taskName=None
+2025-07-31T00:46:30.154229 [32m[INFO][0m test.context:171 log_with_context() - Context logging test | taskName=None | correlation_id=0cc15beb-74ef-4af3-ae2b-d364f99c3f91 | user_id=test_user_123 | operation=test_operation | additional_data=some_value
+2025-07-31T00:46:30.258740 [33m[WARNING][0m performance:124 log_performance() - Slow operation: slow_operation took 0.104s | taskName=None | operation=slow_operation | duration=0.104 | correlation_id=0cc15beb-74ef-4af3-ae2b-d364f99c3f91 | operation_type=simulation | data_processed=100
+2025-07-31T00:46:30.258959 [31m[ERROR][0m test.errors:98 log_error() - Error in failing_operation: This is a test error | taskName=None | operation=failing_operation | error=This is a test error | error_type=ValueError | correlation_id=0cc15beb-74ef-4af3-ae2b-d364f99c3f91 | user_id=test_user_123 | operation_id=test_123 | input_data=invalid_input
+Traceback (most recent call last):
+  File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja/test_logging.py", line 108, in failing_operation
+    raise ValueError("This is a test error")
+ValueError: This is a test error
+2025-07-31T00:56:24.630430 [32m[INFO][0m api.middleware:331 _log_request() - Request: GET / | taskName=Task-3 | correlation_id=590df8b5-e1fe-4d32-a6b9-27afbd53816a | method=GET | path=/ | query_params={} | headers={'host': '127.0.0.1:8000', 'user-agent': 'curl/8.7.1', 'accept': '*/*'} | client_ip=127.0.0.1 | user_agent=curl/8.7.1 | content_type=None | body_size=0 | user_id=None
+2025-07-31T00:56:24.631281 [32m[INFO][0m api.test:171 log_with_context() - Root endpoint accessed | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro | correlation_id=590df8b5-e1fe-4d32-a6b9-27afbd53816a | endpoint=/ | user_action=browse
+2025-07-31T00:56:24.631638 [32m[INFO][0m api.middleware:364 _log_response() - Response: 200 for GET / | taskName=Task-3 | correlation_id=590df8b5-e1fe-4d32-a6b9-27afbd53816a | method=GET | path=/ | status_code=200 | duration=0.001 | response_size=119 | content_type=application/json | user_id=None
+2025-07-31T00:56:24.631709 [32m[INFO][0m performance:408 _log_performance() - Request performance: GET / | taskName=Task-3 | correlation_id=590df8b5-e1fe-4d32-a6b9-27afbd53816a | method=GET | path=/ | status_code=200 | duration=0.001 | cpu_time=0.001 | memory_delta=0.22 | user_id=None
+2025-07-31T01:01:28.906061 [32m[INFO][0m api.middleware:331 _log_request() - Request: GET /test/context | taskName=Task-5 | correlation_id=c98cabbd-9125-404a-83c4-516cc0abc813 | method=GET | path=/test/context | query_params={} | headers={'host': '127.0.0.1:8000', 'user-agent': 'curl/8.7.1', 'accept': '*/*'} | client_ip=127.0.0.1 | user_agent=curl/8.7.1 | content_type=None | body_size=0 | user_id=None
+2025-07-31T01:01:28.907471 [32m[INFO][0m api.test:171 log_with_context() - Context test endpoint | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro | correlation_id=c98cabbd-9125-404a-83c4-516cc0abc813 | context_test=True | correlation_verified=True
+2025-07-31T01:01:28.908073 [32m[INFO][0m api.middleware:364 _log_response() - Response: 200 for GET /test/context | taskName=Task-5 | correlation_id=c98cabbd-9125-404a-83c4-516cc0abc813 | method=GET | path=/test/context | status_code=200 | duration=0.002 | response_size=131 | content_type=application/json | user_id=None
+2025-07-31T01:01:28.908177 [32m[INFO][0m performance:408 _log_performance() - Request performance: GET /test/context | taskName=Task-5 | correlation_id=c98cabbd-9125-404a-83c4-516cc0abc813 | method=GET | path=/test/context | status_code=200 | duration=0.002 | cpu_time=0.002 | memory_delta=3.59 | user_id=None
