@@ -1,37 +1,38 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
-import { useAuth } from "@/contexts/AuthContext";
-import { handleCheckout } from "@/utils/checkout-helpers";
-import { motion } from "framer-motion";
+import { AccountErrorBoundary } from '@/components/error';
+import { useAuth } from '@/contexts/AuthContext';
+import { handleCheckout } from '@/utils/checkout-helpers';
+import { motion } from 'framer-motion';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-export default function AccountPage() {
+function AccountPageComponent() {
   const { user, isAuthenticated, loading } = useAuth();
-  const [activeTab, setActiveTab] = useState("subscription");
+  const [activeTab, setActiveTab] = useState('subscription');
   const [updateLoading, setUpdateLoading] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "" });
+  const [message, setMessage] = useState({ type: '', text: '' });
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscriptionEnds, setSubscriptionEnds] = useState(null);
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);
   const router = useRouter();
 
   // Form states for profile update
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push("/login?callbackUrl=/account");
+      router.push('/login?callbackUrl=/account');
     }
 
     if (user) {
-      setName(user.name || "");
-      setEmail(user.email || "");
+      setName(user.name || '');
+      setEmail(user.email || '');
       fetchSubscriptionStatus();
     }
   }, [loading, isAuthenticated, router, user]);
@@ -40,20 +41,20 @@ export default function AccountPage() {
   const fetchSubscriptionStatus = async () => {
     setSubscriptionLoading(true);
     try {
-      const response = await fetch("/api/subscription-status");
+      const response = await fetch('/api/subscription-status');
 
       if (!response.ok) {
-        throw new Error("Failed to fetch subscription status");
+        throw new Error('Failed to fetch subscription status');
       }
 
       const data = await response.json();
       setIsSubscribed(data.isSubscribed);
       setSubscriptionEnds(data.subscriptionEnds);
     } catch (error) {
-      console.error("Error fetching subscription status:", error);
+      console.error('Error fetching subscription status:', error);
       setMessage({
-        type: "error",
-        text: "Failed to load subscription details. Please refresh the page."
+        type: 'error',
+        text: 'Failed to load subscription details. Please refresh the page.',
       });
     } finally {
       setSubscriptionLoading(false);
@@ -61,18 +62,18 @@ export default function AccountPage() {
   };
 
   // Format date for display
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
+  const formatDate = dateString => {
+    if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     }).format(date);
   };
 
   // Calculate days remaining in subscription
-  const getDaysRemaining = (endDate) => {
+  const getDaysRemaining = endDate => {
     if (!endDate) return 0;
 
     const end = new Date(endDate);
@@ -88,10 +89,10 @@ export default function AccountPage() {
     try {
       await handleCheckout();
     } catch (error) {
-      console.error("Error renewing subscription:", error);
+      console.error('Error renewing subscription:', error);
       setMessage({
-        type: "error",
-        text: "Failed to process subscription renewal.",
+        type: 'error',
+        text: 'Failed to process subscription renewal.',
       });
     } finally {
       setUpdateLoading(false);
@@ -100,70 +101,74 @@ export default function AccountPage() {
 
   const handleCancelSubscription = async () => {
     // Add confirmation dialog
-    if (!confirm("Are you sure you want to cancel your subscription? You'll still have access until the billing period ends.")) {
+    if (
+      !confirm(
+        "Are you sure you want to cancel your subscription? You'll still have access until the billing period ends."
+      )
+    ) {
       return;
     }
-    
+
     setUpdateLoading(true);
-    setMessage({ type: "", text: "" });
-    
+    setMessage({ type: '', text: '' });
+
     try {
-      const response = await fetch("/api/cancel-subscription", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/cancel-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to cancel subscription");
+        throw new Error(errorData.error || 'Failed to cancel subscription');
       }
 
       const data = await response.json();
       setMessage({
-        type: "success",
-        text: data.message
+        type: 'success',
+        text: data.message,
       });
 
       // Refresh subscription status after cancellation
       await fetchSubscriptionStatus();
     } catch (error) {
-      console.error("Error cancelling subscription:", error);
+      console.error('Error cancelling subscription:', error);
       setMessage({
-        type: "error",
-        text: error.message || "Failed to cancel subscription. Please try again."
+        type: 'error',
+        text: error.message || 'Failed to cancel subscription. Please try again.',
       });
     } finally {
       setUpdateLoading(false);
     }
   };
 
-  const handleUpdateProfile = async (e) => {
+  const handleUpdateProfile = async e => {
     e.preventDefault();
     setUpdateLoading(true);
-    setMessage({ type: "", text: "" });
+    setMessage({ type: '', text: '' });
 
     try {
       // Validate passwords if attempting to change
       if (newPassword) {
         if (newPassword !== confirmNewPassword) {
-          setMessage({ type: "error", text: "New passwords do not match." });
+          setMessage({ type: 'error', text: 'New passwords do not match.' });
           setUpdateLoading(false);
           return;
         }
 
         if (newPassword.length < 6) {
           setMessage({
-            type: "error",
-            text: "New password must be at least 6 characters.",
+            type: 'error',
+            text: 'New password must be at least 6 characters.',
           });
           setUpdateLoading(false);
           return;
         }
       }
 
-      const response = await fetch("/api/update-profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/update-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name,
           email,
@@ -175,27 +180,27 @@ export default function AccountPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to update profile");
+        throw new Error(data.error || 'Failed to update profile');
       }
 
-      setMessage({ type: "success", text: "Profile updated successfully!" });
+      setMessage({ type: 'success', text: 'Profile updated successfully!' });
 
       // Clear password fields
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmNewPassword("");
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
 
       // If email was changed, need to sign out and back in
       if (email !== user.email) {
         setTimeout(() => {
-          signOut({ callbackUrl: "/login" });
+          signOut({ callbackUrl: '/login' });
         }, 2000);
       }
     } catch (error) {
-      console.error("Error updating profile:", error);
+      console.error('Error updating profile:', error);
       setMessage({
-        type: "error",
-        text: error.message || "Failed to update profile. Please try again.",
+        type: 'error',
+        text: error.message || 'Failed to update profile. Please try again.',
       });
     } finally {
       setUpdateLoading(false);
@@ -236,11 +241,9 @@ export default function AccountPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-400">Status</span>
                   <span
-                    className={`font-medium ${
-                      isSubscribed ? "text-green-500" : "text-red-500"
-                    }`}
+                    className={`font-medium ${isSubscribed ? 'text-green-500' : 'text-red-500'}`}
                   >
-                    {isSubscribed ? "Active" : "Inactive"}
+                    {isSubscribed ? 'Active' : 'Inactive'}
                   </span>
                 </div>
 
@@ -251,17 +254,13 @@ export default function AccountPage() {
 
                 <div className="flex justify-between">
                   <span className="text-gray-400">Next billing date</span>
-                  <span className="font-medium">
-                    {formatDate(subscriptionEnds)}
-                  </span>
+                  <span className="font-medium">{formatDate(subscriptionEnds)}</span>
                 </div>
 
                 {subscriptionEnds && (
                   <div className="flex justify-between">
                     <span className="text-gray-400">Days remaining</span>
-                    <span className="font-medium">
-                      {getDaysRemaining(subscriptionEnds)}
-                    </span>
+                    <span className="font-medium">{getDaysRemaining(subscriptionEnds)}</span>
                   </div>
                 )}
               </div>
@@ -274,19 +273,15 @@ export default function AccountPage() {
                   disabled={updateLoading || subscriptionLoading}
                   className="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-md flex-1 transition-colors disabled:opacity-50"
                 >
-                  {updateLoading ? "Processing..." : "Renew Subscription"}
+                  {updateLoading ? 'Processing...' : 'Renew Subscription'}
                 </button>
 
                 <button
                   onClick={handleCancelSubscription}
-                  disabled={
-                    updateLoading || subscriptionLoading || !isSubscribed
-                  }
+                  disabled={updateLoading || subscriptionLoading || !isSubscribed}
                   className="border border-red-500 text-red-500 hover:bg-red-500/10 py-2 px-4 rounded-md flex-1 transition-colors disabled:opacity-50"
                 >
-                  {updateLoading
-                    ? "Processing..."
-                    : "Cancel Subscription"}
+                  {updateLoading ? 'Processing...' : 'Cancel Subscription'}
                 </button>
               </div>
             </div>
@@ -385,12 +380,8 @@ export default function AccountPage() {
 
             <div className="mt-6 pt-6 border-t border-gray-700">
               <p className="text-gray-400 text-sm">
-                Need help with your subscription? Contact our support team
-                at{" "}
-                <a
-                  href="mailto:support@4ex.ninja"
-                  className="text-green-500"
-                >
+                Need help with your subscription? Contact our support team at{' '}
+                <a href="mailto:support@4ex.ninja" className="text-green-500">
                   support@4ex.ninja
                 </a>
               </p>
@@ -408,39 +399,37 @@ export default function AccountPage() {
         {/* Header */}
         <div className="mb-10 text-center">
           <h1 className="text-4xl font-bold mb-2">Account Settings</h1>
-          <p className="text-gray-400">
-            Manage your 4ex.ninja account and subscription
-          </p>
+          <p className="text-gray-400">Manage your 4ex.ninja account and subscription</p>
         </div>
 
         {/* Tabs */}
         <div className="flex flex-wrap border-b border-gray-700 mb-8">
           <button
-            onClick={() => setActiveTab("subscription")}
+            onClick={() => setActiveTab('subscription')}
             className={`py-3 px-6 font-medium text-sm focus:outline-none transition-colors ${
-              activeTab === "subscription"
-                ? "border-b-2 border-green-500 text-green-500"
-                : "text-gray-400 hover:text-gray-300"
+              activeTab === 'subscription'
+                ? 'border-b-2 border-green-500 text-green-500'
+                : 'text-gray-400 hover:text-gray-300'
             }`}
           >
             Subscription
           </button>
           <button
-            onClick={() => setActiveTab("profile")}
+            onClick={() => setActiveTab('profile')}
             className={`py-3 px-6 font-medium text-sm focus:outline-none transition-colors ${
-              activeTab === "profile"
-                ? "border-b-2 border-green-500 text-green-500"
-                : "text-gray-400 hover:text-gray-300"
+              activeTab === 'profile'
+                ? 'border-b-2 border-green-500 text-green-500'
+                : 'text-gray-400 hover:text-gray-300'
             }`}
           >
             Profile
           </button>
           <button
-            onClick={() => setActiveTab("security")}
+            onClick={() => setActiveTab('security')}
             className={`py-3 px-6 font-medium text-sm focus:outline-none transition-colors ${
-              activeTab === "security"
-                ? "border-b-2 border-green-500 text-green-500"
-                : "text-gray-400 hover:text-gray-300"
+              activeTab === 'security'
+                ? 'border-b-2 border-green-500 text-green-500'
+                : 'text-gray-400 hover:text-gray-300'
             }`}
           >
             Security
@@ -453,9 +442,9 @@ export default function AccountPage() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className={`mb-6 p-4 rounded ${
-              message.type === "error"
-                ? "bg-red-500/20 text-red-400"
-                : "bg-green-500/20 text-green-500"
+              message.type === 'error'
+                ? 'bg-red-500/20 text-red-400'
+                : 'bg-green-500/20 text-green-500'
             }`}
           >
             {message.text}
@@ -465,44 +454,38 @@ export default function AccountPage() {
         {/* Tab content */}
         <div className="bg-gray-800 rounded-xl p-6 md:p-8">
           {/* Subscription Tab */}
-          {activeTab === "subscription" && renderSubscriptionTab()}
+          {activeTab === 'subscription' && renderSubscriptionTab()}
 
           {/* Profile Tab */}
-          {activeTab === "profile" && (
+          {activeTab === 'profile' && (
             <div>
               <h2 className="text-2xl font-bold mb-6">Profile Information</h2>
 
               <form onSubmit={handleUpdateProfile}>
                 <div className="space-y-6">
                   <div>
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-gray-400 mb-2"
-                    >
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">
                       Full Name
                     </label>
                     <input
                       id="name"
                       type="text"
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={e => setName(e.target.value)}
                       className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                       required
                     />
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-400 mb-2"
-                    >
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">
                       Email Address
                     </label>
                     <input
                       id="email"
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={e => setEmail(e.target.value)}
                       className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                       required
                     />
@@ -514,7 +497,7 @@ export default function AccountPage() {
                       disabled={updateLoading}
                       className="bg-green-700 hover:bg-green-800 text-white py-2 px-6 rounded-md transition-colors"
                     >
-                      {updateLoading ? "Saving..." : "Save Changes"}
+                      {updateLoading ? 'Saving...' : 'Save Changes'}
                     </button>
                   </div>
                 </div>
@@ -523,7 +506,7 @@ export default function AccountPage() {
           )}
 
           {/* Security Tab */}
-          {activeTab === "security" && (
+          {activeTab === 'security' && (
             <div>
               <h2 className="text-2xl font-bold mb-6">Security Settings</h2>
 
@@ -540,7 +523,7 @@ export default function AccountPage() {
                       id="current-password"
                       type="password"
                       value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      onChange={e => setCurrentPassword(e.target.value)}
                       className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
@@ -556,7 +539,7 @@ export default function AccountPage() {
                       id="new-password"
                       type="password"
                       value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
+                      onChange={e => setNewPassword(e.target.value)}
                       className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
@@ -572,7 +555,7 @@ export default function AccountPage() {
                       id="confirm-password"
                       type="password"
                       value={confirmNewPassword}
-                      onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      onChange={e => setConfirmNewPassword(e.target.value)}
                       className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
@@ -580,12 +563,10 @@ export default function AccountPage() {
                   <div className="pt-4 border-t border-gray-700">
                     <button
                       type="submit"
-                      disabled={
-                        updateLoading || (!currentPassword && !newPassword)
-                      }
+                      disabled={updateLoading || (!currentPassword && !newPassword)}
                       className="bg-green-700 hover:bg-green-800 text-white py-2 px-6 rounded-md transition-colors disabled:opacity-50"
                     >
-                      {updateLoading ? "Updating..." : "Update Password"}
+                      {updateLoading ? 'Updating...' : 'Update Password'}
                     </button>
                   </div>
                 </div>
@@ -596,11 +577,7 @@ export default function AccountPage() {
 
                 <button
                   onClick={() => {
-                    if (
-                      confirm(
-                        "Are you sure you want to sign out from all devices?"
-                      )
-                    ) {
+                    if (confirm('Are you sure you want to sign out from all devices?')) {
                       // Implement force sign out from all devices
                     }
                   }}
@@ -613,7 +590,7 @@ export default function AccountPage() {
                   onClick={() => {
                     if (
                       confirm(
-                        "Are you sure you want to delete your account? This action cannot be undone."
+                        'Are you sure you want to delete your account? This action cannot be undone.'
                       )
                     ) {
                       // Implement account deletion logic
@@ -629,5 +606,14 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Wrap the component with AccountErrorBoundary
+export default function AccountPage() {
+  return (
+    <AccountErrorBoundary>
+      <AccountPageComponent />
+    </AccountErrorBoundary>
   );
 }

@@ -1,49 +1,50 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { handleCheckout } from "@/utils/checkout-helpers";
+import { AuthErrorBoundary } from '@/components/error';
+import { handleCheckout } from '@/utils/checkout-helpers';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-export default function RegisterPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
+function RegisterPageComponent() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError('');
 
     // Client-side validation
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+      setError('Password must be at least 6 characters');
       setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Registration failed");
+        throw new Error(data.error || 'Registration failed');
       }
 
       // Show success message
@@ -52,13 +53,13 @@ export default function RegisterPage() {
       // Proceed to checkout instead of redirecting to login
       setTimeout(() => {
         handleCheckout().catch(err => {
-          console.error("Checkout error after registration:", err);
+          console.error('Checkout error after registration:', err);
           // Fallback to login page if checkout fails
-          router.push("/login");
+          router.push('/login');
         });
       }, 2000);
     } catch (err) {
-      console.error("Registration error:", err);
+      console.error('Registration error:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -75,9 +76,7 @@ export default function RegisterPage() {
         </div>
 
         {error && (
-          <div className="bg-red-500/20 text-red-400 p-3 rounded-md text-center">
-            {error}
-          </div>
+          <div className="bg-red-500/20 text-red-400 p-3 rounded-md text-center">{error}</div>
         )}
 
         {success && (
@@ -98,7 +97,7 @@ export default function RegisterPage() {
                 className="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
                 placeholder="Full Name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
               />
             </div>
             <div>
@@ -111,7 +110,7 @@ export default function RegisterPage() {
                 className="appearance-none relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
                 placeholder="Email address"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
             </div>
             <div>
@@ -124,7 +123,7 @@ export default function RegisterPage() {
                 className="appearance-none relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
             </div>
             <div>
@@ -137,7 +136,7 @@ export default function RegisterPage() {
                 className="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
                 placeholder="Confirm Password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={e => setConfirmPassword(e.target.value)}
               />
             </div>
           </div>
@@ -151,21 +150,27 @@ export default function RegisterPage() {
               {loading ? (
                 <span className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
               ) : null}
-              {success ? "Account Created!" : "Create Account"}
+              {success ? 'Account Created!' : 'Create Account'}
             </button>
           </div>
         </form>
 
         <div className="text-center text-sm">
-          <span className="text-gray-400">Already have an account?</span>{" "}
-          <Link
-            href="/login"
-            className="font-medium text-green-500 hover:text-green-500"
-          >
+          <span className="text-gray-400">Already have an account?</span>{' '}
+          <Link href="/login" className="font-medium text-green-500 hover:text-green-500">
             Sign in
           </Link>
         </div>
       </div>
     </div>
+  );
+}
+
+// Wrap the component with AuthErrorBoundary
+export default function RegisterPage() {
+  return (
+    <AuthErrorBoundary>
+      <RegisterPageComponent />
+    </AuthErrorBoundary>
   );
 }

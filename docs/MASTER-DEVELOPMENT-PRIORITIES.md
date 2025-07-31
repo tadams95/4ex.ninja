@@ -70,11 +70,11 @@ This document provides a strategic, ordered approach to implementing all planned
   - [x] **1.3.1.3**: Create `ApiErrorFallback` component for API call failures (`src/components/error/ApiErrorFallback.tsx`)
   - [x] **1.3.1.4**: Create `ChunkLoadErrorBoundary` for JavaScript chunk loading failures (`src/components/error/ChunkLoadErrorBoundary.tsx`)
 
-- [ ] **Day 2**: Implement critical route error boundaries
-  - **1.3.2.1**: Wrap Feed page (`/feed`) with error boundary for signal loading failures
-  - **1.3.2.2**: Wrap Auth pages (`/login`, `/register`) with error boundary for authentication failures  
-  - **1.3.2.3**: Wrap Account page (`/account`) with error boundary for subscription management errors
-  - **1.3.2.4**: Wrap Pricing page (`/pricing`) with error boundary for Stripe integration failures
+- [x] **Day 2**: Implement critical route error boundaries
+  - [x] **1.3.2.1**: Wrap Feed page (`/feed`) with error boundary for signal loading failures
+  - [x] **1.3.2.2**: Wrap Auth pages (`/login`, `/register`) with error boundary for authentication failures  
+  - [x] **1.3.2.3**: Wrap Account page (`/account`) with error boundary for subscription management errors
+  - [x] **1.3.2.4**: Wrap Pricing page (`/pricing`) with error boundary for Stripe integration failures
 
 - [ ] **Day 3**: Add component-level error handling
   - **1.3.3.1**: Add error boundary to `AuthProvider` component for session management failures

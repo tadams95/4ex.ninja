@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { logAuthAttempt, logAuthDebug } from "@/lib/auth-debug";
+import { AuthErrorBoundary } from '@/components/error';
+import { logAuthDebug } from '@/lib/auth-debug';
+import { signIn } from 'next-auth/react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [detailedError, setDetailedError] = useState("");
+function LoginPageComponent() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [detailedError, setDetailedError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const callbackUrl =
-    typeof window !== "undefined"
-      ? new URLSearchParams(window.location.search).get("callbackUrl") ||
-        "/feed"
-      : "/feed";
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).get('callbackUrl') || '/feed'
+      : '/feed';
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setDetailedError("");
+    setError('');
+    setDetailedError('');
 
     logAuthDebug('environment', {
       nodeEnv: process.env.NODE_ENV,
@@ -32,20 +32,20 @@ export default function LoginPage() {
     });
 
     if (!email || !password) {
-      setError("Email and password are required");
+      setError('Email and password are required');
       setLoading(false);
       return;
     }
 
     try {
-      logAuthDebug('pre-signin', { 
+      logAuthDebug('pre-signin', {
         email,
         hasPassword: !!password,
         callbackUrl,
-        env: process.env.NODE_ENV
+        env: process.env.NODE_ENV,
       });
-      
-      const result = await signIn("credentials", {
+
+      const result = await signIn('credentials', {
         redirect: false,
         email,
         password,
@@ -56,21 +56,21 @@ export default function LoginPage() {
         ok: result?.ok,
         error: result?.error,
         url: result?.url,
-        status: result?.status
+        status: result?.status,
       });
 
       if (result?.ok && !result.error) {
         router.replace(result.url || callbackUrl);
       } else {
-        setError("Invalid email or password");
+        setError('Invalid email or password');
         setDetailedError(`Auth Error: ${result?.error}. Status: ${result?.status}`);
       }
     } catch (error) {
       logAuthDebug('error', {
         message: error.message,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
       });
-      setError("An unexpected error occurred");
+      setError('An unexpected error occurred');
       setDetailedError(error.message);
     } finally {
       setLoading(false);
@@ -79,7 +79,7 @@ export default function LoginPage() {
 
   // Add debugging information to console on component mount
   useEffect(() => {
-    console.log("Login page initialized with callback URL:", callbackUrl);
+    console.log('Login page initialized with callback URL:', callbackUrl);
   }, [callbackUrl]);
 
   return (
@@ -110,7 +110,7 @@ export default function LoginPage() {
                 className="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
                 placeholder="Email address"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
             </div>
             <div>
@@ -123,7 +123,7 @@ export default function LoginPage() {
                 className="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
             </div>
           </div>
@@ -148,22 +148,28 @@ export default function LoginPage() {
               {loading ? (
                 <span className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
               ) : (
-                "Sign in"
+                'Sign in'
               )}
             </button>
           </div>
         </form>
 
         <div className="text-center text-sm">
-          <span className="text-gray-400">Don't have an account?</span>{" "}
-          <Link
-            href="/register"
-            className="font-medium text-green-500 hover:text-green-500"
-          >
+          <span className="text-gray-400">Don't have an account?</span>{' '}
+          <Link href="/register" className="font-medium text-green-500 hover:text-green-500">
             Register
           </Link>
         </div>
       </div>
     </div>
+  );
+}
+
+// Wrap the component with AuthErrorBoundary
+export default function LoginPage() {
+  return (
+    <AuthErrorBoundary>
+      <LoginPageComponent />
+    </AuthErrorBoundary>
   );
 }

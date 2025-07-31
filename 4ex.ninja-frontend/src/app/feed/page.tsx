@@ -1,5 +1,6 @@
 'use client';
 
+import { FeedErrorBoundary } from '@/components/error';
 import { ApiResponse, Crossover } from '@/types';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
@@ -202,11 +203,13 @@ function SignalsPage() {
   );
 }
 
-// Wrap the component with ProtectedRoute
+// Wrap the component with ProtectedRoute and FeedErrorBoundary
 export default function ProtectedSignalsPage(): React.ReactElement {
   return (
     <ProtectedRoute requireSubscription={true}>
-      <SignalsPage />
+      <FeedErrorBoundary>
+        <SignalsPage />
+      </FeedErrorBoundary>
     </ProtectedRoute>
   );
 }
