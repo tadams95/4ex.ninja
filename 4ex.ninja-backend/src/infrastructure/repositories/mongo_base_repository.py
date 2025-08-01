@@ -2,7 +2,8 @@
 Base MongoDB Repository Implementation - Concrete implementation of IBaseRepository
 
 This module provides the base MongoDB repository implementation that all
-entity-specific repositories inherit from, implementing common CRUD operations.
+entity-specific repositories inherit from, implementing common CRUD operations
+with integrated performance monitoring and caching.
 """
 
 from typing import List, Optional, Dict, Any, Type, TypeVar, Generic, Sequence, Union
@@ -10,6 +11,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 from abc import ABC
 import logging
+import time
 
 try:
     from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorDatabase  # type: ignore
@@ -29,6 +31,14 @@ except ImportError:
     MOTOR_AVAILABLE = False
 
 from ...core.interfaces.repository import IBaseRepository, RepositoryError
+
+# Performance monitoring imports
+try:
+    from ..performance_manager import get_performance_manager
+
+    PERFORMANCE_MONITORING_AVAILABLE = True
+except ImportError:
+    PERFORMANCE_MONITORING_AVAILABLE = False
 
 # Generic type for entities
 T = TypeVar("T")
@@ -65,6 +75,96 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
         self._entity_class = entity_class
         self._collection_name = collection_name
         self._session = session  # MongoDB session for transactions
+
+        # Performance monitoring
+        self._performance_manager = (
+            get_performance_manager() if PERFORMANCE_MONITORING_AVAILABLE else None
+        )
+
+    def _record_query_performance(
+        self,
+        operation: str,
+        query_filter: Dict[str, Any],
+        execution_time_ms: float,
+        result_count: int = 0,
+    ):
+        """Record query performance metrics."""
+        try:
+            if self._performance_manager and self._performance_manager.query_monitor:
+                self._performance_manager.query_monitor.record_query(
+                    query_type=operation,
+                    collection=self._collection_name,
+                    duration_ms=execution_time_ms,
+                    success=True,
+                    result_count=result_count,
+                    query_filter=query_filter,
+                )
+
+            # Also record for optimization analysis
+            if self._performance_manager:
+                self._performance_manager.record_query_for_optimization(
+                    collection=self._collection_name,
+                    operation=operation,
+                    query_filter=query_filter,
+                    execution_time_ms=execution_time_ms,
+                    result_count=result_count,
+                )
+        except Exception as e:
+            logger.debug(f"Error recording performance metrics: {e}")
+
+    def _record_query_error(
+        self,
+        operation: str,
+        query_filter: Dict[str, Any],
+        execution_time_ms: float,
+        error: str,
+    ):
+        """Record query error metrics."""
+        try:
+            if self._performance_manager and self._performance_manager.query_monitor:
+                self._performance_manager.query_monitor.record_query(
+                    query_type=operation,
+                    collection=self._collection_name,
+                    duration_ms=execution_time_ms,
+                    success=False,
+                    result_count=0,
+                    query_filter=query_filter,
+                    error=error,
+                )
+        except Exception as e:
+            logger.debug(f"Error recording error metrics: {e}")
+
+    async def _get_from_cache(
+        self, cache_key: str, namespace: str = "repository"
+    ) -> Optional[Any]:
+        """Get data from cache if available."""
+        try:
+            if self._performance_manager and self._performance_manager.cache_manager:
+                return await self._performance_manager.cache_manager.get(
+                    namespace=namespace, identifier=cache_key
+                )
+        except Exception as e:
+            logger.debug(f"Error getting from cache: {e}")
+        return None
+
+    async def _set_cache(
+        self,
+        cache_key: str,
+        value: Any,
+        ttl_seconds: Optional[int] = None,
+        namespace: str = "repository",
+    ):
+        """Set data in cache if available."""
+        try:
+            if self._performance_manager and self._performance_manager.cache_manager:
+                await self._performance_manager.cache_manager.set(
+                    namespace=namespace,
+                    identifier=cache_key,
+                    value=value,
+                    ttl_seconds=ttl_seconds,
+                )
+        except Exception as e:
+            logger.debug(f"Error setting cache: {e}")
 
     def _entity_to_dict(self, entity: T) -> dict:
         """
@@ -125,7 +225,10 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
             )
 
     async def create(self, entity: T) -> T:
-        """Create a new entity in MongoDB."""
+        """Create a new entity in MongoDB with performance monitoring."""
+        start_time = time.time()
+        data = {}
+
         try:
             data = self._entity_to_dict(entity)
 
@@ -143,6 +246,15 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
             # Add the generated ID to the data
             data["_id"] = result.inserted_id
 
+            # Record performance metrics
+            execution_time_ms = (time.time() - start_time) * 1000
+            self._record_query_performance(
+                operation="insert",
+                query_filter={"operation": "insert"},
+                execution_time_ms=execution_time_ms,
+                result_count=1,
+            )
+
             logger.info(
                 f"Created entity in {self._collection_name}: {result.inserted_id}"
             )
@@ -154,12 +266,28 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
             return created_entity
 
         except PyMongoError as e:
+            execution_time_ms = (time.time() - start_time) * 1000
+            self._record_query_error(
+                operation="insert",
+                query_filter={"operation": "insert"},
+                execution_time_ms=execution_time_ms,
+                error=str(e),
+            )
             raise RepositoryError(
                 f"Failed to create entity in {self._collection_name}", original_error=e
             )
 
     async def get_by_id(self, entity_id: str) -> Optional[T]:
-        """Retrieve an entity by its unique identifier."""
+        """Retrieve an entity by its unique identifier with caching and performance monitoring."""
+        start_time = time.time()
+
+        # Check cache first
+        cache_key = f"get_by_id:{entity_id}"
+        cached_result = await self._get_from_cache(cache_key)
+        if cached_result is not None:
+            logger.debug(f"Cache hit for entity {entity_id} in {self._collection_name}")
+            return cached_result
+
         try:
             # Handle ObjectId conversion if available
             query_filters = []
@@ -182,9 +310,35 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
 
             query = {"$or": query_filters}
             data = await self._collection.find_one(query, **self._get_session_kwargs())
-            return self._dict_to_entity(data) if data else None
+
+            # Record performance metrics
+            execution_time_ms = (time.time() - start_time) * 1000
+            result_count = 1 if data else 0
+            self._record_query_performance(
+                operation="find",
+                query_filter=query,
+                execution_time_ms=execution_time_ms,
+                result_count=result_count,
+            )
+
+            result = self._dict_to_entity(data) if data else None
+
+            # Cache the result if found
+            if result is not None:
+                await self._set_cache(
+                    cache_key, result, ttl_seconds=300
+                )  # 5 minute cache
+
+            return result
 
         except PyMongoError as e:
+            execution_time_ms = (time.time() - start_time) * 1000
+            self._record_query_error(
+                operation="find",
+                query_filter=query,
+                execution_time_ms=execution_time_ms,
+                error=str(e),
+            )
             raise RepositoryError(
                 f"Failed to get entity by ID {entity_id}", original_error=e
             )
