@@ -137,7 +137,7 @@ class IMarketDataRepository(IBaseRepository[MarketData]):
     @abstractmethod
     async def get_data_coverage(
         self, pair: str, granularity: Granularity
-    ) -> Dict[str, datetime]:
+    ) -> Dict[str, Any]:
         """
         Get data coverage information for a pair and timeframe.
 
@@ -146,7 +146,7 @@ class IMarketDataRepository(IBaseRepository[MarketData]):
             granularity: The timeframe granularity
 
         Returns:
-            Dictionary with 'first_candle' and 'last_candle' timestamps
+            Dictionary with 'first_candle', 'last_candle' timestamps and 'total_candles' count
         """
         pass
 

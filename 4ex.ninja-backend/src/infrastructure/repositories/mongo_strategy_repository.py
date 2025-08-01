@@ -1,38 +1,43 @@
 """
-MongoDB Strategy Repository Implementation - Concrete implementation for Strategy entities
+MongoDB Strategy Repository Implementation
 
-This module provides the MongoDB-specific implementation of the Strategy repository,
-extending the base MongoDB repository with Strategy-specific operations.
+Concrete implementation of IStrategyRepository for MongoDB database operations.
+Provides optimized queries and strategy-specific operations including
+performance tracking, lifecycle management, and validation.
 """
 
+import logging
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
 from decimal import Decimal
-import logging
+import copy
 
 from .mongo_base_repository import MongoBaseRepository
 from ...core.interfaces.strategy_repository import IStrategyRepository
 from ...core.entities.strategy import Strategy, StrategyType, StrategyStatus
 from ...core.interfaces.repository import RepositoryError
 
+# Set up logging
 logger = logging.getLogger(__name__)
 
 
 class MongoStrategyRepository(MongoBaseRepository[Strategy], IStrategyRepository):
     """
-    MongoDB implementation of the Strategy repository.
+    MongoDB implementation of strategy repository.
 
-    Extends the base MongoDB repository with Strategy-specific query operations.
+    Provides optimized queries for strategy-specific operations including
+    filtering by type, status, performance metrics, and lifecycle management.
     """
 
-    def __init__(self, database: Any):
+    def __init__(self, database: Any, session: Optional[Any] = None):
         """
-        Initialize the Strategy repository.
+        Initialize the strategy repository.
 
         Args:
             database: MongoDB database instance
+            session: Optional MongoDB session for transactions
         """
-        super().__init__(database, "strategies", Strategy)
+        super().__init__(database, "strategies", Strategy, session)
 
     async def get_by_name(self, name: str) -> Optional[Strategy]:
         """Get a strategy by its name."""
@@ -50,13 +55,14 @@ class MongoStrategyRepository(MongoBaseRepository[Strategy], IStrategyRepository
     ) -> List[Strategy]:
         """Get all strategies of a specific type."""
         try:
-            filters = {"strategy_type": strategy_type}
+            filters = {"strategy_type": strategy_type.value}
             return await self.find_by_criteria(
                 filters=filters, limit=limit, sort_by="created_at", sort_order="desc"
             )
         except Exception as e:
             raise RepositoryError(
-                f"Failed to get strategies by type {strategy_type}", original_error=e
+                f"Failed to get strategies by type {strategy_type.value}",
+                original_error=e,
             )
 
     async def get_by_status(
@@ -64,13 +70,13 @@ class MongoStrategyRepository(MongoBaseRepository[Strategy], IStrategyRepository
     ) -> List[Strategy]:
         """Get all strategies with a specific status."""
         try:
-            filters = {"status": status}
+            filters = {"status": status.value}
             return await self.find_by_criteria(
                 filters=filters, limit=limit, sort_by="updated_at", sort_order="desc"
             )
         except Exception as e:
             raise RepositoryError(
-                f"Failed to get strategies by status {status}", original_error=e
+                f"Failed to get strategies by status {status.value}", original_error=e
             )
 
     async def get_active_strategies(
@@ -78,7 +84,7 @@ class MongoStrategyRepository(MongoBaseRepository[Strategy], IStrategyRepository
     ) -> List[Strategy]:
         """Get all currently active strategies."""
         try:
-            filters = {"status": StrategyStatus.ACTIVE}
+            filters = {"status": StrategyStatus.ACTIVE.value}
             return await self.find_by_criteria(
                 filters=filters, limit=limit, sort_by="updated_at", sort_order="desc"
             )

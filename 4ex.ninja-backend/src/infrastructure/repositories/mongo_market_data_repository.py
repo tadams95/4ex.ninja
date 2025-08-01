@@ -1,52 +1,81 @@
 """
-MongoDB MarketData Repository Implementation - Concrete implementation for MarketData entities
+MongoDB MarketData Repository Implementation
 
-This module provides the MongoDB-specific implementation of the MarketData repository,
-extending the base MongoDB repository with MarketData-specific operations.
+Concrete implementation of IMarketDataRepository for MongoDB database operations.
+Provides optimized queries and time-series data access methods for market data.
 """
 
+import logging
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
 from decimal import Decimal
-import logging
 
 from .mongo_base_repository import MongoBaseRepository
 from ...core.interfaces.market_data_repository import IMarketDataRepository
 from ...core.entities.market_data import MarketData, Candle, Granularity
 from ...core.interfaces.repository import RepositoryError
 
+# Set up logging
 logger = logging.getLogger(__name__)
 
 
 class MongoMarketDataRepository(MongoBaseRepository[MarketData], IMarketDataRepository):
     """
-    MongoDB implementation of the MarketData repository.
+    MongoDB implementation of market data repository.
 
-    Extends the base MongoDB repository with MarketData-specific query operations.
+    Provides optimized time-series queries and market data operations including
+    candle management, technical indicators, and data validation.
     """
 
-    def __init__(self, database: Any):
+    def __init__(self, database: Any, session: Optional[Any] = None):
         """
-        Initialize the MarketData repository.
+        Initialize the market data repository.
 
         Args:
             database: MongoDB database instance
+            session: Optional MongoDB session for transactions
         """
-        super().__init__(database, "market_data", MarketData)
+        super().__init__(database, "market_data", MarketData, session)
 
     async def get_by_pair_and_timeframe(
         self, pair: str, granularity: Granularity, limit: Optional[int] = None
     ) -> Optional[MarketData]:
         """Get market data for a specific pair and timeframe."""
         try:
-            filters = {"instrument": pair, "granularity": granularity}
+            filters = {"instrument": pair, "granularity": granularity.value}
 
-            results = await self.find_by_criteria(filters, limit=1)
-            return results[0] if results else None
+            if limit:
+                # Use aggregation to limit candles when limit is specified
+                pipeline = [
+                    {"$match": filters},
+                    {
+                        "$project": {
+                            "instrument": 1,
+                            "granularity": 1,
+                            "last_updated": 1,
+                            "candles": {
+                                "$slice": ["$candles", -limit]
+                            },  # Get latest N candles
+                        }
+                    },
+                ]
+
+                cursor = self._collection.aggregate(
+                    pipeline, **self._get_session_kwargs()
+                )
+                results = await cursor.to_list(length=1)
+
+                if results:
+                    return self._dict_to_entity(results[0])
+                return None
+            else:
+                results = await self.find_by_criteria(filters, limit=1)
+                return results[0] if results else None
 
         except Exception as e:
             raise RepositoryError(
-                f"Failed to get market data for {pair} {granularity}", original_error=e
+                f"Failed to get market data for {pair} {granularity.value}",
+                original_error=e,
             )
 
     async def get_latest_candles(
@@ -54,19 +83,41 @@ class MongoMarketDataRepository(MongoBaseRepository[MarketData], IMarketDataRepo
     ) -> List[Candle]:
         """Get the latest N candles for a pair and timeframe."""
         try:
-            market_data = await self.get_by_pair_and_timeframe(pair, granularity)
-            if not market_data or not market_data.candles:
+            # Use aggregation pipeline for efficient latest candles retrieval
+            pipeline = [
+                {"$match": {"instrument": pair, "granularity": granularity.value}},
+                {"$unwind": "$candles"},
+                {"$sort": {"candles.time": -1}},  # Sort by candle time descending
+                {"$limit": count},
+                {"$group": {"_id": None, "candles": {"$push": "$candles"}}},
+            ]
+
+            cursor = self._collection.aggregate(pipeline, **self._get_session_kwargs())
+            results = await cursor.to_list(length=1)
+
+            if not results or not results[0].get("candles"):
                 return []
 
-            # Sort candles by time and get the latest ones
-            sorted_candles = sorted(
-                market_data.candles, key=lambda c: c.time, reverse=True
-            )
-            return sorted_candles[:count]
+            # Convert to Candle objects and reverse to get chronological order
+            candles_data = results[0]["candles"]
+            candles = []
+
+            for candle_data in reversed(candles_data):  # Reverse to chronological order
+                candle = Candle(
+                    time=candle_data["time"],
+                    open=Decimal(str(candle_data["open"])),
+                    high=Decimal(str(candle_data["high"])),
+                    low=Decimal(str(candle_data["low"])),
+                    close=Decimal(str(candle_data["close"])),
+                    volume=candle_data.get("volume", 0),
+                )
+                candles.append(candle)
+
+            return candles
 
         except Exception as e:
             raise RepositoryError(
-                f"Failed to get latest candles for {pair} {granularity}",
+                f"Failed to get latest candles for {pair} {granularity.value}",
                 original_error=e,
             )
 
@@ -79,23 +130,41 @@ class MongoMarketDataRepository(MongoBaseRepository[MarketData], IMarketDataRepo
     ) -> List[Candle]:
         """Get candles within a specific date range."""
         try:
-            market_data = await self.get_by_pair_and_timeframe(pair, granularity)
-            if not market_data or not market_data.candles:
-                return []
-
-            # Filter candles by date range
-            filtered_candles = [
-                candle
-                for candle in market_data.candles
-                if start_date <= candle.time <= end_date
+            # Use aggregation pipeline for efficient date range filtering
+            pipeline = [
+                {"$match": {"instrument": pair, "granularity": granularity.value}},
+                {"$unwind": "$candles"},
+                {"$match": {"candles.time": {"$gte": start_date, "$lte": end_date}}},
+                {"$sort": {"candles.time": 1}},  # Sort chronologically
+                {"$group": {"_id": None, "candles": {"$push": "$candles"}}},
             ]
 
-            # Sort by time
-            return sorted(filtered_candles, key=lambda c: c.time)
+            cursor = self._collection.aggregate(pipeline, **self._get_session_kwargs())
+            results = await cursor.to_list(length=1)
+
+            if not results or not results[0].get("candles"):
+                return []
+
+            # Convert to Candle objects
+            candles_data = results[0]["candles"]
+            candles = []
+
+            for candle_data in candles_data:
+                candle = Candle(
+                    time=candle_data["time"],
+                    open=Decimal(str(candle_data["open"])),
+                    high=Decimal(str(candle_data["high"])),
+                    low=Decimal(str(candle_data["low"])),
+                    close=Decimal(str(candle_data["close"])),
+                    volume=candle_data.get("volume", 0),
+                )
+                candles.append(candle)
+
+            return candles
 
         except Exception as e:
             raise RepositoryError(
-                f"Failed to get candles by date range for {pair} {granularity}",
+                f"Failed to get candles by date range for {pair} {granularity.value}",
                 original_error=e,
             )
 
@@ -104,30 +173,76 @@ class MongoMarketDataRepository(MongoBaseRepository[MarketData], IMarketDataRepo
     ) -> bool:
         """Add new candles to existing market data."""
         try:
-            market_data = await self.get_by_pair_and_timeframe(pair, granularity)
+            if not candles:
+                return True
 
-            if not market_data:
-                # Create new market data if it doesn't exist
-                market_data = MarketData(
-                    instrument=pair, granularity=granularity, candles=candles
+            # Convert candles to dict format for MongoDB
+            candle_dicts = []
+            for candle in candles:
+                candle_dicts.append(
+                    {
+                        "time": candle.time,
+                        "open": float(candle.open),
+                        "high": float(candle.high),
+                        "low": float(candle.low),
+                        "close": float(candle.close),
+                        "volume": candle.volume,
+                    }
                 )
-                await self.create(market_data)
+
+            # Use upsert with atomic operations to handle concurrent updates
+            filters = {"instrument": pair, "granularity": granularity.value}
+
+            # First, try to find existing document
+            existing = await self._collection.find_one(
+                filters, **self._get_session_kwargs()
+            )
+
+            if not existing:
+                # Create new document
+                new_doc = {
+                    "instrument": pair,
+                    "granularity": granularity.value,
+                    "candles": candle_dicts,
+                    "last_updated": datetime.utcnow(),
+                    "created_at": datetime.utcnow(),
+                }
+                await self._collection.insert_one(new_doc, **self._get_session_kwargs())
+                logger.info(
+                    f"Created new market data for {pair} {granularity.value} with {len(candles)} candles"
+                )
             else:
-                # Add new candles and avoid duplicates
-                existing_timestamps = {c.time for c in market_data.candles}
-                new_candles = [c for c in candles if c.time not in existing_timestamps]
+                # Get existing timestamps to avoid duplicates
+                existing_times = {
+                    candle["time"] for candle in existing.get("candles", [])
+                }
+                new_candles = [
+                    c for c in candle_dicts if c["time"] not in existing_times
+                ]
 
                 if new_candles:
-                    market_data.candles.extend(new_candles)
-                    market_data.last_updated = datetime.utcnow()
-                    await self.update(market_data)
+                    # Use $push with $each to add multiple candles atomically
+                    update_doc = {
+                        "$push": {"candles": {"$each": new_candles}},
+                        "$set": {"last_updated": datetime.utcnow()},
+                    }
+                    await self._collection.update_one(
+                        filters, update_doc, **self._get_session_kwargs()
+                    )
+                    logger.info(
+                        f"Added {len(new_candles)} new candles for {pair} {granularity.value}"
+                    )
+                else:
+                    logger.info(
+                        f"No new candles to add for {pair} {granularity.value} (all already exist)"
+                    )
 
-            logger.info(f"Added {len(candles)} candles for {pair} {granularity}")
             return True
 
         except Exception as e:
             raise RepositoryError(
-                f"Failed to add candles for {pair} {granularity}", original_error=e
+                f"Failed to add candles for {pair} {granularity.value}",
+                original_error=e,
             )
 
     async def update_latest_candle(
@@ -135,40 +250,74 @@ class MongoMarketDataRepository(MongoBaseRepository[MarketData], IMarketDataRepo
     ) -> bool:
         """Update the latest candle for a pair and timeframe."""
         try:
-            market_data = await self.get_by_pair_and_timeframe(pair, granularity)
-            if not market_data:
-                return False
+            filters = {"instrument": pair, "granularity": granularity.value}
 
-            # Find and update the latest candle or add if not exists
-            updated = False
-            for i, existing_candle in enumerate(market_data.candles):
-                if existing_candle.time == candle.time:
-                    market_data.candles[i] = candle
-                    updated = True
-                    break
+            # Convert candle to dict format
+            candle_dict = {
+                "time": candle.time,
+                "open": float(candle.open),
+                "high": float(candle.high),
+                "low": float(candle.low),
+                "close": float(candle.close),
+                "volume": candle.volume,
+            }
 
-            if not updated:
-                market_data.candles.append(candle)
+            # Use arrayFilters to update specific candle by timestamp
+            update_doc = {
+                "$set": {
+                    "candles.$[elem]": candle_dict,
+                    "last_updated": datetime.utcnow(),
+                }
+            }
 
-            market_data.last_updated = datetime.utcnow()
-            await self.update(market_data)
+            array_filters = [{"elem.time": candle.time}]
 
-            logger.info(
-                f"Updated latest candle for {pair} {granularity} at {candle.time}"
+            result = await self._collection.update_one(
+                filters,
+                update_doc,
+                array_filters=array_filters,
+                **self._get_session_kwargs(),
             )
+
+            if result.modified_count == 0:
+                # Candle doesn't exist, add it instead
+                add_doc = {
+                    "$push": {"candles": candle_dict},
+                    "$set": {"last_updated": datetime.utcnow()},
+                }
+                result = await self._collection.update_one(
+                    filters, add_doc, **self._get_session_kwargs()
+                )
+
+                if result.modified_count > 0:
+                    logger.info(
+                        f"Added new candle for {pair} {granularity.value} at {candle.time}"
+                    )
+                else:
+                    logger.warning(
+                        f"Failed to add candle for {pair} {granularity.value}"
+                    )
+                    return False
+            else:
+                logger.info(
+                    f"Updated candle for {pair} {granularity.value} at {candle.time}"
+                )
+
             return True
 
         except Exception as e:
             raise RepositoryError(
-                f"Failed to update latest candle for {pair} {granularity}",
+                f"Failed to update latest candle for {pair} {granularity.value}",
                 original_error=e,
             )
 
     async def get_pairs_with_data(self) -> List[str]:
         """Get all currency pairs that have market data."""
         try:
-            # Get distinct instruments from the collection
-            pairs = await self._collection.distinct("instrument")
+            # Use distinct operation with session support
+            pairs = await self._collection.distinct(
+                "instrument", {}, **self._get_session_kwargs()
+            )
             return sorted(pairs)
 
         except Exception as e:
@@ -177,17 +326,22 @@ class MongoMarketDataRepository(MongoBaseRepository[MarketData], IMarketDataRepo
     async def get_available_timeframes(self, pair: str) -> List[Granularity]:
         """Get all available timeframes for a specific pair."""
         try:
-            # Get distinct granularities for the pair
+            # Get distinct granularities for the pair with session support
             granularities = await self._collection.distinct(
-                "granularity", {"instrument": pair}
+                "granularity", {"instrument": pair}, **self._get_session_kwargs()
             )
 
             # Convert string values back to Granularity enum
-            return [
-                Granularity(g)
-                for g in granularities
-                if g in [gv.value for gv in Granularity]
-            ]
+            valid_timeframes = []
+            for g in granularities:
+                try:
+                    timeframe = Granularity(g)
+                    valid_timeframes.append(timeframe)
+                except ValueError:
+                    logger.warning(f"Invalid granularity value found: {g}")
+                    continue
+
+            return sorted(valid_timeframes, key=lambda x: x.value)
 
         except Exception as e:
             raise RepositoryError(
@@ -196,23 +350,39 @@ class MongoMarketDataRepository(MongoBaseRepository[MarketData], IMarketDataRepo
 
     async def get_data_coverage(
         self, pair: str, granularity: Granularity
-    ) -> Dict[str, datetime]:
+    ) -> Dict[str, Any]:
         """Get data coverage information for a pair and timeframe."""
         try:
-            market_data = await self.get_by_pair_and_timeframe(pair, granularity)
-            if not market_data or not market_data.candles:
-                return {"first_candle": None, "last_candle": None}  # type: ignore
+            # Use aggregation pipeline for efficient min/max calculation
+            pipeline = [
+                {"$match": {"instrument": pair, "granularity": granularity.value}},
+                {"$unwind": "$candles"},
+                {
+                    "$group": {
+                        "_id": None,
+                        "first_candle": {"$min": "$candles.time"},
+                        "last_candle": {"$max": "$candles.time"},
+                        "total_candles": {"$sum": 1},
+                    }
+                },
+            ]
 
-            sorted_candles = sorted(market_data.candles, key=lambda c: c.time)
+            cursor = self._collection.aggregate(pipeline, **self._get_session_kwargs())
+            results = await cursor.to_list(length=1)
 
+            if not results:
+                return {"first_candle": None, "last_candle": None, "total_candles": 0}
+
+            result = results[0]
             return {
-                "first_candle": sorted_candles[0].time,
-                "last_candle": sorted_candles[-1].time,
+                "first_candle": result.get("first_candle"),
+                "last_candle": result.get("last_candle"),
+                "total_candles": result.get("total_candles", 0),
             }
 
         except Exception as e:
             raise RepositoryError(
-                f"Failed to get data coverage for {pair} {granularity}",
+                f"Failed to get data coverage for {pair} {granularity.value}",
                 original_error=e,
             )
 
