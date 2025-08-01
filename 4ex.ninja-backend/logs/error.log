@@ -138,3 +138,128 @@ Exception Details:
     raise ValueError("This is a test error")
     ValueError: This is a test error
 ==================================================
+=== ERROR at 2025-07-31T21:22:37.203634 ===
+Logger: test.basic
+Module: test_day6_logging
+Function: test_basic_logging() at line 44
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: This is an error message
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T21:22:37.307276 ===
+Logger: test.errors
+Module: middleware
+Function: log_error() at line 104
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: Error in failing_operation: This is a test error
+Context:
+  taskName: None
+  operation: failing_operation
+  error: This is a test error
+  error_type: ValueError
+  correlation_id: ea20b971-3132-47b7-b681-22dacd05cbdd
+  user_id: test_user_123
+  operation_id: test_123
+  input_data: invalid_input
+Exception Details:
+  Type: ValueError
+  Message: This is a test error
+  Traceback:
+    Traceback (most recent call last):
+      File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/tests/days/test_day6_logging.py", line 115, in failing_operation
+    raise ValueError("This is a test error")
+    ValueError: This is a test error
+==================================================
+=== ERROR at 2025-07-31T21:22:37.417720 ===
+Logger: infrastructure.monitoring.error_tracking
+Module: error_tracking
+Function: capture_error() at line 89
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: Sentry not initialized. Error: Test API error
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T21:22:37.417875 ===
+Logger: infrastructure.monitoring.error_tracking
+Module: error_tracking
+Function: capture_error() at line 89
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: Sentry not initialized. Error: Test business logic error
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T21:22:37.421236 ===
+Logger: src.strategies.error_handling
+Module: error_handling
+Function: validate_market_data() at line 457
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: Missing required field: timestamp
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T21:22:37.421346 ===
+Logger: src.strategies.error_handling
+Module: error_handling
+Function: validate_signal_data() at line 523
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: Missing required signal field: timestamp
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T21:22:37.421784 ===
+Logger: src.strategies.error_handling
+Module: error_handling
+Function: validate_market_data() at line 457
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: Missing required field: high
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T21:22:37.421867 ===
+Logger: src.strategies.error_handling
+Module: error_handling
+Function: validate_market_data() at line 457
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: Missing required field: open
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T21:22:37.421926 ===
+Logger: src.strategies.error_handling
+Module: error_handling
+Function: validate_market_data() at line 457
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: Missing required field: open
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T21:22:37.421981 ===
+Logger: src.strategies.error_handling
+Module: error_handling
+Function: validate_market_data() at line 457
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: Missing required field: open
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-07-31T21:22:37.422061 ===
+Logger: src.strategies.error_handling
+Module: error_handling
+Function: validate_market_data() at line 457
+Thread: MainThread (8538119936)
+Process: MainProcess (81429)
+Message: Missing required field: open
+Context:
+  taskName: None
+==================================================

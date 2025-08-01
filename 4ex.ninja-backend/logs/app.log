@@ -49,3 +49,28 @@ Traceback (most recent call last):
     raise ValueError("This is a test error")
 ValueError: This is a test error
 2025-07-31T01:17:09.658252 [32m[INFO][0m consolidation.test:10 <module>() - Consolidation completed successfully! | taskName=None
+2025-07-31T21:22:37.202902 [32m[INFO][0m test.basic:42 test_basic_logging() - Basic logging test successful | taskName=None
+2025-07-31T21:22:37.203574 [33m[WARNING][0m test.basic:43 test_basic_logging() - This is a warning message | taskName=None
+2025-07-31T21:22:37.203634 [31m[ERROR][0m test.basic:44 test_basic_logging() - This is an error message | taskName=None
+2025-07-31T21:22:37.204508 [32m[INFO][0m test.context:173 log_with_context() - Context logging test | taskName=None | correlation_id=ea20b971-3132-47b7-b681-22dacd05cbdd | user_id=test_user_123 | operation=test_operation | additional_data=some_value
+2025-07-31T21:22:37.306333 [33m[WARNING][0m performance:128 log_performance() - Slow operation: slow_operation took 0.101s | taskName=None | operation=slow_operation | duration=0.101 | correlation_id=ea20b971-3132-47b7-b681-22dacd05cbdd | operation_type=simulation | data_processed=100
+2025-07-31T21:22:37.307276 [31m[ERROR][0m test.errors:104 log_error() - Error in failing_operation: This is a test error | taskName=None | operation=failing_operation | error=This is a test error | error_type=ValueError | correlation_id=ea20b971-3132-47b7-b681-22dacd05cbdd | user_id=test_user_123 | operation_id=test_123 | input_data=invalid_input
+Traceback (most recent call last):
+  File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/tests/days/test_day6_logging.py", line 115, in failing_operation
+    raise ValueError("This is a test error")
+ValueError: This is a test error
+2025-07-31T21:22:37.417720 [31m[ERROR][0m infrastructure.monitoring.error_tracking:89 capture_error() - Sentry not initialized. Error: Test API error | taskName=None
+2025-07-31T21:22:37.417875 [31m[ERROR][0m infrastructure.monitoring.error_tracking:89 capture_error() - Sentry not initialized. Error: Test business logic error | taskName=None
+2025-07-31T21:22:37.421236 [31m[ERROR][0m src.strategies.error_handling:457 validate_market_data() - Missing required field: timestamp | taskName=None
+2025-07-31T21:22:37.421346 [31m[ERROR][0m src.strategies.error_handling:523 validate_signal_data() - Missing required signal field: timestamp | taskName=None
+2025-07-31T21:22:37.421784 [31m[ERROR][0m src.strategies.error_handling:457 validate_market_data() - Missing required field: high | taskName=None
+2025-07-31T21:22:37.421867 [31m[ERROR][0m src.strategies.error_handling:457 validate_market_data() - Missing required field: open | taskName=None
+2025-07-31T21:22:37.421926 [31m[ERROR][0m src.strategies.error_handling:457 validate_market_data() - Missing required field: open | taskName=None
+2025-07-31T21:22:37.421981 [31m[ERROR][0m src.strategies.error_handling:457 validate_market_data() - Missing required field: open | taskName=None
+2025-07-31T21:22:37.422061 [31m[ERROR][0m src.strategies.error_handling:457 validate_market_data() - Missing required field: open | taskName=None
+2025-07-31T21:22:37.459834 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'logs' added | taskName=None
+2025-07-31T21:22:37.459934 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'email' added | taskName=None
+2025-07-31T21:22:37.459971 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'webhook' added | taskName=None
+2025-07-31T21:22:37.461702 [33m[WARNING][0m src.infrastructure.monitoring.dashboards:273 increment_counter() - Counter metric not found: test_counter | taskName=None
+2025-07-31T21:22:37.475094 [33m[WARNING][0m src.infrastructure.monitoring.dashboards:273 increment_counter() - Counter metric not found: signal_errors_total | taskName=None
+2025-07-31T21:22:37.475198 [33m[WARNING][0m src.infrastructure.monitoring.dashboards:273 increment_counter() - Counter metric not found: database_errors_total | taskName=None
