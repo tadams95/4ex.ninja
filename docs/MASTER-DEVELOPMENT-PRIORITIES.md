@@ -235,27 +235,71 @@ This document provides a strategic, ordered approach to implementing all planned
 ## 🚀 **PHASE 2: BUSINESS-CRITICAL FEATURES** (Weeks 9-12)
 *Priority: HIGH - Immediate business value*
 
-### **Week 9-10: Notification System Implementation**
+### **Week 9-10: Modern Notification System Implementation**
 
-#### 2.1 Email Notification Foundation
-- [ ] **Day 1-2**: Setup email service with SMTP configuration
+#### 2.1 Discord Notification Foundation
+- [ ] **Day 1-2**: Setup Discord webhook integration and server structure
   ```bash
-  pip install aiosmtplib jinja2 pydantic
+  pip install aiohttp discord-webhook
   ```
-- [ ] **Day 3-4**: Create email templates for crossover alerts
-- [ ] **Day 5-6**: Integrate notification service with signal generation
-- [ ] **Day 7**: Test end-to-end email notification flow
+  - Create Discord server with organized channels (#signals, #alerts, #premium, #general)
+  - Configure webhook URLs for different notification types and subscription tiers
+  - Setup role-based access control (free users, premium subscribers, admins)
+  - Implement rich embed formatting for professional trading signal presentation
 
-#### 2.2 Real-time Notifications
-- [ ] **Day 1-2**: Implement WebSocket server for real-time updates
-- [ ] **Day 3-4**: Create WebSocket client integration in frontend
-- [ ] **Day 5-6**: Add real-time signal updates to feed page
-- [ ] **Day 7**: Test real-time notification delivery
+- [ ] **Day 3-4**: Create Discord notification templates and user management
+  - Signal alerts with formatted embeds (pair, action, entry price, stop loss, confidence)
+  - Market analysis notifications with trend information and regime detection
+  - System status alerts (maintenance, updates, performance issues)
+  - User preference management (channel subscriptions, notification frequency)
+  - Premium vs free tier channel access automation
+
+- [ ] **Day 5-6**: Integrate Discord service with signal generation pipeline
+  - Real-time signal posting to Discord channels within 5 seconds of generation
+  - User role-based channel access and notification routing
+  - Rate limiting and spam prevention to maintain channel quality
+  - Signal confidence-based routing (high confidence → premium channels)
+  - Community engagement features (reactions for signal feedback)
+
+- [ ] **Day 7**: Test end-to-end Discord notification flow and community setup
+  - Comprehensive testing across all notification types and user roles
+  - Mobile Discord app notification reliability testing
+  - Channel organization and user onboarding flow validation
+  - Performance testing with concurrent signal generation
+
+#### 2.2 Real-time Web App Notifications
+- [ ] **Day 1-2**: Implement WebSocket server for instant signal streaming
+  - FastAPI WebSocket endpoints for live signal broadcasting
+  - Connection management with user authentication and session handling
+  - Graceful fallback mechanisms for connection failures and reconnection
+  - User preference integration (notification types, sound alerts, frequency)
+
+- [ ] **Day 3-4**: Create WebSocket client integration with modern UI/UX
+  - Real-time signal updates without page refresh using WebSocket connections
+  - Toast notifications for new signals with customizable styling and positioning
+  - Browser push notification API integration for background notifications
+  - Sound alerts for critical signals (user configurable, respectful of user preferences)
+
+- [ ] **Day 5-6**: Add real-time signal feed enhancements and interactivity
+  - Live signal feed with auto-updating entries and smooth animations
+  - Signal interaction features (mark as favorite, add notes, share)
+  - Real-time signal confidence updates and market regime changes
+  - Notification preference controls (sound, visual, frequency, signal types)
+  - Offline handling and notification queuing for when users return
+
+- [ ] **Day 7**: Test real-time notification delivery across devices and scenarios
+  - Cross-device testing (desktop, mobile, tablet) for consistent experience
+  - Network interruption and reconnection testing
+  - Performance testing with high-frequency signal generation
+  - User experience testing for notification fatigue prevention
 
 **🎯 Week 9-10 Success Criteria:**
-- [ ] Email notifications sent within 30 seconds of signal generation
-- [ ] Real-time updates working without manual refresh
-- [ ] User notification preferences fully functional
+- [ ] Discord notifications delivered within 5 seconds of signal generation
+- [ ] Real-time web app updates working seamlessly without manual refresh
+- [ ] User notification preferences fully functional for both Discord and Web App
+- [ ] Mobile Discord notifications working reliably with proper rich formatting
+- [ ] Browser push notifications working across major browsers and devices
+- [ ] Community engagement features active with user feedback mechanisms
 
 ---
 
