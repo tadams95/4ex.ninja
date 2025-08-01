@@ -1,5 +1,5 @@
 """
-Test Day 7 Monitoring System
+Day 7: Monitoring System Tests
 
 Test script to validate error tracking, health monitoring,
 and performance monitoring components.
@@ -13,7 +13,7 @@ import time
 from pathlib import Path
 
 # Add src to path
-src_path = str(Path(__file__).parent / "src")
+src_path = str(Path(__file__).parent / ".." / ".." / "src")
 sys.path.insert(0, src_path)
 
 try:
@@ -272,9 +272,9 @@ def test_integration():
     return True
 
 
-async def run_all_tests():
-    """Run all monitoring tests."""
-    print("🔍 Starting Day 7 Monitoring System Tests")
+async def run_day7_tests():
+    """Run all Day 7 monitoring tests."""
+    print("🔍 Starting Day 7: Monitoring System Tests")
     print("=" * 50)
 
     # Configure logging for tests
@@ -302,7 +302,7 @@ async def run_all_tests():
 
     # Print results
     print("\n" + "=" * 50)
-    print("📊 Test Results Summary")
+    print("📊 Day 7 Test Results Summary")
     print("=" * 50)
 
     passed = 0
@@ -331,5 +331,5 @@ async def run_all_tests():
 
 
 if __name__ == "__main__":
-    success = asyncio.run(run_all_tests())
+    success = asyncio.run(run_day7_tests())
     sys.exit(0 if success else 1)
