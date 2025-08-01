@@ -5,15 +5,19 @@ This module provides the base MongoDB repository implementation that all
 entity-specific repositories inherit from, implementing common CRUD operations.
 """
 
-from typing import Generic, TypeVar, Optional, List, Dict, Any, Type
+from typing import List, Optional, Dict, Any, Type, TypeVar, Generic, Sequence, Union
+from contextlib import asynccontextmanager
 from datetime import datetime
 from abc import ABC
 import logging
 
 try:
-    from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorDatabase
-    from pymongo import ASCENDING, DESCENDING
-    from pymongo.errors import PyMongoError
+    from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorDatabase  # type: ignore
+    from pymongo import ASCENDING, DESCENDING  # type: ignore
+    from pymongo.errors import PyMongoError  # type: ignore
+    from bson import ObjectId  # type: ignore
+
+    MOTOR_AVAILABLE = True
 except ImportError:
     # Fallback for when motor is not installed
     AsyncIOMotorCollection = None
@@ -21,6 +25,8 @@ except ImportError:
     ASCENDING = 1
     DESCENDING = -1
     PyMongoError = Exception
+    ObjectId = None
+    MOTOR_AVAILABLE = False
 
 from ...core.interfaces.repository import IBaseRepository, RepositoryError
 
@@ -38,7 +44,13 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
     following the Repository pattern defined in the core interfaces.
     """
 
-    def __init__(self, database: Any, collection_name: str, entity_class: Type[T]):
+    def __init__(
+        self,
+        database: Any,
+        collection_name: str,
+        entity_class: Type[T],
+        session: Optional[Any] = None,
+    ):
         """
         Initialize the repository.
 
@@ -46,11 +58,13 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
             database: MongoDB database instance
             collection_name: Name of the MongoDB collection
             entity_class: The entity class this repository manages
+            session: Optional MongoDB session for transactions
         """
         self._database = database
         self._collection: Any = database[collection_name]
         self._entity_class = entity_class
         self._collection_name = collection_name
+        self._session = session  # MongoDB session for transactions
 
     def _entity_to_dict(self, entity: T) -> dict:
         """
@@ -122,7 +136,9 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
             # Add updated timestamp
             data["updated_at"] = datetime.utcnow()
 
-            result = await self._collection.insert_one(data)
+            result = await self._collection.insert_one(
+                data, **self._get_session_kwargs()
+            )
 
             # Add the generated ID to the data
             data["_id"] = result.inserted_id
@@ -145,14 +161,27 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
     async def get_by_id(self, entity_id: str) -> Optional[T]:
         """Retrieve an entity by its unique identifier."""
         try:
-            # Try both string ID and ObjectId lookup
-            query = {"$or": [{"_id": entity_id}, {"id": entity_id}]}
-            if hasattr(self._entity_class, "signal_id"):
-                query["$or"].append({"signal_id": entity_id})
-            if hasattr(self._entity_class, "strategy_id"):
-                query["$or"].append({"strategy_id": entity_id})
+            # Handle ObjectId conversion if available
+            query_filters = []
 
-            data = await self._collection.find_one(query)
+            # Add string ID lookup
+            query_filters.append({"id": entity_id})
+
+            # Add ObjectId lookup if ObjectId is available and entity_id is valid ObjectId
+            if ObjectId and self._is_valid_object_id(entity_id):
+                query_filters.append({"_id": ObjectId(entity_id)})
+            else:
+                # Fallback to string _id lookup
+                query_filters.append({"_id": entity_id})
+
+            # Add entity-specific ID fields
+            if hasattr(self._entity_class, "signal_id"):
+                query_filters.append({"signal_id": entity_id})
+            if hasattr(self._entity_class, "strategy_id"):
+                query_filters.append({"strategy_id": entity_id})
+
+            query = {"$or": query_filters}
+            data = await self._collection.find_one(query, **self._get_session_kwargs())
             return self._dict_to_entity(data) if data else None
 
         except PyMongoError as e:
@@ -160,12 +189,22 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
                 f"Failed to get entity by ID {entity_id}", original_error=e
             )
 
+    def _is_valid_object_id(self, id_string: str) -> bool:
+        """Check if string is a valid ObjectId."""
+        if not ObjectId:
+            return False
+        try:
+            ObjectId(id_string)
+            return True
+        except:
+            return False
+
     async def get_all(
         self, limit: Optional[int] = None, offset: Optional[int] = None
     ) -> List[T]:
         """Retrieve all entities with optional pagination."""
         try:
-            cursor = self._collection.find({})
+            cursor = self._collection.find({}, **self._get_session_kwargs())
 
             if offset:
                 cursor = cursor.skip(offset)
@@ -239,7 +278,9 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
             if hasattr(self._entity_class, "strategy_id"):
                 query["$or"].append({"strategy_id": entity_id})
 
-            result = await self._collection.delete_one(query)
+            result = await self._collection.delete_one(
+                query, **self._get_session_kwargs()
+            )
 
             if result.deleted_count > 0:
                 logger.info(f"Deleted entity from {self._collection_name}: {entity_id}")
@@ -290,7 +331,7 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
         """Find entities matching specific criteria."""
         try:
             query = self._build_query(filters)
-            cursor = self._collection.find(query)
+            cursor = self._collection.find(query, **self._get_session_kwargs())
 
             if offset:
                 cursor = cursor.skip(offset)
@@ -330,7 +371,9 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
         try:
             query = {date_field: {"$gte": start_date, "$lte": end_date}}
 
-            cursor = self._collection.find(query).sort(date_field, DESCENDING)
+            cursor = self._collection.find(query, **self._get_session_kwargs()).sort(
+                date_field, DESCENDING
+            )
 
             if limit:
                 cursor = cursor.limit(limit)
@@ -363,7 +406,9 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
                 data["updated_at"] = datetime.utcnow()
                 documents.append(data)
 
-            result = await self._collection.insert_many(documents)
+            result = await self._collection.insert_many(
+                documents, **self._get_session_kwargs()
+            )
 
             # Add generated IDs back to documents
             for i, inserted_id in enumerate(result.inserted_ids):
@@ -426,7 +471,9 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
                     updated_entities.append(entity)
 
             if operations:
-                await self._collection.bulk_write(operations)
+                await self._collection.bulk_write(
+                    operations, **self._get_session_kwargs()
+                )
                 logger.info(
                     f"Bulk updated {len(operations)} entities in {self._collection_name}"
                 )
@@ -454,7 +501,9 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
                     id_query["$or"].append({"strategy_id": entity_id})
                 query["$or"].append(id_query)
 
-            result = await self._collection.delete_many(query)
+            result = await self._collection.delete_many(
+                query, **self._get_session_kwargs()
+            )
 
             logger.info(
                 f"Bulk deleted {result.deleted_count} entities from {self._collection_name}"
@@ -507,3 +556,234 @@ class MongoBaseRepository(IBaseRepository[T], ABC, Generic[T]):
                 query[key] = value
 
         return query
+
+    async def get_by_ids(self, entity_ids: List[str]) -> List[T]:
+        """
+        Retrieve multiple entities by their IDs.
+
+        Args:
+            entity_ids: List of entity IDs to retrieve
+
+        Returns:
+            List of found entities
+        """
+        try:
+            if not entity_ids:
+                return []
+
+            query_filters = []
+            for entity_id in entity_ids:
+                filters: List[Dict[str, Any]] = [{"id": entity_id}]
+
+                if ObjectId and self._is_valid_object_id(entity_id):
+                    filters.append({"_id": ObjectId(entity_id)})
+                else:
+                    filters.append({"_id": entity_id})
+
+                if hasattr(self._entity_class, "signal_id"):
+                    filters.append({"signal_id": entity_id})
+                if hasattr(self._entity_class, "strategy_id"):
+                    filters.append({"strategy_id": entity_id})
+
+                query_filters.append({"$or": filters})
+
+            query = {"$or": query_filters}
+            cursor = self._collection.find(query, **self._get_session_kwargs())
+
+            entities = []
+            async for data in cursor:
+                entity = self._dict_to_entity(data)
+                if entity is not None:
+                    entities.append(entity)
+
+            return entities
+
+        except PyMongoError as e:
+            raise RepositoryError(f"Failed to get entities by IDs", original_error=e)
+
+    async def find_one(self, filters: Dict[str, Any]) -> Optional[T]:
+        """
+        Find a single entity matching the given filters.
+
+        Args:
+            filters: Dictionary of field-value pairs to filter by
+
+        Returns:
+            First matching entity or None if not found
+        """
+        try:
+            query = self._build_query(filters)
+            data = await self._collection.find_one(query, **self._get_session_kwargs())
+            return self._dict_to_entity(data) if data else None
+
+        except PyMongoError as e:
+            raise RepositoryError(
+                f"Failed to find entity by criteria in {self._collection_name}",
+                original_error=e,
+            )
+
+    async def upsert(self, entity: T, update_fields: Optional[List[str]] = None) -> T:
+        """
+        Insert or update an entity.
+
+        Args:
+            entity: Entity to upsert
+            update_fields: Specific fields to update (if None, update all fields)
+
+        Returns:
+            The upserted entity
+        """
+        try:
+            data = self._entity_to_dict(entity)
+            entity_id = (
+                data.get("id") or data.get("signal_id") or data.get("strategy_id")
+            )
+
+            if not entity_id:
+                # No ID provided, perform insert
+                return await self.create(entity)
+
+            # Build query for existing entity
+            query = {"$or": [{"id": entity_id}]}
+            if ObjectId and self._is_valid_object_id(entity_id):
+                query["$or"].append({"_id": ObjectId(entity_id)})
+            else:
+                query["$or"].append({"_id": entity_id})
+
+            if "signal_id" in data:
+                query["$or"].append({"signal_id": entity_id})
+            if "strategy_id" in data:
+                query["$or"].append({"strategy_id": entity_id})
+
+            # Prepare update data
+            update_data = data.copy()
+            if update_fields:
+                # Only update specified fields
+                update_data = {
+                    field: data[field] for field in update_fields if field in data
+                }
+
+            # Add/update timestamps
+            update_data["updated_at"] = datetime.utcnow()
+            if "created_at" not in update_data:
+                update_data["created_at"] = datetime.utcnow()
+
+            result = await self._collection.update_one(
+                query, {"$set": update_data}, upsert=True, **self._get_session_kwargs()
+            )
+
+            if result.upserted_id:
+                update_data["_id"] = result.upserted_id
+                logger.info(
+                    f"Upserted (inserted) entity in {self._collection_name}: {entity_id}"
+                )
+            else:
+                logger.info(
+                    f"Upserted (updated) entity in {self._collection_name}: {entity_id}"
+                )
+
+            upserted_entity = self._dict_to_entity(update_data)
+            if upserted_entity is None:
+                raise RepositoryError(
+                    f"Failed to upsert entity in {self._collection_name}: entity conversion returned None"
+                )
+            return upserted_entity
+
+        except PyMongoError as e:
+            raise RepositoryError(
+                f"Failed to upsert entity in {self._collection_name}", original_error=e
+            )
+
+    async def delete_by_criteria(self, filters: Dict[str, Any]) -> int:
+        """
+        Delete entities matching the given filters.
+
+        Args:
+            filters: Dictionary of field-value pairs to filter by
+
+        Returns:
+            Number of entities deleted
+        """
+        try:
+            query = self._build_query(filters)
+            result = await self._collection.delete_many(
+                query, **self._get_session_kwargs()
+            )
+
+            logger.info(
+                f"Deleted {result.deleted_count} entities from {self._collection_name}"
+            )
+            return result.deleted_count
+
+        except PyMongoError as e:
+            raise RepositoryError(
+                f"Failed to delete entities by criteria in {self._collection_name}",
+                original_error=e,
+            )
+
+    async def update_by_criteria(
+        self, filters: Dict[str, Any], update_data: Dict[str, Any], upsert: bool = False
+    ) -> int:
+        """
+        Update entities matching the given filters.
+
+        Args:
+            filters: Dictionary of field-value pairs to filter by
+            update_data: Dictionary of fields to update
+            upsert: Whether to insert if no documents match
+
+        Returns:
+            Number of entities updated
+        """
+        try:
+            query = self._build_query(filters)
+
+            # Add updated timestamp
+            update_data_copy = update_data.copy()
+            update_data_copy["updated_at"] = datetime.utcnow()
+
+            result = await self._collection.update_many(
+                query,
+                {"$set": update_data_copy},
+                upsert=upsert,
+                **self._get_session_kwargs(),
+            )
+
+            count = result.modified_count + (1 if result.upserted_id else 0)
+            logger.info(f"Updated {count} entities in {self._collection_name}")
+            return count
+
+        except PyMongoError as e:
+            raise RepositoryError(
+                f"Failed to update entities by criteria in {self._collection_name}",
+                original_error=e,
+            )
+
+    def _get_session_kwargs(self) -> Dict[str, Any]:
+        """
+        Get session kwargs for MongoDB operations.
+
+        Returns:
+            Dictionary containing session if available
+        """
+        return {"session": self._session} if self._session else {}
+
+    def set_session(self, session: Optional[Any]) -> None:
+        """
+        Set the MongoDB session for this repository.
+
+        Args:
+            session: MongoDB session for transaction support
+        """
+        self._session = session
+
+    async def in_transaction(self) -> bool:
+        """
+        Check if repository is currently in a transaction.
+
+        Returns:
+            True if in transaction, False otherwise
+        """
+        return self._session is not None and getattr(
+            self._session, "in_transaction", False
+        )
