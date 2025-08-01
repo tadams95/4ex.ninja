@@ -1,6 +1,9 @@
 'use client';
 
 import { AuthErrorBoundary } from '@/components/error';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
 import { logAuthDebug } from '@/lib/auth-debug';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
@@ -84,7 +87,7 @@ function LoginPageComponent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-4">
-      <div className="max-w-md w-full space-y-8 p-8 bg-gray-800 rounded-xl">
+      <Card className="max-w-md w-full space-y-8" padding="lg">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             Sign in to your account
@@ -92,75 +95,60 @@ function LoginPageComponent() {
         </div>
 
         {error && (
-          <div className="bg-red-500/20 text-red-400 p-3 rounded-md">
+          <div className="bg-error/20 text-error p-3 rounded-md">
             <p className="font-medium">{error}</p>
-            {detailedError && <p className="text-sm mt-1 text-red-300">{detailedError}</p>}
+            {detailedError && <p className="text-sm mt-1 text-error/80">{detailedError}</p>}
           </div>
         )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
-                placeholder="Email address"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
-                placeholder="Password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-              />
-            </div>
+          <div className="space-y-4">
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              placeholder="Email address"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+            />
           </div>
 
           <div className="flex items-center justify-between">
             <div className="text-sm">
               <Link
                 href="/forgot-password"
-                className="font-medium text-green-500 hover:text-green-500"
+                className="font-medium text-primary-500 hover:text-primary-400"
               >
                 Forgot your password?
               </Link>
             </div>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-              {loading ? (
-                <span className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
-              ) : (
-                'Sign in'
-              )}
-            </button>
-          </div>
+          <Button type="submit" disabled={loading} className="w-full" loading={loading}>
+            Sign in
+          </Button>
         </form>
 
         <div className="text-center text-sm">
-          <span className="text-gray-400">Don't have an account?</span>{' '}
-          <Link href="/register" className="font-medium text-green-500 hover:text-green-500">
+          <span className="text-neutral-400">Don't have an account?</span>{' '}
+          <Link href="/register" className="font-medium text-primary-500 hover:text-primary-400">
             Register
           </Link>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

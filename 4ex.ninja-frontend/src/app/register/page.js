@@ -1,6 +1,9 @@
 'use client';
 
 import { AuthErrorBoundary } from '@/components/error';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
 import { handleCheckout } from '@/utils/checkout-helpers';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -68,100 +71,80 @@ function RegisterPageComponent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-4">
-      <div className="max-w-md w-full space-y-8 p-8 bg-gray-800 rounded-xl">
+      <Card className="max-w-md w-full space-y-8" padding="lg">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             Create your account
           </h2>
         </div>
 
-        {error && (
-          <div className="bg-red-500/20 text-red-400 p-3 rounded-md text-center">{error}</div>
-        )}
+        {error && <div className="bg-error/20 text-error p-3 rounded-md text-center">{error}</div>}
 
         {success && (
-          <div className="bg-green-500/20 text-green-500 p-3 rounded-md text-center">
+          <div className="bg-success/20 text-success p-3 rounded-md text-center">
             Account created successfully! Redirecting to checkout...
           </div>
         )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                autoComplete="name"
-                required
-                className="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
-                placeholder="Full Name"
-                value={name}
-                onChange={e => setName(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
-                placeholder="Email address"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
-                placeholder="Password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                required
-                className="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-              />
-            </div>
+          <div className="space-y-4">
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              autoComplete="name"
+              required
+              placeholder="Full Name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+            />
+
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              placeholder="Email address"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              required
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+            />
+
+            <Input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              autoComplete="new-password"
+              required
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+            />
           </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading || success}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
-            >
-              {loading ? (
-                <span className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
-              ) : null}
-              {success ? 'Account Created!' : 'Create Account'}
-            </button>
-          </div>
+          <Button type="submit" disabled={loading || success} className="w-full" loading={loading}>
+            {success ? 'Account Created!' : 'Create Account'}
+          </Button>
         </form>
 
         <div className="text-center text-sm">
-          <span className="text-gray-400">Already have an account?</span>{' '}
-          <Link href="/login" className="font-medium text-green-500 hover:text-green-500">
+          <span className="text-neutral-400">Already have an account?</span>{' '}
+          <Link href="/login" className="font-medium text-primary-500 hover:text-primary-400">
             Sign in
           </Link>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
