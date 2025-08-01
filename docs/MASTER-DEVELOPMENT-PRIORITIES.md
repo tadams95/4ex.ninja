@@ -254,11 +254,27 @@ This document provides a strategic, ordered approach to implementing all planned
     - ✅ Interface compliance checking with async method validation
     - ✅ Performance monitoring with query timing and timeout detection
     - ✅ Data integrity validation with CRUD operation testing
-- [ ] **Day 4**: Database Schema & Indexing
-  - [ ] **1.5.13**: Create database initialization scripts with proper indexes
-  - [ ] **1.5.14**: Add compound indexes for common query patterns (pair+timestamp, strategy+status)
-  - [ ] **1.5.15**: Implement time-series collection setup for market data
-  - [ ] **1.5.16**: Add data validation rules and constraints
+- [x] **Day 4**: Database Schema & Indexing
+  - [x] **1.5.13**: Create database initialization scripts with proper indexes
+    - ✅ Created comprehensive `SchemaInitializer` class for MongoDB collection setup
+    - ✅ Implemented JSON schema validation for all collections (signals, market_data, strategies, users, migrations)
+    - ✅ Added proper error handling and fallback support for missing MongoDB drivers
+    - ✅ Created convenience functions for easy import and use
+  - [x] **1.5.14**: Add compound indexes for common query patterns (pair+timestamp, strategy+status)
+    - ✅ Added compound indexes for signals: strategy+pair+timestamp, pair+signal_type+timestamp
+    - ✅ Added compound indexes for market_data: timeframe+timestamp, pair+created_at
+    - ✅ Added compound indexes for strategies: type+status+created_at, status+last_executed_at
+    - ✅ Implemented sparse indexes for optional fields (executed_at, last_executed_at)
+  - [x] **1.5.15**: Implement time-series collection setup for market data
+    - ✅ Created `_setup_time_series_collection` method with proper time-series configuration
+    - ✅ Implemented `_create_time_series_indexes` for optimized time-based queries
+    - ✅ Added granularity settings and data expiration (1 year for market data)
+    - ✅ Integrated time-series setup into collection initialization process
+  - [x] **1.5.16**: Add data validation rules and constraints
+    - ✅ Enhanced schema validation with pattern matching for currency pairs (XXX/YYY format)
+    - ✅ Added min/max constraints for numeric fields (prices, volumes, position sizes)
+    - ✅ Implemented string length validation and pattern matching for IDs
+    - ✅ Added strict validation with `additionalProperties: false` to prevent invalid fields
 - [ ] **Day 5**: Integration & Migration
   - [ ] **1.5.17**: Update dependency injection container to use new repositories
   - [ ] **1.5.18**: Migrate existing API endpoints to use repository pattern
