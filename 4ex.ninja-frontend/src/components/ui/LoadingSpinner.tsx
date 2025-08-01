@@ -2,13 +2,13 @@ import React from 'react';
 
 export interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  color?: 'white' | 'green' | 'gray';
+  color?: 'white' | 'primary' | 'neutral';
   className?: string;
 }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'md',
-  color = 'green',
+  color = 'primary',
   className = '',
 }) => {
   const sizeClasses = {
@@ -20,8 +20,8 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   const colorClasses = {
     white: 'text-white',
-    green: 'text-green-500',
-    gray: 'text-gray-400',
+    primary: 'text-primary-500',
+    neutral: 'text-neutral-400',
   };
 
   const spinnerClasses =

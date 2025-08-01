@@ -17,7 +17,7 @@ export const Input: React.FC<InputProps> = ({
   ...props
 }) => {
   const baseClasses =
-    'appearance-none relative block w-full px-3 py-2 border bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 transition-colors duration-200';
+    'appearance-none relative block w-full px-3 py-2 border bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200';
 
   const variantClasses = {
     default: 'rounded-md',
@@ -25,8 +25,8 @@ export const Input: React.FC<InputProps> = ({
   };
 
   const errorClasses = error
-    ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-    : 'border-gray-600';
+    ? 'border-error focus:ring-error focus:border-error'
+    : 'border-neutral-600';
 
   const inputClasses =
     `${baseClasses} ${variantClasses[variant]} ${errorClasses} ${className}`.trim();
@@ -36,17 +36,17 @@ export const Input: React.FC<InputProps> = ({
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={inputId} className="block text-sm font-medium text-gray-300 mb-1">
+        <label htmlFor={inputId} className="block text-sm font-medium text-neutral-300 mb-1">
           {label}
         </label>
       )}
       <input id={inputId} className={inputClasses} {...props} />
       {error && (
-        <p className="mt-1 text-sm text-red-400" role="alert">
+        <p className="mt-1 text-sm text-error" role="alert">
           {error}
         </p>
       )}
-      {helperText && !error && <p className="mt-1 text-sm text-gray-400">{helperText}</p>}
+      {helperText && !error && <p className="mt-1 text-sm text-neutral-400">{helperText}</p>}
     </div>
   );
 };

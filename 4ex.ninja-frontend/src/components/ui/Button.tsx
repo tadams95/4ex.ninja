@@ -9,11 +9,11 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const buttonVariants = {
-  primary: 'bg-green-700 hover:bg-green-900 text-white font-bold border-transparent',
-  secondary: 'bg-gray-700 hover:bg-gray-800 text-white font-bold border-transparent',
+  primary: 'bg-primary-700 hover:bg-primary-800 text-white font-semibold border-transparent',
+  secondary: 'bg-neutral-700 hover:bg-neutral-800 text-white font-semibold border-transparent',
   outline:
-    'bg-transparent hover:bg-gray-800 text-white font-bold border border-gray-600 hover:border-gray-500',
-  ghost: 'bg-transparent hover:bg-gray-800 text-white font-medium border-transparent',
+    'bg-transparent hover:bg-neutral-800 text-white font-semibold border border-neutral-600 hover:border-neutral-500',
+  ghost: 'bg-transparent hover:bg-neutral-800 text-white font-medium border-transparent',
 };
 
 const buttonSizes = {
@@ -32,7 +32,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses =
-    'rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-colors duration-200 inline-flex items-center justify-center';
+    'rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50 transition-colors duration-200 inline-flex items-center justify-center';
   const variantClasses = buttonVariants[variant];
   const sizeClasses = buttonSizes[size];
   const disabledClasses = disabled || loading ? 'opacity-50 cursor-not-allowed' : '';

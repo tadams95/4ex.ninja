@@ -79,7 +79,7 @@ export const Modal: React.FC<ModalProps> = ({
 
           {/* Modal */}
           <motion.div
-            className={`relative bg-gray-800 rounded-lg shadow-xl w-full mx-4 ${sizeClasses[size]} ${className}`}
+            className={`relative bg-neutral-800 rounded-lg shadow-xl w-full mx-4 ${sizeClasses[size]} ${className}`}
             variants={modalVariants}
             initial="hidden"
             animate="visible"
@@ -87,11 +87,11 @@ export const Modal: React.FC<ModalProps> = ({
             transition={{ duration: 0.2 }}
           >
             {title && (
-              <div className="flex items-center justify-between p-4 border-b border-gray-600">
+              <div className="flex items-center justify-between p-4 border-b border-neutral-600">
                 <h3 className="text-lg font-semibold text-white">{title}</h3>
                 <button
                   onClick={onClose}
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                  className="text-neutral-400 hover:text-white transition-colors duration-200"
                   aria-label="Close modal"
                 >
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
