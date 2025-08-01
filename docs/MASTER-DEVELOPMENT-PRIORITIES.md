@@ -208,10 +208,41 @@ This document provides a strategic, ordered approach to implementing all planned
       - Consistent visual design across all authentication flows
 
 #### 1.5 Database Layer & Repository Pattern
-- [ ] **Day 1-2**: Implement MongoDB connection manager and base repository
-- [ ] **Day 3-4**: Create SignalRepository and MarketDataRepository
-- [ ] **Day 5-6**: Migrate existing strategies to use repository pattern
-- [ ] **Day 7**: Add database indexing and query optimization
+- [ ] **Day 1**: Implement MongoDB Connection Manager
+  - [ ] **1.5.1**: Create `src/infrastructure/database/connection.py` with DatabaseManager class
+  - [ ] **1.5.2**: Implement connection pooling, health checks, and retry logic
+  - [ ] **1.5.3**: Add environment-based configuration (dev/prod connection strings)
+  - [ ] **1.5.4**: Create database initialization and migration utilities
+- [ ] **Day 2**: Complete Base Repository Implementation
+  - [ ] **1.5.5**: Enhance `mongo_base_repository.py` with missing CRUD operations
+  - [ ] **1.5.6**: Add transaction support and unit of work pattern
+  - [ ] **1.5.7**: Implement proper error handling and logging
+  - [ ] **1.5.8**: Add repository factory pattern for dependency injection
+- [ ] **Day 3**: Finalize Entity Repositories
+  - [ ] **1.5.9**: Complete `MongoSignalRepository` with optimized queries
+  - [ ] **1.5.10**: Complete `MongoMarketDataRepository` with time-series optimizations
+  - [ ] **1.5.11**: Complete `MongoStrategyRepository` with strategy-specific operations
+  - [ ] **1.5.12**: Add repository interfaces validation and testing utilities
+- [ ] **Day 4**: Database Schema & Indexing
+  - [ ] **1.5.13**: Create database initialization scripts with proper indexes
+  - [ ] **1.5.14**: Add compound indexes for common query patterns (pair+timestamp, strategy+status)
+  - [ ] **1.5.15**: Implement time-series collection setup for market data
+  - [ ] **1.5.16**: Add data validation rules and constraints
+- [ ] **Day 5**: Integration & Migration
+  - [ ] **1.5.17**: Update dependency injection container to use new repositories
+  - [ ] **1.5.18**: Migrate existing API endpoints to use repository pattern
+  - [ ] **1.5.19**: Update existing signal generation logic to use repositories
+  - [ ] **1.5.20**: Create data migration scripts for existing data
+- [ ] **Day 6**: Performance & Optimization
+  - [ ] **1.5.21**: Add query performance monitoring and logging
+  - [ ] **1.5.22**: Implement caching layer for frequently accessed data
+  - [ ] **1.5.23**: Add connection pool monitoring and health checks
+  - [ ] **1.5.24**: Optimize repository queries based on usage patterns
+- [ ] **Day 7**: Testing & Validation
+  - [ ] **1.5.25**: Create comprehensive repository tests with test database
+  - [ ] **1.5.26**: Add integration tests for database operations
+  - [ ] **1.5.27**: Validate data consistency and constraint enforcement
+  - [ ] **1.5.28**: Performance testing and load validation
 
 #### 1.6 State Management Implementation
 - [ ] **Day 1-2**: Install and configure Zustand + React Query
