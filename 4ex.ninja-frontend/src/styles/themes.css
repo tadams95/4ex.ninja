@@ -1,18 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /**
- * Design Tokens and Theme System for 4ex.ninja
+ * Theme System for 4ex.ninja
  * 
- * This defines CSS custom properties (CSS variables) for all design tokens,
+ * This file defines CSS custom properties (CSS variables) for all design tokens,
  * enabling dynamic theming and consistent styling across the application.
  */
 
 :root {
   /* === EXISTING VARIABLES (maintained for backward compatibility) === */
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #ededed;
 
   /* === DESIGN TOKEN VARIABLES === */
 
@@ -143,12 +139,12 @@
   --z-tooltip: 1800;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* === SYSTEM PREFERENCE DETECTION === */
+
+/* Default dark theme is already applied above */
+/* Light theme implementation can be added here when needed */
+
+/* System preference detection is handled by Tailwind's dark mode configuration */
 
 /* === REDUCED MOTION SUPPORT === */
 
@@ -214,10 +210,4 @@
 .theme-transition {
   transition-duration: var(--transition-normal);
   transition-timing-function: var(--transition-ease);
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
