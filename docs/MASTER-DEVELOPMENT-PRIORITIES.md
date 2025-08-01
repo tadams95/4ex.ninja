@@ -162,6 +162,35 @@ This document provides a strategic, ordered approach to implementing all planned
 - [x] **Day 1-2**: Create `src/components/ui/` directory with base components
   - Button, Input, Card, LoadingSpinner, Modal components
 - [ ] **Day 3-4**: Implement design tokens and theme system
+  - **Day 3 Subtasks:**
+    - [ ] **3.1**: Create design tokens configuration (`src/styles/tokens.ts`)
+      - Color palette (primary: green, neutral: grays, semantic: success/warning/error)
+      - Typography scale (font sizes, weights, line heights)
+      - Spacing scale (4px, 8px, 16px, 24px, 32px, 48px, 64px)
+      - Border radius values (sm: 4px, md: 8px, lg: 12px, xl: 16px)
+      - Shadow/elevation system (xs, sm, md, lg, xl)
+    - [ ] **3.2**: Extend Tailwind configuration with design tokens (`tailwind.config.mjs`)
+      - Map design tokens to Tailwind theme
+      - Custom color palette integration
+      - Typography and spacing system integration
+    - [ ] **3.3**: Create CSS custom properties system (`src/styles/themes.css`)
+      - CSS variables for all design tokens
+      - Dark theme implementation (current default)
+      - System preference detection
+  - **Day 4 Subtasks:**
+    - [ ] **4.1**: Update UI components to use design tokens
+      - Refactor Button component (colors, spacing, typography)
+      - Refactor Input component (semantic color mapping, consistent spacing)
+      - Refactor Card component (background colors, border radius, shadows)
+      - Refactor Modal and LoadingSpinner components
+    - [ ] **4.2**: Create theme utility functions (`src/utils/theme.ts`)
+      - Color manipulation utilities
+      - Theme value getters
+      - Responsive helpers
+    - [ ] **4.3**: Integration testing and validation
+      - Verify theme consistency across all components
+      - Test TypeScript compilation with new theme system
+      - Ensure no visual regressions
 - [ ] **Day 5-7**: Replace existing components with new library components
 
 #### 1.5 Database Layer & Repository Pattern
