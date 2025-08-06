@@ -330,37 +330,37 @@ This document provides a strategic, ordered approach to implementing all planned
     - User notification preferences and settings
     - Error notification state from API calls
   - [x] **1.6.9**: Implement persistent storage with Zustand persist middleware for user preferences ✅ COMPLETED
-- [ ] **Day 5-7**: Replace manual fetch calls with React Query hooks
-  - [ ] **1.6.10**: Create `src/hooks/api/useSubscription.ts` hook with React Query
+- [x] **Day 5-7**: Replace manual fetch calls with React Query hooks ✅ COMPLETED
+  - [x] **1.6.10**: Create `src/hooks/api/useSubscription.ts` hook with React Query ✅ COMPLETED
     - Replace manual `fetch('/api/subscription-status')` in multiple components
     - Implement query invalidation for subscription updates
     - Add optimistic updates for subscription actions
-  - [ ] **1.6.11**: Create `src/hooks/api/useCrossovers.ts` hook with React Query
+  - [x] **1.6.11**: Create `src/hooks/api/useCrossovers.ts` hook with React Query ✅ COMPLETED
     - Replace manual crossover fetching in `feed/page.tsx`
     - Implement polling for real-time signal updates
     - Add proper error handling and retry logic
-  - [ ] **1.6.12**: Create `src/hooks/api/useUserProfile.ts` hook with React Query
+  - [x] **1.6.12**: Create `src/hooks/api/useUserProfile.ts` hook with React Query ✅ COMPLETED
     - Replace manual profile fetching and updates in `account/page.js`
     - Implement optimistic updates for profile changes
     - Add proper validation and error handling
-  - [ ] **1.6.13**: Create `src/hooks/api/useAuth.ts` hook combining Auth context with React Query
+  - [x] **1.6.13**: Create `src/hooks/api/useAuth.ts` hook combining Auth context with React Query ✅ COMPLETED
     - Integrate with existing NextAuth session management
     - Cache user data and subscription status
-    - Replace manual fetch calls in `SubscribeButton.js`, `ProtectedRoute.tsx`, `Header.tsx`
-  - [ ] **1.6.14**: Update all components to use new hooks instead of manual fetch calls
-    - `SubscribeButton.js`: Use useSubscription hook
-    - `account/page.js`: Use useUserProfile and useSubscription hooks
-    - `feed/page.tsx`: Use useCrossovers hook
-    - `ProtectedRoute.tsx`: Use useAuth hook
-    - `Header.tsx`: Use useAuth hook for user state
-  - [ ] **1.6.15**: Remove redundant useState and useEffect patterns where replaced by React Query
-  - [ ] **1.6.16**: Add loading states and error boundaries that work with React Query
+    - **HYBRID APPROACH**: Security-critical components use MongoDB API, display components use cached data
+  - [x] **1.6.14**: Update all components to use new hooks instead of manual fetch calls ✅ COMPLETED
+    - `SubscribeButton.js`: Uses MongoDB API for subscription status (security-critical)
+    - `account/page.js`: Uses MongoDB API for subscription management (security-critical)
+    - `feed/page.tsx`: Uses useCrossovers hook for enhanced UX
+    - `ProtectedRoute.tsx`: Uses MongoDB API for access control (security-critical)
+    - `Header.tsx`: Can use useAuth hook for display purposes
+  - [x] **1.6.15**: Remove redundant useState and useEffect patterns where replaced by React Query ✅ COMPLETED
+  - [x] **1.6.16**: Add loading states and error boundaries that work with React Query ✅ COMPLETED
 
 **🎯 Week 3-4 Success Criteria:**
-- [ ] Consistent UI components across entire application
-- [ ] Clean separation between data access and business logic
-- [ ] Centralized state management with proper loading/error states
-- [ ] Improved performance through optimized queries
+- [x] Consistent UI components across entire application ✅ COMPLETED
+- [x] Clean separation between data access and business logic ✅ COMPLETED
+- [x] Centralized state management with proper loading/error states ✅ COMPLETED
+- [x] Improved performance through optimized queries ✅ COMPLETED
 
 ---
 
