@@ -3,8 +3,8 @@
  */
 
 import { createTestCrossover, createTestUser } from '@/test-utils/database';
-import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 
 describe('Testing Infrastructure Setup', () => {
   describe('Jest Configuration', () => {
