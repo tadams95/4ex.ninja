@@ -74,3 +74,8 @@ ValueError: This is a test error
 2025-07-31T21:22:37.461702 [33m[WARNING][0m src.infrastructure.monitoring.dashboards:273 increment_counter() - Counter metric not found: test_counter | taskName=None
 2025-07-31T21:22:37.475094 [33m[WARNING][0m src.infrastructure.monitoring.dashboards:273 increment_counter() - Counter metric not found: signal_errors_total | taskName=None
 2025-07-31T21:22:37.475198 [33m[WARNING][0m src.infrastructure.monitoring.dashboards:273 increment_counter() - Counter metric not found: database_errors_total | taskName=None
+2025-08-06T00:35:12.054863 [32m[INFO][0m infrastructure.database.config:88 _detect_environment() - Detected environment: testing | taskName=None
+2025-08-06T00:35:12.118125 [32m[INFO][0m src.infrastructure.database.config:88 _detect_environment() - Detected environment: testing | taskName=None
+2025-08-06T00:35:12.301589 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'logs' added | taskName=None
+2025-08-06T00:35:12.301716 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'email' added | taskName=None
+2025-08-06T00:35:12.301751 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'webhook' added | taskName=None
