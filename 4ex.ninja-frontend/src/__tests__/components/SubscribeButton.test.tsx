@@ -2,11 +2,11 @@
  * @jest-environment jsdom
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SessionProvider } from 'next-auth/react';
 import SubscribeButton from '@/app/components/SubscribeButton';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { SessionProvider } from 'next-auth/react';
 
 // Mock next/navigation
 const mockPush = jest.fn();
@@ -31,8 +31,9 @@ jest.mock('@/hooks/api', () => ({
 
 // Mock error boundary - simple mock that just renders children
 jest.mock('@/components/error', () => ({
-  SubscribeButtonErrorBoundary: ({ children }: { children: React.ReactNode }) => 
+  SubscribeButtonErrorBoundary: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="subscribe-button-error-boundary">{children}</div>
+  ),
 }));
 
 // Mock fetch
@@ -55,9 +56,7 @@ describe('SubscribeButton', () => {
 
   const TestWrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>
-        {children}
-      </SessionProvider>
+      <SessionProvider>{children}</SessionProvider>
     </QueryClientProvider>
   );
 
@@ -336,7 +335,7 @@ describe('SubscribeButton', () => {
       });
 
       const button = screen.getByRole('button');
-      
+
       // Should be focusable
       button.focus();
       expect(button).toHaveFocus();
@@ -355,10 +354,14 @@ describe('SubscribeButton', () => {
       // Mock slow subscription check
       mockFetch.mockReturnValue(
         new Promise(resolve => {
-          setTimeout(() => resolve({
-            ok: true,
-            json: async () => ({ isSubscribed: false }),
-          }), 100);
+          setTimeout(
+            () =>
+              resolve({
+                ok: true,
+                json: async () => ({ isSubscribed: false }),
+              }),
+            100
+          );
         })
       );
 

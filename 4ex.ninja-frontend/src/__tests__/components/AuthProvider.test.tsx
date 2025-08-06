@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 
-import { render, screen } from '@testing-library/react';
-import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
+import { SessionProvider } from 'next-auth/react';
 
 // Mock next-auth
 jest.mock('next-auth/react', () => ({
@@ -16,9 +16,7 @@ jest.mock('next-auth/react', () => ({
 const MockAuthProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <div data-testid="auth-error-boundary">
-      <SessionProvider refetchInterval={5 * 60}>
-        {children}
-      </SessionProvider>
+      <SessionProvider refetchInterval={5 * 60}>{children}</SessionProvider>
     </div>
   );
 };
@@ -38,11 +36,7 @@ describe('AuthProvider', () => {
   const TestComponent = () => <div data-testid="test-child">Test Child</div>;
 
   const renderWithProviders = (component: React.ReactElement) => {
-    return render(
-      <QueryClientProvider client={queryClient}>
-        {component}
-      </QueryClientProvider>
-    );
+    return render(<QueryClientProvider client={queryClient}>{component}</QueryClientProvider>);
   };
 
   it('should render children wrapped in SessionProvider', () => {

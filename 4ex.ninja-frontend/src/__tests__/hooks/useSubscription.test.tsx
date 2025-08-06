@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 
-import { renderHook, waitFor, act } from '@testing-library/react';
+import { useCancelSubscription, useSubscriptionStatus } from '@/hooks/api/useSubscription';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useSubscriptionStatus, useCancelSubscription } from '@/hooks/api/useSubscription';
 import '@testing-library/jest-dom';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 // Mock fetch
 const mockFetch = jest.fn();
@@ -35,9 +35,7 @@ describe('useSubscription hooks', () => {
   });
 
   const wrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 
   describe('useSubscriptionStatus', () => {
@@ -203,7 +201,7 @@ describe('useSubscription hooks', () => {
 
     it('should show loading state during cancellation', async () => {
       let resolvePromise: (value: any) => void;
-      const pendingPromise = new Promise((resolve) => {
+      const pendingPromise = new Promise(resolve => {
         resolvePromise = resolve;
       });
 
