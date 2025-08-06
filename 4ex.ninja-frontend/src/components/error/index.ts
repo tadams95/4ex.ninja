@@ -3,6 +3,7 @@ export { default as ApiErrorFallback } from './ApiErrorFallback';
 export { default as ChunkLoadErrorBoundary } from './ChunkLoadErrorBoundary';
 export { default as GlobalErrorBoundary } from './GlobalErrorBoundary';
 export { default as PageErrorFallback } from './PageErrorFallback';
+export { default as ReactQueryErrorBoundary } from './ReactQueryErrorBoundary';
 
 // Page-specific Error Boundaries
 export { default as AccountErrorBoundary } from './AccountErrorBoundary';

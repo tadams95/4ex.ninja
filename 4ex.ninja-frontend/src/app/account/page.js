@@ -1,21 +1,36 @@
 'use client';
 
 import { AccountErrorBoundary } from '@/components/error';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, useProfileManagement } from '@/hooks/api';
 import { handleCheckout } from '@/utils/checkout-helpers';
 import { motion } from 'framer-motion';
-import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 function AccountPageComponent() {
-  const { user, isAuthenticated, loading } = useAuth();
-  const [activeTab, setActiveTab] = useState('subscription');
-  const [updateLoading, setUpdateLoading] = useState(false);
-  const [message, setMessage] = useState({ type: '', text: '' });
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [subscriptionEnds, setSubscriptionEnds] = useState(null);
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const {
+    profile,
+    isLoading: profileLoading,
+    updateProfile,
+    updatePassword,
+    isUpdating,
+    updateError,
+    updateSuccess,
+    resetUpdateState,
+  } = useProfileManagement();
+
+  // Subscription state managed directly with MongoDB API
+  const [subscriptionData, setSubscriptionData] = useState({
+    isSubscribed: false,
+    subscriptionEnds: null,
+    status: null,
+  });
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);
+  const [isCanceling, setIsCanceling] = useState(false);
+
+  const [activeTab, setActiveTab] = useState('subscription');
+  const [message, setMessage] = useState({ type: '', text: '' });
   const router = useRouter();
 
   // Form states for profile update
@@ -26,40 +41,64 @@ function AccountPageComponent() {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       router.push('/login?callbackUrl=/account');
     }
 
-    if (user) {
-      setName(user.name || '');
-      setEmail(user.email || '');
+    if (profile) {
+      setName(profile.name || '');
+      setEmail(profile.email || '');
+    }
+
+    // Fetch subscription status from MongoDB API when authenticated
+    if (isAuthenticated) {
       fetchSubscriptionStatus();
     }
-  }, [loading, isAuthenticated, router, user]);
+  }, [authLoading, isAuthenticated, router, profile]);
 
-  // Fetch subscription status from MongoDB
+  // Fetch subscription status from MongoDB API
   const fetchSubscriptionStatus = async () => {
-    setSubscriptionLoading(true);
     try {
+      setSubscriptionLoading(true);
       const response = await fetch('/api/subscription-status');
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch subscription status');
+      if (response.ok) {
+        const data = await response.json();
+        setSubscriptionData({
+          isSubscribed: data.isSubscribed,
+          subscriptionEnds: data.subscriptionEnds,
+          status: data.status,
+        });
+      } else {
+        console.error('Failed to fetch subscription status');
       }
-
-      const data = await response.json();
-      setIsSubscribed(data.isSubscribed);
-      setSubscriptionEnds(data.subscriptionEnds);
     } catch (error) {
       console.error('Error fetching subscription status:', error);
-      setMessage({
-        type: 'error',
-        text: 'Failed to load subscription details. Please refresh the page.',
-      });
     } finally {
       setSubscriptionLoading(false);
     }
   };
+
+  // Handle update success/error messages
+  useEffect(() => {
+    if (updateSuccess) {
+      setMessage({
+        type: 'success',
+        text: 'Profile updated successfully!',
+      });
+      // Clear form fields for password update
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
+      resetUpdateState();
+    }
+
+    if (updateError) {
+      setMessage({
+        type: 'error',
+        text: updateError,
+      });
+    }
+  }, [updateSuccess, updateError, resetUpdateState]);
 
   // Format date for display
   const formatDate = dateString => {
@@ -85,7 +124,6 @@ function AccountPageComponent() {
   };
 
   const handleRenewSubscription = async () => {
-    setUpdateLoading(true);
     try {
       await handleCheckout();
     } catch (error) {
@@ -94,8 +132,6 @@ function AccountPageComponent() {
         type: 'error',
         text: 'Failed to process subscription renewal.',
       });
-    } finally {
-      setUpdateLoading(false);
     }
   };
 
@@ -109,42 +145,45 @@ function AccountPageComponent() {
       return;
     }
 
-    setUpdateLoading(true);
     setMessage({ type: '', text: '' });
+    setIsCanceling(true);
 
     try {
-      const response = await fetch('/api/cancel-subscription', {
+      const response = await fetch('/api/subscription/cancel', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to cancel subscription');
-      }
 
       const data = await response.json();
-      setMessage({
-        type: 'success',
-        text: data.message,
-      });
 
-      // Refresh subscription status after cancellation
-      await fetchSubscriptionStatus();
+      if (response.ok) {
+        setMessage({
+          type: 'success',
+          text: data.message || 'Subscription canceled successfully.',
+        });
+        // Refresh subscription status
+        await fetchSubscriptionStatus();
+      } else {
+        setMessage({
+          type: 'error',
+          text: data.message || 'Failed to cancel subscription. Please try again.',
+        });
+      }
     } catch (error) {
       console.error('Error cancelling subscription:', error);
       setMessage({
         type: 'error',
-        text: error.message || 'Failed to cancel subscription. Please try again.',
+        text: 'Failed to cancel subscription. Please try again.',
       });
     } finally {
-      setUpdateLoading(false);
+      setIsCanceling(false);
     }
   };
 
   const handleUpdateProfile = async e => {
     e.preventDefault();
-    setUpdateLoading(true);
     setMessage({ type: '', text: '' });
 
     try {
@@ -152,7 +191,6 @@ function AccountPageComponent() {
       if (newPassword) {
         if (newPassword !== confirmNewPassword) {
           setMessage({ type: 'error', text: 'New passwords do not match.' });
-          setUpdateLoading(false);
           return;
         }
 
@@ -161,40 +199,21 @@ function AccountPageComponent() {
             type: 'error',
             text: 'New password must be at least 6 characters.',
           });
-          setUpdateLoading(false);
           return;
         }
-      }
 
-      const response = await fetch('/api/update-profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        // Update password separately
+        updatePassword({
+          currentPassword,
+          newPassword,
+          confirmNewPassword,
+        });
+      } else {
+        // Update profile information
+        updateProfile({
           name,
           email,
-          currentPassword: currentPassword || undefined,
-          newPassword: newPassword || undefined,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to update profile');
-      }
-
-      setMessage({ type: 'success', text: 'Profile updated successfully!' });
-
-      // Clear password fields
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmNewPassword('');
-
-      // If email was changed, need to sign out and back in
-      if (email !== user.email) {
-        setTimeout(() => {
-          signOut({ callbackUrl: '/login' });
-        }, 2000);
+        });
       }
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -202,13 +221,11 @@ function AccountPageComponent() {
         type: 'error',
         text: error.message || 'Failed to update profile. Please try again.',
       });
-    } finally {
-      setUpdateLoading(false);
     }
   };
 
   // Loading state
-  if (loading) {
+  if (authLoading || profileLoading) {
     return (
       <div className="min-h-screen bg-black flex justify-center items-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
@@ -241,9 +258,11 @@ function AccountPageComponent() {
                 <div className="flex justify-between">
                   <span className="text-gray-400">Status</span>
                   <span
-                    className={`font-medium ${isSubscribed ? 'text-green-500' : 'text-red-500'}`}
+                    className={`font-medium ${
+                      subscriptionData.isSubscribed ? 'text-green-500' : 'text-red-500'
+                    }`}
                   >
-                    {isSubscribed ? 'Active' : 'Inactive'}
+                    {subscriptionData.isSubscribed ? 'Active' : 'Inactive'}
                   </span>
                 </div>
 
@@ -254,13 +273,17 @@ function AccountPageComponent() {
 
                 <div className="flex justify-between">
                   <span className="text-gray-400">Next billing date</span>
-                  <span className="font-medium">{formatDate(subscriptionEnds)}</span>
+                  <span className="font-medium">
+                    {formatDate(subscriptionData.subscriptionEnds)}
+                  </span>
                 </div>
 
-                {subscriptionEnds && (
+                {subscriptionData.subscriptionEnds && (
                   <div className="flex justify-between">
                     <span className="text-gray-400">Days remaining</span>
-                    <span className="font-medium">{getDaysRemaining(subscriptionEnds)}</span>
+                    <span className="font-medium">
+                      {getDaysRemaining(subscriptionData.subscriptionEnds)}
+                    </span>
                   </div>
                 )}
               </div>
@@ -270,18 +293,18 @@ function AccountPageComponent() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={handleRenewSubscription}
-                  disabled={updateLoading || subscriptionLoading}
+                  disabled={isUpdating || subscriptionLoading}
                   className="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-md flex-1 transition-colors disabled:opacity-50"
                 >
-                  {updateLoading ? 'Processing...' : 'Renew Subscription'}
+                  {isUpdating ? 'Processing...' : 'Renew Subscription'}
                 </button>
 
                 <button
                   onClick={handleCancelSubscription}
-                  disabled={updateLoading || subscriptionLoading || !isSubscribed}
+                  disabled={isCanceling || subscriptionLoading || !subscriptionData.isSubscribed}
                   className="border border-red-500 text-red-500 hover:bg-red-500/10 py-2 px-4 rounded-md flex-1 transition-colors disabled:opacity-50"
                 >
-                  {updateLoading ? 'Processing...' : 'Cancel Subscription'}
+                  {isCanceling ? 'Processing...' : 'Cancel Subscription'}
                 </button>
               </div>
             </div>
@@ -494,10 +517,10 @@ function AccountPageComponent() {
                   <div className="pt-4 border-t border-gray-700">
                     <button
                       type="submit"
-                      disabled={updateLoading}
+                      disabled={isUpdating}
                       className="bg-green-700 hover:bg-green-800 text-white py-2 px-6 rounded-md transition-colors"
                     >
-                      {updateLoading ? 'Saving...' : 'Save Changes'}
+                      {isUpdating ? 'Saving...' : 'Save Changes'}
                     </button>
                   </div>
                 </div>
@@ -563,10 +586,10 @@ function AccountPageComponent() {
                   <div className="pt-4 border-t border-gray-700">
                     <button
                       type="submit"
-                      disabled={updateLoading || (!currentPassword && !newPassword)}
+                      disabled={isUpdating || (!currentPassword && !newPassword)}
                       className="bg-green-700 hover:bg-green-800 text-white py-2 px-6 rounded-md transition-colors disabled:opacity-50"
                     >
-                      {updateLoading ? 'Updating...' : 'Update Password'}
+                      {isUpdating ? 'Updating...' : 'Update Password'}
                     </button>
                   </div>
                 </div>

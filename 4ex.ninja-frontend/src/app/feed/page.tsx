@@ -1,80 +1,20 @@
 'use client';
 
 import { FeedErrorBoundary } from '@/components/error';
-import { ApiResponse, Crossover } from '@/types';
+import { useLatestCrossovers } from '@/hooks/api';
+import { Crossover } from '@/types';
 import { motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 function SignalsPage() {
-  // const { data: session } = useSession();
+  const { data: crossoverData, isLoading: loading, error, refetch } = useLatestCrossovers(20); // Get latest 20 crossovers with polling
 
-  // // Debug subscription status at the top level
-  // useEffect(() => {
-  //   if (session) {
-  //     // console.log("Feed page - session:", {
-  //     //   email: session.user.email,
-  //     //   isSubscribed: session.user.isSubscribed
-  //     // });
-
-  //     // Also check subscription status directly for debugging
-  //     fetch("/api/subscription-status")
-  //       .then(res => res.json())
-  //       .then(data => {
-  //         console.log("Feed page - subscription status check:", data);
-  //       })
-  //       .catch(err => {
-  //         console.error("Error checking status:", err);
-  //       });
-  //   }
-  // }, [session]);
-
-  const [crossovers, setCrossovers] = useState<Crossover[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isEmpty, setIsEmpty] = useState<boolean>(false);
-
-  useEffect(() => {
-    async function fetchCrossovers(): Promise<void> {
-      try {
-        setLoading(true);
-        setError(null);
-        setIsEmpty(false);
-
-        const response = await fetch('/api/crossovers');
-
-        if (!response.ok) {
-          const errorData: ApiResponse = await response.json();
-          throw new Error(errorData.error || 'Failed to fetch crossovers');
-        }
-
-        const data: ApiResponse<Crossover[]> = await response.json();
-        setCrossovers(data.crossovers || []);
-
-        // Check if API returned isEmpty flag
-        if (data.isEmpty) {
-          setIsEmpty(true);
-        }
-      } catch (err) {
-        console.error('Error fetching crossovers:', err);
-        const errorMessage =
-          err instanceof Error ? err.message : 'Failed to load crossovers. Please try again later.';
-        setError(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchCrossovers();
-
-    // Optional: Set up polling to refresh signals periodically
-    const intervalId = setInterval(fetchCrossovers, 5 * 60 * 1000); // Every 5 minutes
-
-    return () => clearInterval(intervalId);
-  }, []);
+  const crossovers = crossoverData?.crossovers || [];
+  const isEmpty = crossoverData?.isEmpty || crossovers.length === 0;
 
   const handleRetry = (): void => {
-    window.location.reload();
+    refetch();
   };
 
   if (loading) {
@@ -108,7 +48,7 @@ function SignalsPage() {
             />
           </svg>
           <p className="font-medium mb-2">Error loading signals</p>
-          <p className="text-sm">{error}</p>
+          <p className="text-sm">{error?.message || 'An error occurred'}</p>
           <button
             onClick={handleRetry}
             className="mt-4 px-4 py-2 bg-red-500/30 text-red-300 rounded-md hover:bg-red-500/40 transition-colors"

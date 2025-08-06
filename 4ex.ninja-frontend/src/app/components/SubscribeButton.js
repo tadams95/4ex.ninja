@@ -1,7 +1,7 @@
 'use client';
 
 import { SubscribeButtonErrorBoundary } from '@/components/error';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/hooks/api';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -10,16 +10,16 @@ function SubscribeButtonComponent() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [checkingStatus, setCheckingStatus] = useState(true);
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { isAuthenticated, loading: authLoading } = useAuth();
 
   useEffect(() => {
     // Only check subscription status if user is logged in
-    if (status === 'authenticated' && session?.user?.id) {
+    if (isAuthenticated) {
       checkSubscriptionStatus();
-    } else if (status !== 'loading') {
+    } else if (!authLoading) {
       setCheckingStatus(false);
     }
-  }, [session, status]);
+  }, [isAuthenticated, authLoading]);
 
   const checkSubscriptionStatus = async () => {
     try {
@@ -27,7 +27,6 @@ function SubscribeButtonComponent() {
       if (response.ok) {
         const data = await response.json();
         setIsSubscribed(data.isSubscribed);
-        console.log('Subscription status:', data);
       } else {
         console.error('Failed to fetch subscription status');
       }
@@ -41,7 +40,7 @@ function SubscribeButtonComponent() {
   const handleButtonClick = () => {
     setLoading(true);
 
-    if (!session) {
+    if (!isAuthenticated) {
       // Not logged in - go to login
       router.push('/login');
     } else if (isSubscribed) {
@@ -56,8 +55,8 @@ function SubscribeButtonComponent() {
   // Decide button text based on auth and subscription status
   const getButtonText = () => {
     if (loading) return 'Loading...';
-    if (status === 'loading' || checkingStatus) return 'Loading...';
-    if (!session) return 'Sign In';
+    if (authLoading || checkingStatus) return 'Loading...';
+    if (!isAuthenticated) return 'Sign In';
     if (isSubscribed) return 'Go to Feed';
     return 'Start 1-Month Free Trial';
   };
@@ -65,7 +64,7 @@ function SubscribeButtonComponent() {
   return (
     <button
       onClick={handleButtonClick}
-      disabled={loading || status === 'loading' || checkingStatus}
+      disabled={loading || authLoading || checkingStatus}
       className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded"
     >
       {getButtonText()}

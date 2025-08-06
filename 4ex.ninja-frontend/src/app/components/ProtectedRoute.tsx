@@ -1,8 +1,8 @@
 'use client';
 
 import { ProtectedRouteErrorBoundary } from '@/components/error';
-import { BaseComponentProps, User } from '@/types';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/hooks/api';
+import { BaseComponentProps } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -16,25 +16,19 @@ interface SubscriptionResponse {
 
 function ProtectedRouteComponent({ requireSubscription = true, children }: ProtectedRouteProps) {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { isAuthenticated, loading } = useAuth();
   const [verified, setVerified] = useState<boolean>(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState<boolean | null>(null);
   const [isCheckingAPI, setIsCheckingAPI] = useState<boolean>(false);
 
-  // Get subscription status directly from API for reliable data
+  // Get subscription status directly from MongoDB API for reliable data
   useEffect(() => {
-    if (
-      status === 'authenticated' &&
-      requireSubscription &&
-      subscriptionStatus === null &&
-      !isCheckingAPI
-    ) {
+    if (isAuthenticated && requireSubscription && subscriptionStatus === null && !isCheckingAPI) {
       setIsCheckingAPI(true);
 
       fetch('/api/subscription-status')
         .then(res => res.json())
         .then((data: SubscriptionResponse) => {
-          // console.log("Subscription API response:", data);
           setSubscriptionStatus(data.isSubscribed);
         })
         .catch(err => {
@@ -45,15 +39,15 @@ function ProtectedRouteComponent({ requireSubscription = true, children }: Prote
           setIsCheckingAPI(false);
         });
     }
-  }, [status, requireSubscription, subscriptionStatus, isCheckingAPI]);
+  }, [isAuthenticated, requireSubscription, subscriptionStatus, isCheckingAPI]);
 
   // Make access decisions based on auth and subscription status
   useEffect(() => {
     // Wait until auth status is determined
-    if (status === 'loading') return;
+    if (loading) return;
 
     // Handle unauthenticated users
-    if (status === 'unauthenticated') {
+    if (!isAuthenticated) {
       router.push(`/login?callbackUrl=${encodeURIComponent(window.location.href)}`);
       return;
     }
@@ -66,32 +60,20 @@ function ProtectedRouteComponent({ requireSubscription = true, children }: Prote
       return;
     }
 
-    // For routes that require subscription
-
-    // First check session data
-    const sessionSubscribed = (session?.user as User)?.isSubscribed === true;
-
-    // Then check API data (more reliable)
-    const apiSubscribed = subscriptionStatus === true;
-
-    // If either source confirms subscription, allow access
-    if (sessionSubscribed || apiSubscribed) {
-      // console.log("User is subscribed, allowing access", {
-      //   sessionSubscribed,
-      //   apiSubscribed
-      // });
-      setVerified(true);
-    }
-    // Only redirect if we've completed API check and user is not subscribed
-    else if (subscriptionStatus !== null) {
-      // console.log("User not subscribed, redirecting to /pricing");
-      router.push('/pricing');
+    // For routes that require subscription, wait for API check to complete
+    if (subscriptionStatus !== null) {
+      if (subscriptionStatus) {
+        setVerified(true);
+      } else {
+        // User not subscribed, redirect to pricing
+        router.push('/pricing');
+      }
     }
     // Otherwise wait for API check to complete
-  }, [session, status, requireSubscription, router, subscriptionStatus]);
+  }, [loading, isAuthenticated, requireSubscription, router, subscriptionStatus]);
 
   // Show loading state during auth or subscription check
-  if (status === 'loading' || !verified || (requireSubscription && subscriptionStatus === null)) {
+  if (loading || !verified || (requireSubscription && subscriptionStatus === null)) {
     return (
       <div className="flex justify-center items-center h-screen bg-black">
         <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
