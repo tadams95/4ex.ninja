@@ -366,25 +366,91 @@ This document provides a strategic, ordered approach to implementing all planned
 
 ### **Week 5-6: Testing Infrastructure**
 
-#### 1.7 Testing Framework Setup
-- [ ] **Frontend**: Configure Jest + React Testing Library
-- [ ] **Backend**: Setup pytest with proper test configuration
-- [ ] **Integration**: Create test utilities and mock services
+#### 1.7 Testing Framework Setup & Configuration
+- [ ] **Day 1**: Frontend testing framework installation and configuration
+  - [ ] **1.7.1**: Install Jest + React Testing Library + testing utilities
+    - Install @testing-library/react, @testing-library/jest-dom, @testing-library/user-event
+    - Install jest-environment-jsdom for DOM testing environment
+    - Configure jest.config.js with Next.js setup and TypeScript support
+  - [ ] **1.7.2**: Install and configure MSW (Mock Service Worker) for API mocking
+    - Setup MSW for reliable API mocking in tests
+    - Create mock handlers for critical API endpoints (/api/auth/*, /api/subscription-status, /api/crossovers)
+    - Configure MSW integration with Jest setup files
+  - [ ] **1.7.3**: Setup testing database and environment
+    - Configure separate MongoDB instance for testing
+    - Create test environment variables and configuration
+    - Setup database seeding utilities for consistent test data
 
-#### 1.8 Critical Path Testing
-- [ ] **Day 1-3**: Write tests for core components (Button, Input, Feed, Auth)
-- [ ] **Day 4-5**: Write tests for repository layer and signal generation
-- [ ] **Day 6-7**: Create integration tests for API endpoints
+- [ ] **Day 2**: Backend testing framework setup
+  - [ ] **1.7.4**: Configure pytest with proper test structure
+    - Install pytest, pytest-asyncio, pytest-mock for backend testing
+    - Setup conftest.py with database fixtures and test configuration
+    - Configure test discovery and async test support
+  - [ ] **1.7.5**: Create test utilities and database fixtures
+    - Create repository test fixtures for MongoDB operations
+    - Setup signal generation test data and market data fixtures
+    - Implement test database cleanup and isolation utilities
 
-#### 1.9 CI/CD Pipeline Setup
-- [ ] **Day 1-2**: Create GitHub Actions workflow for testing
-- [ ] **Day 3-4**: Setup automated testing on PRs
-- [ ] **Day 5**: Configure deployment pipeline basics
+#### 1.8 Critical Component Testing (Priority: Authentication & Subscription)
+- [ ] **Day 3**: Authentication system testing
+  - [ ] **1.8.1**: Test AuthProvider component and useAuth hook
+    - Unit tests for authentication state management
+    - Integration tests for login/logout flow with MongoDB API
+    - Test error boundaries for authentication failures
+  - [ ] **1.8.2**: Test subscription management components
+    - Unit tests for useSubscription hook and subscription status checks
+    - Integration tests for SubscribeButton component and payment flow
+    - Test hybrid approach: MongoDB API vs React Query caching behavior
+
+- [ ] **Day 4**: UI component library testing
+  - [ ] **1.8.3**: Test UI components (Button, Card, Input, Modal, LoadingSpinner)
+    - Unit tests for component props, events, and accessibility
+    - Visual regression tests for design system consistency
+    - Test TypeScript integration and prop validation
+  - [ ] **1.8.4**: Test error boundary system (18 error boundary components)
+    - Unit tests for error catching and fallback UI rendering
+    - Integration tests for error boundary hierarchy and error propagation
+    - Test error logging and monitoring integration
+
+- [ ] **Day 5**: Trading data and state management testing
+  - [ ] **1.8.5**: Test React Query hooks (useCrossovers, useUserProfile)
+    - Unit tests for data fetching, caching, and error states
+    - Integration tests for real-time updates and cache invalidation
+    - Test loading states, error handling, and retry logic
+  - [ ] **1.8.6**: Test Zustand stores (user, crossover, notification stores)
+    - Unit tests for store actions, state updates, and selectors
+    - Integration tests for store persistence and hydration
+    - Test store integration with React Query hooks
+
+#### 1.9 API Routes & Backend Testing
+- [ ] **Day 6**: API endpoint testing
+  - [ ] **1.9.1**: Test critical API routes
+    - Integration tests for /api/auth/* authentication endpoints
+    - Integration tests for /api/subscription-status and /api/verify-subscription
+    - Integration tests for /api/crossovers trading data endpoints
+    - Integration tests for /api/webhook Stripe payment processing
+  - [ ] **1.9.2**: Test repository layer and data access
+    - Unit tests for MongoDB repository implementations
+    - Integration tests for signal generation service using repositories
+    - Test database operations, error handling, and data validation
+
+- [ ] **Day 7**: End-to-end critical user flows
+  - [ ] **1.9.3**: Setup Playwright for E2E testing
+    - Install Playwright with browser automation
+    - Configure Playwright with test environment and base URLs
+    - Setup test data seeding and cleanup for E2E tests
+  - [ ] **1.9.4**: Test critical user journeys
+    - E2E test: Authentication flow (Login → Dashboard → Subscription check)
+    - E2E test: Subscription flow (Sign up → Payment → Premium access)
+    - E2E test: Trading flow (View signals → Access crossovers → Real-time updates)
+    - E2E test: Error handling (Network failures → Error boundaries → Recovery)
 
 **🎯 Week 5-6 Success Criteria:**
-- [ ] 60%+ test coverage on critical functionality
-- [ ] Automated testing preventing regressions
-- [ ] CI/CD pipeline ensuring code quality
+- [ ] 70%+ test coverage on critical functionality (authentication, subscription, trading data)
+- [ ] Comprehensive error boundary testing preventing UI crashes
+- [ ] Reliable API mocking preventing external dependencies in tests
+- [ ] E2E tests covering complete user journeys from authentication to trading data access
+- [ ] Automated testing preventing regressions in hybrid state management architecture
 
 ---
 
