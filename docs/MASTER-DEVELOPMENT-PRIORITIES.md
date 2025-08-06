@@ -310,8 +310,51 @@ This document provides a strategic, ordered approach to implementing all planned
 
 #### 1.6 State Management Implementation
 - [ ] **Day 1-2**: Install and configure Zustand + React Query
-- [ ] **Day 3-4**: Create stores (userStore, crossoverStore, notificationStore)
+  - [ ] **1.6.1**: Install packages (`npm install zustand @tanstack/react-query @tanstack/react-query-devtools immer`)
+  - [ ] **1.6.2**: Setup React Query client configuration (`src/lib/queryClient.ts`)
+  - [ ] **1.6.3**: Wrap app with QueryClient provider in `src/app/layout.tsx`
+  - [ ] **1.6.4**: Setup React Query devtools for development environment
+  - [ ] **1.6.5**: Configure proper cache and retry strategies for API calls
+- [ ] **Day 3-4**: Create stores (userStore, crossoverStore, notificationStore)  
+  - [ ] **1.6.6**: Create `src/stores/userStore.ts` for user state and subscription management
+    - User authentication state (isAuthenticated, user data)
+    - Subscription status (isSubscribed, subscriptionEnds, subscription loading states)
+    - Profile update state (name, email, loading states)
+    - Replace manual state in `AuthContext.tsx`, `account/page.js`, `SubscribeButton.js`
+  - [ ] **1.6.7**: Create `src/stores/crossoverStore.ts` for signal/crossover data management
+    - Crossover data state (crossovers array, loading, error states)
+    - Signal filtering and sorting preferences
+    - Replace manual state in `feed/page.tsx` 
+  - [ ] **1.6.8**: Create `src/stores/notificationStore.ts` for notification preferences
+    - Toast notification state and queue management
+    - User notification preferences and settings
+    - Error notification state from API calls
+  - [ ] **1.6.9**: Implement persistent storage with Zustand persist middleware for user preferences
 - [ ] **Day 5-7**: Replace manual fetch calls with React Query hooks
+  - [ ] **1.6.10**: Create `src/hooks/api/useSubscription.ts` hook with React Query
+    - Replace manual `fetch('/api/subscription-status')` in multiple components
+    - Implement query invalidation for subscription updates
+    - Add optimistic updates for subscription actions
+  - [ ] **1.6.11**: Create `src/hooks/api/useCrossovers.ts` hook with React Query
+    - Replace manual crossover fetching in `feed/page.tsx`
+    - Implement polling for real-time signal updates
+    - Add proper error handling and retry logic
+  - [ ] **1.6.12**: Create `src/hooks/api/useUserProfile.ts` hook with React Query
+    - Replace manual profile fetching and updates in `account/page.js`
+    - Implement optimistic updates for profile changes
+    - Add proper validation and error handling
+  - [ ] **1.6.13**: Create `src/hooks/api/useAuth.ts` hook combining Auth context with React Query
+    - Integrate with existing NextAuth session management
+    - Cache user data and subscription status
+    - Replace manual fetch calls in `SubscribeButton.js`, `ProtectedRoute.tsx`, `Header.tsx`
+  - [ ] **1.6.14**: Update all components to use new hooks instead of manual fetch calls
+    - `SubscribeButton.js`: Use useSubscription hook
+    - `account/page.js`: Use useUserProfile and useSubscription hooks
+    - `feed/page.tsx`: Use useCrossovers hook
+    - `ProtectedRoute.tsx`: Use useAuth hook
+    - `Header.tsx`: Use useAuth hook for user state
+  - [ ] **1.6.15**: Remove redundant useState and useEffect patterns where replaced by React Query
+  - [ ] **1.6.16**: Add loading states and error boundaries that work with React Query
 
 **🎯 Week 3-4 Success Criteria:**
 - [ ] Consistent UI components across entire application
