@@ -7,6 +7,11 @@ and data consistency validation without relying on incomplete abstractions.
 
 import pytest
 import asyncio
+import logging
+import os
+
+import pytest
+import asyncio
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta
 import os
@@ -229,7 +234,7 @@ class TestDataConsistency:
         # Test status change
         signal.close_signal("Take profit hit")
         assert signal.status == SignalStatus.FILLED
-        assert "Take profit hit" in signal.notes
+        assert signal.notes is not None and "Take profit hit" in signal.notes
 
     async def test_timestamp_consistency(self):
         """Test timestamp consistency across entities."""
