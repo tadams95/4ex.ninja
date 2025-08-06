@@ -22,44 +22,44 @@ interface NotificationState {
   // Toast notification queue
   toasts: ToastNotification[];
   maxToasts: number;
-  
+
   // User notification preferences
   settings: NotificationSettings;
   settingsLoading: boolean;
   settingsError: string | null;
-  
+
   // Error notifications from API calls
   apiErrors: Record<string, string>; // key: endpoint/action, value: error message
-  
+
   // Browser notification permission
   browserPermission: NotificationPermission | null;
-  
+
   // Actions for toast management
   addToast: (toast: Omit<ToastNotification, 'id' | 'createdAt'>) => void;
   removeToast: (id: string) => void;
   clearAllToasts: () => void;
-  
+
   // Actions for notification settings
   updateSettings: (settings: Partial<NotificationSettings>) => void;
   setSettingsLoading: (loading: boolean) => void;
   setSettingsError: (error: string | null) => void;
   resetSettings: () => void;
-  
+
   // Actions for API error tracking
   setApiError: (key: string, error: string) => void;
   clearApiError: (key: string) => void;
   clearAllApiErrors: () => void;
-  
+
   // Browser notification actions
   requestBrowserPermission: () => Promise<NotificationPermission>;
   setBrowserPermission: (permission: NotificationPermission) => void;
-  
+
   // Utility actions
   showSuccessToast: (title: string, message?: string) => void;
   showErrorToast: (title: string, message?: string) => void;
   showWarningToast: (title: string, message?: string) => void;
   showInfoToast: (title: string, message?: string) => void;
-  
+
   reset: () => void;
 }
 
@@ -97,7 +97,7 @@ export const useNotificationStore = create<NotificationState>()(
         ...initialState,
 
         addToast: (toast: Omit<ToastNotification, 'id' | 'createdAt'>) =>
-          set((state) => {
+          set(state => {
             const newToast: ToastNotification = {
               ...toast,
               id: `toast-${++toastCounter}`,
@@ -121,69 +121,69 @@ export const useNotificationStore = create<NotificationState>()(
           }),
 
         removeToast: (id: string) =>
-          set((state) => {
+          set(state => {
             state.toasts = state.toasts.filter(toast => toast.id !== id);
           }),
 
         clearAllToasts: () =>
-          set((state) => {
+          set(state => {
             state.toasts = [];
           }),
 
         updateSettings: (settings: Partial<NotificationSettings>) =>
-          set((state) => {
+          set(state => {
             state.settings = { ...state.settings, ...settings };
             state.settingsError = null;
           }),
 
         setSettingsLoading: (loading: boolean) =>
-          set((state) => {
+          set(state => {
             state.settingsLoading = loading;
           }),
 
         setSettingsError: (error: string | null) =>
-          set((state) => {
+          set(state => {
             state.settingsError = error;
           }),
 
         resetSettings: () =>
-          set((state) => {
+          set(state => {
             state.settings = defaultSettings;
             state.settingsError = null;
           }),
 
         setApiError: (key: string, error: string) =>
-          set((state) => {
+          set(state => {
             state.apiErrors[key] = error;
           }),
 
         clearApiError: (key: string) =>
-          set((state) => {
+          set(state => {
             delete state.apiErrors[key];
           }),
 
         clearAllApiErrors: () =>
-          set((state) => {
+          set(state => {
             state.apiErrors = {};
           }),
 
         requestBrowserPermission: async () => {
           if (!('Notification' in window)) {
-            set((state) => {
+            set(state => {
               state.browserPermission = 'denied';
             });
             return 'denied';
           }
 
           const permission = await Notification.requestPermission();
-          set((state) => {
+          set(state => {
             state.browserPermission = permission;
           });
           return permission;
         },
 
         setBrowserPermission: (permission: NotificationPermission) =>
-          set((state) => {
+          set(state => {
             state.browserPermission = permission;
           }),
 
@@ -218,14 +218,14 @@ export const useNotificationStore = create<NotificationState>()(
           }),
 
         reset: () =>
-          set((state) => {
+          set(state => {
             Object.assign(state, initialState);
           }),
       })),
       {
         name: 'notification-store',
         // Persist user preferences and browser permission, but not toasts or errors
-        partialize: (state) => ({
+        partialize: state => ({
           settings: state.settings,
           browserPermission: state.browserPermission,
           maxToasts: state.maxToasts,
@@ -239,22 +239,24 @@ export const useNotificationStore = create<NotificationState>()(
 );
 
 // Selectors for common use cases
-export const useToasts = () => useNotificationStore((state) => state.toasts);
-export const useNotificationSettings = () => useNotificationStore((state) => state.settings);
-export const useNotificationSettingsState = () => useNotificationStore((state) => ({
-  settings: state.settings,
-  loading: state.settingsLoading,
-  error: state.settingsError,
-}));
-export const useApiErrors = () => useNotificationStore((state) => state.apiErrors);
-export const useBrowserPermission = () => useNotificationStore((state) => state.browserPermission);
+export const useToasts = () => useNotificationStore(state => state.toasts);
+export const useNotificationSettings = () => useNotificationStore(state => state.settings);
+export const useNotificationSettingsState = () =>
+  useNotificationStore(state => ({
+    settings: state.settings,
+    loading: state.settingsLoading,
+    error: state.settingsError,
+  }));
+export const useApiErrors = () => useNotificationStore(state => state.apiErrors);
+export const useBrowserPermission = () => useNotificationStore(state => state.browserPermission);
 
 // Toast action selectors
-export const useToastActions = () => useNotificationStore((state) => ({
-  showSuccess: state.showSuccessToast,
-  showError: state.showErrorToast,
-  showWarning: state.showWarningToast,
-  showInfo: state.showInfoToast,
-  remove: state.removeToast,
-  clearAll: state.clearAllToasts,
-}));
+export const useToastActions = () =>
+  useNotificationStore(state => ({
+    showSuccess: state.showSuccessToast,
+    showError: state.showErrorToast,
+    showWarning: state.showWarningToast,
+    showInfo: state.showInfoToast,
+    remove: state.removeToast,
+    clearAll: state.clearAllToasts,
+  }));

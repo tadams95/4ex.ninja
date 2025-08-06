@@ -10,16 +10,16 @@ interface UserState {
   isAuthenticated: boolean;
   user: User | null;
   authLoading: boolean;
-  
+
   // Subscription state
   isSubscribed: boolean;
   subscriptionEnds: Date | null;
   subscriptionLoading: boolean;
-  
+
   // Profile update state
   profileLoading: boolean;
   profileError: string | null;
-  
+
   // Actions
   setUser: (user: User | null) => void;
   setAuthLoading: (loading: boolean) => void;
@@ -50,10 +50,10 @@ export const useUserStore = create<UserState>()(
         ...initialState,
 
         setUser: (user: User | null) =>
-          set((state) => {
+          set(state => {
             state.user = user;
             state.isAuthenticated = !!user;
-            
+
             // Update subscription status from user data if available
             if (user?.subscriptionEnds) {
               const subscriptionEnds = new Date(user.subscriptionEnds);
@@ -66,42 +66,40 @@ export const useUserStore = create<UserState>()(
           }),
 
         setAuthLoading: (loading: boolean) =>
-          set((state) => {
+          set(state => {
             state.authLoading = loading;
           }),
 
         setSubscriptionStatus: (isSubscribed: boolean, subscriptionEnds?: Date | string | null) =>
-          set((state) => {
+          set(state => {
             state.isSubscribed = isSubscribed;
-            state.subscriptionEnds = subscriptionEnds 
-              ? new Date(subscriptionEnds) 
-              : null;
+            state.subscriptionEnds = subscriptionEnds ? new Date(subscriptionEnds) : null;
           }),
 
         setSubscriptionLoading: (loading: boolean) =>
-          set((state) => {
+          set(state => {
             state.subscriptionLoading = loading;
           }),
 
         updateProfile: (updates: Partial<User>) =>
-          set((state) => {
+          set(state => {
             if (state.user) {
               state.user = { ...state.user, ...updates };
             }
           }),
 
         setProfileLoading: (loading: boolean) =>
-          set((state) => {
+          set(state => {
             state.profileLoading = loading;
           }),
 
         setProfileError: (error: string | null) =>
-          set((state) => {
+          set(state => {
             state.profileError = error;
           }),
 
         clearUser: () =>
-          set((state) => {
+          set(state => {
             state.user = null;
             state.isAuthenticated = false;
             state.isSubscribed = false;
@@ -110,14 +108,14 @@ export const useUserStore = create<UserState>()(
           }),
 
         reset: () =>
-          set((state) => {
+          set(state => {
             Object.assign(state, initialState);
           }),
       })),
       {
         name: 'user-store',
         // Only persist user data and subscription status, not loading states
-        partialize: (state) => ({
+        partialize: state => ({
           user: state.user,
           isAuthenticated: state.isAuthenticated,
           isSubscribed: state.isSubscribed,
@@ -132,16 +130,18 @@ export const useUserStore = create<UserState>()(
 );
 
 // Selectors for common use cases
-export const useUser = () => useUserStore((state) => state.user);
-export const useIsAuthenticated = () => useUserStore((state) => state.isAuthenticated);
-export const useIsSubscribed = () => useUserStore((state) => state.isSubscribed);
-export const useAuthLoading = () => useUserStore((state) => state.authLoading);
-export const useSubscriptionStatus = () => useUserStore((state) => ({
-  isSubscribed: state.isSubscribed,
-  subscriptionEnds: state.subscriptionEnds,
-  loading: state.subscriptionLoading,
-}));
-export const useProfileState = () => useUserStore((state) => ({
-  loading: state.profileLoading,
-  error: state.profileError,
-}));
+export const useUser = () => useUserStore(state => state.user);
+export const useIsAuthenticated = () => useUserStore(state => state.isAuthenticated);
+export const useIsSubscribed = () => useUserStore(state => state.isSubscribed);
+export const useAuthLoading = () => useUserStore(state => state.authLoading);
+export const useSubscriptionStatus = () =>
+  useUserStore(state => ({
+    isSubscribed: state.isSubscribed,
+    subscriptionEnds: state.subscriptionEnds,
+    loading: state.subscriptionLoading,
+  }));
+export const useProfileState = () =>
+  useUserStore(state => ({
+    loading: state.profileLoading,
+    error: state.profileError,
+  }));

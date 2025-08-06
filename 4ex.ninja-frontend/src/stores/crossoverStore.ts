@@ -27,17 +27,17 @@ interface CrossoverState {
   error: string | null;
   isEmpty: boolean;
   lastFetched: Date | null;
-  
+
   // UI state
   filters: CrossoverFilters;
   sorting: CrossoverSorting;
   searchQuery: string;
-  
+
   // Pagination
   currentPage: number;
   itemsPerPage: number;
   totalItems: number;
-  
+
   // Actions
   setCrossovers: (crossovers: Crossover[]) => void;
   addCrossover: (crossover: Crossover) => void;
@@ -47,25 +47,25 @@ interface CrossoverState {
   setError: (error: string | null) => void;
   setIsEmpty: (isEmpty: boolean) => void;
   setLastFetched: (date: Date) => void;
-  
+
   // Filter actions
   setFilters: (filters: Partial<CrossoverFilters>) => void;
   resetFilters: () => void;
   togglePairFilter: (pair: string) => void;
   toggleTimeframeFilter: (timeframe: string) => void;
   toggleSignalTypeFilter: (signalType: 'BULLISH' | 'BEARISH') => void;
-  
+
   // Sorting actions
   setSorting: (sorting: CrossoverSorting) => void;
   toggleSortDirection: () => void;
-  
+
   // Search actions
   setSearchQuery: (query: string) => void;
-  
+
   // Pagination actions
   setCurrentPage: (page: number) => void;
   setItemsPerPage: (itemsPerPage: number) => void;
-  
+
   // Utility actions
   getFilteredCrossovers: () => Crossover[];
   reset: () => void;
@@ -103,7 +103,7 @@ export const useCrossoverStore = create<CrossoverState>()(
         ...initialState,
 
         setCrossovers: (crossovers: Crossover[]) =>
-          set((state) => {
+          set(state => {
             state.crossovers = crossovers;
             state.totalItems = crossovers.length;
             state.isEmpty = crossovers.length === 0;
@@ -111,7 +111,7 @@ export const useCrossoverStore = create<CrossoverState>()(
           }),
 
         addCrossover: (crossover: Crossover) =>
-          set((state) => {
+          set(state => {
             // Add to beginning for most recent first
             state.crossovers.unshift(crossover);
             state.totalItems = state.crossovers.length;
@@ -119,7 +119,7 @@ export const useCrossoverStore = create<CrossoverState>()(
           }),
 
         updateCrossover: (id: string, updates: Partial<Crossover>) =>
-          set((state) => {
+          set(state => {
             const index = state.crossovers.findIndex(c => c._id === id);
             if (index !== -1) {
               state.crossovers[index] = { ...state.crossovers[index], ...updates };
@@ -127,46 +127,46 @@ export const useCrossoverStore = create<CrossoverState>()(
           }),
 
         removeCrossover: (id: string) =>
-          set((state) => {
+          set(state => {
             state.crossovers = state.crossovers.filter(c => c._id !== id);
             state.totalItems = state.crossovers.length;
             state.isEmpty = state.crossovers.length === 0;
           }),
 
         setLoading: (loading: boolean) =>
-          set((state) => {
+          set(state => {
             state.loading = loading;
           }),
 
         setError: (error: string | null) =>
-          set((state) => {
+          set(state => {
             state.error = error;
           }),
 
         setIsEmpty: (isEmpty: boolean) =>
-          set((state) => {
+          set(state => {
             state.isEmpty = isEmpty;
           }),
 
         setLastFetched: (date: Date) =>
-          set((state) => {
+          set(state => {
             state.lastFetched = date;
           }),
 
         setFilters: (filters: Partial<CrossoverFilters>) =>
-          set((state) => {
+          set(state => {
             state.filters = { ...state.filters, ...filters };
             state.currentPage = 1; // Reset to first page when filters change
           }),
 
         resetFilters: () =>
-          set((state) => {
+          set(state => {
             state.filters = initialFilters;
             state.currentPage = 1;
           }),
 
         togglePairFilter: (pair: string) =>
-          set((state) => {
+          set(state => {
             const pairs = state.filters.pairs;
             if (pairs.includes(pair)) {
               state.filters.pairs = pairs.filter(p => p !== pair);
@@ -177,7 +177,7 @@ export const useCrossoverStore = create<CrossoverState>()(
           }),
 
         toggleTimeframeFilter: (timeframe: string) =>
-          set((state) => {
+          set(state => {
             const timeframes = state.filters.timeframes;
             if (timeframes.includes(timeframe)) {
               state.filters.timeframes = timeframes.filter(t => t !== timeframe);
@@ -188,7 +188,7 @@ export const useCrossoverStore = create<CrossoverState>()(
           }),
 
         toggleSignalTypeFilter: (signalType: 'BULLISH' | 'BEARISH') =>
-          set((state) => {
+          set(state => {
             const signalTypes = state.filters.signalTypes;
             if (signalTypes.includes(signalType)) {
               state.filters.signalTypes = signalTypes.filter(s => s !== signalType);
@@ -199,28 +199,28 @@ export const useCrossoverStore = create<CrossoverState>()(
           }),
 
         setSorting: (sorting: CrossoverSorting) =>
-          set((state) => {
+          set(state => {
             state.sorting = sorting;
           }),
 
         toggleSortDirection: () =>
-          set((state) => {
+          set(state => {
             state.sorting.direction = state.sorting.direction === 'asc' ? 'desc' : 'asc';
           }),
 
         setSearchQuery: (query: string) =>
-          set((state) => {
+          set(state => {
             state.searchQuery = query;
             state.currentPage = 1; // Reset to first page when search changes
           }),
 
         setCurrentPage: (page: number) =>
-          set((state) => {
+          set(state => {
             state.currentPage = page;
           }),
 
         setItemsPerPage: (itemsPerPage: number) =>
-          set((state) => {
+          set(state => {
             state.itemsPerPage = itemsPerPage;
             state.currentPage = 1; // Reset to first page when page size changes
           }),
@@ -245,18 +245,21 @@ export const useCrossoverStore = create<CrossoverState>()(
           if (state.filters.dateRange) {
             filtered = filtered.filter(c => {
               const crossoverDate = new Date(c.timestamp);
-              return crossoverDate >= state.filters.dateRange!.start && 
-                     crossoverDate <= state.filters.dateRange!.end;
+              return (
+                crossoverDate >= state.filters.dateRange!.start &&
+                crossoverDate <= state.filters.dateRange!.end
+              );
             });
           }
 
           // Apply search
           if (state.searchQuery) {
             const query = state.searchQuery.toLowerCase();
-            filtered = filtered.filter(c => 
-              c.pair.toLowerCase().includes(query) ||
-              c.crossoverType.toLowerCase().includes(query) ||
-              c.timeframe.toLowerCase().includes(query)
+            filtered = filtered.filter(
+              c =>
+                c.pair.toLowerCase().includes(query) ||
+                c.crossoverType.toLowerCase().includes(query) ||
+                c.timeframe.toLowerCase().includes(query)
             );
           }
 
@@ -295,14 +298,14 @@ export const useCrossoverStore = create<CrossoverState>()(
         },
 
         reset: () =>
-          set((state) => {
+          set(state => {
             Object.assign(state, initialState);
           }),
       })),
       {
         name: 'crossover-store',
         // Persist user preferences but not the actual data
-        partialize: (state) => ({
+        partialize: state => ({
           filters: state.filters,
           sorting: state.sorting,
           itemsPerPage: state.itemsPerPage,
@@ -316,14 +319,16 @@ export const useCrossoverStore = create<CrossoverState>()(
 );
 
 // Selectors for common use cases
-export const useCrossovers = () => useCrossoverStore((state) => state.crossovers);
-export const useCrossoverLoading = () => useCrossoverStore((state) => state.loading);
-export const useCrossoverError = () => useCrossoverStore((state) => state.error);
-export const useCrossoverFilters = () => useCrossoverStore((state) => state.filters);
-export const useCrossoverSorting = () => useCrossoverStore((state) => state.sorting);
-export const useFilteredCrossovers = () => useCrossoverStore((state) => state.getFilteredCrossovers());
-export const useCrossoverPagination = () => useCrossoverStore((state) => ({
-  currentPage: state.currentPage,
-  itemsPerPage: state.itemsPerPage,
-  totalItems: state.totalItems,
-}));
+export const useCrossovers = () => useCrossoverStore(state => state.crossovers);
+export const useCrossoverLoading = () => useCrossoverStore(state => state.loading);
+export const useCrossoverError = () => useCrossoverStore(state => state.error);
+export const useCrossoverFilters = () => useCrossoverStore(state => state.filters);
+export const useCrossoverSorting = () => useCrossoverStore(state => state.sorting);
+export const useFilteredCrossovers = () =>
+  useCrossoverStore(state => state.getFilteredCrossovers());
+export const useCrossoverPagination = () =>
+  useCrossoverStore(state => ({
+    currentPage: state.currentPage,
+    itemsPerPage: state.itemsPerPage,
+    totalItems: state.totalItems,
+  }));
