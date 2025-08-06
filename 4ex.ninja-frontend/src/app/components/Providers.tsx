@@ -3,7 +3,10 @@
 import { ErrorNotificationProvider } from '@/components/error/ErrorNotificationSystem';
 import ProvidersErrorBoundary from '@/components/error/ProvidersErrorBoundary';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { queryClient } from '@/lib/queryClient';
 import { BaseComponentProps } from '@/types';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
 
 interface ProvidersProps extends BaseComponentProps {}
@@ -11,9 +14,15 @@ interface ProvidersProps extends BaseComponentProps {}
 function ProvidersComponent({ children }: ProvidersProps) {
   return (
     <SessionProvider>
-      <AuthProvider>
-        <ErrorNotificationProvider>{children}</ErrorNotificationProvider>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <ErrorNotificationProvider>
+            {children}
+            {/* Only show devtools in development */}
+            {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
+          </ErrorNotificationProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </SessionProvider>
   );
 }
