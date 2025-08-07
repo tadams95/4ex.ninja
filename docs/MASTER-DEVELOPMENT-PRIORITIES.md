@@ -431,7 +431,7 @@ This document provides a strategic, ordered approach to implementing all planned
     - ✅ Unit tests for data fetching, caching, and error states
     - ✅ Simple, lean test suites with fetch mocking and query validation
     - ✅ Test loading states, API call parameters, and query key generation
-  - [ ] **1.8.6**: Test Zustand stores (user, crossover, notification stores)
+  - [x] **1.8.6**: Test Zustand stores (user, crossover, notification stores)
     - Unit tests for store actions, state updates, and selectors
     - Integration tests for store persistence and hydration
     - Test store integration with React Query hooks
