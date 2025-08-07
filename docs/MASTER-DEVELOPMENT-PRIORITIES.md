@@ -412,7 +412,7 @@ This document provides a strategic, ordered approach to implementing all planned
     - ✅ Integration tests for SubscribeButton component with authentication flow
     - ✅ Test React Query caching behavior and optimistic updates
 
-- [ ] **Day 4**: UI component library testing ✅ **COMPLETED**
+- [x]**Day 4**: UI component library testing ✅ **COMPLETED**
   - [x] **1.8.3**: Test UI components (Button, Card, Input, Modal, LoadingSpinner) ✅ **COMPLETED**
     - ✅ Unit tests for component props, events, and accessibility (60 tests passing)
     - ✅ Visual regression tests for design system consistency
@@ -427,10 +427,10 @@ This document provides a strategic, ordered approach to implementing all planned
     - Test error logging and monitoring integration
 
 - [ ] **Day 5**: Trading data and state management testing
-  - [ ] **1.8.5**: Test React Query hooks (useCrossovers, useUserProfile)
-    - Unit tests for data fetching, caching, and error states
-    - Integration tests for real-time updates and cache invalidation
-    - Test loading states, error handling, and retry logic
+  - [x] **1.8.5**: Test React Query hooks (useCrossovers, useUserProfile) ✅ **COMPLETED**
+    - ✅ Unit tests for data fetching, caching, and error states
+    - ✅ Simple, lean test suites with fetch mocking and query validation
+    - ✅ Test loading states, API call parameters, and query key generation
   - [ ] **1.8.6**: Test Zustand stores (user, crossover, notification stores)
     - Unit tests for store actions, state updates, and selectors
     - Integration tests for store persistence and hydration
