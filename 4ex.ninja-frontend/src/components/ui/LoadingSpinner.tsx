@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface LoadingSpinnerProps {
+export interface LoadingSpinnerProps extends React.SVGAttributes<SVGSVGElement> {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   color?: 'white' | 'primary' | 'neutral';
   className?: string;
@@ -10,6 +10,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'md',
   color = 'primary',
   className = '',
+  ...props
 }) => {
   const sizeClasses = {
     sm: 'h-4 w-4',
@@ -35,6 +36,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       viewBox="0 0 24 24"
       role="status"
       aria-label="Loading"
+      {...props}
     >
       <circle
         className="opacity-25"
