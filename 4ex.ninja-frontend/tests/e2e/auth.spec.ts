@@ -3,9 +3,21 @@ import { AuthHelpers, CommonHelpers } from '../fixtures/helpers';
 import { testUsers } from '../fixtures/testData';
 
 /**
- * Critical User Path #1: Authentication Flow
- * Revenue Impact: HIGH - Users must authenticate to access paid features
- * Test Coverage: Login, Registration, Logout, Error handling
+ * LEAN E2E Tests: Authentication Flow
+ *
+ * Critical Path: User Registration → Login → Protected Route Access
+ *
+ * This test covers 20% of user actions but 80% of revenue impact:
+ * - New user can create account
+ * - Existing user can login
+ * - Authentication persists across sessions
+ * - Unauthenticated users are properly redirected
+ *
+ * Success Criteria:
+ * - All authentication flows work end-to-end
+ * - Proper error handling for invalid credentials
+ * - Route protection working correctly
+ *
  * Estimated Time: 20 minutes
  */
 
@@ -20,11 +32,14 @@ test.describe('Authentication Flow - Critical Path', () => {
 
   test('should complete successful user registration', async ({ page }) => {
     // Test user can register with valid credentials
-    await authHelpers.register();
+    await authHelpers.register(testUsers.newUser);
 
-    // Verify user lands on dashboard after registration
-    await expect(page).toHaveURL('/dashboard');
-    await expect(page.locator('[data-testid="welcome-message"]')).toBeVisible();
+    // Verify user lands on feed after registration
+    await expect(page).toHaveURL('/feed');
+
+    // Check for authenticated user elements in header
+    await expect(page.locator('text=Account')).toBeVisible();
+    await expect(page.locator('text=Sign Out')).toBeVisible();
   });
 
   test('should complete successful user login', async ({ page }) => {
@@ -32,8 +47,14 @@ test.describe('Authentication Flow - Critical Path', () => {
     await authHelpers.login();
 
     // Verify successful login state
-    await expect(page).toHaveURL('/dashboard');
-    await expect(page.locator('[data-testid="user-profile"]')).toBeVisible();
+    await expect(page).toHaveURL('/feed');
+
+    // Check for authenticated user elements in header
+    await expect(page.locator('text=Account')).toBeVisible();
+    await expect(page.locator('text=Sign Out')).toBeVisible();
+
+    // Verify page title shows we're on the feed page
+    await expect(page.locator('h1:has-text("Latest MA Crossover Signals")')).toBeVisible();
   });
 
   test('should handle invalid login credentials', async ({ page }) => {
@@ -54,29 +75,29 @@ test.describe('Authentication Flow - Critical Path', () => {
 
     // Verify logged out state
     await expect(page).toHaveURL('/');
-    await expect(page.locator('[data-testid="login-link"]')).toBeVisible();
+    await expect(page.locator('text=Log in')).toBeVisible();
   });
 
   test('should redirect unauthenticated users from protected routes', async ({ page }) => {
     // Try to access protected route without authentication
-    await page.goto('/dashboard');
+    await page.goto('/feed');
 
-    // Should redirect to login
-    await expect(page).toHaveURL('/login');
+    // Should redirect to login (with possible query parameters)
+    await expect(page).toHaveURL(/\/login/);
     await expect(page.locator('[data-testid="login-form"]')).toBeVisible();
   });
 
   test('should persist authentication state across browser refresh', async ({ page }) => {
     // Login and verify state
     await authHelpers.login();
-    await expect(page).toHaveURL('/dashboard');
+    await expect(page).toHaveURL('/feed');
 
     // Refresh page
     await page.reload();
-    await commonHelpers.waitForPageLoad();
 
     // Should still be authenticated
-    await expect(page).toHaveURL('/dashboard');
-    await expect(page.locator('[data-testid="user-profile"]')).toBeVisible();
+    await expect(page).toHaveURL('/feed');
+    await expect(page.locator('text=Account')).toBeVisible();
+    await expect(page.locator('text=Sign Out')).toBeVisible();
   });
 });

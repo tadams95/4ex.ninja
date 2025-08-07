@@ -86,7 +86,7 @@ function RegisterPageComponent() {
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit} data-testid="register-form">
           <div className="space-y-4">
             <Input
               id="name"
@@ -97,6 +97,7 @@ function RegisterPageComponent() {
               placeholder="Full Name"
               value={name}
               onChange={e => setName(e.target.value)}
+              data-testid="first-name-input"
             />
 
             <Input
@@ -108,6 +109,7 @@ function RegisterPageComponent() {
               placeholder="Email address"
               value={email}
               onChange={e => setEmail(e.target.value)}
+              data-testid="email-input"
             />
 
             <Input
@@ -119,6 +121,7 @@ function RegisterPageComponent() {
               placeholder="Password"
               value={password}
               onChange={e => setPassword(e.target.value)}
+              data-testid="password-input"
             />
 
             <Input
@@ -130,10 +133,17 @@ function RegisterPageComponent() {
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
+              data-testid="confirm-password-input"
             />
           </div>
 
-          <Button type="submit" disabled={loading || success} className="w-full" loading={loading}>
+          <Button
+            type="submit"
+            disabled={loading || success}
+            className="w-full"
+            loading={loading}
+            data-testid="register-button"
+          >
             {success ? 'Account Created!' : 'Create Account'}
           </Button>
         </form>

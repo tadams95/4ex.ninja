@@ -457,11 +457,15 @@ This document provides a strategic, ordered approach to implementing all planned
     - ✅ Setup basic test data fixtures and Page Object Model helpers
     - ✅ Create lean playwright.config.ts with essential settings
     - ✅ **Total: 23 E2E tests across 4 test files covering critical user journeys**
-  - [ ] **1.9.4**: Test 3 critical user journeys (LEAN implementation)
-    - E2E test: Authentication flow (Login → Feed access) - 20 minutes
-    - E2E test: Subscription flow (Sign up → Payment → Premium features) - 30 minutes  
-    - E2E test: Core trading flow (View signals → Access crossovers) - 15 minutes
-    - **Total: 3 tests covering 80% of revenue-critical user paths**
+  - [ ] **1.9.4**: Test 3 critical user journeys (LEAN implementation) ⚠️ **IN PROGRESS**
+    - ✅ E2E test infrastructure working with 10-second timeouts
+    - ✅ E2E test: Protected route redirect (working) - 5 minutes 
+    - ⚠️ E2E test: Authentication flow (BLOCKED - needs test user setup) - 15 minutes remaining
+    - ⚠️ E2E test: Subscription flow (BLOCKED - depends on auth) - 30 minutes remaining  
+    - ⚠️ E2E test: Core trading flow (BLOCKED - depends on auth) - 15 minutes remaining
+    - **ISSUE**: Test users don't exist in database; authentication failing on login page
+    - **Next Step**: Create test database seeding or use API to create test users
+    - **Total: 1/4 test scenarios passing (protected route redirect)**
 
 **🎯 Week 5-6 Success Criteria:**
 - [ ] 70%+ test coverage on critical functionality (authentication, subscription, trading data)

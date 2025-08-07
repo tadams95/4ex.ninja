@@ -101,7 +101,7 @@ function LoginPageComponent() {
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit} data-testid="login-form">
           <div className="space-y-4">
             <Input
               id="email"
@@ -112,6 +112,7 @@ function LoginPageComponent() {
               placeholder="Email address"
               value={email}
               onChange={e => setEmail(e.target.value)}
+              data-testid="email-input"
             />
 
             <Input
@@ -123,6 +124,7 @@ function LoginPageComponent() {
               placeholder="Password"
               value={password}
               onChange={e => setPassword(e.target.value)}
+              data-testid="password-input"
             />
           </div>
 
@@ -137,7 +139,13 @@ function LoginPageComponent() {
             </div>
           </div>
 
-          <Button type="submit" disabled={loading} className="w-full" loading={loading}>
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full"
+            loading={loading}
+            data-testid="login-button"
+          >
             Sign in
           </Button>
         </form>

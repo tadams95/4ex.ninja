@@ -8,35 +8,64 @@ import { subscriptionData, testUsers, tradingData } from './testData';
 export class AuthHelpers {
   constructor(private page: Page) {}
 
-  async login(
-    email: string = testUsers.validUser.email,
-    password: string = testUsers.validUser.password
-  ) {
+  async login(email = testUsers.validUser.email, password = testUsers.validUser.password) {
     await this.page.goto('/login');
     await this.page.fill('[data-testid="email-input"]', email);
     await this.page.fill('[data-testid="password-input"]', password);
     await this.page.click('[data-testid="login-button"]');
 
-    // Wait for successful login redirect
-    await expect(this.page).toHaveURL('/dashboard');
+    // Wait for response - either success or error (much shorter timeout)
+    try {
+      await this.page.waitForURL('/feed', { timeout: 3000 });
+    } catch (error) {
+      // Check if we got an error message instead
+      const errorElement = await this.page.locator('.bg-error').first();
+      if (await errorElement.isVisible()) {
+        const errorText = await errorElement.textContent();
+        console.log('Login failed with error:', errorText);
+        throw new Error(`Login failed: ${errorText}`);
+      }
+      console.log('Login did not redirect to /feed. Current URL:', this.page.url());
+      throw error;
+    }
   }
 
   async logout() {
-    await this.page.click('[data-testid="user-menu"]');
-    await this.page.click('[data-testid="logout-button"]');
+    // Click the "Sign Out" button directly by text
+    await this.page.click('text=Sign Out');
     await expect(this.page).toHaveURL('/');
   }
 
   async register(user = testUsers.validUser) {
     await this.page.goto('/register');
-    await this.page.fill('[data-testid="first-name-input"]', user.firstName);
-    await this.page.fill('[data-testid="last-name-input"]', user.lastName);
+    // Combine firstName and lastName since the form uses a single name field
+    const fullName = `${user.firstName} ${user.lastName}`;
+    await this.page.fill('[data-testid="first-name-input"]', fullName);
     await this.page.fill('[data-testid="email-input"]', user.email);
     await this.page.fill('[data-testid="password-input"]', user.password);
+    await this.page.fill('[data-testid="confirm-password-input"]', user.password);
     await this.page.click('[data-testid="register-button"]');
 
-    // Wait for successful registration
-    await expect(this.page).toHaveURL('/dashboard');
+    // Wait for response - either success or error (short timeout)
+    try {
+      await this.page.waitForURL('/feed', { timeout: 3000 });
+    } catch (error) {
+      // Check for success or error messages
+      const successElement = await this.page.locator('.bg-success').first();
+      const errorElement = await this.page.locator('.bg-error').first();
+
+      if (await successElement.isVisible()) {
+        console.log('Registration successful but did not redirect');
+        return;
+      }
+      if (await errorElement.isVisible()) {
+        const errorText = await errorElement.textContent();
+        console.log('Registration failed with error:', errorText);
+        throw new Error(`Registration failed: ${errorText}`);
+      }
+      console.log('Registration did not complete. Current URL:', this.page.url());
+      throw error;
+    }
   }
 }
 

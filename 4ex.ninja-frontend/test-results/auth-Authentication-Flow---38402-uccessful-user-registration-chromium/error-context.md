@@ -1,0 +1,48 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - link "4ex.ninja":
+    - /url: /
+  - navigation:
+    - list:
+      - listitem:
+        - link "Home":
+          - /url: /
+      - listitem:
+        - link "About":
+          - /url: /about
+      - listitem:
+        - link "Log in":
+          - /url: /login
+- main:
+  - heading "Create your account" [level=2]
+  - text: Account created successfully! Redirecting to checkout...
+  - textbox "Full Name": Test User
+  - textbox "Email address": test.1754554349999@4ex.ninja
+  - textbox "Password": Password22$
+  - textbox "Confirm Password": Password22$
+  - button "Account Created!" [disabled]
+  - text: Already have an account?
+  - link "Sign in":
+    - /url: /login
+- contentinfo:
+  - paragraph: © 2025 4ex.ninja | Made by a Ninja
+  - paragraph: Trading forex carries high risk. Past performance does not guarantee future results.
+  - link "Terms of Service":
+    - /url: /terms
+  - text: •
+  - link "Privacy Policy":
+    - /url: /privacy
+  - text: •
+  - link "Risk Disclaimer":
+    - /url: /disclaimer
+- button "Open Tanstack query devtools":
+  - img
+- status:
+  - img
+  - text: Static route
+  - button "Hide static indicator":
+    - img
+- alert
+```

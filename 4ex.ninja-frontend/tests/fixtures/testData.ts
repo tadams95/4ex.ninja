@@ -3,14 +3,20 @@
 
 export const testUsers = {
   validUser: {
-    email: 'test.user@4ex.ninja',
-    password: 'TestPass123!',
+    email: 'tyrelle@ragestate.com',
+    password: 'Password22$',
+    firstName: 'Ty',
+    lastName: 'Adams',
+  },
+  newUser: {
+    email: `test.${Date.now()}@4ex.ninja`,
+    password: 'Password22$',
     firstName: 'Test',
     lastName: 'User',
   },
   premiumUser: {
-    email: 'premium.user@4ex.ninja',
-    password: 'PremiumPass123!',
+    email: 'tyrelle@ragestate.com',
+    password: 'Password22$',
     firstName: 'Premium',
     lastName: 'User',
     subscriptionTier: 'premium',
