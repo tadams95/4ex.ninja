@@ -450,16 +450,18 @@ This document provides a strategic, ordered approach to implementing all planned
     - ✅ Test database operations, error handling, and data validation
     - ✅ **Total: 25 passing repository and integration tests with comprehensive validation**
 
-- [ ] **Day 7**: End-to-end critical user flows
-  - [ ] **1.9.3**: Setup Playwright for E2E testing
-    - Install Playwright with browser automation
-    - Configure Playwright with test environment and base URLs
-    - Setup test data seeding and cleanup for E2E tests
-  - [ ] **1.9.4**: Test critical user journeys
-    - E2E test: Authentication flow (Login → Dashboard → Subscription check)
-    - E2E test: Subscription flow (Sign up → Payment → Premium access)
-    - E2E test: Trading flow (View signals → Access crossovers → Real-time updates)
-    - E2E test: Error handling (Network failures → Error boundaries → Recovery)
+- [ ] **Day 7**: LEAN End-to-end critical user flows
+  - [x] **1.9.3**: Lean Playwright E2E setup (30 minutes) ✅
+    - ✅ Install Playwright with minimal configuration (Chromium only)
+    - ✅ Configure test environment for 3 critical user paths only
+    - ✅ Setup basic test data fixtures and Page Object Model helpers
+    - ✅ Create lean playwright.config.ts with essential settings
+    - ✅ **Total: 23 E2E tests across 4 test files covering critical user journeys**
+  - [ ] **1.9.4**: Test 3 critical user journeys (LEAN implementation)
+    - E2E test: Authentication flow (Login → Feed access) - 20 minutes
+    - E2E test: Subscription flow (Sign up → Payment → Premium features) - 30 minutes  
+    - E2E test: Core trading flow (View signals → Access crossovers) - 15 minutes
+    - **Total: 3 tests covering 80% of revenue-critical user paths**
 
 **🎯 Week 5-6 Success Criteria:**
 - [ ] 70%+ test coverage on critical functionality (authentication, subscription, trading data)
