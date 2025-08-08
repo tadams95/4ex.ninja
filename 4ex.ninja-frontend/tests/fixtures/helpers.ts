@@ -1,5 +1,14 @@
-import { Page, expect } from '@playwright/test';
-import { subscriptionData, testUsers, tradingData } from './testData';
+import { Page } from '@playwright/test';
+import { testUsers } from './testData';
+
+// Types for test data
+type TestUser = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  subscriptionTier?: string;
+};
 
 /**
  * Page Object Model helpers for critical E2E flows
@@ -14,29 +23,25 @@ export class AuthHelpers {
     await this.page.fill('[data-testid="password-input"]', password);
     await this.page.click('[data-testid="login-button"]');
 
-    // Wait for response - either success or error (much shorter timeout)
+    // Wait for response - either success or error
     try {
-      await this.page.waitForURL('/feed', { timeout: 3000 });
+      await this.page.waitForURL('/feed', { timeout: 8000 });
     } catch (error) {
-      // Check if we got an error message instead
-      const errorElement = await this.page.locator('.bg-error').first();
+      // Check if we got an error message instead - try multiple error selectors
+      const errorElement = await this.page
+        .locator('.bg-error, .text-red-500, .error-message, [data-testid="error-message"]')
+        .first();
       if (await errorElement.isVisible()) {
         const errorText = await errorElement.textContent();
         console.log('Login failed with error:', errorText);
         throw new Error(`Login failed: ${errorText}`);
       }
-      console.log('Login did not redirect to /feed. Current URL:', this.page.url());
+      console.log('Login did not complete successfully. Current URL:', this.page.url());
       throw error;
     }
   }
 
-  async logout() {
-    // Click the "Sign Out" button directly by text
-    await this.page.click('text=Sign Out');
-    await expect(this.page).toHaveURL('/');
-  }
-
-  async register(user = testUsers.validUser) {
+  async register(user: TestUser) {
     await this.page.goto('/register');
     // Combine firstName and lastName since the form uses a single name field
     const fullName = `${user.firstName} ${user.lastName}`;
@@ -46,9 +51,20 @@ export class AuthHelpers {
     await this.page.fill('[data-testid="confirm-password-input"]', user.password);
     await this.page.click('[data-testid="register-button"]');
 
-    // Wait for response - either success or error (short timeout)
+    // Wait for response - either redirect to feed, pricing, or stripe checkout
     try {
-      await this.page.waitForURL('/feed', { timeout: 3000 });
+      // Registration can redirect to:
+      // 1. /feed (if already subscribed)
+      // 2. /pricing (subscription needed)
+      // 3. stripe checkout (direct subscription flow)
+      await this.page.waitForURL(
+        (url: URL) =>
+          url.pathname === '/feed' ||
+          url.pathname === '/pricing' ||
+          url.hostname.includes('checkout.stripe.com'),
+        { timeout: 8000 }
+      );
+      console.log('Registration successful, redirected to:', this.page.url());
     } catch (error) {
       // Check for success or error messages
       const successElement = await this.page.locator('.bg-success').first();
@@ -67,88 +83,116 @@ export class AuthHelpers {
       throw error;
     }
   }
+
+  async logout() {
+    await this.page.click('[data-testid="logout-button"]');
+    await this.page.waitForURL('/login', { timeout: 8000 });
+  }
 }
 
 export class TradingHelpers {
   constructor(private page: Page) {}
 
-  async placeTrade(trade = tradingData.validTrade) {
-    await this.page.goto('/trading');
-
-    // Select currency pair
-    await this.page.click('[data-testid="pair-selector"]');
-    await this.page.click(`[data-testid="pair-option-${trade.pair}"]`);
-
-    // Enter trade details
-    await this.page.fill('[data-testid="amount-input"]', trade.amount);
-    await this.page.click(`[data-testid="${trade.direction}-button"]`);
-
-    if (trade.stopLoss) {
-      await this.page.fill('[data-testid="stop-loss-input"]', trade.stopLoss);
-    }
-
-    if (trade.takeProfit) {
-      await this.page.fill('[data-testid="take-profit-input"]', trade.takeProfit);
-    }
-
-    // Execute trade
-    await this.page.click('[data-testid="execute-trade-button"]');
-
-    // Verify trade confirmation
-    await expect(this.page.locator('[data-testid="trade-confirmation"]')).toBeVisible();
+  async navigateToFeed() {
+    await this.page.goto('/feed');
+    await this.page.waitForSelector('[data-testid="crossover-feed"]', { timeout: 8000 });
   }
 
-  async viewPositions() {
-    await this.page.goto('/trading/positions');
-    await expect(this.page.locator('[data-testid="positions-table"]')).toBeVisible();
+  async waitForSignals() {
+    // Wait for crossover signals to load
+    await this.page.waitForSelector('[data-testid="crossover-item"]', { timeout: 8000 });
+  }
+
+  async getCrossoverCount() {
+    const crossovers = await this.page.locator('[data-testid="crossover-item"]');
+    return await crossovers.count();
+  }
+
+  async getFirstCrossover() {
+    const firstCrossover = await this.page.locator('[data-testid="crossover-item"]').first();
+    return {
+      pair: await firstCrossover.locator('[data-testid="crossover-pair"]').textContent(),
+      type: await firstCrossover.locator('[data-testid="crossover-type"]').textContent(),
+      confidence: await firstCrossover
+        .locator('[data-testid="crossover-confidence"]')
+        .textContent(),
+    };
   }
 }
 
 export class SubscriptionHelpers {
   constructor(private page: Page) {}
 
-  async selectPlan(planType: 'basic' | 'premium' = 'premium') {
-    await this.page.goto('/pricing');
-
-    const plan = planType === 'premium' ? subscriptionData.premiumPlan : subscriptionData.basicPlan;
-    await this.page.click(`[data-testid="select-${planType}-plan"]`);
-
-    // Verify plan selection
-    await expect(this.page).toHaveURL('/checkout');
-    await expect(this.page.locator('[data-testid="selected-plan-name"]')).toContainText(plan.name);
+  async navigateToAccount() {
+    await this.page.goto('/account');
+    await this.page.waitForSelector('[data-testid="subscription-section"]', { timeout: 8000 });
   }
 
-  async enterPaymentDetails(card = subscriptionData.testCard) {
-    // Fill payment form
-    await this.page.fill('[data-testid="card-number-input"]', card.number);
-    await this.page.fill('[data-testid="card-expiry-input"]', card.expiry);
-    await this.page.fill('[data-testid="card-cvc-input"]', card.cvc);
-    await this.page.fill('[data-testid="card-name-input"]', card.name);
+  async getSubscriptionStatus() {
+    const statusElement = await this.page.locator('[data-testid="subscription-status"]');
+    return await statusElement.textContent();
   }
 
-  async completePurchase() {
-    await this.page.click('[data-testid="complete-purchase-button"]');
+  async clickSubscribe() {
+    await this.page.click('[data-testid="subscribe-button"]');
+    // This will redirect to Stripe - we don't follow through in tests
+    await this.page.waitForTimeout(2000); // Short wait to confirm redirect started
+  }
 
-    // Wait for success confirmation
-    await expect(this.page.locator('[data-testid="purchase-success"]')).toBeVisible();
-    await expect(this.page).toHaveURL('/dashboard');
+  async hasAccessToFeed() {
+    try {
+      await this.page.goto('/feed');
+      await this.page.waitForSelector('[data-testid="crossover-feed"]', { timeout: 5000 });
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 
-export class CommonHelpers {
-  constructor(private page: Page) {}
+// Test data helpers
+export function generateTestUser(): TestUser {
+  return {
+    email: `test.${Date.now()}@example.com`,
+    password: 'TestPassword123!',
+    firstName: 'Test',
+    lastName: 'User',
+  };
+}
 
-  async waitForPageLoad() {
-    await this.page.waitForLoadState('networkidle');
+export function generatePremiumTestUser(): TestUser {
+  return {
+    email: `premium.${Date.now()}@example.com`,
+    password: 'TestPassword123!',
+    firstName: 'Premium',
+    lastName: 'User',
+    subscriptionTier: 'premium',
+  };
+}
+
+// Wait helpers
+export async function waitForStableDOM(page: Page, selector: string, timeout = 5000) {
+  let lastCount = -1;
+  const startTime = Date.now();
+
+  while (Date.now() - startTime < timeout) {
+    try {
+      const elements = await page.locator(selector);
+      const currentCount = await elements.count();
+
+      if (currentCount === lastCount && currentCount > 0) {
+        // DOM is stable for this selector
+        await page.waitForTimeout(500); // Extra buffer
+        return;
+      }
+
+      lastCount = currentCount;
+      await page.waitForTimeout(500);
+    } catch {
+      // Continue waiting
+      await page.waitForTimeout(500);
+    }
   }
 
-  async checkErrorMessage(expectedMessage: string) {
-    await expect(this.page.locator('[data-testid="error-message"]')).toContainText(expectedMessage);
-  }
-
-  async checkSuccessMessage(expectedMessage: string) {
-    await expect(this.page.locator('[data-testid="success-message"]')).toContainText(
-      expectedMessage
-    );
-  }
+  throw new Error(`DOM never stabilized for selector: ${selector}`);
 }

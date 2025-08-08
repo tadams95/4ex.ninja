@@ -33,7 +33,7 @@ export default defineConfig({
     baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'on',
 
     /* Take screenshot on failure */
     screenshot: 'only-on-failure',
@@ -43,6 +43,11 @@ export default defineConfig({
 
     /* Shorter action timeout */
     actionTimeout: 5000, // 5 seconds for individual actions
+
+    /* Enable more detailed logging */
+    launchOptions: {
+      slowMo: process.env.CI ? 0 : 500, // Slow down actions in dev
+    },
   },
 
   /* Configure projects for major browsers */
