@@ -1,9 +1,9 @@
 'use client';
 
 import { FeedErrorBoundary } from '@/components/error';
+import { ConditionalMotionDiv } from '@/components/ui';
 import { useLatestCrossovers } from '@/hooks/api';
 import { Crossover } from '@/types';
-import { motion } from 'framer-motion';
 import React from 'react';
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -93,11 +93,14 @@ function SignalsPage() {
       ) : (
         <div className="space-y-4">
           {crossovers.map((crossover: Crossover, index: number) => (
-            <motion.div
+            <ConditionalMotionDiv
               key={crossover._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
+              motionProps={{
+                initial: { opacity: 0, y: 20 },
+                animate: { opacity: 1, y: 0 },
+                transition: { duration: 0.3, delay: index * 0.1 },
+              }}
+              fallbackClassName={`animate-slide-up animate-stagger-${Math.min(index + 1, 5)}`}
               className={`bg-gray-700 rounded-lg p-6 shadow-lg border-l-4 ${
                 crossover.crossoverType === 'BULLISH' ? 'border-green-500' : 'border-red-500'
               }`}
@@ -135,7 +138,7 @@ function SignalsPage() {
                   {new Date(crossover.timestamp).toLocaleString()}
                 </p>
               </div>
-            </motion.div>
+            </ConditionalMotionDiv>
           ))}
         </div>
       )}

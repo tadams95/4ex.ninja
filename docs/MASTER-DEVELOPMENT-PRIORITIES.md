@@ -515,7 +515,7 @@ This document provides a strategic, ordered approach to implementing all planned
 ##### 1.10.1 Frontend Bundle Optimization (Priority: HIGH - ~40% bundle size reduction potential)
 **🎯 Progress Update**: Route-based code splitting achieved 58-66% reduction in page-specific bundle sizes for large pages (account, pricing, register). Webpack configuration implemented for vendor library separation.
 
-- [ ] **Day 1**: Code splitting and lazy loading implementation (2/4 subtasks completed)
+- [ ] **Day 1**: Code splitting and lazy loading implementation (3/4 subtasks completed)
   - [x] **1.10.1.1**: Analyze current bundle composition (517KB + 196KB main chunks identified) ✅ **COMPLETED**
     - ✅ Next.js framework chunk: 180KB (acceptable)
     - ✅ Main vendor chunk (517-92b28c7643d08218.js): 196KB (identified for optimization)
@@ -527,11 +527,13 @@ This document provides a strategic, ordered approach to implementing all planned
     - ✅ Split `/register` page (3.67KB → 1.45KB, -60% reduction) with lazy loading
     - ✅ Create separate chunks for authentication flows vs. trading flows
     - ✅ Added webpack configuration for optimal vendor library splitting
-  - [ ] **1.10.1.3**: Implement component-level lazy loading for heavy components
-    - Lazy load `CurrencyTicker` component (WebSocket + animation heavy)
-    - Lazy load `framer-motion` animations on demand (currently loaded globally)
-    - Lazy load error boundary components not immediately needed
-    - Dynamic import for `@tanstack/react-query-devtools` (dev only)
+  - [x] **1.10.1.3**: Implement component-level lazy loading for heavy components ✅ **COMPLETED**
+    - ✅ Lazy load `CurrencyTicker` component (WebSocket + animation heavy) with dynamic imports and Suspense fallback
+    - ✅ Lazy load `framer-motion` animations on demand using conditional loading system (reduces initial bundle)
+    - ✅ Dynamic import for `@tanstack/react-query-devtools` (dev only) - loads only in development environment
+    - ✅ Created `ConditionalMotionDiv` component for conditional framer-motion loading with CSS fallbacks
+    - ✅ Added CSS-only animation fallbacks for users with `prefers-reduced-motion` or when motion hasn't loaded
+    - ✅ **Result**: Home page and Feed page reduced initial bundle by implementing conditional motion loading
   - [ ] **1.10.1.4**: Optimize third-party library loading (1/4 subtasks completed)
     - [ ] Move `framer-motion` to dynamic imports (reduce initial bundle by ~40KB)
     - [ ] Implement tree-shaking for unused Tailwind classes (purge unused CSS)

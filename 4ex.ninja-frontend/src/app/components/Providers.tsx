@@ -6,8 +6,20 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { queryClient } from '@/lib/queryClient';
 import { BaseComponentProps } from '@/types';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
+import dynamic from 'next/dynamic';
+
+// Lazy load React Query devtools only in development
+const ReactQueryDevtools = dynamic(
+  () =>
+    import('@tanstack/react-query-devtools').then(mod => ({
+      default: mod.ReactQueryDevtools,
+    })),
+  {
+    ssr: false,
+    loading: () => null, // No loading state needed for devtools
+  }
+);
 
 interface ProvidersProps extends BaseComponentProps {}
 

@@ -1,6 +1,7 @@
 // Export all UI components
 export { Button } from './Button';
 export { Card } from './Card';
+export { default as ConditionalMotionDiv } from './ConditionalMotionDiv';
 export { Input } from './Input';
 export { LoadingSpinner } from './LoadingSpinner';
 export { Modal } from './Modal';
