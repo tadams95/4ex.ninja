@@ -511,7 +511,125 @@ This document provides a strategic, ordered approach to implementing all planned
 ### **Week 7-8: Performance & Security Baseline**
 
 #### 1.10 Performance Optimization
-- [ ] **Frontend**: Implement code splitting and lazy loading
+
+##### 1.10.1 Frontend Bundle Optimization (Priority: HIGH - ~40% bundle size reduction potential)
+- [ ] **Day 1**: Code splitting and lazy loading implementation
+  - [x] **1.10.1.1**: Analyze current bundle composition (517KB + 196KB main chunks identified)
+    - ✅ Next.js framework chunk: 180KB (acceptable)
+    - ⚠️ Main vendor chunk (517-92b28c7643d08218.js): 196KB (needs optimization)
+    - ⚠️ Application chunk (4bd1b696-5f1282123f394903.js): 164KB (needs splitting)
+    - ⚠️ React Query + Zustand bundle: 112KB (888 chunk - consider lazy loading)
+  - [ ] **1.10.1.2**: Implement route-based code splitting for large pages
+    - Split `/account` page (4.37KB + heavy form logic) into separate chunks
+    - Split `/pricing` page (3.45KB + Stripe integration) with dynamic imports
+    - Split `/register` page (3.67KB + validation logic) with lazy loading
+    - Create separate chunks for authentication flows vs. trading flows
+  - [ ] **1.10.1.3**: Implement component-level lazy loading for heavy components
+    - Lazy load `CurrencyTicker` component (WebSocket + animation heavy)
+    - Lazy load `framer-motion` animations on demand (currently loaded globally)
+    - Lazy load error boundary components not immediately needed
+    - Dynamic import for `@tanstack/react-query-devtools` (dev only)
+  - [ ] **1.10.1.4**: Optimize third-party library loading
+    - Move `framer-motion` to dynamic imports (reduce initial bundle by ~40KB)
+    - Implement tree-shaking for unused Tailwind classes (purge unused CSS)
+    - Split vendor libraries: NextAuth, Stripe, React Query into separate chunks
+    - Use dynamic imports for Stripe SDK only when needed
+
+- [ ] **Day 2**: Animation and interaction optimization
+  - [ ] **1.10.2.1**: Optimize framer-motion usage for performance
+    - Replace heavy `motion` components with CSS transitions where possible
+    - Implement `will-change` property for GPU acceleration
+    - Use `transform3d` for hardware acceleration on mobile
+    - Reduce motion complexity for mobile devices (prefers-reduced-motion)
+  - [ ] **1.10.2.2**: Optimize WebSocket and real-time data handling
+    - Move `CurrencyTicker` WebSocket to Web Worker to prevent main thread blocking
+    - Implement connection pooling for WebSocket connections
+    - Add memory cleanup for WebSocket subscriptions
+    - Throttle price updates to prevent excessive re-renders
+  - [ ] **1.10.2.3**: Optimize React component rendering performance
+    - Add `React.memo` to static components (Header, Footer, error boundaries)
+    - Implement `useMemo` for expensive calculations in feed components
+    - Use `useCallback` for event handlers to prevent unnecessary re-renders
+    - Optimize crossover list rendering with virtualization for large datasets
+
+- [ ] **Day 3**: Asset and loading optimization
+  - [ ] **1.10.3.1**: Image and asset optimization
+    - Implement Next.js Image component with proper sizing and formats
+    - Add WebP/AVIF support with fallbacks for better compression
+    - Optimize font loading with `font-display: swap` and preload critical fonts
+    - Implement resource hints (preload, prefetch) for critical assets
+  - [ ] **1.10.3.2**: CSS and styling optimization
+    - Implement critical CSS extraction for above-the-fold content
+    - Reduce CSS bundle size by removing unused Tailwind classes (potential 30% reduction)
+    - Split theme CSS to load only necessary color schemes
+    - Optimize CSS custom properties usage for better browser caching
+  - [ ] **1.10.3.3**: Progressive loading strategies
+    - Implement skeleton loading states for all async components
+    - Add progressive enhancement for JavaScript-disabled users
+    - Implement service worker for offline functionality and caching
+    - Create optimized loading sequences for authentication flows
+
+##### 1.10.4 React Query and State Management Optimization (Priority: MEDIUM)
+- [ ] **Day 4**: Query and caching optimization
+  - [ ] **1.10.4.1**: Optimize React Query configuration for performance
+    - Fine-tune `staleTime` and `gcTime` based on actual usage patterns
+    - Implement query prefetching for predictable user flows
+    - Add query dehydration/hydration for SSR performance
+    - Optimize query key structures to prevent unnecessary refetches
+  - [ ] **1.10.4.2**: Implement smart caching strategies
+    - Add background refetching for stale subscription data
+    - Implement optimistic updates for better perceived performance
+    - Create cache invalidation strategies for real-time data
+    - Add offline-first caching with IndexedDB fallback
+  - [ ] **1.10.4.3**: Optimize Zustand store performance
+    - Implement store slicing to prevent unnecessary re-renders
+    - Add computed values with memoization for derived state
+    - Optimize persistence middleware for better startup performance
+    - Create selective subscriptions to reduce update frequency
+
+##### 1.10.5 Backend API and Integration Optimization (Priority: MEDIUM)
+- [ ] **Day 5**: Backend caching and response optimization  
+  - [ ] **1.10.5.1**: Implement comprehensive caching layer
+    - Redis caching for frequently accessed crossover data
+    - Database query result caching with proper invalidation
+    - API response caching with ETags and conditional requests
+    - CDN integration for static and semi-static content
+  - [ ] **1.10.5.2**: Database query optimization
+    - Optimize MongoDB queries with proper indexing strategies
+    - Implement aggregation pipeline optimizations for crossover data
+    - Add connection pooling and query batching
+    - Create materialized views for complex analytics queries
+  - [ ] **1.10.5.3**: API response optimization
+    - Implement GraphQL or field selection to reduce payload sizes
+    - Add response compression (gzip/brotli) for all API endpoints
+    - Optimize JSON serialization with faster libraries
+    - Implement pagination and infinite scroll for large datasets
+
+##### 1.10.6 Monitoring and Performance Measurement (Priority: HIGH)
+- [ ] **Day 6**: Performance monitoring infrastructure
+  - [ ] **1.10.6.1**: Implement comprehensive performance monitoring
+    - Add Web Vitals tracking (CLS, FID, LCP) with real user monitoring
+    - Create performance budgets and alerts for bundle size increases
+    - Implement Core Web Vitals monitoring in production
+    - Add custom performance metrics for trading-specific flows
+  - [ ] **1.10.6.2**: Bundle and build optimization monitoring
+    - Setup bundle analyzer in CI/CD pipeline with size alerts
+    - Add lighthouse CI for automated performance testing
+    - Create performance regression testing in GitHub Actions
+    - Implement tree-shaking effectiveness monitoring
+  - [ ] **1.10.6.3**: Real-time performance optimization
+    - Add performance profiling for React Query cache hit rates
+    - Monitor WebSocket connection performance and reconnection rates
+    - Track animation performance and frame rate drops
+    - Create user experience metrics for subscription and trading flows
+
+- [ ] **Day 7**: Performance validation and optimization
+  - [ ] **1.10.7.1**: Comprehensive performance testing across devices
+    - Test on low-end mobile devices for JavaScript execution performance
+    - Validate performance improvements with synthetic testing
+    - A/B testing for performance optimizations impact on user engagement
+    - Cross-browser performance validation and optimization
+
 - [ ] **Backend**: Add caching layer for repeated queries
 - [ ] **Integration**: Optimize API response times and bundle sizes
 
