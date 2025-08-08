@@ -1,7 +1,7 @@
 'use client';
 
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { PageErrorFallback } from '../error';
+import PageErrorFallback from './PageErrorFallback';
 
 interface Props {
   children: ReactNode;
