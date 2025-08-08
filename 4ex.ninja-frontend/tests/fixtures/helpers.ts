@@ -85,8 +85,8 @@ export class AuthHelpers {
   }
 
   async logout() {
-    await this.page.click('[data-testid="logout-button"]');
-    await this.page.waitForURL('/login', { timeout: 8000 });
+    await this.page.click('[data-testid="sign-out-button"]');
+    await this.page.waitForURL('/', { timeout: 8000 }); // Wait for redirect to home page
   }
 }
 

@@ -109,6 +109,7 @@ function HeaderComponent() {
                       isMobile && setIsMenuOpen(false);
                     }}
                     className="text-red-500"
+                    data-testid="sign-out-button"
                   >
                     Sign Out
                   </button>
