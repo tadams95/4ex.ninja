@@ -373,3 +373,18 @@ body {
 .animate-stagger-5 {
   animation-delay: 0.5s;
 }
+
+/* Scrolling ticker animation for currency ticker fallback */
+@keyframes scroll-ticker {
+  0% {
+    transform: translate3d(100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.animate-scroll-ticker {
+  animation: scroll-ticker 50s linear infinite;
+  will-change: transform;
+}
