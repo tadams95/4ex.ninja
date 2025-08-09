@@ -1,10 +1,10 @@
 'use client';
 
 import { FeedErrorBoundary } from '@/components/error';
+import { LoadingSequence } from '@/components/ui';
 import VirtualizedCrossoverList from '@/components/VirtualizedCrossoverList';
 import { useLatestCrossovers } from '@/hooks/api';
 import { Crossover } from '@/types';
-import { CrossoverSkeleton, FeedStatsSkeleton, LoadingSequence } from '@/components/ui';
 import React, { useCallback, useMemo } from 'react';
 import ProtectedRoute from '../components/ProtectedRoute';
 

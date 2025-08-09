@@ -1,9 +1,9 @@
 'use client';
 
 // Lazy-loaded component for Account page to reduce main bundle size
+import { LoadingSequence } from '@/components/ui';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { LoadingSequence } from '@/components/ui';
 
 // Lazy load the main account component with loading state
 const AccountPageComponent = dynamic(() => import('./AccountPageComponent'), {

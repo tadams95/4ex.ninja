@@ -214,27 +214,34 @@ async function handleApiRequest(request) {
     // Return meaningful offline responses for specific endpoints
     const url = new URL(request.url);
     if (url.pathname.includes('/api/crossovers')) {
-      return new Response(JSON.stringify({
-        error: 'Offline',
-        message: 'Unable to fetch latest signals while offline. Please check your internet connection.',
-        crossovers: [],
-        isEmpty: true,
-        offline: true
-      }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({
+          error: 'Offline',
+          message:
+            'Unable to fetch latest signals while offline. Please check your internet connection.',
+          crossovers: [],
+          isEmpty: true,
+          offline: true,
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
-    
+
     if (url.pathname.includes('/api/subscription-status')) {
-      return new Response(JSON.stringify({
-        error: 'Offline',
-        message: 'Cannot check subscription status while offline',
-        offline: true
-      }), {
-        status: 503,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({
+          error: 'Offline',
+          message: 'Cannot check subscription status while offline',
+          offline: true,
+        }),
+        {
+          status: 503,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     return new Response('API not available', {

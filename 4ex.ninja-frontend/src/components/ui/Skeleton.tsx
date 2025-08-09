@@ -1,6 +1,6 @@
 /**
  * Skeleton Loading Components
- * 
+ *
  * Provides skeleton loading states for async components to improve perceived performance.
  * Uses CSS animations for smooth loading effects.
  */
@@ -83,7 +83,7 @@ export const AccountSkeleton: React.FC = () => (
         <Skeleton className="h-10 w-24" /> {/* Save button */}
       </div>
     </div>
-    
+
     {/* Subscription section */}
     <div className="bg-gray-800 rounded-lg p-6">
       <Skeleton className="h-6 w-40 mb-4" /> {/* Section title */}

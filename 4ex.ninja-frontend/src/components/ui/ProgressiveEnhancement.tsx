@@ -1,6 +1,6 @@
 /**
  * Progressive Enhancement Utility
- * 
+ *
  * Provides utilities for progressive enhancement and graceful degradation
  * when JavaScript is disabled or fails to load.
  */
@@ -19,7 +19,7 @@ export const JavaScriptOnly: React.FC<{ children: React.ReactNode }> = ({ childr
 };
 
 // Component that provides fallback content when JavaScript is disabled
-export const NoScriptFallback: React.FC<{ 
+export const NoScriptFallback: React.FC<{
   children: React.ReactNode;
   fallback?: React.ReactNode;
 }> = ({ children, fallback }) => (
@@ -30,8 +30,8 @@ export const NoScriptFallback: React.FC<{
         <div className="bg-yellow-500/20 text-yellow-400 p-4 rounded-md border border-yellow-500/30">
           <p className="font-medium">JavaScript Required</p>
           <p className="text-sm mt-1">
-            This application requires JavaScript to function properly. 
-            Please enable JavaScript in your browser settings.
+            This application requires JavaScript to function properly. Please enable JavaScript in
+            your browser settings.
           </p>
         </div>
       )}
@@ -69,12 +69,7 @@ export const ProgressiveButton: React.FC<{
     return (
       <>
         <JavaScriptOnly>
-          <button 
-            type={type}
-            className={className}
-            onClick={onClick}
-            disabled={disabled}
-          >
+          <button type={type} className={className} onClick={onClick} disabled={disabled}>
             {children}
           </button>
         </JavaScriptOnly>
@@ -88,12 +83,7 @@ export const ProgressiveButton: React.FC<{
   }
 
   return (
-    <button 
-      type={type}
-      className={className}
-      onClick={onClick}
-      disabled={disabled}
-    >
+    <button type={type} className={className} onClick={onClick} disabled={disabled}>
       {children}
     </button>
   );

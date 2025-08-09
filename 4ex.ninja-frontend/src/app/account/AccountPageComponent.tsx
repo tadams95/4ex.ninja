@@ -1,8 +1,8 @@
 'use client';
 
 import { AccountErrorBoundary } from '@/components/error';
-import { useAuth, useProfileManagement } from '@/hooks/api';
 import { AccountSkeleton } from '@/components/ui';
+import { useAuth, useProfileManagement } from '@/hooks/api';
 import { handleCheckout } from '@/utils/checkout-helpers';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';

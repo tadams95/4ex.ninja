@@ -1,9 +1,9 @@
 'use client';
 
 // Lazy-loaded component for Register page to reduce main bundle size
+import { FormSkeleton } from '@/components/ui';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { FormSkeleton } from '@/components/ui';
 
 // Lazy load the main register component with loading state
 const RegisterPageComponent = dynamic(() => import('./RegisterPageComponent'), {

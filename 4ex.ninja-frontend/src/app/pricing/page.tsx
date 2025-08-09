@@ -1,9 +1,9 @@
 'use client';
 
 // Lazy-loaded component for Pricing page to reduce main bundle size
+import { PricingCardSkeleton } from '@/components/ui';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { PricingCardSkeleton } from '@/components/ui';
 
 // Lazy load the main pricing component with loading state
 const PricingPageComponent = dynamic(() => import('./PricingPageComponent'), {

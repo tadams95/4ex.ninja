@@ -1,12 +1,12 @@
 /**
  * Optimized Loading Sequence Component
- * 
+ *
  * Provides intelligent loading sequences that prioritize critical content
  * and show relevant information during authentication flows.
  */
 
 import React, { useEffect, useState } from 'react';
-import { FormSkeleton, Skeleton } from './Skeleton';
+import { Skeleton } from './Skeleton';
 
 interface LoadingSequenceProps {
   type: 'auth' | 'subscription' | 'trading' | 'general';
@@ -51,9 +51,9 @@ export const LoadingSequence: React.FC<LoadingSequenceProps> = ({
 
   useEffect(() => {
     const stepDuration = duration / sequenceSteps.length;
-    
+
     const interval = setInterval(() => {
-      setActiveStep((prev) => {
+      setActiveStep(prev => {
         if (prev < sequenceSteps.length - 1) {
           return prev + 1;
         }
@@ -88,10 +88,8 @@ export const LoadingSequence: React.FC<LoadingSequenceProps> = ({
     <div className="container mx-auto px-4 py-8 max-w-2xl bg-black min-h-screen">
       <div className="text-center mb-8">
         <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
-        <h2 className="text-xl font-semibold text-white mb-2">
-          {sequenceSteps[activeStep]}
-        </h2>
-        
+        <h2 className="text-xl font-semibold text-white mb-2">{sequenceSteps[activeStep]}</h2>
+
         {/* Progress bar */}
         <div className="w-full bg-gray-700 rounded-full h-2 mb-4">
           <div
@@ -101,7 +99,7 @@ export const LoadingSequence: React.FC<LoadingSequenceProps> = ({
             }}
           ></div>
         </div>
-        
+
         {/* Step indicator */}
         <p className="text-gray-400 text-sm">
           Step {activeStep + 1} of {sequenceSteps.length}
@@ -133,7 +131,7 @@ const AuthLoadingContent: React.FC = () => (
         </div>
       </div>
     </div>
-    
+
     <div className="bg-gray-800 rounded-lg p-6">
       <Skeleton className="h-6 w-40 mb-4" />
       <div className="grid grid-cols-2 gap-4">
@@ -157,7 +155,7 @@ const SubscriptionLoadingContent: React.FC = () => (
       <Skeleton className="h-8 w-24 mx-auto mb-2" />
       <Skeleton className="h-6 w-32 mx-auto mb-4" />
       <Skeleton className="h-4 w-48 mx-auto mb-6" />
-      
+
       <div className="space-y-3">
         {[...Array(3)].map((_, i) => (
           <div key={i} className="flex items-center justify-center space-x-2">
@@ -166,7 +164,7 @@ const SubscriptionLoadingContent: React.FC = () => (
           </div>
         ))}
       </div>
-      
+
       <Skeleton className="h-12 w-full mt-6" />
     </div>
   </div>
@@ -184,7 +182,7 @@ const TradingLoadingContent: React.FC = () => (
         </div>
       ))}
     </div>
-    
+
     {/* Signals skeleton */}
     <div className="space-y-4">
       {[...Array(3)].map((_, i) => (
