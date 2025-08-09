@@ -60,3 +60,7 @@ motor==3.6.0
 # Caching dependencies
 redis==5.2.1
 aioredis==2.0.1
+
+# Performance optimization dependencies
+brotli==1.1.0
+orjson==3.10.12

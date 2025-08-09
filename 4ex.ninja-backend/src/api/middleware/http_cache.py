@@ -242,7 +242,11 @@ class ResponseCompressionMiddleware(BaseHTTPMiddleware):
     Response compression middleware for reducing payload sizes.
 
     This middleware automatically compresses responses based on
-    Accept-Encoding headers and content type.
+    Accept-Encoding headers and content type using gzip.
+
+    Note: This is a simplified implementation that relies on FastAPI's
+    built-in GZipMiddleware for actual compression. This class is kept
+    for future extensibility and configuration.
     """
 
     def __init__(
@@ -250,6 +254,7 @@ class ResponseCompressionMiddleware(BaseHTTPMiddleware):
         app,
         minimum_size: int = 1024,
         compressible_types: Optional[List[str]] = None,
+        compression_level: int = 6,
     ):
         """
         Initialize compression middleware.
@@ -258,9 +263,11 @@ class ResponseCompressionMiddleware(BaseHTTPMiddleware):
             app: FastAPI application
             minimum_size: Minimum response size to compress
             compressible_types: List of compressible content types
+            compression_level: Compression level (1-9 for gzip)
         """
         super().__init__(app)
         self.minimum_size = minimum_size
+        self.compression_level = compression_level
         self.compressible_types = compressible_types or [
             "application/json",
             "text/plain",
@@ -284,28 +291,23 @@ class ResponseCompressionMiddleware(BaseHTTPMiddleware):
         if not any(ct in content_type for ct in self.compressible_types):
             return False
 
-        # Check response size
-        if hasattr(response, "body") and len(response.body) < self.minimum_size:
-            return False
-
         return True
 
     async def dispatch(self, request: Request, call_next):
-        """Process request and compress response if appropriate."""
+        """Process request and add compression headers if needed."""
         response = await call_next(request)
 
         # Skip compression for non-successful responses
         if not (200 <= response.status_code < 300):
             return response
 
-        # Note: Actual compression implementation would require more complex
-        # handling of response bodies and streaming. For now, we'll just
-        # add the headers to indicate compression support.
-
+        # Add Vary header for responses that could be compressed
         if self._should_compress(response, request):
-            # In a real implementation, you'd compress the response body here
-            # response.headers["Content-Encoding"] = "gzip"
-            # response.headers["Vary"] = "Accept-Encoding"
-            pass
+            if "vary" not in response.headers:
+                response.headers["vary"] = "Accept-Encoding"
+            else:
+                current_vary = response.headers["vary"]
+                if "Accept-Encoding" not in current_vary:
+                    response.headers["vary"] = f"{current_vary}, Accept-Encoding"
 
         return response

@@ -8,6 +8,7 @@ middleware, and route registration.
 from fastapi import FastAPI, Request, Response, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from contextlib import asynccontextmanager
 import logging
 import os
@@ -119,7 +120,7 @@ def create_app() -> FastAPI:
             allowed_hosts=["4ex.ninja", "www.4ex.ninja", "api.4ex.ninja"],
         )
 
-    # Add custom middleware
+    # Add custom middleware (order matters - last added is executed first)
     app.add_middleware(LoggingMiddleware)
     app.add_middleware(ErrorHandlerMiddleware)
     app.add_middleware(
@@ -134,6 +135,9 @@ def create_app() -> FastAPI:
             "/cache/invalidate",
         ],
     )
+
+    # Add GZip compression middleware
+    app.add_middleware(GZipMiddleware, minimum_size=1000)
 
     # Include routers
     app.include_router(health_router)

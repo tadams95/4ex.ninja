@@ -17,6 +17,12 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from api.dependencies.simple_container import get_signal_repository
 from services.cache_service import CrossoverCacheService, CacheServiceFactory
+from api.utils.response_optimization import (
+    FieldSelector,
+    PaginationOptimizer,
+    create_optimized_response,
+)
+from api.utils.fast_json import FastJSONResponse, create_fast_json_response
 
 router = APIRouter(prefix="/signals", tags=["signals"])
 logger = logging.getLogger(__name__)
@@ -42,10 +48,10 @@ async def get_cache_service() -> CrossoverCacheService:
     return _cache_service
 
 
-@router.get("/", response_model=List[Dict[str, Any]])
+@router.get("/", response_class=FastJSONResponse)
 async def get_signals(
-    limit: int = Query(50, ge=1, le=1000, description="Number of signals to retrieve"),
-    offset: int = Query(0, ge=0, description="Number of signals to skip"),
+    pagination: PaginationOptimizer = Depends(),
+    field_selector: FieldSelector = Depends(),
     pair: Optional[str] = Query(
         None, description="Currency pair filter (e.g., EUR_USD)"
     ),
@@ -57,22 +63,22 @@ async def get_signals(
     ),
     signal_repository=Depends(get_signal_repository),
     cache_service: CrossoverCacheService = Depends(get_cache_service),
-) -> List[Dict[str, Any]]:
+) -> FastJSONResponse:
     """
-    Get signals with optional filtering and intelligent caching.
+    Get signals with optional filtering, field selection, and intelligent caching.
 
     This endpoint demonstrates the repository pattern usage for data access
-    with comprehensive caching for improved performance.
+    with comprehensive caching and response optimization.
     """
     try:
         logger.info(
-            f"Fetching signals with filters: pair={pair}, limit={limit}, offset={offset}, force_refresh={force_refresh}"
+            f"Fetching signals with filters: pair={pair}, limit={pagination.limit}, offset={pagination.offset}, force_refresh={force_refresh}"
         )
 
         # Build cache filters
         cache_filters: Dict[str, Any] = {
-            "limit": limit,
-            "offset": offset,
+            "limit": pagination.limit,
+            "offset": pagination.offset,
         }
         if pair:
             cache_filters["pair"] = pair
@@ -86,7 +92,13 @@ async def get_signals(
 
         if cached_signals is not None:
             logger.info(f"Returning {len(cached_signals)} signals from cache")
-            return cached_signals
+            optimized_response = create_optimized_response(
+                cached_signals,
+                field_selector=field_selector,
+                pagination=pagination,
+                additional_meta={"source": "cache", "cache_hit": True},
+            )
+            return create_fast_json_response(optimized_response)
 
         # Cache miss or force refresh - get from repository/mock data
         if not signal_repository:
@@ -102,6 +114,8 @@ async def get_signals(
                     "confidence": 0.85,
                     "created_at": datetime.utcnow().isoformat(),
                     "status": "ACTIVE",
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "notes": "Strong bullish momentum detected",
                 },
                 {
                     "id": "mock_signal_2",
@@ -113,6 +127,8 @@ async def get_signals(
                     "confidence": 0.78,
                     "created_at": (datetime.utcnow() - timedelta(hours=1)).isoformat(),
                     "status": "ACTIVE",
+                    "timestamp": (datetime.utcnow() - timedelta(hours=1)).isoformat(),
+                    "notes": "Resistance level break expected",
                 },
                 {
                     "id": "mock_signal_3",
@@ -121,44 +137,61 @@ async def get_signals(
                     "entry_price": 149.50,
                     "stop_loss": 149.00,
                     "take_profit": 150.20,
-                    "confidence": 0.91,
+                    "confidence": 0.82,
                     "created_at": (datetime.utcnow() - timedelta(hours=2)).isoformat(),
-                    "status": "COMPLETED",
+                    "status": "CLOSED",
+                    "timestamp": (datetime.utcnow() - timedelta(hours=2)).isoformat(),
+                    "notes": "Target reached successfully",
                 },
             ]
 
-            # Apply basic filtering to mock data
+            # Apply filtering
             filtered_signals = mock_signals
             if pair:
                 filtered_signals = [s for s in filtered_signals if s["pair"] == pair]
             if since:
-                since_str = since.isoformat()
                 filtered_signals = [
-                    s for s in filtered_signals if s["created_at"] >= since_str
+                    s
+                    for s in filtered_signals
+                    if datetime.fromisoformat(s["created_at"]) >= since
                 ]
 
             # Apply pagination
-            paginated_signals = filtered_signals[offset : offset + limit]
+            paginated_signals = filtered_signals[
+                pagination.offset : pagination.offset + pagination.limit
+            ]
 
-            # Cache the results
-            await cache_service.set_crossovers(
-                crossovers=paginated_signals,
-                filters=cache_filters,
-                ttl_seconds=60,  # Cache signals for 1 minute
-                metadata={
-                    "total_count": len(filtered_signals),
-                    "is_mock_data": True,
+            # Store in cache for future requests
+            try:
+                await cache_service.set_crossovers(
+                    crossovers=paginated_signals,
+                    filters=cache_filters,
+                    ttl_seconds=60,  # Cache signals for 1 minute
+                    metadata={
+                        "total_count": len(filtered_signals),
+                        "is_mock_data": True,
+                    },
+                )
+                logger.info(f"Cached {len(paginated_signals)} signals")
+            except Exception as cache_error:
+                logger.warning(f"Failed to cache signals: {cache_error}")
+
+            optimized_response = create_optimized_response(
+                paginated_signals,
+                field_selector=field_selector,
+                pagination=pagination,
+                additional_meta={
+                    "source": "mock_data",
+                    "cache_hit": False,
+                    "total_unfiltered": len(mock_signals),
+                    "total_filtered": len(filtered_signals),
                 },
             )
-
-            logger.info(f"Returning {len(paginated_signals)} mock signals (cached)")
-            return paginated_signals
+            return create_fast_json_response(optimized_response)
 
         # Use repository to fetch signals (when available)
-        # This would use the actual repository methods when implemented
         signals = []
 
-        # Cache the repository results
         if signals:
             await cache_service.set_crossovers(
                 crossovers=signals,
@@ -166,7 +199,13 @@ async def get_signals(
                 ttl_seconds=300,  # Cache real data for 5 minutes
             )
 
-        return signals
+        optimized_response = create_optimized_response(
+            signals,
+            field_selector=field_selector,
+            pagination=pagination,
+            additional_meta={"source": "repository", "cache_hit": False},
+        )
+        return create_fast_json_response(optimized_response)
 
     except Exception as e:
         logger.error(f"Error fetching signals: {str(e)}")
