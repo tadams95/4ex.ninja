@@ -1,0 +1,22 @@
+"""
+API Dependencies Package
+
+Dependency injection and shared dependencies for FastAPI routes.
+"""
+
+# Temporarily commented out to fix import issues
+# from .container import (
+#     get_container,
+#     get_signal_repository,
+#     get_market_data_repository,
+#     get_strategy_repository,
+#     get_database_manager,
+# )
+
+# __all__ = [
+#     "get_container",
+#     "get_signal_repository",
+#     "get_market_data_repository",
+#     "get_strategy_repository",
+#     "get_database_manager",
+# ]

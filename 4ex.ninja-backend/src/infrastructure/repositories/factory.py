@@ -13,14 +13,35 @@ from typing import Dict, Any, Type, TypeVar, Optional, List
 from abc import ABC, abstractmethod
 from datetime import datetime
 
-from ...core.interfaces.repository import IBaseRepository
-from ...core.interfaces.signal_repository import ISignalRepository
-from ...core.interfaces.market_data_repository import IMarketDataRepository
-from ...core.interfaces.strategy_repository import IStrategyRepository
+import sys
+import os
 
-from .mongo_base_repository import MongoBaseRepository
-from ..database.connection import DatabaseManager
-from ..database.config import DatabaseConfigurationManager
+# Add src to path for absolute imports
+src_path = os.path.join(os.path.dirname(__file__), "..", "..", "..")
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
+try:
+    from core.interfaces.repository import IBaseRepository
+    from core.interfaces.signal_repository import ISignalRepository
+    from core.interfaces.market_data_repository import IMarketDataRepository
+    from core.interfaces.strategy_repository import IStrategyRepository
+except ImportError:
+    # Fallback for relative imports
+    from ...core.interfaces.repository import IBaseRepository
+    from ...core.interfaces.signal_repository import ISignalRepository
+    from ...core.interfaces.market_data_repository import IMarketDataRepository
+    from ...core.interfaces.strategy_repository import IStrategyRepository
+
+try:
+    from infrastructure.repositories.mongo_base_repository import MongoBaseRepository
+    from infrastructure.database.connection import DatabaseManager
+    from infrastructure.database.config import DatabaseConfigurationManager
+except ImportError:
+    # Fallback for relative imports
+    from .mongo_base_repository import MongoBaseRepository
+    from ..database.connection import DatabaseManager
+    from ..database.config import DatabaseConfigurationManager
 
 # Set up logging
 logger = logging.getLogger(__name__)
