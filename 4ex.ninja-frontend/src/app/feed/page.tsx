@@ -1,21 +1,51 @@
 'use client';
 
 import { FeedErrorBoundary } from '@/components/error';
-import { ConditionalMotionDiv } from '@/components/ui';
+import VirtualizedCrossoverList from '@/components/VirtualizedCrossoverList';
 import { useLatestCrossovers } from '@/hooks/api';
 import { Crossover } from '@/types';
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 function SignalsPage() {
   const { data: crossoverData, isLoading: loading, error, refetch } = useLatestCrossovers(20); // Get latest 20 crossovers with polling
 
-  const crossovers = crossoverData?.crossovers || [];
-  const isEmpty = crossoverData?.isEmpty || crossovers.length === 0;
+  // Memoize expensive data processing
+  const processedData = useMemo(() => {
+    const crossovers = crossoverData?.crossovers || [];
+    const isEmpty = crossoverData?.isEmpty || crossovers.length === 0;
 
-  const handleRetry = (): void => {
+    // Expensive calculations: Sort crossovers and compute statistics
+    const sortedCrossovers = [...crossovers].sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+
+    const bullishCount = crossovers.filter(c => c.crossoverType === 'BULLISH').length;
+    const bearishCount = crossovers.filter(c => c.crossoverType === 'BEARISH').length;
+    const totalSignals = crossovers.length;
+    const bullishPercentage =
+      totalSignals > 0 ? ((bullishCount / totalSignals) * 100).toFixed(1) : '0';
+
+    return {
+      crossovers: sortedCrossovers,
+      isEmpty,
+      stats: {
+        bullishCount,
+        bearishCount,
+        totalSignals,
+        bullishPercentage,
+      },
+    };
+  }, [crossoverData]);
+
+  const handleRetry = useCallback((): void => {
     refetch();
-  };
+  }, [refetch]);
+
+  const handleCrossoverClick = useCallback((crossover: Crossover) => {
+    // Handle crossover item clicks (e.g., show details, navigate to analysis)
+    console.log('Crossover clicked:', crossover);
+  }, []);
 
   if (loading) {
     return (
@@ -64,7 +94,31 @@ function SignalsPage() {
     <div className="container mx-auto px-4 py-8 max-w-2xl bg-black min-h-screen">
       <h1 className="text-3xl font-bold mb-6">Latest MA Crossover Signals</h1>
 
-      {isEmpty || crossovers.length === 0 ? (
+      {/* Signal statistics - only show when we have data */}
+      {!loading && !error && processedData.stats.totalSignals > 0 && (
+        <div className="bg-gray-800 rounded-lg p-4 mb-6 grid grid-cols-3 gap-4 text-center">
+          <div>
+            <div className="text-2xl font-bold text-green-500">
+              {processedData.stats.bullishCount}
+            </div>
+            <div className="text-sm text-gray-400">Bullish</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-red-500">
+              {processedData.stats.bearishCount}
+            </div>
+            <div className="text-sm text-gray-400">Bearish</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-blue-500">
+              {processedData.stats.bullishPercentage}%
+            </div>
+            <div className="text-sm text-gray-400">Bullish Rate</div>
+          </div>
+        </div>
+      )}
+
+      {processedData.isEmpty || processedData.crossovers.length === 0 ? (
         <div className="bg-gray-800 rounded-lg p-8 text-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -91,56 +145,13 @@ function SignalsPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {crossovers.map((crossover: Crossover, index: number) => (
-            <ConditionalMotionDiv
-              key={crossover._id}
-              motionProps={{
-                initial: { opacity: 0, y: 20 },
-                animate: { opacity: 1, y: 0 },
-                transition: { duration: 0.3, delay: index * 0.1 },
-              }}
-              fallbackClassName={`animate-slide-up animate-stagger-${Math.min(index + 1, 5)}`}
-              className={`bg-gray-700 rounded-lg p-6 shadow-lg border-l-4 ${
-                crossover.crossoverType === 'BULLISH' ? 'border-green-500' : 'border-red-500'
-              }`}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">{crossover.pair}</h2>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm ${
-                    crossover.crossoverType === 'BULLISH'
-                      ? 'bg-green-500/20 text-green-500'
-                      : 'bg-red-500/20 text-red-400'
-                  }`}
-                >
-                  {crossover.crossoverType}
-                </span>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <p className="text-gray-300">Timeframe:</p>
-                  <p className="font-medium">{crossover.timeframe}</p>
-                </div>
-                <div className="flex justify-between">
-                  <p className="text-gray-300">Price:</p>
-                  <p className="font-medium">{crossover.price}</p>
-                </div>
-                {/* <div className="flex justify-between">
-                  <p className="text-gray-300">Fast MA:</p>
-                  <p className="font-medium">{crossover.fastMA} SMA</p>
-                </div>
-                <div className="flex justify-between">
-                  <p className="text-gray-300">Slow MA:</p>
-                  <p className="font-medium">{crossover.slowMA} SMA</p>
-                </div> */}
-                <p className="text-sm text-gray-400 mt-4">
-                  {new Date(crossover.timestamp).toLocaleString()}
-                </p>
-              </div>
-            </ConditionalMotionDiv>
-          ))}
-        </div>
+        <VirtualizedCrossoverList
+          crossovers={processedData.crossovers}
+          onItemClick={handleCrossoverClick}
+          height={600}
+          itemHeight={200}
+          enableVirtualization={true}
+        />
       )}
     </div>
   );

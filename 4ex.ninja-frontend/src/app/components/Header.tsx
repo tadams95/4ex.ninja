@@ -2,9 +2,9 @@
 import { HeaderErrorBoundary } from '@/components/error';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
-function HeaderComponent() {
+const HeaderComponent = memo(function HeaderComponent() {
   const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -25,9 +25,18 @@ function HeaderComponent() {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  const toggleMenu = (): void => {
+  const toggleMenu = useCallback((): void => {
     setIsMenuOpen(!isMenuOpen);
-  };
+  }, [isMenuOpen]);
+
+  const handleSignOut = useCallback(() => {
+    signOut({ callbackUrl: '/' });
+    if (isMobile) setIsMenuOpen(false);
+  }, [isMobile]);
+
+  const handleNavClick = useCallback(() => {
+    if (isMobile) setIsMenuOpen(false);
+  }, [isMobile]);
 
   return (
     <header className="bg-black text-white pt-4 pb-4">
@@ -72,19 +81,19 @@ function HeaderComponent() {
           `}
           >
             <li className="py-2 md:py-0">
-              <Link href="/" onClick={() => isMobile && setIsMenuOpen(false)}>
+              <Link href="/" onClick={handleNavClick}>
                 Home
               </Link>
             </li>
             <li className="py-2 md:py-0">
-              <Link href="/about" onClick={() => isMobile && setIsMenuOpen(false)}>
+              <Link href="/about" onClick={handleNavClick}>
                 About
               </Link>
             </li>
             {/* Only show feed link if authenticated */}
             {status === 'authenticated' && (
               <li className="py-2 md:py-0">
-                <Link href="/feed" onClick={() => isMobile && setIsMenuOpen(false)}>
+                <Link href="/feed" onClick={handleNavClick}>
                   Signals
                 </Link>
               </li>
@@ -94,20 +103,13 @@ function HeaderComponent() {
             {status === 'authenticated' ? (
               <>
                 <li className="py-2 md:py-0">
-                  <Link
-                    href="/account"
-                    onClick={() => isMobile && setIsMenuOpen(false)}
-                    className="text-green-500"
-                  >
+                  <Link href="/account" onClick={handleNavClick} className="text-green-500">
                     Account
                   </Link>
                 </li>
                 <li className="py-2 md:py-0">
                   <button
-                    onClick={() => {
-                      signOut({ callbackUrl: '/' });
-                      isMobile && setIsMenuOpen(false);
-                    }}
+                    onClick={handleSignOut}
                     className="text-red-500"
                     data-testid="sign-out-button"
                   >
@@ -120,7 +122,7 @@ function HeaderComponent() {
                 <li className="py-2 md:py-0">
                   <Link
                     href="/login"
-                    onClick={() => isMobile && setIsMenuOpen(false)}
+                    onClick={handleNavClick}
                     className="bg-green-700 hover:bg-green-800 px-4 py-1 rounded"
                   >
                     Log in
@@ -133,7 +135,7 @@ function HeaderComponent() {
       </div>
     </header>
   );
-}
+});
 
 export default function Header() {
   return (
