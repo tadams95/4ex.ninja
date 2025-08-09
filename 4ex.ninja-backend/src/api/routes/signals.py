@@ -23,6 +23,7 @@ from api.utils.response_optimization import (
     create_optimized_response,
 )
 from api.utils.fast_json import FastJSONResponse, create_fast_json_response
+from api.utils.endpoint_optimization import QueryOptimizer, CacheOptimizer
 
 router = APIRouter(prefix="/signals", tags=["signals"])
 logger = logging.getLogger(__name__)
@@ -71,19 +72,37 @@ async def get_signals(
     with comprehensive caching and response optimization.
     """
     try:
-        logger.info(
-            f"Fetching signals with filters: pair={pair}, limit={pagination.limit}, offset={pagination.offset}, force_refresh={force_refresh}"
+        # Initialize optimizers
+        query_optimizer = QueryOptimizer()
+        cache_optimizer = CacheOptimizer()
+
+        # Build and optimize filters
+        filters = {}
+        if pair:
+            filters["pair"] = pair
+        if since:
+            filters["since"] = since
+
+        optimized_filters = query_optimizer.optimize_filters(filters)
+
+        # Calculate optimal TTL for caching
+        optimal_ttl = cache_optimizer.calculate_optimal_ttl(
+            request_frequency=5.0,  # Assume 5 requests per second for signals
+            data_update_frequency=0.1,  # Signals update every ~10 seconds
+            base_ttl=60,
         )
 
-        # Build cache filters
+        logger.info(
+            f"Fetching signals with optimized filters: pair={pair}, limit={pagination.limit}, "
+            f"offset={pagination.offset}, force_refresh={force_refresh}, optimal_ttl={optimal_ttl}s"
+        )
+
+        # Build cache filters with optimized values
         cache_filters: Dict[str, Any] = {
             "limit": pagination.limit,
             "offset": pagination.offset,
         }
-        if pair:
-            cache_filters["pair"] = pair
-        if since:
-            cache_filters["since"] = since.isoformat()
+        cache_filters.update(optimized_filters)
 
         # Try to get from cache first (unless force refresh)
         cached_signals = None
@@ -166,10 +185,11 @@ async def get_signals(
                 await cache_service.set_crossovers(
                     crossovers=paginated_signals,
                     filters=cache_filters,
-                    ttl_seconds=60,  # Cache signals for 1 minute
+                    ttl_seconds=optimal_ttl,  # Use optimized TTL
                     metadata={
                         "total_count": len(filtered_signals),
                         "is_mock_data": True,
+                        "optimization_applied": True,
                     },
                 )
                 logger.info(f"Cached {len(paginated_signals)} signals")

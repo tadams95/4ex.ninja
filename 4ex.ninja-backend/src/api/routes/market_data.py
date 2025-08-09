@@ -22,6 +22,7 @@ from api.utils.response_optimization import (
     create_optimized_response,
 )
 from api.utils.fast_json import FastJSONResponse, create_fast_json_response
+from api.utils.endpoint_optimization import QueryOptimizer, CacheOptimizer
 
 router = APIRouter(prefix="/market-data", tags=["market-data"])
 logger = logging.getLogger(__name__)
@@ -46,8 +47,30 @@ async def get_market_data(
     Get market data with optional filtering and response optimization.
     """
     try:
+        # Optimize query parameters for better performance
+        query_optimizer = QueryOptimizer()
+        cache_optimizer = CacheOptimizer()
+
+        # Build optimized filters
+        filters = {}
+        if instrument:
+            filters["instrument"] = instrument
+        if timeframe:
+            filters["timeframe"] = timeframe
+        if since:
+            filters["since"] = since
+
+        # Apply query optimizations
+        optimized_filters = query_optimizer.optimize_filters(filters)
+
+        # Calculate optimal caching strategy
+        aggressive_cache = cache_optimizer.should_use_aggressive_caching(
+            "/api/v1/market-data/"
+        )
+
         logger.info(
-            f"Fetching market data: instrument={instrument}, timeframe={timeframe}, limit={pagination.limit}"
+            f"Fetching market data: instrument={instrument}, timeframe={timeframe}, "
+            f"limit={pagination.limit}, aggressive_cache={aggressive_cache}"
         )
 
         if not market_data_repository:

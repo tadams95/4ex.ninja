@@ -25,6 +25,7 @@ from api.routes.performance import router as performance_router
 from api.middleware.error_handler import ErrorHandlerMiddleware
 from api.middleware.logging_middleware import LoggingMiddleware
 from api.middleware.http_cache import HTTPCacheMiddleware
+from api.middleware.response_optimization import ResponseOptimizationMiddleware
 from api.dependencies.simple_container import get_container
 from infrastructure.monitoring.error_tracking import initialize_error_tracking
 from services.cache_service import CacheServiceFactory
@@ -123,6 +124,12 @@ def create_app() -> FastAPI:
     # Add custom middleware (order matters - last added is executed first)
     app.add_middleware(LoggingMiddleware)
     app.add_middleware(ErrorHandlerMiddleware)
+    app.add_middleware(
+        ResponseOptimizationMiddleware,
+        enable_keepalive=True,
+        max_response_size_mb=10,
+        enable_timing_headers=True,
+    )
     app.add_middleware(
         HTTPCacheMiddleware,
         enable_etags=True,
