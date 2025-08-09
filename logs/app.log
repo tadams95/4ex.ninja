@@ -946,3 +946,8 @@
 2025-08-06T22:50:48.021803 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'logs' added | taskName=None
 2025-08-06T22:50:48.021940 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'email' added | taskName=None
 2025-08-06T22:50:48.021979 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'webhook' added | taskName=None
+2025-08-08T19:16:41.336240 [32m[INFO][0m infrastructure.database.config:88 _detect_environment() - Detected environment: testing | taskName=None
+2025-08-08T19:16:44.055529 [32m[INFO][0m src.infrastructure.database.config:88 _detect_environment() - Detected environment: testing | taskName=None
+2025-08-08T19:16:45.856968 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'logs' added | taskName=None
+2025-08-08T19:16:45.857113 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'email' added | taskName=None
+2025-08-08T19:16:45.857155 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'webhook' added | taskName=None
