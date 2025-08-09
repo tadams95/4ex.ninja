@@ -4,35 +4,79 @@ import { AuthErrorBoundary } from '@/components/error';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
+import {
+  formatRemainingTime,
+  getSecureHeaders,
+  registerRateLimit,
+  registrationSchema,
+  sanitizeTextInput,
+} from '@/lib/security';
 import { handleCheckout } from '@/utils/checkout-helpers';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { z } from 'zod';
 
 function RegisterPageComponent() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [generalError, setGeneralError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
 
+  const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = sanitizeTextInput(e.target.value);
+    setFormData(prev => ({ ...prev, [field]: value }));
+
+    // Clear field-specific error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const validateForm = (): boolean => {
+    try {
+      registrationSchema.parse(formData);
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.issues.forEach(issue => {
+          if (issue.path[0]) {
+            newErrors[issue.path[0] as string] = issue.message;
+          }
+        });
+        setErrors(newErrors);
+      }
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setGeneralError('');
 
-    // Client-side validation
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
+    // Rate limiting check
+    const clientId = `register_${formData.email}`;
+    if (!registerRateLimit.canAttempt(clientId)) {
+      const remainingTime = registerRateLimit.getRemainingTime(clientId);
+      setGeneralError(
+        `Too many registration attempts. Please try again in ${formatRemainingTime(remainingTime)}.`
+      );
       setLoading(false);
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+    // Client-side validation
+    if (!validateForm()) {
       setLoading(false);
       return;
     }
@@ -40,8 +84,12 @@ function RegisterPageComponent() {
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        headers: getSecureHeaders(),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
       });
 
       const data = await response.json();
@@ -57,7 +105,7 @@ function RegisterPageComponent() {
       }, 2000);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Registration failed';
-      setError(errorMessage);
+      setGeneralError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -91,9 +139,9 @@ function RegisterPageComponent() {
             </p>
           </div>
 
-          {error && (
+          {generalError && (
             <div className="mb-6 p-4 bg-red-900/20 border border-red-800 rounded-md">
-              <p className="text-red-400 text-sm">{error}</p>
+              <p className="text-red-400 text-sm">{generalError}</p>
             </div>
           )}
 
@@ -105,12 +153,15 @@ function RegisterPageComponent() {
               <Input
                 type="text"
                 id="name"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                className="w-full bg-gray-700 border-gray-600 text-white"
+                value={formData.name}
+                onChange={handleInputChange('name')}
+                className={`w-full bg-gray-700 border-gray-600 text-white ${
+                  errors.name ? 'border-red-500' : ''
+                }`}
                 placeholder="Enter your full name"
                 required
               />
+              {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
             </div>
 
             <div>
@@ -120,12 +171,15 @@ function RegisterPageComponent() {
               <Input
                 type="email"
                 id="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="w-full bg-gray-700 border-gray-600 text-white"
+                value={formData.email}
+                onChange={handleInputChange('email')}
+                className={`w-full bg-gray-700 border-gray-600 text-white ${
+                  errors.email ? 'border-red-500' : ''
+                }`}
                 placeholder="Enter your email"
                 required
               />
+              {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
             </div>
 
             <div>
@@ -135,13 +189,18 @@ function RegisterPageComponent() {
               <Input
                 type="password"
                 id="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full bg-gray-700 border-gray-600 text-white"
-                placeholder="Create a password (min. 6 characters)"
+                value={formData.password}
+                onChange={handleInputChange('password')}
+                className={`w-full bg-gray-700 border-gray-600 text-white ${
+                  errors.password ? 'border-red-500' : ''
+                }`}
+                placeholder="Create a strong password"
                 required
-                minLength={6}
               />
+              {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
+              <p className="text-gray-400 text-xs mt-1">
+                Must contain uppercase, lowercase, number, and special character
+              </p>
             </div>
 
             <div>
@@ -154,13 +213,17 @@ function RegisterPageComponent() {
               <Input
                 type="password"
                 id="confirmPassword"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                className="w-full bg-gray-700 border-gray-600 text-white"
+                value={formData.confirmPassword}
+                onChange={handleInputChange('confirmPassword')}
+                className={`w-full bg-gray-700 border-gray-600 text-white ${
+                  errors.confirmPassword ? 'border-red-500' : ''
+                }`}
                 placeholder="Confirm your password"
                 required
-                minLength={6}
               />
+              {errors.confirmPassword && (
+                <p className="text-red-400 text-sm mt-1">{errors.confirmPassword}</p>
+              )}
             </div>
 
             <Button
