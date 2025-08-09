@@ -4,12 +4,30 @@ import { FeedErrorBoundary } from '@/components/error';
 import { LoadingSequence } from '@/components/ui';
 import VirtualizedCrossoverList from '@/components/VirtualizedCrossoverList';
 import { useLatestCrossovers } from '@/hooks/api';
+import {
+  usePageNavigationTracking,
+  useRenderPerformance,
+  useSignalLoadTracking,
+} from '@/hooks/usePerformance';
 import { Crossover } from '@/types';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 function SignalsPage() {
+  // Performance monitoring hooks
+  useRenderPerformance('SignalsPage');
+  usePageNavigationTracking('feed');
+  const trackSignalLoad = useSignalLoadTracking();
+
   const { data: crossoverData, isLoading: loading, error, refetch } = useLatestCrossovers(20); // Get latest 20 crossovers with polling
+
+  // Track signal loading performance
+  useEffect(() => {
+    if (!loading && crossoverData) {
+      const endTracking = trackSignalLoad(crossoverData.crossovers?.length || 0);
+      endTracking();
+    }
+  }, [loading, crossoverData, trackSignalLoad]);
 
   // Memoize expensive data processing
   const processedData = useMemo(() => {

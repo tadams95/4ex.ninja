@@ -1,9 +1,4 @@
 /** @type {import('next').NextConfig} */
-import bundleAnalyzer from '@next/bundle-analyzer';
-
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
 
 const nextConfig = {
   // SWC minification for better performance
@@ -77,20 +72,6 @@ const nextConfig = {
             test: /[\/]node_modules[\/](react|react-dom)[\/]/,
             priority: 40,
           },
-          // Vendor chunk for framer-motion
-          framerMotion: {
-            name: 'framer-motion',
-            chunks: 'all',
-            test: /[\/]node_modules[\/]framer-motion[\/]/,
-            priority: 35,
-          },
-          // Vendor chunk for React Query
-          reactQuery: {
-            name: 'react-query',
-            chunks: 'all',
-            test: /[\/]node_modules[\/]@tanstack[\/]react-query[\/]/,
-            priority: 33,
-          },
           // Stripe chunk for financial components
           stripe: {
             name: 'stripe',
@@ -127,4 +108,4 @@ const nextConfig = {
   },
 };
 
-export default withBundleAnalyzer(nextConfig);
+export default nextConfig;

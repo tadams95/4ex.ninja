@@ -1,0 +1,60 @@
+{
+  "timestamp": "2025-08-09T20:40:26.961Z",
+  "budgets": {
+    "js": {
+      "current": 1155,
+      "budget": 200,
+      "status": "fail"
+    },
+    "css": {
+      "current": 39,
+      "budget": 50,
+      "status": "pass"
+    },
+    "total": {
+      "current": 1194,
+      "budget": 800,
+      "status": "fail"
+    }
+  },
+  "assets": {
+    "js": [
+      {
+        "name": "1517-ce8c6289c63a5dc4.js",
+        "path": ".next/static/chunks/1517-ce8c6289c63a5dc4.js",
+        "size": 196
+      },
+      {
+        "name": "framework-a92d6b075cc4cfc2.js",
+        "path": ".next/static/chunks/framework-a92d6b075cc4cfc2.js",
+        "size": 178
+      },
+      {
+        "name": "4bd1b696-ef0eb2871145a1af.js",
+        "path": ".next/static/chunks/4bd1b696-ef0eb2871145a1af.js",
+        "size": 163
+      },
+      {
+        "name": "main-93a9029ea811d841.js",
+        "path": ".next/static/chunks/main-93a9029ea811d841.js",
+        "size": 115
+      },
+      {
+        "name": "polyfills-42372ed130431b0a.js",
+        "path": ".next/static/chunks/polyfills-42372ed130431b0a.js",
+        "size": 110
+      }
+    ],
+    "css": [
+      {
+        "name": "86c2f621e01a233d.css",
+        "path": ".next/static/css/86c2f621e01a233d.css",
+        "size": 39
+      }
+    ]
+  },
+  "summary": {
+    "totalFiles": 60,
+    "totalSize": 1194
+  }
+}

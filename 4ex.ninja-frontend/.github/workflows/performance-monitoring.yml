@@ -1,0 +1,346 @@
+# Performance Monitoring CI/CD Workflow
+#
+# This workflow runs performance tests, bundle analysis,
+# and monitors Core Web Vitals in CI/CD pipeline.
+
+name: Performance Monitoring
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  # Run weekly performance audits
+  schedule:
+    - cron: '0 6 * * 1' # Every Monday at 6 AM UTC
+
+jobs:
+  # Bundle size analysis and performance budgets
+  bundle-analysis:
+    runs-on: ubuntu-latest
+    name: Bundle Analysis & Performance Budgets
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: '4ex.ninja-frontend/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./4ex.ninja-frontend
+        run: npm ci
+
+      - name: Build with bundle analysis
+        working-directory: ./4ex.ninja-frontend
+        env:
+          ANALYZE: 'true'
+          NODE_ENV: 'production'
+        run: npm run build
+
+      - name: Check performance budgets
+        working-directory: ./4ex.ninja-frontend
+        run: |
+          if [ -f "performance-budget-report.json" ]; then
+            echo "📊 Performance Budget Report:"
+            cat performance-budget-report.json
+            
+            # Check if any budgets failed
+            BUDGET_FAILURES=$(cat performance-budget-report.json | jq '.budgets | to_entries[] | select(.value.status == "fail") | .key' | wc -l)
+            
+            if [ $BUDGET_FAILURES -gt 0 ]; then
+              echo "❌ Performance budget violations detected!"
+              echo "BUDGET_STATUS=failed" >> $GITHUB_ENV
+              exit 1
+            else
+              echo "✅ All performance budgets passed!"
+              echo "BUDGET_STATUS=passed" >> $GITHUB_ENV
+            fi
+          else
+            echo "⚠️ No performance budget report found"
+            echo "BUDGET_STATUS=missing" >> $GITHUB_ENV
+          fi
+
+      - name: Upload bundle analysis
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bundle-analysis
+          path: |
+            4ex.ninja-frontend/performance-budget-report.json
+            4ex.ninja-frontend/.next/analyze/
+
+      - name: Comment performance budget on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = './4ex.ninja-frontend/performance-budget-report.json';
+
+            if (!fs.existsSync(path)) {
+              return;
+            }
+
+            const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+
+            let comment = '## 📊 Performance Budget Report\n\n';
+            comment += '| Category | Current | Budget | Status |\n';
+            comment += '|----------|---------|--------|---------|\n';
+
+            Object.entries(report.budgets).forEach(([category, budget]) => {
+              const status = budget.status === 'pass' ? '✅' : '❌';
+              comment += `| ${category} | ${budget.current}KB | ${budget.budget}KB | ${status} |\n`;
+            });
+
+            const budgetFailures = Object.values(report.budgets).filter(b => b.status === 'fail').length;
+
+            if (budgetFailures > 0) {
+              comment += `\n⚠️ **${budgetFailures} performance budget violation(s) detected!**\n`;
+            } else {
+              comment += '\n✅ **All performance budgets passed!**\n';
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # Lighthouse CI for Web Vitals monitoring
+  lighthouse-ci:
+    runs-on: ubuntu-latest
+    name: Lighthouse Performance Audit
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: '4ex.ninja-frontend/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./4ex.ninja-frontend
+        run: npm ci
+
+      - name: Build application
+        working-directory: ./4ex.ninja-frontend
+        env:
+          NODE_ENV: 'production'
+        run: npm run build
+
+      - name: Start application
+        working-directory: ./4ex.ninja-frontend
+        run: |
+          npm start &
+          sleep 10 # Wait for app to start
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.12.x
+
+      - name: Run Lighthouse CI
+        working-directory: ./4ex.ninja-frontend
+        run: |
+          lhci autorun || echo "Lighthouse CI completed with warnings"
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-results
+          path: |
+            4ex.ninja-frontend/.lighthouseci/
+            4ex.ninja-frontend/lighthouse-results.json
+
+  # Performance regression testing
+  performance-regression:
+    runs-on: ubuntu-latest
+    name: Performance Regression Tests
+    needs: [bundle-analysis]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: '4ex.ninja-frontend/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./4ex.ninja-frontend
+        run: npm ci
+
+      - name: Download previous performance data
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: performance-baseline
+          path: ./performance-baseline/
+
+      - name: Run performance tests
+        working-directory: ./4ex.ninja-frontend
+        run: |
+          # Create performance test script
+          cat > performance-test.js << 'EOF'
+          const { execSync } = require('child_process');
+          const fs = require('fs');
+
+          console.log('🧪 Running performance regression tests...');
+
+          // Build timing
+          const buildStart = Date.now();
+          execSync('npm run build', { stdio: 'inherit' });
+          const buildTime = Date.now() - buildStart;
+
+          console.log(`📦 Build completed in ${buildTime}ms`);
+
+          // Bundle size analysis
+          const buildDir = '.next';
+          const bundleStats = {
+            buildTime,
+            timestamp: new Date().toISOString(),
+            bundles: []
+          };
+
+          // Analyze .next/static/chunks
+          if (fs.existsSync(`${buildDir}/static/chunks`)) {
+            const chunks = fs.readdirSync(`${buildDir}/static/chunks`);
+            chunks.forEach(chunk => {
+              if (chunk.endsWith('.js')) {
+                const path = `${buildDir}/static/chunks/${chunk}`;
+                const stats = fs.statSync(path);
+                bundleStats.bundles.push({
+                  name: chunk,
+                  size: stats.size,
+                  sizeKB: Math.round(stats.size / 1024)
+                });
+              }
+            });
+          }
+
+          console.log('📊 Bundle analysis:', JSON.stringify(bundleStats, null, 2));
+
+          // Write results
+          fs.writeFileSync('performance-results.json', JSON.stringify(bundleStats, null, 2));
+
+          // Compare with baseline if available
+          const baselinePath = '../performance-baseline/performance-results.json';
+          if (fs.existsSync(baselinePath)) {
+            const baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8'));
+            
+            console.log('📈 Performance comparison:');
+            console.log(`Build time: ${buildTime}ms vs ${baseline.buildTime}ms (${buildTime > baseline.buildTime ? '+' : ''}${buildTime - baseline.buildTime}ms)`);
+            
+            // Compare bundle sizes
+            const totalSize = bundleStats.bundles.reduce((sum, b) => sum + b.size, 0);
+            const baselineSize = baseline.bundles.reduce((sum, b) => sum + b.size, 0);
+            const sizeDiff = totalSize - baselineSize;
+            
+            console.log(`Bundle size: ${Math.round(totalSize/1024)}KB vs ${Math.round(baselineSize/1024)}KB (${sizeDiff > 0 ? '+' : ''}${Math.round(sizeDiff/1024)}KB)`);
+            
+            // Fail if significant regression
+            if (buildTime > baseline.buildTime * 1.5) {
+              console.error('❌ Build time regression detected!');
+              process.exit(1);
+            }
+            
+            if (sizeDiff > 50000) { // 50KB increase
+              console.error('❌ Bundle size regression detected!');
+              process.exit(1);
+            }
+          }
+
+          console.log('✅ Performance regression tests passed!');
+          EOF
+
+          node performance-test.js
+
+      - name: Save performance results as baseline
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-baseline
+          path: 4ex.ninja-frontend/performance-results.json
+
+      - name: Comment performance comparison on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const resultsPath = './4ex.ninja-frontend/performance-results.json';
+
+            if (!fs.existsSync(resultsPath)) {
+              return;
+            }
+
+            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+
+            let comment = '## 🧪 Performance Test Results\n\n';
+            comment += `**Build Time:** ${results.buildTime}ms\n\n`;
+
+            comment += '### Bundle Sizes\n';
+            comment += '| File | Size |\n';
+            comment += '|------|------|\n';
+
+            results.bundles.forEach(bundle => {
+              comment += `| ${bundle.name} | ${bundle.sizeKB}KB |\n`;
+            });
+
+            const totalSize = results.bundles.reduce((sum, b) => sum + b.sizeKB, 0);
+            comment += `| **Total** | **${totalSize}KB** |\n`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # Backend performance monitoring
+  backend-performance:
+    runs-on: ubuntu-latest
+    name: Backend Performance Tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        working-directory: ./4ex.ninja-backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-benchmark
+
+      - name: Run performance tests
+        working-directory: ./4ex.ninja-backend
+        run: |
+          # Run performance tests with pytest-benchmark
+          python -m pytest tests/ -k "performance" --benchmark-only --benchmark-json=benchmark-results.json || true
+
+      - name: Upload performance results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-performance
+          path: 4ex.ninja-backend/benchmark-results.json

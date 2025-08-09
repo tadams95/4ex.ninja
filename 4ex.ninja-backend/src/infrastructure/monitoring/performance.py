@@ -204,6 +204,141 @@ class PerformanceMonitor:
                 "stddev_ms": statistics.stdev(durations) if len(durations) > 1 else 0,
             }
 
+    def record_metric(
+        self, name: str, value: float, tags: Optional[Dict[str, str]] = None
+    ) -> None:
+        """Record a general metric (auto-detects type)."""
+        self.set_gauge(name, value, tags)
+
+    def get_counter_value(
+        self, name: str, tags: Optional[Dict[str, str]] = None
+    ) -> int:
+        """Get current counter value."""
+        with self._lock:
+            key = self._build_key(name, tags)
+            return self._counters.get(key, 0)
+
+    def get_gauge_value(
+        self, name: str, tags: Optional[Dict[str, str]] = None
+    ) -> float:
+        """Get current gauge value."""
+        with self._lock:
+            key = self._build_key(name, tags)
+            return self._gauges.get(key, 0.0)
+
+    def get_percentile(
+        self, name: str, percentile: int, tags: Optional[Dict[str, str]] = None
+    ) -> Optional[float]:
+        """Get percentile for a metric."""
+        with self._lock:
+            key = self._build_key(name, tags)
+            if key not in self._metrics or not self._metrics[key]:
+                return None
+
+            values = [m.value for m in self._metrics[key]]
+            if not values:
+                return None
+
+            return self._percentile(values, percentile / 100.0)
+
+    def get_average(
+        self, name: str, tags: Optional[Dict[str, str]] = None
+    ) -> Optional[float]:
+        """Get average value for a metric."""
+        with self._lock:
+            key = self._build_key(name, tags)
+            if key not in self._metrics or not self._metrics[key]:
+                return None
+
+            values = [m.value for m in self._metrics[key]]
+            if not values:
+                return None
+
+            return statistics.mean(values)
+
+    def get_performance_summary(self) -> Dict[str, Any]:
+        """Get comprehensive performance summary."""
+        with self._lock:
+            summary = {
+                "timestamp": time.time(),
+                "total_metrics": len(self._metrics),
+                "counters": dict(self._counters),
+                "gauges": dict(self._gauges),
+                "recent_requests": self._request_count,
+                "recent_errors": self._error_count,
+            }
+
+            # Add response time stats if available
+            if self._response_times:
+                response_times = list(self._response_times)
+                summary["response_times"] = {
+                    "avg": statistics.mean(response_times),
+                    "min": min(response_times),
+                    "max": max(response_times),
+                    "p95": self._percentile(response_times, 0.95),
+                }
+
+            return summary
+
+    def get_uptime_metrics(self) -> Dict[str, Any]:
+        """Get uptime and availability metrics."""
+        return {
+            "uptime_seconds": time.time() - getattr(self, "_start_time", time.time()),
+            "total_requests": self._request_count,
+            "total_errors": self._error_count,
+            "error_rate": (self._error_count / max(self._request_count, 1)) * 100,
+            "availability": (
+                (self._request_count - self._error_count) / max(self._request_count, 1)
+            )
+            * 100,
+        }
+
+    def get_recent_metrics(self, minutes: int = 5) -> List[Dict[str, Any]]:
+        """Get metrics from the last N minutes."""
+        cutoff_time = time.time() - (minutes * 60)
+        recent_metrics = []
+
+        with self._lock:
+            for key, metric_deque in self._metrics.items():
+                for metric in metric_deque:
+                    if metric.timestamp > cutoff_time:
+                        recent_metrics.append(
+                            {
+                                "name": metric.name,
+                                "value": metric.value,
+                                "timestamp": metric.timestamp,
+                                "tags": metric.tags,
+                                "type": metric.metric_type.value,
+                            }
+                        )
+
+        return recent_metrics
+
+    def get_metric_history(
+        self, metric_name: str, start_time: float, end_time: float
+    ) -> List[Dict[str, Any]]:
+        """Get historical data for a specific metric."""
+        history = []
+
+        with self._lock:
+            for key, metric_deque in self._metrics.items():
+                for metric in metric_deque:
+                    if (
+                        metric.name == metric_name
+                        and start_time <= metric.timestamp <= end_time
+                    ):
+                        history.append(
+                            {
+                                "value": metric.value,
+                                "timestamp": metric.timestamp,
+                                "tags": metric.tags,
+                            }
+                        )
+
+        # Sort by timestamp
+        history.sort(key=lambda x: x["timestamp"])
+        return history
+
     def get_all_metrics(self) -> Dict[str, Any]:
         """Get all current metrics."""
         with self._lock:

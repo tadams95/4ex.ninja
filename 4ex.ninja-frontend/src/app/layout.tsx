@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { Exo } from 'next/font/google';
 import { ChunkLoadErrorBoundary, GlobalErrorBoundary } from '../components/error';
 import HydrationErrorBoundary from '../components/error/HydrationErrorBoundary';
+import PerformanceDashboard from '../components/PerformanceDashboard';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Providers from './components/Providers';
@@ -94,6 +95,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   <main className="flex-grow">{children}</main>
                   <Footer />
                 </div>
+                {/* Performance Dashboard - only show in development or when explicitly enabled */}
+                <PerformanceDashboard
+                  isVisible={
+                    process.env.NODE_ENV === 'development' ||
+                    process.env.NEXT_PUBLIC_SHOW_PERFORMANCE === 'true'
+                  }
+                  position="bottom-right"
+                />
               </Providers>
             </HydrationErrorBoundary>
           </ChunkLoadErrorBoundary>
