@@ -9,6 +9,39 @@
  * enabling dynamic theming and consistent styling across the application.
  */
 
+/* Font Loading Optimization */
+@layer base {
+  /* Optimize font rendering */
+  html {
+    font-display: swap;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Preload font fallbacks */
+  body {
+    font-family: var(--font-exo), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+      'Helvetica Neue', Arial, sans-serif;
+  }
+
+  /* Image optimization */
+  img {
+    content-visibility: auto;
+  }
+
+  /* Optimize loading for above-the-fold content */
+  .hero-content {
+    contain: layout style paint;
+  }
+
+  /* Resource hint optimizations */
+  .preload-critical {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 500px;
+  }
+}
+
 :root {
   /* === EXISTING VARIABLES (maintained for backward compatibility) === */
   --background: #ffffff;
