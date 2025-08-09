@@ -25,29 +25,29 @@ jest.mock('mongodb', () => ({
 // Mock fetch for API testing
 global.fetch = jest.fn();
 
-// // Sample crossover data
-// const mockCrossovers = [
-//   {
-//     _id: '1',
-//     pair: 'EUR_USD',
-//     crossoverType: 'BULLISH',
-//     timeframe: 'H1',
-//     fastMA: 10,
-//     slowMA: 20,
-//     price: '1.0850',
-//     timestamp: '2024-01-01T10:00:00Z',
-//   },
-//   {
-//     _id: '2',
-//     pair: 'GBP_USD',
-//     crossoverType: 'BEARISH',
-//     timeframe: 'H4',
-//     fastMA: 5,
-//     slowMA: 15,
-//     price: '1.2750',
-//     timestamp: '2024-01-01T12:00:00Z',
-//   },
-// ];
+// Sample crossover data
+const mockCrossovers = [
+  {
+    _id: '1',
+    pair: 'EUR_USD',
+    crossoverType: 'BULLISH',
+    timeframe: 'H1',
+    fastMA: 10,
+    slowMA: 20,
+    price: '1.0850',
+    timestamp: '2024-01-01T10:00:00Z',
+  },
+  {
+    _id: '2',
+    pair: 'GBP_USD',
+    crossoverType: 'BEARISH',
+    timeframe: 'H4',
+    fastMA: 5,
+    slowMA: 15,
+    price: '1.2750',
+    timestamp: '2024-01-01T12:00:00Z',
+  },
+];
 
 describe('Crossovers API Routes', () => {
   beforeEach(() => {
