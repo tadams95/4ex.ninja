@@ -22,10 +22,12 @@ from api.health import router as health_router
 from api.routes.signals import router as signals_router
 from api.routes.market_data import router as market_data_router
 from api.routes.performance import router as performance_router
+from api.routes.auth import router as auth_router
 from api.middleware.error_handler import ErrorHandlerMiddleware
 from api.middleware.logging_middleware import LoggingMiddleware
 from api.middleware.http_cache import HTTPCacheMiddleware
 from api.middleware.response_optimization import ResponseOptimizationMiddleware
+from api.middleware.rate_limiting import RateLimitMiddleware
 from api.dependencies.simple_container import get_container
 from infrastructure.monitoring.error_tracking import initialize_error_tracking
 from services.cache_service import CacheServiceFactory
@@ -122,6 +124,7 @@ def create_app() -> FastAPI:
         )
 
     # Add custom middleware (order matters - last added is executed first)
+    app.add_middleware(RateLimitMiddleware)
     app.add_middleware(LoggingMiddleware)
     app.add_middleware(ErrorHandlerMiddleware)
     app.add_middleware(
@@ -148,6 +151,7 @@ def create_app() -> FastAPI:
 
     # Include routers
     app.include_router(health_router)
+    app.include_router(auth_router, prefix="/api/v1")
     app.include_router(signals_router, prefix="/api/v1")
     app.include_router(market_data_router, prefix="/api/v1")
     app.include_router(performance_router, prefix="/api/v1")

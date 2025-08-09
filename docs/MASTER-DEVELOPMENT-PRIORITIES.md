@@ -727,7 +727,47 @@ This document provides a strategic, ordered approach to implementing all planned
   - ✅ Added CSRF token generation and secure headers for API requests
   - ✅ Enhanced middleware with additional security headers and API route protection
   - ✅ Comprehensive test coverage for all security utilities
-- [ ] **Backend**: Implement API authentication and rate limiting
+- [x] **Backend**: Implement API authentication and rate limiting
+  - ✅ **JWT Authentication System**: Token-based authentication with secure password hashing
+    - ✅ Created JWT authentication utilities with token creation and verification
+    - ✅ Implemented password hashing using bcrypt for secure credential storage
+    - ✅ Built authentication dependencies for protecting endpoints
+    - ✅ Added OAuth2-compatible token endpoint for standard authentication flows
+  - ✅ **API Key Authentication**: Alternative authentication method for integrations
+    - ✅ Implemented API key verification system using environment variables
+    - ✅ Created flexible authentication dependencies supporting both JWT and API keys
+    - ✅ Added support for premium access through API key authentication
+  - ✅ **Rate Limiting Middleware**: Protection against abuse and DDoS attacks
+    - ✅ Built sliding window rate limiter with in-memory storage
+    - ✅ Implemented different rate limits for authentication vs regular endpoints
+    - ✅ Added rate limit headers and proper HTTP 429 responses
+    - ✅ Created IP-based tracking with cleanup mechanisms
+  - ✅ **Protected Endpoints**: Applied authentication to sensitive API endpoints
+    - ✅ Protected individual signal details endpoint (`/signals/{id}`)
+    - ✅ Protected signal statistics endpoint (`/signals/stats/summary`)
+    - ✅ Maintained public access to general signals feed
+  - ✅ **Authentication Routes**: Complete login and user management endpoints
+    - ✅ Login endpoint with JSON payload (`/auth/login`)
+    - ✅ OAuth2 token endpoint (`/auth/token`)
+    - ✅ Current user information endpoint (`/auth/me`)
+    - ✅ Token refresh endpoint (`/auth/refresh`)
+    - ✅ User registration endpoint (`/auth/register`)
+  - ✅ **Security Configuration**: Production-ready security settings
+    - ✅ Environment-based JWT secret key configuration
+    - ✅ Configurable rate limits and token expiration
+    - ✅ Email validation with proper error handling
+    - ✅ Security headers and CORS configuration
+  - ✅ **Comprehensive Testing**: Full test coverage for authentication features
+    - ✅ Authentication flow tests (login, token validation, user info)
+    - ✅ Protected endpoint access tests
+    - ✅ Rate limiting behavior tests
+    - ✅ API key authentication tests
+    - ✅ Error scenario coverage
+  - ✅ **Documentation**: Complete API authentication documentation
+    - ✅ Authentication methods and usage examples
+    - ✅ Rate limiting policies and headers
+    - ✅ Configuration options and environment variables
+    - ✅ Error handling and troubleshooting guide
 - [ ] **Infrastructure**: Setup HTTPS and security headers
 
 #### 1.12 Monitoring & Observability

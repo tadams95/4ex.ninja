@@ -24,6 +24,8 @@ from api.utils.response_optimization import (
 )
 from api.utils.fast_json import FastJSONResponse, create_fast_json_response
 from api.utils.endpoint_optimization import QueryOptimizer, CacheOptimizer
+from api.dependencies.auth import RequireAuthOrApiKey, OptionalAuth
+from api.auth.models import User
 
 router = APIRouter(prefix="/signals", tags=["signals"])
 logger = logging.getLogger(__name__)
@@ -64,6 +66,7 @@ async def get_signals(
     ),
     signal_repository=Depends(get_signal_repository),
     cache_service: CrossoverCacheService = Depends(get_cache_service),
+    current_user: Optional[User] = OptionalAuth,
 ) -> FastJSONResponse:
     """
     Get signals with optional filtering, field selection, and intelligent caching.
@@ -236,6 +239,7 @@ async def get_signals(
 async def get_signal(
     signal_id: str,
     signal_repository=Depends(get_signal_repository),
+    current_user: User = RequireAuthOrApiKey,
 ) -> Dict[str, Any]:
     """
     Get a specific signal by ID.
@@ -278,6 +282,7 @@ async def get_signal(
 async def get_signal_stats(
     days: int = Query(30, ge=1, le=365, description="Number of days for statistics"),
     signal_repository=Depends(get_signal_repository),
+    current_user: User = RequireAuthOrApiKey,
 ) -> Dict[str, Any]:
     """
     Get signal statistics summary.
