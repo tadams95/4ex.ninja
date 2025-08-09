@@ -7,7 +7,7 @@ import SubscribeButton from './components/SubscribeButton';
 // Lazy load CurrencyTicker component (WebSocket + animation heavy)
 const CurrencyTicker = dynamic(() => import('./components/CurrencyTicker'), {
   loading: () => (
-    <div className="h-16 bg-neutral-900 border-b border-neutral-800 flex items-center justify-center">
+    <div className="h-16 bg-black border-b border-black flex items-center justify-center">
       <div className="text-sm text-neutral-400">Loading market data...</div>
     </div>
   ),
@@ -19,7 +19,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Suspense
         fallback={
-          <div className="h-16 bg-neutral-900 border-b border-neutral-800 flex items-center justify-center">
+          <div className="h-16 bg-black border-b border-black flex items-center justify-center">
             <div className="text-sm text-neutral-400">Loading market data...</div>
           </div>
         }

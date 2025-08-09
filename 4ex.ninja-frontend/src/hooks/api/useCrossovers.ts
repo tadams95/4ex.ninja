@@ -1,13 +1,27 @@
 'use client';
 
+import { getQueryConfig } from '@/lib/queryClient';
 import { ApiResponse, Crossover } from '@/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-// Query keys for crossover-related queries
+// Optimized query keys with better structure to prevent unnecessary refetches
 export const crossoverKeys = {
   all: ['crossovers'] as const,
   lists: () => [...crossoverKeys.all, 'list'] as const,
-  list: (filters?: CrossoverFilters) => [...crossoverKeys.lists(), filters] as const,
+  list: (filters?: CrossoverFilters) => {
+    // Sort filters for consistent cache keys
+    const sortedFilters = filters
+      ? {
+          ...filters,
+          pairs: filters.pairs?.sort(),
+          timeframes: filters.timeframes?.sort(),
+          signalTypes: filters.signalTypes?.sort(),
+        }
+      : undefined;
+    return [...crossoverKeys.lists(), sortedFilters] as const;
+  },
+  pairs: () => [...crossoverKeys.all, 'pairs'] as const,
+  latest: (limit: number) => [...crossoverKeys.all, 'latest', limit] as const,
 } as const;
 
 interface CrossoverFilters {
@@ -76,45 +90,51 @@ const fetchCrossovers = async (filters?: CrossoverFilters): Promise<CrossoverRes
   };
 };
 
-// Hook for fetching crossovers with optional real-time polling
+// Hook for fetching crossovers with optimized caching and real-time updates
 export const useCrossovers = (
   filters?: CrossoverFilters,
   options?: {
     enablePolling?: boolean;
     pollingInterval?: number;
     refetchOnWindowFocus?: boolean;
+    enableBackgroundRefetch?: boolean;
   }
 ) => {
+  const queryClient = useQueryClient();
   const {
     enablePolling = true,
-    pollingInterval = 5 * 60 * 1000, // 5 minutes default
-    refetchOnWindowFocus = true,
+    pollingInterval = 2 * 60 * 1000, // 2 minutes default (reduced from 5)
+    refetchOnWindowFocus = false, // Disabled by default for better UX
+    enableBackgroundRefetch = false, // Only for specific use cases
   } = options || {};
+
+  // Get optimized config for real-time data
+  const realTimeConfig = getQueryConfig('realTime');
 
   return useQuery({
     queryKey: crossoverKeys.list(filters),
     queryFn: () => fetchCrossovers(filters),
 
-    // Caching strategy
-    staleTime: 1000 * 60 * 2, // 2 minutes - crossovers are relatively fresh data
-    gcTime: 1000 * 60 * 10, // 10 minutes
+    // Use optimized caching strategy for real-time data
+    staleTime: realTimeConfig.staleTime, // 30 seconds
+    gcTime: realTimeConfig.gcTime, // 5 minutes
 
-    // Polling for real-time updates
+    // Smart polling configuration
     refetchInterval: enablePolling ? pollingInterval : false,
-    refetchIntervalInBackground: enablePolling, // Continue polling in background
+    refetchIntervalInBackground: enableBackgroundRefetch,
 
-    // Refetch behavior
+    // Optimized refetch behavior
     refetchOnWindowFocus,
     refetchOnReconnect: true,
     refetchOnMount: true,
 
-    // Error handling and retry logic
+    // Enhanced error handling with smart retry logic
     retry: (failureCount, error) => {
       // Don't retry on auth errors
       if (error.message.includes('unauthorized') || error.message.includes('forbidden')) {
         return false;
       }
-      // Don't retry too many times for server errors
+      // Limited retries for server errors
       if (error.message.includes('500') || error.message.includes('503')) {
         return failureCount < 2;
       }
@@ -124,28 +144,94 @@ export const useCrossovers = (
     // Retry delay with exponential backoff
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
 
-    // Transform data to ensure consistency
-    select: data => ({
-      ...data,
-      crossovers: data.crossovers.map(crossover => ({
-        ...crossover,
-        timestamp: new Date(crossover.timestamp),
-        time: crossover.time ? new Date(crossover.time) : undefined,
-      })),
-    }),
+    // Optimized data transformation with error boundaries
+    select: data => {
+      try {
+        return {
+          ...data,
+          crossovers: data.crossovers.map(crossover => ({
+            ...crossover,
+            timestamp: new Date(crossover.timestamp),
+            time: crossover.time ? new Date(crossover.time) : undefined,
+          })),
+        };
+      } catch (error) {
+        console.error('Error transforming crossover data:', error);
+        return data; // Return original data if transformation fails
+      }
+    },
+
+    // Implement cache-first strategy with background updates
+    placeholderData: previousData => previousData,
   });
 };
 
-// Hook for latest crossovers (most recent signals)
+// Hook for latest crossovers (most recent signals) with optimized polling
 export const useLatestCrossovers = (limit: number = 20) => {
   return useCrossovers(
     { limit, offset: 0 },
     {
       enablePolling: true,
-      pollingInterval: 2 * 60 * 1000, // 2 minutes for latest data
-      refetchOnWindowFocus: true,
+      pollingInterval: 1 * 60 * 1000, // 1 minute for latest data
+      refetchOnWindowFocus: false, // Avoid excessive refetches
+      enableBackgroundRefetch: false, // Only when tab is active
     }
   );
+};
+
+// Hook for crossovers with optimistic updates and mutations
+export const useCrossoversWithMutations = () => {
+  const queryClient = useQueryClient();
+
+  // Optimistic update for new crossover
+  const addOptimisticCrossover = (newCrossover: Crossover) => {
+    queryClient.setQueryData(crossoverKeys.latest(20), (old: any) => {
+      if (!old) return old;
+      return {
+        ...old,
+        crossovers: [newCrossover, ...old.crossovers.slice(0, 19)],
+      };
+    });
+  };
+
+  // Invalidate relevant queries when real data arrives
+  const invalidateCrossoverQueries = () => {
+    queryClient.invalidateQueries({
+      queryKey: crossoverKeys.all,
+      exact: false,
+    });
+  };
+
+  return {
+    addOptimisticCrossover,
+    invalidateCrossoverQueries,
+  };
+};
+
+// Hook for crossover pairs (static data) with long-term caching
+export const useCrossoverPairs = () => {
+  const staticConfig = getQueryConfig('static');
+
+  return useQuery({
+    queryKey: crossoverKeys.pairs(),
+    queryFn: async () => {
+      const response = await fetch('/api/crossovers/pairs');
+      if (!response.ok) {
+        throw new Error('Failed to fetch crossover pairs');
+      }
+      return response.json();
+    },
+
+    // Long-term caching for static data
+    staleTime: staticConfig.staleTime, // 1 hour
+    gcTime: staticConfig.gcTime, // 2 hours
+
+    // Minimal refetching for static data
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+  });
 };
 
 // Hook for crossovers with specific filters

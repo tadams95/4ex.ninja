@@ -3,6 +3,9 @@ export * from './crossoverStore';
 export * from './notificationStore';
 export * from './userStore';
 
+// Optimized stores with performance enhancements
+export * from './optimizedUserStore';
+
 // Re-export commonly used hooks for convenience
 export {
   useAuthLoading,
@@ -12,6 +15,9 @@ export {
   useSubscriptionStatus,
   useUser,
 } from './userStore';
+
+// Optimized store hooks for better performance
+export { useAuth, useProfile, useSubscription, useUserComputed } from './optimizedUserStore';
 
 export {
   useCrossoverError,
