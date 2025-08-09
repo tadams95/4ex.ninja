@@ -65,6 +65,32 @@ jobs:
             echo "BUDGET_STATUS=missing" >> $GITHUB_ENV
           fi
 
+      - name: Analyze tree-shaking effectiveness
+        working-directory: ./4ex.ninja-frontend
+        run: |
+          echo "🌳 Running tree-shaking analysis..."
+          npm run treeshaking:analyze
+
+          if [ -f "tree-shaking-report.json" ]; then
+            echo "📊 Tree-Shaking Report:"
+            cat tree-shaking-report.json
+            
+            # Extract effectiveness percentage
+            EFFECTIVENESS=$(cat tree-shaking-report.json | jq '.treeshaking.effectiveness')
+            echo "TREESHAKING_EFFECTIVENESS=$EFFECTIVENESS" >> $GITHUB_ENV
+            
+            # Fail if effectiveness is below threshold
+            if [ "$EFFECTIVENESS" -lt 75 ]; then
+              echo "❌ Tree-shaking effectiveness below 75%: $EFFECTIVENESS%"
+              exit 1
+            else
+              echo "✅ Tree-shaking effectiveness: $EFFECTIVENESS%"
+            fi
+          else
+            echo "⚠️ No tree-shaking report found"
+            echo "TREESHAKING_EFFECTIVENESS=unknown" >> $GITHUB_ENV
+          fi
+
       - name: Upload bundle analysis
         uses: actions/upload-artifact@v4
         if: always()
@@ -72,6 +98,7 @@ jobs:
           name: bundle-analysis
           path: |
             4ex.ninja-frontend/performance-budget-report.json
+            4ex.ninja-frontend/tree-shaking-report.json
             4ex.ninja-frontend/.next/analyze/
 
       - name: Comment performance budget on PR
@@ -80,29 +107,46 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const path = './4ex.ninja-frontend/performance-budget-report.json';
+            const budgetPath = './4ex.ninja-frontend/performance-budget-report.json';
+            const treeshakingPath = './4ex.ninja-frontend/tree-shaking-report.json';
 
-            if (!fs.existsSync(path)) {
-              return;
+            let comment = '## 📊 Performance Monitoring Report\n\n';
+
+            // Performance Budget Section
+            if (fs.existsSync(budgetPath)) {
+              const report = JSON.parse(fs.readFileSync(budgetPath, 'utf8'));
+              
+              comment += '### Performance Budget\n';
+              comment += '| Category | Current | Budget | Status |\n';
+              comment += '|----------|---------|--------|---------|\n';
+
+              Object.entries(report.budgets).forEach(([category, budget]) => {
+                const status = budget.status === 'pass' ? '✅' : '❌';
+                comment += `| ${category} | ${budget.current}KB | ${budget.budget}KB | ${status} |\n`;
+              });
+
+              const budgetFailures = Object.values(report.budgets).filter(b => b.status === 'fail').length;
+              if (budgetFailures > 0) {
+                comment += `\n⚠️ **${budgetFailures} performance budget violation(s) detected!**\n\n`;
+              } else {
+                comment += '\n✅ **All performance budgets passed!**\n\n';
+              }
             }
 
-            const report = JSON.parse(fs.readFileSync(path, 'utf8'));
-
-            let comment = '## 📊 Performance Budget Report\n\n';
-            comment += '| Category | Current | Budget | Status |\n';
-            comment += '|----------|---------|--------|---------|\n';
-
-            Object.entries(report.budgets).forEach(([category, budget]) => {
-              const status = budget.status === 'pass' ? '✅' : '❌';
-              comment += `| ${category} | ${budget.current}KB | ${budget.budget}KB | ${status} |\n`;
-            });
-
-            const budgetFailures = Object.values(report.budgets).filter(b => b.status === 'fail').length;
-
-            if (budgetFailures > 0) {
-              comment += `\n⚠️ **${budgetFailures} performance budget violation(s) detected!**\n`;
-            } else {
-              comment += '\n✅ **All performance budgets passed!**\n';
+            // Tree-Shaking Section
+            if (fs.existsSync(treeshakingPath)) {
+              const treeReport = JSON.parse(fs.readFileSync(treeshakingPath, 'utf8'));
+              
+              comment += '### Tree-Shaking Analysis\n';
+              comment += `**Effectiveness:** ${treeReport.treeshaking.effectiveness}%\n`;
+              comment += `**Potential Savings:** ${treeReport.treeshaking.potentialSavings}KB\n`;
+              comment += `**Files with Unused Code:** ${treeReport.findings.unusedExports.length}\n\n`;
+              
+              if (treeReport.treeshaking.effectiveness < 80) {
+                comment += '⚠️ **Tree-shaking effectiveness below 80%** - Consider optimization\n\n';
+              } else {
+                comment += '✅ **Good tree-shaking effectiveness**\n\n';
+              }
             }
 
             github.rest.issues.createComment({

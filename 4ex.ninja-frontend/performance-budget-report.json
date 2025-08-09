@@ -1,8 +1,8 @@
 {
-  "timestamp": "2025-08-09T20:40:26.961Z",
+  "timestamp": "2025-08-09T20:51:43.491Z",
   "budgets": {
     "js": {
-      "current": 1155,
+      "current": 1431,
       "budget": 200,
       "status": "fail"
     },
@@ -12,7 +12,7 @@
       "status": "pass"
     },
     "total": {
-      "current": 1194,
+      "current": 1470,
       "budget": 800,
       "status": "fail"
     }
@@ -20,29 +20,29 @@
   "assets": {
     "js": [
       {
-        "name": "1517-ce8c6289c63a5dc4.js",
-        "path": ".next/static/chunks/1517-ce8c6289c63a5dc4.js",
+        "name": "88023f6f.c25ddbf6fc4d1257.js",
+        "path": ".next/static/chunks/88023f6f.c25ddbf6fc4d1257.js",
+        "size": 224
+      },
+      {
+        "name": "1517-5f39953c56d70ac8.js",
+        "path": ".next/static/chunks/1517-5f39953c56d70ac8.js",
         "size": 196
       },
       {
-        "name": "framework-a92d6b075cc4cfc2.js",
-        "path": ".next/static/chunks/framework-a92d6b075cc4cfc2.js",
+        "name": "framework-42cf344f87404319.js",
+        "path": ".next/static/chunks/framework-42cf344f87404319.js",
         "size": 178
       },
       {
-        "name": "4bd1b696-ef0eb2871145a1af.js",
-        "path": ".next/static/chunks/4bd1b696-ef0eb2871145a1af.js",
+        "name": "4bd1b696-4096823077505593.js",
+        "path": ".next/static/chunks/4bd1b696-4096823077505593.js",
         "size": 163
       },
       {
-        "name": "main-93a9029ea811d841.js",
-        "path": ".next/static/chunks/main-93a9029ea811d841.js",
-        "size": 115
-      },
-      {
-        "name": "polyfills-42372ed130431b0a.js",
-        "path": ".next/static/chunks/polyfills-42372ed130431b0a.js",
-        "size": 110
+        "name": "2653-3fce0e942dc8a96b.js",
+        "path": ".next/static/chunks/2653-3fce0e942dc8a96b.js",
+        "size": 122
       }
     ],
     "css": [
@@ -54,7 +54,7 @@
     ]
   },
   "summary": {
-    "totalFiles": 60,
-    "totalSize": 1194
+    "totalFiles": 64,
+    "totalSize": 1470
   }
 }

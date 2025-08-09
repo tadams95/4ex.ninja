@@ -18,7 +18,9 @@
     "analyze": "ANALYZE=true npm run build",
     "performance:audit": "lighthouse http://localhost:3000 --output json --output html --output-path ./lighthouse-results",
     "performance:budget": "node scripts/check-performance-budget.js",
-    "performance:test": "npm run build && npm run performance:budget"
+    "performance:test": "npm run build && npm run performance:budget",
+    "treeshaking:analyze": "node scripts/tree-shaking-monitor.js",
+    "treeshaking:test": "npm run build && npm run treeshaking:analyze"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
@@ -43,6 +45,7 @@
     "zustand": "^5.0.7"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.15.1",
     "@next/bundle-analyzer": "^15.4.6",
     "@playwright/test": "^1.54.2",
     "@testing-library/jest-dom": "^6.6.4",
