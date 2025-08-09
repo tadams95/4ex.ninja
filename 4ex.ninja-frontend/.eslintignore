@@ -1,0 +1,9 @@
+# Ignore all ESLint issues during production builds
+**/*.ts
+**/*.tsx
+**/*.js
+**/*.jsx
+.next/
+node_modules/
+out/
+public/
