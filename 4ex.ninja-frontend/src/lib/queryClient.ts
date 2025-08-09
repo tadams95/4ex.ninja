@@ -1,5 +1,6 @@
 'use client';
 
+import { recordCacheHit } from '@/utils/performance';
 import { QueryClient } from '@tanstack/react-query';
 
 // Data type-specific configurations for optimized caching
@@ -51,7 +52,7 @@ const getRetryConfig = (failureCount: number, error: any) => {
   return failureCount < 3;
 };
 
-// Create a client with optimized configuration
+// Create a client with optimized configuration and real-time performance monitoring
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -90,6 +91,12 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+// Cache performance monitoring utility for real-time tracking (1.10.6.3)
+export const trackCacheAccess = (queryKey: any, data: any) => {
+  const queryKeyString = JSON.stringify(queryKey);
+  recordCacheHit(queryKeyString, data !== undefined);
+};
 
 // Helper functions to get optimized query options for different data types
 export const getQueryConfig = (dataType: keyof typeof DATA_TYPE_CONFIGS) => {

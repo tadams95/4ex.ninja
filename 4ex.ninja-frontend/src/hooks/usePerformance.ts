@@ -5,13 +5,16 @@
  * and trading-specific flows.
  */
 
+import { trackCacheAccess } from '@/lib/queryClient';
 import {
   performanceMonitor,
   recordApiCallTime,
   recordAuthenticationTime,
   recordChartRenderTime,
+  recordPageInteractionTime,
   recordSignalLoadTime,
-  recordSubscriptionFlowTime,
+  recordSubscriptionStepCompletion,
+  recordTradingFlowInteraction,
 } from '@/utils/performance';
 import { useCallback, useEffect, useRef } from 'react';
 
@@ -71,18 +74,28 @@ export function useAuthenticationTracking() {
 }
 
 /**
- * Hook to track subscription flow performance
+ * Hook to track subscription flow performance with enhanced UX metrics (1.10.6.3)
  */
 export function useSubscriptionTracking() {
-  const trackSubscriptionStep = useCallback((step: string) => {
+  const trackSubscriptionFlow = useCallback((step: string, userAction?: string) => {
     const startTime = performance.now();
 
     return () => {
-      recordSubscriptionFlowTime(startTime, step);
+      recordSubscriptionStepCompletion(step, startTime, userAction);
     };
   }, []);
 
-  return trackSubscriptionStep;
+  const trackSubscriptionStep = useCallback(
+    (step: string, startTime: number, userAction?: string) => {
+      recordSubscriptionStepCompletion(step, startTime, userAction);
+    },
+    []
+  );
+
+  return {
+    trackSubscriptionFlow,
+    trackSubscriptionStep,
+  };
 }
 
 /**
@@ -254,4 +267,47 @@ export function useFormPerformanceTracking(formName: string) {
   }, [formName]);
 
   return trackFormSubmission;
+}
+
+/**
+ * Hook to track trading flow interactions with enhanced UX metrics (1.10.6.3)
+ */
+export function useTradingFlowTracking() {
+  const trackTradingInteraction = useCallback((flowType: string, interactionType: string) => {
+    const startTime = performance.now();
+
+    return () => {
+      const responseTime = performance.now() - startTime;
+      recordTradingFlowInteraction(flowType, interactionType, responseTime);
+    };
+  }, []);
+
+  return trackTradingInteraction;
+}
+
+/**
+ * Hook to track page interaction performance (1.10.6.3)
+ */
+export function usePageInteractionTracking() {
+  const trackPageInteraction = useCallback((element: string) => {
+    const startTime = performance.now();
+
+    return () => {
+      recordPageInteractionTime(element, startTime);
+    };
+  }, []);
+
+  return trackPageInteraction;
+}
+
+/**
+ * Hook to track React Query cache performance (1.10.6.3)
+ */
+export function useCachePerformanceTracking() {
+  const trackCachePerformance = useCallback((queryKey: any, data: any) => {
+    // Use the imported trackCacheAccess function
+    trackCacheAccess(queryKey, data);
+  }, []);
+
+  return trackCachePerformance;
 }

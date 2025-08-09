@@ -198,6 +198,145 @@ class PerformanceMonitor {
     });
   }
 
+  // Real-time performance optimization metrics for 1.10.6.3
+
+  // React Query cache hit/miss tracking
+  public recordCacheHit(queryKey: string, cacheHit: boolean): void {
+    this.recordMetric({
+      name: 'react_query_cache_hit',
+      value: cacheHit ? 1 : 0,
+      timestamp: Date.now(),
+      tags: {
+        query_key: queryKey,
+        cache_hit: cacheHit.toString(),
+        session_id: this.sessionId,
+      },
+    });
+  }
+
+  // WebSocket connection performance tracking
+  public recordWebSocketConnection(startTime: number, success: boolean): void {
+    const duration = performance.now() - startTime;
+    this.recordMetric({
+      name: 'websocket_connection_time',
+      value: duration,
+      timestamp: Date.now(),
+      tags: {
+        success: success.toString(),
+        session_id: this.sessionId,
+      },
+    });
+  }
+
+  // WebSocket reconnection tracking
+  public recordWebSocketReconnection(attemptNumber: number, success: boolean): void {
+    this.recordMetric({
+      name: 'websocket_reconnection',
+      value: attemptNumber,
+      timestamp: Date.now(),
+      tags: {
+        success: success.toString(),
+        attempt_number: attemptNumber.toString(),
+        session_id: this.sessionId,
+      },
+    });
+  }
+
+  // WebSocket message processing performance
+  public recordWebSocketMessageProcessing(startTime: number, messageCount: number): void {
+    const duration = performance.now() - startTime;
+    this.recordMetric({
+      name: 'websocket_message_processing_time',
+      value: duration,
+      timestamp: Date.now(),
+      tags: {
+        message_count: messageCount.toString(),
+        session_id: this.sessionId,
+      },
+    });
+  }
+
+  // Animation frame rate monitoring
+  public recordAnimationPerformance(animationName: string, frameTime: number): void {
+    const fps = frameTime > 0 ? 1000 / frameTime : 0;
+    this.recordMetric({
+      name: 'animation_frame_rate',
+      value: fps,
+      timestamp: Date.now(),
+      tags: {
+        animation_name: animationName,
+        frame_time: frameTime.toString(),
+        session_id: this.sessionId,
+      },
+    });
+
+    // Track if frame rate drops below 60fps
+    if (fps < 60) {
+      this.recordMetric({
+        name: 'animation_frame_drop',
+        value: 60 - fps,
+        timestamp: Date.now(),
+        tags: {
+          animation_name: animationName,
+          target_fps: '60',
+          actual_fps: fps.toString(),
+          session_id: this.sessionId,
+        },
+      });
+    }
+  }
+
+  // Enhanced subscription flow tracking with user experience metrics
+  public recordSubscriptionStepCompletion(
+    step: string,
+    startTime: number,
+    userAction?: string
+  ): void {
+    const duration = performance.now() - startTime;
+    this.recordMetric({
+      name: 'subscription_step_completion',
+      value: duration,
+      timestamp: Date.now(),
+      tags: {
+        step,
+        user_action: userAction || 'unknown',
+        session_id: this.sessionId,
+      },
+    });
+  }
+
+  // Trading flow user experience metrics
+  public recordTradingFlowInteraction(
+    flowType: string,
+    interactionType: string,
+    responseTime: number
+  ): void {
+    this.recordMetric({
+      name: 'trading_flow_interaction',
+      value: responseTime,
+      timestamp: Date.now(),
+      tags: {
+        flow_type: flowType,
+        interaction_type: interactionType,
+        session_id: this.sessionId,
+      },
+    });
+  }
+
+  // Page interaction performance (click-to-paint time)
+  public recordPageInteractionTime(element: string, startTime: number): void {
+    const duration = performance.now() - startTime;
+    this.recordMetric({
+      name: 'page_interaction_time',
+      value: duration,
+      timestamp: Date.now(),
+      tags: {
+        element,
+        session_id: this.sessionId,
+      },
+    });
+  }
+
   // Record custom metric
   public recordMetric(metric: TradingPerformanceMetric): void {
     this.metrics.push(metric);
@@ -271,6 +410,62 @@ class PerformanceMonitor {
       });
     }
 
+    // Real-time performance budget tracking for 1.10.6.3
+
+    // React Query cache hit rate budget
+    const cacheHitRate = this.getCacheHitRate(300000);
+    if (cacheHitRate !== null) {
+      budgets.push({
+        name: 'React Query Cache Hit Rate',
+        threshold: 80, // 80% cache hit rate target
+        unit: 'score',
+        current: cacheHitRate,
+        status: cacheHitRate < 60 ? 'poor' : cacheHitRate < 80 ? 'needs-improvement' : 'good',
+      });
+    }
+
+    // WebSocket connection performance budget
+    const avgWebSocketConnectionTime = this.getAverageMetric('websocket_connection_time', 300000);
+    if (avgWebSocketConnectionTime) {
+      budgets.push({
+        name: 'WebSocket Connection Time',
+        threshold: 2000, // 2 second budget
+        unit: 'ms',
+        current: avgWebSocketConnectionTime,
+        status:
+          avgWebSocketConnectionTime > 5000
+            ? 'poor'
+            : avgWebSocketConnectionTime > 2000
+            ? 'needs-improvement'
+            : 'good',
+      });
+    }
+
+    // Animation frame rate budget
+    const avgFrameRate = this.getAverageMetric('animation_frame_rate', 300000);
+    if (avgFrameRate) {
+      budgets.push({
+        name: 'Animation Frame Rate',
+        threshold: 60, // 60 FPS target
+        unit: 'score',
+        current: avgFrameRate,
+        status: avgFrameRate < 30 ? 'poor' : avgFrameRate < 60 ? 'needs-improvement' : 'good',
+      });
+    }
+
+    // WebSocket reconnection rate budget
+    const reconnectionRate = this.getWebSocketReconnectionRate(300000);
+    if (reconnectionRate !== null) {
+      budgets.push({
+        name: 'WebSocket Reconnection Rate',
+        threshold: 5, // Maximum 5% reconnection rate
+        unit: 'score',
+        current: reconnectionRate,
+        status:
+          reconnectionRate > 15 ? 'poor' : reconnectionRate > 5 ? 'needs-improvement' : 'good',
+      });
+    }
+
     return budgets;
   }
 
@@ -290,6 +485,35 @@ class PerformanceMonitor {
 
     const sum = recentMetrics.reduce((acc, metric) => acc + metric.value, 0);
     return sum / recentMetrics.length;
+  }
+
+  // Calculate React Query cache hit rate for real-time performance monitoring
+  private getCacheHitRate(timeWindow: number): number | null {
+    const cacheMetrics = this.getRecentMetrics(timeWindow).filter(
+      metric => metric.name === 'react_query_cache_hit'
+    );
+
+    if (cacheMetrics.length === 0) return null;
+
+    const cacheHits = cacheMetrics.filter(metric => metric.value === 1).length;
+    return (cacheHits / cacheMetrics.length) * 100;
+  }
+
+  // Calculate WebSocket reconnection rate for real-time performance monitoring
+  private getWebSocketReconnectionRate(timeWindow: number): number | null {
+    const connectionMetrics = this.getRecentMetrics(timeWindow).filter(
+      metric => metric.name === 'websocket_connection_time'
+    );
+    const reconnectionMetrics = this.getRecentMetrics(timeWindow).filter(
+      metric => metric.name === 'websocket_reconnection'
+    );
+
+    if (connectionMetrics.length === 0) return null;
+
+    const totalConnections = connectionMetrics.length;
+    const totalReconnections = reconnectionMetrics.length;
+
+    return totalConnections > 0 ? (totalReconnections / totalConnections) * 100 : 0;
   }
 
   // Send analytics data to backend
@@ -360,5 +584,36 @@ export const recordApiCallTime = (endpoint: string, startTime: number, success: 
 
 export const recordChartRenderTime = (startTime: number, dataPoints: number) =>
   performanceMonitor.recordChartRenderTime(startTime, dataPoints);
+
+// Real-time performance optimization exports for 1.10.6.3
+export const recordCacheHit = (queryKey: string, cacheHit: boolean) =>
+  performanceMonitor.recordCacheHit(queryKey, cacheHit);
+
+export const recordWebSocketConnection = (startTime: number, success: boolean) =>
+  performanceMonitor.recordWebSocketConnection(startTime, success);
+
+export const recordWebSocketReconnection = (attemptNumber: number, success: boolean) =>
+  performanceMonitor.recordWebSocketReconnection(attemptNumber, success);
+
+export const recordWebSocketMessageProcessing = (startTime: number, messageCount: number) =>
+  performanceMonitor.recordWebSocketMessageProcessing(startTime, messageCount);
+
+export const recordAnimationPerformance = (animationName: string, frameTime: number) =>
+  performanceMonitor.recordAnimationPerformance(animationName, frameTime);
+
+export const recordSubscriptionStepCompletion = (
+  step: string,
+  startTime: number,
+  userAction?: string
+) => performanceMonitor.recordSubscriptionStepCompletion(step, startTime, userAction);
+
+export const recordTradingFlowInteraction = (
+  flowType: string,
+  interactionType: string,
+  responseTime: number
+) => performanceMonitor.recordTradingFlowInteraction(flowType, interactionType, responseTime);
+
+export const recordPageInteractionTime = (element: string, startTime: number) =>
+  performanceMonitor.recordPageInteractionTime(element, startTime);
 
 export const getPerformanceSummary = () => performanceMonitor.getPerformanceSummary();

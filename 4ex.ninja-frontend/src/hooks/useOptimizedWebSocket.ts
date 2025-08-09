@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  recordWebSocketConnection,
+  recordWebSocketMessageProcessing,
+  recordWebSocketReconnection,
+} from '@/utils/performance';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface WebSocketMessage {
@@ -66,6 +71,9 @@ export const useOptimizedWebSocket = (options: UseWebSocketOptions) => {
   const throttleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const messageBufferRef = useRef<any[]>([]);
 
+  // Performance tracking refs for real-time monitoring (1.10.6.3)
+  const connectionStartTime = useRef<number | null>(null);
+
   // Generate unique request ID
   const generateRequestId = useCallback(() => {
     return `req_${++requestIdRef.current}`;
@@ -84,6 +92,7 @@ export const useOptimizedWebSocket = (options: UseWebSocketOptions) => {
 
       // Set new timeout for batch processing
       throttleTimeoutRef.current = setTimeout(() => {
+        const processingStartTime = performance.now();
         const messages = [...messageBufferRef.current];
         messageBufferRef.current = [];
 
@@ -109,6 +118,9 @@ export const useOptimizedWebSocket = (options: UseWebSocketOptions) => {
 
           // Call onMessage with processed data
           onMessage(Object.values(latestMessages));
+
+          // Track WebSocket message processing performance (1.10.6.3)
+          recordWebSocketMessageProcessing(processingStartTime, messages.length);
         }
       }, throttleMs);
     },
@@ -135,6 +147,13 @@ export const useOptimizedWebSocket = (options: UseWebSocketOptions) => {
               connectionId: payload.connectionId,
               reconnectAttempts: 0,
             }));
+
+            // Track WebSocket connection performance (1.10.6.3)
+            if (connectionStartTime.current) {
+              recordWebSocketConnection(connectionStartTime.current, true);
+              connectionStartTime.current = null;
+            }
+
             onConnect?.();
             break;
 
@@ -154,6 +173,13 @@ export const useOptimizedWebSocket = (options: UseWebSocketOptions) => {
               isConnecting: false,
               error: payload.error,
             }));
+
+            // Track failed WebSocket connection (1.10.6.3)
+            if (connectionStartTime.current) {
+              recordWebSocketConnection(connectionStartTime.current, false);
+              connectionStartTime.current = null;
+            }
+
             onError?.(payload.error);
             break;
 
@@ -167,6 +193,9 @@ export const useOptimizedWebSocket = (options: UseWebSocketOptions) => {
               reconnectAttempts: payload.attempt,
               isConnecting: true,
             }));
+
+            // Track WebSocket reconnection attempts (1.10.6.3)
+            recordWebSocketReconnection(payload.attempt, false);
             break;
 
           case 'WORKER_ERROR':
@@ -218,6 +247,9 @@ export const useOptimizedWebSocket = (options: UseWebSocketOptions) => {
     }
 
     setState(prev => ({ ...prev, isConnecting: true, error: null }));
+
+    // Start performance tracking for connection time (1.10.6.3)
+    connectionStartTime.current = performance.now();
 
     workerRef.current.postMessage({
       type: 'CONNECT',
