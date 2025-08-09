@@ -263,3 +263,58 @@ Message: Missing required field: open
 Context:
   taskName: None
 ==================================================
+=== ERROR at 2025-08-08T22:35:11.965671 ===
+Logger: test.basic
+Module: test_day6_logging
+Function: test_basic_logging() at line 44
+Thread: MainThread (8538119936)
+Process: MainProcess (79098)
+Message: This is an error message
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-08-08T22:35:12.070904 ===
+Logger: test.errors
+Module: middleware
+Function: log_error() at line 104
+Thread: MainThread (8538119936)
+Process: MainProcess (79098)
+Message: Error in failing_operation: This is a test error
+Context:
+  taskName: None
+  operation: failing_operation
+  error: This is a test error
+  error_type: ValueError
+  correlation_id: 284e2576-1b4e-44d0-b1b2-ad5e213cfe6a
+  user_id: test_user_123
+  operation_id: test_123
+  input_data: invalid_input
+Exception Details:
+  Type: ValueError
+  Message: This is a test error
+  Traceback:
+    Traceback (most recent call last):
+      File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/tests/days/test_day6_logging.py", line 115, in failing_operation
+    raise ValueError("This is a test error")
+    ValueError: This is a test error
+==================================================
+=== ERROR at 2025-08-08T22:35:12.184409 ===
+Logger: infrastructure.monitoring.error_tracking
+Module: error_tracking
+Function: capture_error() at line 89
+Thread: MainThread (8538119936)
+Process: MainProcess (79098)
+Message: Sentry not initialized. Error: Test API error
+Context:
+  taskName: None
+==================================================
+=== ERROR at 2025-08-08T22:35:12.184680 ===
+Logger: infrastructure.monitoring.error_tracking
+Module: error_tracking
+Function: capture_error() at line 89
+Thread: MainThread (8538119936)
+Process: MainProcess (79098)
+Message: Sentry not initialized. Error: Test business logic error
+Context:
+  taskName: None
+==================================================

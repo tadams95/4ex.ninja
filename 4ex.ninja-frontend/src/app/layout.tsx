@@ -45,8 +45,41 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        
+        {/* Register service worker for offline functionality */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('SW registered: ', registration);
+                  }).catch(function(registrationError) {
+                    console.log('SW registration failed: ', registrationError);
+                  });
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body className={exo.className}>
+        {/* Progressive enhancement noscript fallback */}
+        <noscript>
+          <div style={{
+            backgroundColor: '#1f2937',
+            color: '#f9fafb',
+            padding: '16px',
+            textAlign: 'center',
+            borderBottom: '2px solid #374151'
+          }}>
+            <p><strong>JavaScript Required</strong></p>
+            <p style={{ fontSize: '14px', marginTop: '8px' }}>
+              4ex.ninja requires JavaScript for the best experience. Please enable JavaScript in your browser.
+            </p>
+          </div>
+        </noscript>
+        
         <GlobalErrorBoundary>
           <ChunkLoadErrorBoundary>
             <HydrationErrorBoundary>

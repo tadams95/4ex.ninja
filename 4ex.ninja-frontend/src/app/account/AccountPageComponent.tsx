@@ -2,6 +2,7 @@
 
 import { AccountErrorBoundary } from '@/components/error';
 import { useAuth, useProfileManagement } from '@/hooks/api';
+import { AccountSkeleton } from '@/components/ui';
 import { handleCheckout } from '@/utils/checkout-helpers';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -153,13 +154,11 @@ function AccountPageComponent() {
   };
 
   // Show loading spinner while checking authentication
-  if (authLoading) {
+  if (authLoading || profileLoading || subscriptionLoading) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-2xl bg-black min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-          <p className="mt-2">Loading...</p>
-        </div>
+      <div className="container mx-auto px-4 py-8 max-w-2xl bg-black min-h-screen">
+        <h1 className="text-3xl font-bold mb-6">Account Settings</h1>
+        <AccountSkeleton />
       </div>
     );
   }

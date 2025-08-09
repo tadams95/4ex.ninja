@@ -79,3 +79,23 @@ ValueError: This is a test error
 2025-08-06T00:35:12.301589 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'logs' added | taskName=None
 2025-08-06T00:35:12.301716 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'email' added | taskName=None
 2025-08-06T00:35:12.301751 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'webhook' added | taskName=None
+2025-08-08T22:34:52.297984 [32m[INFO][0m infrastructure.database.config:88 _detect_environment() - Detected environment: testing | taskName=None
+2025-08-08T22:34:52.376547 [32m[INFO][0m src.infrastructure.database.config:88 _detect_environment() - Detected environment: testing | taskName=None
+2025-08-08T22:34:52.408072 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'logs' added | taskName=None
+2025-08-08T22:34:52.408171 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'email' added | taskName=None
+2025-08-08T22:34:52.408201 [32m[INFO][0m src.infrastructure.monitoring.alerts:277 add_channel() - Alert channel 'webhook' added | taskName=None
+2025-08-08T22:34:52.426905 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: database | taskName=None
+2025-08-08T22:34:52.427006 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: oanda_api | taskName=None
+2025-08-08T22:34:52.427036 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: system_resources | taskName=None
+2025-08-08T22:35:11.965230 [32m[INFO][0m test.basic:42 test_basic_logging() - Basic logging test successful | taskName=None
+2025-08-08T22:35:11.965562 [33m[WARNING][0m test.basic:43 test_basic_logging() - This is a warning message | taskName=None
+2025-08-08T22:35:11.965671 [31m[ERROR][0m test.basic:44 test_basic_logging() - This is an error message | taskName=None
+2025-08-08T22:35:11.967503 [32m[INFO][0m test.context:173 log_with_context() - Context logging test | taskName=None | correlation_id=284e2576-1b4e-44d0-b1b2-ad5e213cfe6a | user_id=test_user_123 | operation=test_operation | additional_data=some_value
+2025-08-08T22:35:12.069841 [33m[WARNING][0m performance:128 log_performance() - Slow operation: slow_operation took 0.102s | taskName=None | operation=slow_operation | duration=0.102 | correlation_id=284e2576-1b4e-44d0-b1b2-ad5e213cfe6a | operation_type=simulation | data_processed=100
+2025-08-08T22:35:12.070904 [31m[ERROR][0m test.errors:104 log_error() - Error in failing_operation: This is a test error | taskName=None | operation=failing_operation | error=This is a test error | error_type=ValueError | correlation_id=284e2576-1b4e-44d0-b1b2-ad5e213cfe6a | user_id=test_user_123 | operation_id=test_123 | input_data=invalid_input
+Traceback (most recent call last):
+  File "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/tests/days/test_day6_logging.py", line 115, in failing_operation
+    raise ValueError("This is a test error")
+ValueError: This is a test error
+2025-08-08T22:35:12.184409 [31m[ERROR][0m infrastructure.monitoring.error_tracking:89 capture_error() - Sentry not initialized. Error: Test API error | taskName=None
+2025-08-08T22:35:12.184680 [31m[ERROR][0m infrastructure.monitoring.error_tracking:89 capture_error() - Sentry not initialized. Error: Test business logic error | taskName=None

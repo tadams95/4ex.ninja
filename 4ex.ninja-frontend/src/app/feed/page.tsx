@@ -4,6 +4,7 @@ import { FeedErrorBoundary } from '@/components/error';
 import VirtualizedCrossoverList from '@/components/VirtualizedCrossoverList';
 import { useLatestCrossovers } from '@/hooks/api';
 import { Crossover } from '@/types';
+import { CrossoverSkeleton, FeedStatsSkeleton, LoadingSequence } from '@/components/ui';
 import React, { useCallback, useMemo } from 'react';
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -48,14 +49,7 @@ function SignalsPage() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8 max-w-2xl bg-black min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-          <p className="mt-2">Loading signals...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSequence type="trading" />;
   }
 
   if (error) {

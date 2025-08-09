@@ -1,12 +1,16 @@
 // Export all UI components
 export { Button } from './Button';
 export { Card } from './Card';
-export { default as ConditionalMotionDiv } from './ConditionalMotionDiv';
 export { Input } from './Input';
 export { LoadingSpinner } from './LoadingSpinner';
 export { Modal } from './Modal';
+export { default as OptimizedImage } from './OptimizedImage';
 export { OptimizedModal } from './OptimizedModal';
-export { default as OptimizedMotion } from './OptimizedMotion';
+export { OptimizedMotion } from './OptimizedMotion';
+export { ConditionalMotionDiv } from './ConditionalMotionDiv';
+export * from './Skeleton';
+export * from './ProgressiveEnhancement';
+export { default as LoadingSequence } from './LoadingSequence';
 
 // Export types
 export type { ButtonProps } from './Button';
