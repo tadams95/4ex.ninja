@@ -23,8 +23,10 @@ from api.routes.market_data import router as market_data_router
 from api.routes.performance import router as performance_router
 from api.middleware.error_handler import ErrorHandlerMiddleware
 from api.middleware.logging_middleware import LoggingMiddleware
+from api.middleware.http_cache import HTTPCacheMiddleware
 from api.dependencies.simple_container import get_container
 from infrastructure.monitoring.error_tracking import initialize_error_tracking
+from services.cache_service import CacheServiceFactory
 
 
 logger = logging.getLogger(__name__)
@@ -53,6 +55,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Initialize dependency container
     container = get_container()
     logger.info("Dependency container initialized")
+
+    # Initialize and warm cache
+    try:
+        cache_service = await CacheServiceFactory.create_crossover_cache_service()
+        warm_count = await cache_service.warm_cache()
+        logger.info(f"Cache warming completed. Warmed {warm_count} entries")
+    except Exception as e:
+        logger.warning(f"Cache warming failed: {e}")
 
     yield
 
@@ -112,6 +122,18 @@ def create_app() -> FastAPI:
     # Add custom middleware
     app.add_middleware(LoggingMiddleware)
     app.add_middleware(ErrorHandlerMiddleware)
+    app.add_middleware(
+        HTTPCacheMiddleware,
+        enable_etags=True,
+        enable_conditional_requests=True,
+        excluded_paths=[
+            "/health",
+            "/docs",
+            "/redoc",
+            "/openapi.json",
+            "/cache/invalidate",
+        ],
+    )
 
     # Include routers
     app.include_router(health_router)
