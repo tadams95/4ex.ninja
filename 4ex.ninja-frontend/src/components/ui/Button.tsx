@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import React from 'react';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -6,6 +5,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   children: React.ReactNode;
+  enableMotion?: boolean;
 }
 
 const buttonVariants = {
@@ -29,27 +29,27 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   children,
   className = '',
+  enableMotion = false,
   ...props
 }) => {
   const baseClasses =
-    'rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50 transition-colors duration-200 inline-flex items-center justify-center';
+    'rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50 transition-all duration-200 inline-flex items-center justify-center';
   const variantClasses = buttonVariants[variant];
   const sizeClasses = buttonSizes[size];
   const disabledClasses = disabled || loading ? 'opacity-50 cursor-not-allowed' : '';
 
+  // Hardware-accelerated hover effects using CSS
+  const motionClasses =
+    enableMotion && !disabled && !loading
+      ? 'transform hover:scale-[1.02] active:scale-[0.98] will-change-transform gpu-accelerated'
+      : '';
+
   const buttonClasses =
-    `${baseClasses} ${variantClasses} ${sizeClasses} ${disabledClasses} ${className}`.trim();
+    `${baseClasses} ${variantClasses} ${sizeClasses} ${disabledClasses} ${motionClasses} ${className}`.trim();
 
-  const MotionButton = motion.button;
-
+  // Use CSS transitions for better performance instead of framer-motion for simple interactions
   return (
-    <MotionButton
-      className={buttonClasses}
-      disabled={disabled || loading}
-      whileHover={disabled || loading ? {} : { scale: 1.02 }}
-      whileTap={disabled || loading ? {} : { scale: 0.98 }}
-      {...(props as any)}
-    >
+    <button className={buttonClasses} disabled={disabled || loading} {...props}>
       {loading && (
         <svg
           className="animate-spin -ml-1 mr-2 h-4 w-4 text-current"
@@ -73,6 +73,6 @@ export const Button: React.FC<ButtonProps> = ({
         </svg>
       )}
       {children}
-    </MotionButton>
+    </button>
   );
 };

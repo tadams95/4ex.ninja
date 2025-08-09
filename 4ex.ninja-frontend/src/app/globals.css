@@ -224,48 +224,137 @@ body {
 
 /* === ANIMATION UTILITIES === */
 /* CSS-only fallback animations for when framer-motion is not loaded */
+/* Hardware-accelerated animations using transform3d for better performance */
 
 @keyframes fade-in {
   from {
     opacity: 0;
+    transform: translate3d(0, 0, 0);
   }
   to {
     opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes slide-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translate3d(0, 20px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes scale-in {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: translate3d(0, 0, 0) scale3d(0.95, 0.95, 1);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+}
+
+/* New optimized animations for better performance */
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slide-left {
+  from {
+    opacity: 0;
+    transform: translate3d(20px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slide-right {
+  from {
+    opacity: 0;
+    transform: translate3d(-20px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
+  will-change: opacity, transform;
 }
 
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
+  will-change: opacity, transform;
 }
 
 .animate-scale-in {
   animation: scale-in 0.3s ease-out;
+  will-change: opacity, transform;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
+  will-change: opacity, transform;
+}
+
+.animate-slide-left {
+  animation: slide-left 0.3s ease-out;
+  will-change: opacity, transform;
+}
+
+.animate-slide-right {
+  animation: slide-right 0.3s ease-out;
+  will-change: opacity, transform;
+}
+
+/* Performance optimization classes */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-auto {
+  will-change: auto;
+}
+
+.gpu-accelerated {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-up,
+  .animate-scale-in,
+  .animate-slide-down,
+  .animate-slide-left,
+  .animate-slide-right {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .will-change-transform,
+  .will-change-auto {
+    will-change: auto;
+  }
 }
 
 /* Add staggered animation delays for list items */
