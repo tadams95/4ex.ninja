@@ -872,6 +872,7 @@ This document provides a strategic, ordered approach to implementing all planned
   ```
   - Create Discord server with organized channels (#signals, #alerts, #premium, #general)
   - Configure webhook URLs for different notification types and subscription tiers
+  - **Leverage existing alert system webhook infrastructure** (already implemented in Phase 1)
   - Setup role-based access control (free users, premium subscribers, admins)
   - Implement rich embed formatting for professional trading signal presentation
 
@@ -879,11 +880,13 @@ This document provides a strategic, ordered approach to implementing all planned
   - Signal alerts with formatted embeds (pair, action, entry price, stop loss, confidence)
   - Market analysis notifications with trend information and regime detection
   - System status alerts (maintenance, updates, performance issues)
+  - **Critical system alerts integration** (CPU/memory exhaustion, database failures, API downtime)
   - User preference management (channel subscriptions, notification frequency)
   - Premium vs free tier channel access automation
 
 - [ ] **Day 5-6**: Integrate Discord service with signal generation pipeline
   - Real-time signal posting to Discord channels within 5 seconds of generation
+  - **Integrate existing alert system with Discord webhooks for critical failures**
   - User role-based channel access and notification routing
   - Rate limiting and spam prevention to maintain channel quality
   - Signal confidence-based routing (high confidence → premium channels)
@@ -923,6 +926,7 @@ This document provides a strategic, ordered approach to implementing all planned
 
 **🎯 Week 9-10 Success Criteria:**
 - [ ] Discord notifications delivered within 5 seconds of signal generation
+- [ ] **Critical system alerts automatically routed to Discord admin channels**
 - [ ] Real-time web app updates working seamlessly without manual refresh
 - [ ] User notification preferences fully functional for both Discord and Web App
 - [ ] Mobile Discord notifications working reliably with proper rich formatting

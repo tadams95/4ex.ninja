@@ -124,7 +124,7 @@ class HealthMonitor:
         """Check health results and send alerts for critical issues."""
         try:
             from .alerts import alert_database_connectivity, alert_external_api_downtime
-            
+
             for name, result in results.items():
                 if result.status == HealthStatus.UNHEALTHY:
                     if name == "database":

@@ -41,21 +41,29 @@ async def get_alerts(
         # Convert alerts to dict format
         alert_data = []
         for alert in alerts:
-            alert_data.append({
-                "alert_id": alert.alert_id,
-                "alert_type": alert.alert_type.value,
-                "severity": alert.severity.value,
-                "status": alert.status.value,
-                "title": alert.title,
-                "message": alert.message,
-                "timestamp": alert.timestamp.isoformat(),
-                "context": alert.context,
-                "tags": alert.tags,
-                "acknowledged_by": alert.acknowledged_by,
-                "acknowledged_at": alert.acknowledged_at.isoformat() if alert.acknowledged_at else None,
-                "resolved_at": alert.resolved_at.isoformat() if alert.resolved_at else None,
-                "escalation_level": alert.escalation_level,
-            })
+            alert_data.append(
+                {
+                    "alert_id": alert.alert_id,
+                    "alert_type": alert.alert_type.value,
+                    "severity": alert.severity.value,
+                    "status": alert.status.value,
+                    "title": alert.title,
+                    "message": alert.message,
+                    "timestamp": alert.timestamp.isoformat(),
+                    "context": alert.context,
+                    "tags": alert.tags,
+                    "acknowledged_by": alert.acknowledged_by,
+                    "acknowledged_at": (
+                        alert.acknowledged_at.isoformat()
+                        if alert.acknowledged_at
+                        else None
+                    ),
+                    "resolved_at": (
+                        alert.resolved_at.isoformat() if alert.resolved_at else None
+                    ),
+                    "escalation_level": alert.escalation_level,
+                }
+            )
 
         return {
             "alerts": alert_data,
@@ -80,17 +88,19 @@ async def get_active_alerts() -> Dict[str, Any]:
 
         alert_data = []
         for alert in active_alerts:
-            alert_data.append({
-                "alert_id": alert.alert_id,
-                "alert_type": alert.alert_type.value,
-                "severity": alert.severity.value,
-                "title": alert.title,
-                "message": alert.message,
-                "timestamp": alert.timestamp.isoformat(),
-                "context": alert.context,
-                "tags": alert.tags,
-                "escalation_level": alert.escalation_level,
-            })
+            alert_data.append(
+                {
+                    "alert_id": alert.alert_id,
+                    "alert_type": alert.alert_type.value,
+                    "severity": alert.severity.value,
+                    "title": alert.title,
+                    "message": alert.message,
+                    "timestamp": alert.timestamp.isoformat(),
+                    "context": alert.context,
+                    "tags": alert.tags,
+                    "escalation_level": alert.escalation_level,
+                }
+            )
 
         # Sort by severity and timestamp
         severity_order = {
@@ -102,13 +112,18 @@ async def get_active_alerts() -> Dict[str, Any]:
         }
 
         alert_data.sort(
-            key=lambda x: (severity_order.get(AlertSeverity(x["severity"]), 5), x["timestamp"])
+            key=lambda x: (
+                severity_order.get(AlertSeverity(x["severity"]), 5),
+                x["timestamp"],
+            )
         )
 
         return {
             "active_alerts": alert_data,
             "count": len(alert_data),
-            "critical_count": len([a for a in alert_data if a["severity"] == "critical"]),
+            "critical_count": len(
+                [a for a in alert_data if a["severity"] == "critical"]
+            ),
             "high_count": len([a for a in alert_data if a["severity"] == "high"]),
         }
 
@@ -130,9 +145,7 @@ async def acknowledge_alert(
         success = await alert_manager.acknowledge_alert(alert_id, acknowledged_by)
 
         if not success:
-            raise HTTPException(
-                status_code=404, detail=f"Alert not found: {alert_id}"
-            )
+            raise HTTPException(status_code=404, detail=f"Alert not found: {alert_id}")
 
         return {
             "alert_id": alert_id,
@@ -161,9 +174,7 @@ async def resolve_alert(
         success = await alert_manager.resolve_alert(alert_id, resolved_by)
 
         if not success:
-            raise HTTPException(
-                status_code=404, detail=f"Alert not found: {alert_id}"
-            )
+            raise HTTPException(status_code=404, detail=f"Alert not found: {alert_id}")
 
         return {
             "alert_id": alert_id,
@@ -215,7 +226,9 @@ async def get_alert_channels() -> Dict[str, Any]:
         return {
             "channels": channels,
             "total_channels": len(channels),
-            "available_channels": len([c for c in channels.values() if c.get("available", False)]),
+            "available_channels": len(
+                [c for c in channels.values() if c.get("available", False)]
+            ),
         }
 
     except Exception as e:

@@ -146,13 +146,21 @@ class EmailAlertChannel(AlertChannel):
 
             # Get SMTP configuration from environment
             smtp_host = os.getenv("SMTP_HOST", self.smtp_config.get("host", ""))
-            smtp_port = int(os.getenv("SMTP_PORT", str(self.smtp_config.get("port", 587))))
-            smtp_username = os.getenv("SMTP_USERNAME", self.smtp_config.get("username", ""))
-            smtp_password = os.getenv("SMTP_PASSWORD", self.smtp_config.get("password", ""))
+            smtp_port = int(
+                os.getenv("SMTP_PORT", str(self.smtp_config.get("port", 587)))
+            )
+            smtp_username = os.getenv(
+                "SMTP_USERNAME", self.smtp_config.get("username", "")
+            )
+            smtp_password = os.getenv(
+                "SMTP_PASSWORD", self.smtp_config.get("password", "")
+            )
             from_email = os.getenv("SMTP_FROM_EMAIL", smtp_username)
             to_emails = os.getenv("ALERT_TO_EMAILS", "").split(",")
 
-            if not all([smtp_host, smtp_port, smtp_username, smtp_password, to_emails[0]]):
+            if not all(
+                [smtp_host, smtp_port, smtp_username, smtp_password, to_emails[0]]
+            ):
                 logger.warning("Email configuration incomplete, skipping email alert")
                 return False
 
@@ -225,10 +233,10 @@ class WebhookAlertChannel(AlertChannel):
             # Create Discord-compatible payload
             severity_colors = {
                 AlertSeverity.CRITICAL: 16711680,  # Red
-                AlertSeverity.HIGH: 16753920,      # Orange
-                AlertSeverity.MEDIUM: 16776960,    # Yellow
-                AlertSeverity.LOW: 65535,          # Cyan
-                AlertSeverity.INFO: 5763719,       # Blue
+                AlertSeverity.HIGH: 16753920,  # Orange
+                AlertSeverity.MEDIUM: 16776960,  # Yellow
+                AlertSeverity.LOW: 65535,  # Cyan
+                AlertSeverity.INFO: 5763719,  # Blue
             }
 
             payload = {
@@ -245,12 +253,16 @@ class WebhookAlertChannel(AlertChannel):
                             },
                             {
                                 "name": "Type",
-                                "value": alert.alert_type.value.replace("_", " ").title(),
+                                "value": alert.alert_type.value.replace(
+                                    "_", " "
+                                ).title(),
                                 "inline": True,
                             },
                             {
                                 "name": "Time",
-                                "value": alert.timestamp.strftime("%Y-%m-%d %H:%M:%S UTC"),
+                                "value": alert.timestamp.strftime(
+                                    "%Y-%m-%d %H:%M:%S UTC"
+                                ),
                                 "inline": True,
                             },
                         ],
@@ -263,12 +275,16 @@ class WebhookAlertChannel(AlertChannel):
 
             # Add context if available
             if alert.context:
-                context_text = "\n".join([f"**{k}**: {v}" for k, v in alert.context.items()])
-                payload["embeds"][0]["fields"].append({
-                    "name": "Context",
-                    "value": context_text[:1000],  # Discord field limit
-                    "inline": False,
-                })
+                context_text = "\n".join(
+                    [f"**{k}**: {v}" for k, v in alert.context.items()]
+                )
+                payload["embeds"][0]["fields"].append(
+                    {
+                        "name": "Context",
+                        "value": context_text[:1000],  # Discord field limit
+                        "inline": False,
+                    }
+                )
 
             async with aiohttp.ClientSession() as session:
                 async with session.post(
@@ -281,7 +297,9 @@ class WebhookAlertChannel(AlertChannel):
                         logger.info(f"Webhook alert sent successfully: {alert.title}")
                         return True
                     else:
-                        logger.warning(f"Webhook responded with status {response.status}")
+                        logger.warning(
+                            f"Webhook responded with status {response.status}"
+                        )
                         return False
 
         except Exception as e:
@@ -321,15 +339,15 @@ class AlertManager:
     def _setup_default_channels(self):
         """Setup default alert channels."""
         import os
-        
+
         # Always available log channel
         self.add_channel("logs", LogAlertChannel())
 
         # Email channel (enabled if environment variables are set)
         email_enabled = bool(
-            os.getenv("SMTP_HOST") and 
-            os.getenv("SMTP_USERNAME") and 
-            os.getenv("SMTP_PASSWORD")
+            os.getenv("SMTP_HOST")
+            and os.getenv("SMTP_USERNAME")
+            and os.getenv("SMTP_PASSWORD")
         )
         email_config = {
             "enabled": email_enabled,
@@ -561,7 +579,9 @@ class AlertManager:
 
         return False
 
-    async def resolve_alert(self, alert_id: str, resolved_by: Optional[str] = None) -> bool:
+    async def resolve_alert(
+        self, alert_id: str, resolved_by: Optional[str] = None
+    ) -> bool:
         """Resolve an alert."""
         if alert_id in self.active_alerts:
             alert = self.active_alerts[alert_id]
@@ -615,7 +635,9 @@ class AlertManager:
         """Get alert statistics."""
         total_alerts = len(self.alert_history)
         active_count = len(self.active_alerts)
-        resolved_count = len([a for a in self.alert_history if a.status == AlertStatus.RESOLVED])
+        resolved_count = len(
+            [a for a in self.alert_history if a.status == AlertStatus.RESOLVED]
+        )
 
         # Count by severity
         severity_counts = {}
@@ -637,7 +659,8 @@ class AlertManager:
 
         # Calculate average resolution time
         resolved_alerts = [
-            a for a in self.alert_history 
+            a
+            for a in self.alert_history
             if a.resolved_at is not None and a.timestamp is not None
         ]
         avg_resolution_time = 0
@@ -645,11 +668,17 @@ class AlertManager:
             total_resolution_time = 0
             for alert in resolved_alerts:
                 if alert.resolved_at and alert.timestamp:
-                    total_resolution_time += (alert.resolved_at - alert.timestamp).total_seconds()
-            avg_resolution_time = total_resolution_time / len(resolved_alerts) if resolved_alerts else 0
+                    total_resolution_time += (
+                        alert.resolved_at - alert.timestamp
+                    ).total_seconds()
+            avg_resolution_time = (
+                total_resolution_time / len(resolved_alerts) if resolved_alerts else 0
+            )
 
         # Most frequent alert types
-        most_frequent = sorted(type_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+        most_frequent = sorted(type_counts.items(), key=lambda x: x[1], reverse=True)[
+            :5
+        ]
 
         return {
             "total_alerts": total_alerts,
