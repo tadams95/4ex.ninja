@@ -2,7 +2,8 @@
 Signal Notification Service for 4ex.ninja
 
 This service handles real-time notification delivery for trading signals,
-integrating with Discord, email, and other notification channels.
+integrating with Discord, email, and other notification channels using
+the new AsyncNotificationService for non-blocking delivery.
 """
 
 import logging
@@ -15,6 +16,12 @@ from core.entities.signal import Signal
 from infrastructure.monitoring.alerts import alert_manager
 from infrastructure.monitoring.discord_alerts import send_signal_to_discord
 from infrastructure.external_services.discord_service import UserTier
+from infrastructure.services.notification_integration import (
+    get_notification_integration,
+    send_signal_async,
+    NotificationPriority as AsyncNotificationPriority,
+    ensure_async_notifications_started,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +97,7 @@ class SignalNotificationService:
         additional_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, bool]:
         """
-        Send notifications for a newly generated signal.
+        Send notifications for a newly generated signal using async notification service.
 
         Args:
             signal: The trading signal to notify about
@@ -115,30 +122,50 @@ class SignalNotificationService:
                 **(additional_context or {}),
             }
 
-            # Send to Discord if enabled
+            # Send to Discord using AsyncNotificationService if enabled
             if NotificationChannel.DISCORD in self.enabled_channels:
                 try:
-                    discord_success = await send_signal_to_discord(
+                    # Map priority to async notification priority
+                    async_priority = self._map_priority_to_async(priority)
+
+                    # Use async notification service for non-blocking delivery
+                    discord_success = await send_signal_async(
                         signal=signal,
-                        alert_type="signal_generated",
+                        priority=async_priority,
+                        user_tier=user_tier,
                         additional_context=context,
                     )
                     results["discord"] = discord_success
 
                     if discord_success:
                         logger.info(
-                            f"Signal {signal.signal_id} sent to Discord successfully"
+                            f"Signal {signal.signal_id} queued for Discord delivery successfully"
                         )
                     else:
                         logger.warning(
-                            f"Failed to send signal {signal.signal_id} to Discord"
+                            f"Failed to queue signal {signal.signal_id} for Discord delivery"
                         )
 
                 except Exception as e:
                     logger.error(
-                        f"Discord notification error for signal {signal.signal_id}: {str(e)}"
+                        f"Async Discord notification error for signal {signal.signal_id}: {str(e)}"
                     )
-                    results["discord"] = False
+                    # Fallback to legacy Discord notification
+                    try:
+                        logger.info(
+                            f"Attempting fallback Discord notification for {signal.signal_id}"
+                        )
+                        discord_success = await send_signal_to_discord(
+                            signal=signal,
+                            alert_type="signal_generated",
+                            additional_context=context,
+                        )
+                        results["discord"] = discord_success
+                    except Exception as fallback_e:
+                        logger.error(
+                            f"Fallback Discord notification also failed: {str(fallback_e)}"
+                        )
+                        results["discord"] = False
 
             # Send to Email if enabled and priority is high enough
             if NotificationChannel.EMAIL in self.enabled_channels and priority in [
@@ -189,6 +216,18 @@ class SignalNotificationService:
         except Exception as e:
             logger.error(f"Signal notification error: {str(e)}")
             return {}
+
+    def _map_priority_to_async(
+        self, priority: NotificationPriority
+    ) -> AsyncNotificationPriority:
+        """Map legacy priority to async notification priority."""
+        priority_map = {
+            NotificationPriority.LOW: AsyncNotificationPriority.LOW,
+            NotificationPriority.NORMAL: AsyncNotificationPriority.NORMAL,
+            NotificationPriority.HIGH: AsyncNotificationPriority.HIGH,
+            NotificationPriority.URGENT: AsyncNotificationPriority.URGENT,
+        }
+        return priority_map.get(priority, AsyncNotificationPriority.NORMAL)
 
     async def notify_signal_updated(
         self,

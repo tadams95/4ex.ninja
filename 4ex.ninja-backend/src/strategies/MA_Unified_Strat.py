@@ -36,6 +36,14 @@ from config.discord_config import (
     get_discord_channel_tier,
 )
 
+# Import AsyncNotificationService for non-blocking Discord delivery
+from infrastructure.services.notification_integration import (
+    send_signal_async,
+    NotificationPriority,
+    UserTier,
+)
+from infrastructure.services.async_notification_startup import on_strategy_start
+
 # Set up database connections
 client = MongoClient(
     MONGO_CONNECTION_STRING, tls=True, tlsAllowInvalidCertificates=True
@@ -84,6 +92,16 @@ class MovingAverageCrossStrategy:
         logging.info(
             f"Discord notifications {'enabled' if self.discord_enabled else 'disabled'} for {self.pair} {self.timeframe}"
         )
+
+        # Initialize AsyncNotificationService for non-blocking Discord delivery
+        try:
+            on_strategy_start()
+            logging.info(
+                f"AsyncNotificationService initialized for {self.pair} {self.timeframe}"
+            )
+        except Exception as e:
+            logging.error(f"Failed to initialize AsyncNotificationService: {str(e)}")
+            logging.info("Falling back to legacy Discord notifications")
 
     def validate_signal(
         self, signal: int, atr: float, risk_reward_ratio: float
@@ -279,71 +297,154 @@ class MovingAverageCrossStrategy:
                 confidence_score=0.85,  # You can calculate this based on ATR, volume, etc.
             )
 
-            # Send to Discord using existing infrastructure
+            # Send to Discord using AsyncNotificationService for non-blocking delivery
             channel_tier = get_discord_channel_tier(signal_data)
-            discord_success = await send_signal_to_discord(
-                signal=signal_entity,
-                alert_type="crossover_signal",
-                additional_context={
-                    "market_conditions": "Live Trading Signal",
-                    "sl_pips": signal_data.get("sl_pips", 0),
-                    "tp_pips": signal_data.get("tp_pips", 0),
-                    "atr_value": signal_data.get("atr", 0),
-                    "volatility": (
-                        "Medium" if signal_data.get("atr", 0) < 50 else "High"
-                    ),
-                    "session": self._get_trading_session(),
-                    "strategy_confidence": (
-                        "High"
-                        if signal_data.get("risk_reward_ratio", 0) > 1.5
-                        else "Medium"
-                    ),
-                    "channel_tier": channel_tier,
-                    "notification_priority": (
-                        "HIGH" if channel_tier == "premium" else "NORMAL"
-                    ),
-                },
-            )
 
-            if discord_success:
-                logging.info(
-                    f"✅ Discord notification sent for {self.pair} {self.timeframe} signal"
-                )
-                # Track Discord notification success
-                metrics_collector.increment_counter(
-                    "discord_notifications_sent",
-                    1,
-                    {
-                        "pair": self.pair,
-                        "timeframe": self.timeframe,
-                        "signal_type": "crossover",
+            # Determine priority and user tier based on signal quality
+            priority = (
+                NotificationPriority.HIGH
+                if channel_tier == "premium"
+                else NotificationPriority.NORMAL
+            )
+            user_tier = UserTier.PREMIUM if channel_tier == "premium" else UserTier.FREE
+
+            try:
+                # Use async notification service for non-blocking delivery
+                discord_success = await send_signal_async(
+                    signal=signal_entity,
+                    priority=priority,
+                    user_tier=user_tier,
+                    additional_context={
+                        "market_conditions": "Live Trading Signal",
+                        "sl_pips": signal_data.get("sl_pips", 0),
+                        "tp_pips": signal_data.get("tp_pips", 0),
+                        "atr_value": signal_data.get("atr", 0),
+                        "volatility": (
+                            "Medium" if signal_data.get("atr", 0) < 50 else "High"
+                        ),
+                        "session": self._get_trading_session(),
+                        "strategy_confidence": (
+                            "High"
+                            if signal_data.get("risk_reward_ratio", 0) > 1.5
+                            else "Medium"
+                        ),
+                        "channel_tier": channel_tier,
+                        "notification_priority": priority.value,
                     },
                 )
-            else:
-                logging.warning(
-                    f"⚠️ Failed to send Discord notification for {self.pair} {self.timeframe}"
+
+                if discord_success:
+                    logging.info(
+                        f"✅ Discord notification queued for {self.pair} {self.timeframe} signal"
+                    )
+                    # Track Discord notification success
+                    metrics_collector.increment_counter(
+                        "discord_notifications_sent",
+                        1,
+                        {
+                            "pair": self.pair,
+                            "timeframe": self.timeframe,
+                            "signal_type": "crossover",
+                        },
+                    )
+                else:
+                    logging.warning(
+                        f"⚠️ Failed to queue Discord notification for {self.pair} {self.timeframe}"
+                    )
+                    # Track Discord notification failure
+                    metrics_collector.increment_counter(
+                        "discord_notifications_failed",
+                        1,
+                        {
+                            "pair": self.pair,
+                            "timeframe": self.timeframe,
+                            "reason": "queue_failure",
+                        },
+                    )
+
+            except Exception as e:
+                logging.error(
+                    f"⚠️ AsyncNotificationService failed for {self.pair} {self.timeframe}: {str(e)}"
                 )
-                # Track Discord notification failure
-                metrics_collector.increment_counter(
-                    "discord_notifications_failed",
-                    1,
-                    {
-                        "pair": self.pair,
-                        "timeframe": self.timeframe,
-                        "reason": "send_failure",
-                    },
-                )
+
+                # Fallback to legacy Discord notification
+                try:
+                    logging.info(
+                        f"Attempting legacy Discord notification for {self.pair} {self.timeframe}"
+                    )
+                    discord_success = await send_signal_to_discord(
+                        signal=signal_entity,
+                        alert_type="crossover_signal",
+                        additional_context={
+                            "market_conditions": "Live Trading Signal (Fallback)",
+                            "sl_pips": signal_data.get("sl_pips", 0),
+                            "tp_pips": signal_data.get("tp_pips", 0),
+                            "atr_value": signal_data.get("atr", 0),
+                            "volatility": (
+                                "Medium" if signal_data.get("atr", 0) < 50 else "High"
+                            ),
+                            "session": self._get_trading_session(),
+                            "strategy_confidence": (
+                                "High"
+                                if signal_data.get("risk_reward_ratio", 0) > 1.5
+                                else "Medium"
+                            ),
+                            "channel_tier": channel_tier,
+                            "notification_priority": (
+                                "HIGH" if channel_tier == "premium" else "NORMAL"
+                            ),
+                        },
+                    )
+
+                    if discord_success:
+                        logging.info(
+                            f"✅ Legacy Discord notification sent for {self.pair} {self.timeframe} signal"
+                        )
+                        # Track Discord notification success
+                        metrics_collector.increment_counter(
+                            "discord_notifications_sent",
+                            1,
+                            {
+                                "pair": self.pair,
+                                "timeframe": self.timeframe,
+                                "signal_type": "crossover_fallback",
+                            },
+                        )
+                    else:
+                        logging.warning(
+                            f"⚠️ Legacy Discord notification also failed for {self.pair} {self.timeframe}"
+                        )
+                        # Track Discord notification failure
+                        metrics_collector.increment_counter(
+                            "discord_notifications_failed",
+                            1,
+                            {
+                                "pair": self.pair,
+                                "timeframe": self.timeframe,
+                                "reason": "fallback_failure",
+                            },
+                        )
+
+                except Exception as fallback_e:
+                    logging.error(
+                        f"❌ Legacy Discord notification also failed for {self.pair} {self.timeframe}: {str(fallback_e)}",
+                        exc_info=True,
+                    )
+                    # Track Discord notification errors
+                    metrics_collector.increment_counter(
+                        "discord_notifications_failed",
+                        1,
+                        {
+                            "pair": self.pair,
+                            "timeframe": self.timeframe,
+                            "reason": "exception",
+                        },
+                    )
 
         except Exception as e:
             logging.error(
-                f"❌ Error sending Discord notification for {self.pair} {self.timeframe}: {str(e)}",
+                f"❌ Error in send_signal_to_discord for {self.pair} {self.timeframe}: {str(e)}",
                 exc_info=True,
-            )
-            # Track Discord notification errors
-            metrics_collector.increment_counter(
-                "discord_notifications_failed",
-                1,
-                {"pair": self.pair, "timeframe": self.timeframe, "reason": "exception"},
             )
 
     def _get_trading_session(self) -> str:
