@@ -28,6 +28,7 @@ from api.middleware.logging_middleware import LoggingMiddleware
 from api.middleware.http_cache import HTTPCacheMiddleware
 from api.middleware.response_optimization import ResponseOptimizationMiddleware
 from api.middleware.rate_limiting import RateLimitMiddleware
+from api.middleware.security_headers import create_security_middleware_stack
 from api.dependencies.simple_container import get_container
 from infrastructure.monitoring.error_tracking import initialize_error_tracking
 from services.cache_service import CacheServiceFactory
@@ -148,6 +149,9 @@ def create_app() -> FastAPI:
 
     # Add GZip compression middleware
     app.add_middleware(GZipMiddleware, minimum_size=1000)
+    
+    # Add comprehensive security middleware stack
+    create_security_middleware_stack(app)
 
     # Include routers
     app.include_router(health_router)

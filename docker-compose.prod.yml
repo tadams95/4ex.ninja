@@ -1,0 +1,134 @@
+# Docker Compose for 4ex.ninja Production with HTTPS
+version: '3.8'
+
+services:
+  # Nginx Reverse Proxy with SSL Termination
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/4ex-ninja.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - backend
+      - frontend
+    restart: unless-stopped
+    networks:
+      - 4ex-network
+
+  # Let's Encrypt Certificate Management
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    restart: unless-stopped
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      - ENVIRONMENT=production
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - DATABASE_URL=${DATABASE_URL:-mongodb://mongodb:27017/4ex-ninja}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+    ports:
+      - "127.0.0.1:8000:8000"  # Only expose locally
+    depends_on:
+      - mongodb
+      - redis
+    restart: unless-stopped
+    networks:
+      - 4ex-network
+    volumes:
+      - backend_logs:/app/logs
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=https://api.4ex.ninja
+      - NEXTAUTH_URL=https://4ex.ninja
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+    ports:
+      - "127.0.0.1:3000:3000"  # Only expose locally
+    restart: unless-stopped
+    networks:
+      - 4ex-network
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:7-jammy
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=4ex-ninja
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongodb/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "127.0.0.1:27017:27017"  # Only expose locally
+    restart: unless-stopped
+    networks:
+      - 4ex-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-defaultpassword}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "127.0.0.1:6379:6379"  # Only expose locally
+    restart: unless-stopped
+    networks:
+      - 4ex-network
+
+  # Monitoring (Optional)
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "127.0.0.1:9090:9090"  # Only expose locally
+    restart: unless-stopped
+    networks:
+      - 4ex-network
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "127.0.0.1:3001:3000"  # Only expose locally
+    restart: unless-stopped
+    networks:
+      - 4ex-network
+
+volumes:
+  mongodb_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+  nginx_logs:
+  backend_logs:
+
+networks:
+  4ex-network:
+    driver: bridge
