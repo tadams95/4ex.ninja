@@ -63,8 +63,11 @@ async def record_web_vital(metric: WebVitalMetric) -> Dict[str, Any]:
     """
     try:
         if not performance_monitor:
-            return {"status": "success", "message": "Performance monitoring not available"}
-            
+            return {
+                "status": "success",
+                "message": "Performance monitoring not available",
+            }
+
         # Convert and store the metric
         performance_monitor.record_metric(
             name=f"web_vital_{metric.name.lower()}",
@@ -95,8 +98,11 @@ async def record_custom_metric(metric: CustomMetric) -> Dict[str, Any]:
     """
     try:
         if not performance_monitor:
-            return {"status": "success", "message": "Performance monitoring not available"}
-            
+            return {
+                "status": "success",
+                "message": "Performance monitoring not available",
+            }
+
         performance_monitor.record_metric(
             name=metric.name, value=metric.value, tags=metric.tags or {}
         )
@@ -304,7 +310,7 @@ async def get_performance_budgets() -> Dict[str, Any]:
                 "budgets": budgets,
                 "status": "unknown",
                 "alerts": [],
-                "overall_score": 0
+                "overall_score": 0,
             }
 
         for budget_name, budget_config in budgets.items():
@@ -427,6 +433,7 @@ async def get_metric_trends(metric_name: str, hours: int = 24) -> Dict[str, Any]
 
 # Enhanced Metrics Endpoints
 
+
 @router.get("/system", response_model=Dict[str, Any])
 async def get_system_metrics() -> Dict[str, Any]:
     """
@@ -435,14 +442,14 @@ async def get_system_metrics() -> Dict[str, Any]:
     try:
         if not system_metrics_monitor:
             return {"error": "System metrics monitoring not available"}
-            
+
         current_metrics = system_metrics_monitor.get_current_metrics()
         if not current_metrics:
             return {"error": "No current system metrics available"}
-            
+
         summary = system_metrics_monitor.get_metrics_summary(minutes=60)
         health_status = system_metrics_monitor.get_health_status()
-        
+
         return {
             "timestamp": time.time(),
             "current": {
@@ -453,12 +460,12 @@ async def get_system_metrics() -> Dict[str, Any]:
                 "disk_usage_percent": current_metrics.disk_usage_percent,
                 "disk_free_gb": current_metrics.disk_free_gb,
                 "process_count": current_metrics.process_count,
-                "open_file_descriptors": current_metrics.open_file_descriptors
+                "open_file_descriptors": current_metrics.open_file_descriptors,
             },
             "summary_60min": summary,
-            "health_status": health_status
+            "health_status": health_status,
         }
-        
+
     except Exception as e:
         logger.error(f"Error getting system metrics: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get system metrics")
@@ -472,10 +479,10 @@ async def get_business_metrics() -> Dict[str, Any]:
     try:
         if not business_metrics_monitor:
             return {"error": "Business metrics monitoring not available"}
-            
+
         comprehensive_summary = business_metrics_monitor.get_comprehensive_summary()
         return comprehensive_summary
-        
+
     except Exception as e:
         logger.error(f"Error getting business metrics: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get business metrics")
@@ -489,10 +496,10 @@ async def get_signal_metrics() -> Dict[str, Any]:
     try:
         if not business_metrics_monitor:
             return {"error": "Business metrics monitoring not available"}
-            
+
         signal_summary = business_metrics_monitor.get_signal_metrics_summary()
         return signal_summary
-        
+
     except Exception as e:
         logger.error(f"Error getting signal metrics: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get signal metrics")
@@ -506,16 +513,15 @@ async def get_api_performance_metrics() -> Dict[str, Any]:
     try:
         if not business_metrics_monitor:
             return {"error": "Business metrics monitoring not available"}
-            
+
         api_summary = business_metrics_monitor.get_api_metrics_summary()
-        return {
-            "timestamp": time.time(),
-            "api_endpoints": api_summary
-        }
-        
+        return {"timestamp": time.time(), "api_endpoints": api_summary}
+
     except Exception as e:
         logger.error(f"Error getting API performance metrics: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to get API performance metrics")
+        raise HTTPException(
+            status_code=500, detail="Failed to get API performance metrics"
+        )
 
 
 @router.get("/cache-metrics", response_model=Dict[str, Any])
@@ -526,13 +532,10 @@ async def get_cache_metrics() -> Dict[str, Any]:
     try:
         if not business_metrics_monitor:
             return {"error": "Business metrics monitoring not available"}
-            
+
         cache_summary = business_metrics_monitor.get_cache_metrics_summary()
-        return {
-            "timestamp": time.time(),
-            "cache_performance": cache_summary
-        }
-        
+        return {"timestamp": time.time(), "cache_performance": cache_summary}
+
     except Exception as e:
         logger.error(f"Error getting cache metrics: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get cache metrics")
@@ -546,16 +549,15 @@ async def get_database_performance_metrics() -> Dict[str, Any]:
     try:
         if not business_metrics_monitor:
             return {"error": "Business metrics monitoring not available"}
-            
+
         db_summary = business_metrics_monitor.get_database_performance_summary()
-        return {
-            "timestamp": time.time(),
-            "database_performance": db_summary
-        }
-        
+        return {"timestamp": time.time(), "database_performance": db_summary}
+
     except Exception as e:
         logger.error(f"Error getting database performance metrics: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to get database performance metrics")
+        raise HTTPException(
+            status_code=500, detail="Failed to get database performance metrics"
+        )
 
 
 @router.post("/system/start-monitoring")
@@ -565,14 +567,16 @@ async def start_system_monitoring(interval_seconds: int = 30) -> Dict[str, Any]:
     """
     try:
         if not system_metrics_monitor:
-            raise HTTPException(status_code=503, detail="System metrics monitoring not available")
-            
+            raise HTTPException(
+                status_code=503, detail="System metrics monitoring not available"
+            )
+
         await system_metrics_monitor.start_monitoring(interval_seconds)
         return {
             "status": "success",
-            "message": f"System monitoring started with {interval_seconds}s interval"
+            "message": f"System monitoring started with {interval_seconds}s interval",
         }
-        
+
     except Exception as e:
         logger.error(f"Error starting system monitoring: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to start system monitoring")
@@ -585,14 +589,13 @@ async def stop_system_monitoring() -> Dict[str, Any]:
     """
     try:
         if not system_metrics_monitor:
-            raise HTTPException(status_code=503, detail="System metrics monitoring not available")
-            
+            raise HTTPException(
+                status_code=503, detail="System metrics monitoring not available"
+            )
+
         await system_metrics_monitor.stop_monitoring()
-        return {
-            "status": "success",
-            "message": "System monitoring stopped"
-        }
-        
+        return {"status": "success", "message": "System monitoring stopped"}
+
     except Exception as e:
         logger.error(f"Error stopping system monitoring: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to stop system monitoring")
@@ -605,21 +608,21 @@ async def reset_metrics() -> Dict[str, Any]:
     """
     try:
         reset_count = 0
-        
+
         if business_metrics_monitor:
             business_metrics_monitor.reset_metrics()
             reset_count += 1
-            
-        if performance_monitor and hasattr(performance_monitor, 'reset_metrics'):
+
+        if performance_monitor and hasattr(performance_monitor, "reset_metrics"):
             performance_monitor.reset_metrics()
             reset_count += 1
-            
+
         return {
             "status": "success",
             "message": f"Reset {reset_count} metric monitors",
-            "timestamp": time.time()
+            "timestamp": time.time(),
         }
-        
+
     except Exception as e:
         logger.error(f"Error resetting metrics: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to reset metrics")

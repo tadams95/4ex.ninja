@@ -79,6 +79,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Start system metrics monitoring
     try:
         from infrastructure.monitoring.system_metrics import system_metrics_monitor
+
         await system_metrics_monitor.start_monitoring(interval_seconds=30)
         logger.info("✅ System metrics monitoring started")
     except Exception as e:
@@ -91,15 +92,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     # Shutdown
     logger.info("🛑 Shutting down 4ex.ninja Trading Platform API")
-    
+
     # Stop system metrics monitoring
     try:
         from infrastructure.monitoring.system_metrics import system_metrics_monitor
+
         await system_metrics_monitor.stop_monitoring()
         logger.info("✅ System metrics monitoring stopped")
     except Exception as e:
         logger.warning(f"❌ Error stopping system metrics monitoring: {e}")
-    
+
     logger.info("✅ Shutdown completed successfully")
 
 
