@@ -29,6 +29,7 @@ from api.middleware.http_cache import HTTPCacheMiddleware
 from api.middleware.response_optimization import ResponseOptimizationMiddleware
 from api.middleware.rate_limiting import RateLimitMiddleware
 from api.middleware.security_headers import create_security_middleware_stack
+from api.middleware.metrics_collection import MetricsCollectionMiddleware
 from api.dependencies.simple_container import get_container
 from infrastructure.monitoring.error_tracking import initialize_error_tracking
 from infrastructure.logging import setup_logging, get_logger
@@ -75,6 +76,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     except Exception as e:
         logger.warning(f"❌ Cache warming failed: {e}")
 
+    # Start system metrics monitoring
+    try:
+        from infrastructure.monitoring.system_metrics import system_metrics_monitor
+        await system_metrics_monitor.start_monitoring(interval_seconds=30)
+        logger.info("✅ System metrics monitoring started")
+    except Exception as e:
+        logger.warning(f"❌ System metrics monitoring failed to start: {e}")
+
     # Log startup completion
     logger.info("🎯 4ex.ninja Trading Platform API startup completed successfully")
 
@@ -82,6 +91,15 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     # Shutdown
     logger.info("🛑 Shutting down 4ex.ninja Trading Platform API")
+    
+    # Stop system metrics monitoring
+    try:
+        from infrastructure.monitoring.system_metrics import system_metrics_monitor
+        await system_metrics_monitor.stop_monitoring()
+        logger.info("✅ System metrics monitoring stopped")
+    except Exception as e:
+        logger.warning(f"❌ Error stopping system metrics monitoring: {e}")
+    
     logger.info("✅ Shutdown completed successfully")
 
 
@@ -136,6 +154,7 @@ def create_app() -> FastAPI:
 
     # Add custom middleware (order matters - last added is executed first)
     app.add_middleware(RateLimitMiddleware)
+    app.add_middleware(MetricsCollectionMiddleware, collect_user_metrics=True)
     app.add_middleware(LoggingMiddleware)
     app.add_middleware(ErrorHandlerMiddleware)
     app.add_middleware(

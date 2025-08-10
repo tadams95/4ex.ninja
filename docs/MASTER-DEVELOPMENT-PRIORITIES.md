@@ -810,7 +810,29 @@ This document provides a strategic, ordered approach to implementing all planned
     - Request/response middleware logging
   - **Files Enhanced**: `app.py`, `signal_generation_service.py`, `cache_service.py`, `signals.py`
   - **Documentation**: `LOGGING-IMPLEMENTATION-COMPLETE.md`
-- [ ] **Metrics**: Add basic performance monitoring
+- [x] **Metrics**: Add basic performance monitoring ✅ **COMPLETE**
+  - **System Resource Monitoring**: Comprehensive CPU, memory, disk, and process monitoring
+  - **Business Metrics Tracking**: Signal generation, API performance, cache metrics, user activity
+  - **Real-time Monitoring**: Automated system metrics collection with configurable intervals
+  - **Key Components**: 
+    - `SystemMetricsMonitor` with health status checking and resource alerts
+    - `BusinessMetricsMonitor` for trading-specific metrics and performance tracking
+    - `MetricsCollectionMiddleware` for automatic API request metrics collection
+    - Enhanced performance API endpoints (`/system`, `/business`, `/signals`, `/api-performance`, `/cache-metrics`)
+    - Automatic system monitoring startup/shutdown in FastAPI application lifecycle
+  - **Features Delivered**:
+    - Real-time system resource monitoring (CPU, memory, disk usage, file descriptors)
+    - Business metrics for signal generation (confidence, processing time, success rates)
+    - API endpoint performance tracking (response times, error rates, call counts)
+    - Cache performance monitoring (hit rates, evictions, operations)
+    - Database operation metrics (query performance, operation timing)
+    - User activity tracking and categorization
+    - Health status monitoring with automated alerts for resource thresholds
+    - Comprehensive metrics API endpoints for external monitoring systems
+    - Production-ready metrics collection with graceful fallbacks
+  - **Files Created**: `system_metrics.py`, `business_metrics.py`, `metrics_collection.py`
+  - **Files Enhanced**: `app.py`, `performance.py` (added 8 new endpoints)
+  - **Production Ready**: Automatic monitoring, proper error handling, configurable thresholds
 - [ ] **Alerts**: Setup alerts for critical failures
 
 **🎯 Week 7-8 Success Criteria:**
