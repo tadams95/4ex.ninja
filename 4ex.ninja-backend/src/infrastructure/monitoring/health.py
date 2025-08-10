@@ -269,8 +269,9 @@ async def check_external_api_oanda() -> HealthCheck:
 async def check_system_resources() -> HealthCheck:
     """Check system resource usage."""
     try:
-        # CPU usage
-        cpu_percent = psutil.cpu_percent(interval=1)
+        # CPU usage - Non-blocking instant read (performance optimization)
+        # Changed from interval=1 to interval=None to avoid 1-second blocking wait
+        cpu_percent = psutil.cpu_percent(interval=None)
 
         # Memory usage
         memory = psutil.virtual_memory()

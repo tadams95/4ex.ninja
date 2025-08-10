@@ -1,13 +1,100 @@
-INFO:     Started server process [89782]
+2025-08-09T19:26:34.071672 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=Task-1
+INFO:     Started server process [11257]
 INFO:     Waiting for application startup.
+2025-08-09T19:26:34.083738 [32m[INFO][0m src.app:51 lifespan() - 🚀 Starting 4ex.ninja Trading Platform API | taskName=Task-2
+2025-08-09T19:26:34.083808 [32m[INFO][0m src.app:52 lifespan() - Environment: development | taskName=Task-2
+2025-08-09T19:26:34.083842 [32m[INFO][0m src.app:53 lifespan() - Log Level: 20 | taskName=Task-2
+2025-08-09T19:26:34.083870 [32m[INFO][0m src.app:66 lifespan() - ℹ️ Sentry DSN not configured - error tracking disabled | taskName=Task-2
+2025-08-09T19:26:34.083898 [32m[INFO][0m src.app:70 lifespan() - ✅ Dependency container initialized | taskName=Task-2
+2025-08-09T19:26:34.083933 [32m[INFO][0m services.cache_service:315 create_cache_manager() - Using memory cache backend | taskName=Task-2
+2025-08-09T19:26:34.084137 [32m[INFO][0m services.cache_service:238 warm_cache() - Starting cache warming for 5 filter combinations | taskName=Task-2
+2025-08-09T19:26:34.084197 [32m[INFO][0m services.cache_service:257 warm_cache() - Cache warming completed. Warmed 0 entries | taskName=Task-2
+2025-08-09T19:26:34.084223 [32m[INFO][0m src.app:76 lifespan() - ✅ Cache warming completed. Warmed 0 entries | taskName=Task-2
+2025-08-09T19:26:34.084252 [32m[INFO][0m infrastructure.monitoring.system_metrics:53 start_monitoring() - Started system monitoring with 30s interval | taskName=Task-2
+2025-08-09T19:26:34.084275 [32m[INFO][0m src.app:85 lifespan() - ✅ System metrics monitoring started | taskName=Task-2
+2025-08-09T19:26:34.084297 [32m[INFO][0m src.app:90 lifespan() - 🎯 4ex.ninja Trading Platform API startup completed successfully | taskName=Task-2
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     127.0.0.1:59113 - "GET /health/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59116 - "GET /api/v1/signals/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59126 - "GET /api/v1/signals/cache/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59143 - "GET /api/v1/signals/?pair=EUR_USD HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59155 - "GET /api/v1/signals/cache/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59174 - "GET /api/v1/signals/?pair=EUR_USD&limit=10 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59176 - "GET /api/v1/signals/?pair=EUR_USD&limit=10 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59180 - "POST /api/v1/signals/cache/invalidate HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62098 - "GET /api/v1/performance/ HTTP/1.1" 200 OK
+2025-08-09T19:26:47.276720 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET / | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:26:47.278499 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET / -> 200 in 0.002s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:26:47.278686 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET / completed in 0.002s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64560 - "GET / HTTP/1.1" 200 OK
+2025-08-09T19:27:33.628613 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET / | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:33.631771 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET / -> 200 in 0.003s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:33.632005 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET / completed in 0.004s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64573 - "GET / HTTP/1.1" 200 OK
+2025-08-09T19:27:33.740436 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET / | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:33.740954 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET / -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:33.741083 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET / completed in 0.001s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64574 - "GET / HTTP/1.1" 200 OK
+2025-08-09T19:27:33.846459 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET / | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:33.847237 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET / -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:33.847460 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET / completed in 0.001s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64575 - "GET / HTTP/1.1" 200 OK
+2025-08-09T19:27:33.962896 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET / | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:33.963989 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET / -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:33.964236 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET / completed in 0.002s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64576 - "GET / HTTP/1.1" 200 OK
+2025-08-09T19:27:34.079675 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET / | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.081263 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET / -> 200 in 0.002s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.081547 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET / completed in 0.002s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64577 - "GET / HTTP/1.1" 200 OK
+2025-08-09T19:27:34.190440 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/v1/performance/ | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.191119 [32m[INFO][0m api.routes.performance:125 get_performance_overview() - Fetching performance overview | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.263133 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/v1/performance/ -> 200 in 0.073s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.263304 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/v1/performance/ completed in 0.073s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64578 - "GET /api/v1/performance/ HTTP/1.1" 200 OK
+2025-08-09T19:27:34.370914 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/v1/performance/ | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.371287 [32m[INFO][0m api.routes.performance:125 get_performance_overview() - Fetching performance overview | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.371795 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/v1/performance/ -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.371940 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/v1/performance/ completed in 0.001s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64579 - "GET /api/v1/performance/ HTTP/1.1" 200 OK
+2025-08-09T19:27:34.478322 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/v1/performance/ | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.478705 [32m[INFO][0m api.routes.performance:125 get_performance_overview() - Fetching performance overview | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.479224 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/v1/performance/ -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.479372 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/v1/performance/ completed in 0.001s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64580 - "GET /api/v1/performance/ HTTP/1.1" 200 OK
+2025-08-09T19:27:34.584223 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/v1/performance/ | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.584521 [32m[INFO][0m api.routes.performance:125 get_performance_overview() - Fetching performance overview | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.584968 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/v1/performance/ -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.585139 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/v1/performance/ completed in 0.001s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64581 - "GET /api/v1/performance/ HTTP/1.1" 200 OK
+2025-08-09T19:27:34.693260 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/v1/performance/ | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.693636 [32m[INFO][0m api.routes.performance:125 get_performance_overview() - Fetching performance overview | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.694155 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/v1/performance/ -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.694316 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/v1/performance/ completed in 0.001s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64582 - "GET /api/v1/performance/ HTTP/1.1" 200 OK
+2025-08-09T19:27:34.806352 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/v1/performance/system | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.807809 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/v1/performance/system -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.808343 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/v1/performance/system completed in 0.002s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64583 - "GET /api/v1/performance/system HTTP/1.1" 200 OK
+2025-08-09T19:27:34.919946 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/v1/performance/system | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.921052 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/v1/performance/system -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:34.921316 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/v1/performance/system completed in 0.001s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64584 - "GET /api/v1/performance/system HTTP/1.1" 200 OK
+2025-08-09T19:27:35.032143 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/v1/performance/system | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.033772 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/v1/performance/system -> 200 in 0.002s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.033920 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/v1/performance/system completed in 0.002s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64585 - "GET /api/v1/performance/system HTTP/1.1" 200 OK
+2025-08-09T19:27:35.146302 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/v1/performance/system | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.147522 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/v1/performance/system -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.147741 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/v1/performance/system completed in 0.002s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64586 - "GET /api/v1/performance/system HTTP/1.1" 200 OK
+2025-08-09T19:27:35.258206 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/v1/performance/system | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.259083 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/v1/performance/system -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.259241 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/v1/performance/system completed in 0.001s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64587 - "GET /api/v1/performance/system HTTP/1.1" 200 OK
+2025-08-09T19:27:35.372805 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET / | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.374361 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET / -> 200 in 0.002s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.374724 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET / completed in 0.002s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64588 - "GET / HTTP/1.1" 200 OK
+2025-08-09T19:27:35.380142 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET / | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.381125 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET / -> 200 in 0.001s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.381376 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET / completed in 0.001s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64589 - "GET / HTTP/1.1" 200 OK
+2025-08-09T19:27:35.387014 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: POST /api/v1/auth/login | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.397137 [33m[WARNING][0m api.routes.auth:87 login() - Login failed for user: test@test.com | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.397544 [33m[WARNING][0m api.middleware.logging_middleware:96 dispatch() - Response: POST /api/v1/auth/login -> 401 in 0.011s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.397703 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - POST /api/v1/auth/login completed in 0.011s with status 401 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+2025-08-09T19:27:35.398106 [33m[WARNING][0m api.middleware.security_headers:271 _monitor_response_patterns() - Failed authentication attempt from 127.0.0.1 to /api/v1/auth/login | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:64590 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized

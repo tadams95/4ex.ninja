@@ -1,0 +1,136 @@
+{
+  "timestamp": "2025-08-09 19:25:57",
+  "criteria_status": {
+    "api_response_times_under_200ms": true,
+    "comprehensive_security_implemented": false,
+    "production_monitoring_alerting": true
+  },
+  "overall_p95_response_time": 61.86779192648828,
+  "detailed_results": {
+    "api_response_times": {
+      "Health Check": {
+        "endpoint": "/",
+        "mean_ms": 5.158133408986032,
+        "p95_ms": 15.897459001280367,
+        "median_ms": 3.7694379570893943,
+        "min_ms": 3.1700419494882226,
+        "max_ms": 15.897459001280367,
+        "success_rate": 100.0,
+        "passed": true
+      },
+      "Health Detailed": {
+        "endpoint": "/health",
+        "mean_ms": 12.124083400703967,
+        "p95_ms": 61.86779192648828,
+        "median_ms": 6.495229026768357,
+        "min_ms": 5.384957999922335,
+        "max_ms": 61.86779192648828,
+        "success_rate": 100.0,
+        "passed": true
+      },
+      "Performance Overview": {
+        "endpoint": "/api/v1/performance/",
+        "mean_ms": 3.9434917271137238,
+        "p95_ms": 6.296125007793307,
+        "median_ms": 3.6202710471116006,
+        "min_ms": 3.4631669986993074,
+        "max_ms": 6.296125007793307,
+        "success_rate": 100.0,
+        "passed": true
+      },
+      "System Metrics": {
+        "endpoint": "/api/v1/performance/system",
+        "mean_ms": 3.888345684390515,
+        "p95_ms": 6.892040953971446,
+        "median_ms": 3.566186933312565,
+        "min_ms": 3.275458002462983,
+        "max_ms": 6.892040953971446,
+        "success_rate": 100.0,
+        "passed": true
+      },
+      "Business Metrics": {
+        "endpoint": "/api/v1/performance/business",
+        "mean_ms": 4.0653542266227305,
+        "p95_ms": 7.783500012010336,
+        "median_ms": 3.6291875294409692,
+        "min_ms": 3.2125840662047267,
+        "max_ms": 7.783500012010336,
+        "success_rate": 100.0,
+        "passed": true
+      },
+      "Signals Overview": {
+        "endpoint": "/api/v1/performance/signals",
+        "mean_ms": 4.066470789257437,
+        "p95_ms": 6.9807079853489995,
+        "median_ms": 3.594583016820252,
+        "min_ms": 3.156416933052242,
+        "max_ms": 6.9807079853489995,
+        "success_rate": 100.0,
+        "passed": true
+      },
+      "API Performance": {
+        "endpoint": "/api/v1/performance/api-performance",
+        "mean_ms": 4.225379065610468,
+        "p95_ms": 7.679957896471024,
+        "median_ms": 3.6096039693802595,
+        "min_ms": 3.30416695214808,
+        "max_ms": 7.679957896471024,
+        "success_rate": 100.0,
+        "passed": true
+      },
+      "Cache Metrics": {
+        "endpoint": "/api/v1/performance/cache-metrics",
+        "mean_ms": 3.9506916189566255,
+        "p95_ms": 6.761833094060421,
+        "median_ms": 3.5071459715254605,
+        "min_ms": 3.196457982994616,
+        "max_ms": 6.761833094060421,
+        "success_rate": 100.0,
+        "passed": true
+      },
+      "Signals Feed": {
+        "endpoint": "/api/v1/signals/",
+        "mean_ms": 4.423362377565354,
+        "p95_ms": 7.022208999842405,
+        "median_ms": 3.7822499871253967,
+        "min_ms": 3.5493329633027315,
+        "max_ms": 7.022208999842405,
+        "success_rate": 100.0,
+        "passed": true
+      },
+      "Market Data": {
+        "endpoint": "/api/v1/market-data/",
+        "mean_ms": 4.454095801338553,
+        "p95_ms": 6.945000030100346,
+        "median_ms": 4.1561664547771215,
+        "min_ms": 3.4929580288007855,
+        "max_ms": 6.945000030100346,
+        "success_rate": 80.0,
+        "passed": true
+      },
+      "Alerts List": {
+        "endpoint": "/api/v1/alerts/",
+        "mean_ms": 4.6246293117292225,
+        "p95_ms": 9.953291970305145,
+        "median_ms": 3.6691040149889886,
+        "min_ms": 3.0973750399425626,
+        "max_ms": 9.953291970305145,
+        "success_rate": 0.0,
+        "passed": true
+      },
+      "Active Alerts": {
+        "endpoint": "/api/v1/alerts/active",
+        "mean_ms": 3.5143874934874475,
+        "p95_ms": 5.60570799279958,
+        "median_ms": 3.3086250768974423,
+        "min_ms": 3.180541913025081,
+        "max_ms": 5.60570799279958,
+        "success_rate": 0.0,
+        "passed": true
+      }
+    },
+    "security_tests": {},
+    "overall_status": {}
+  },
+  "week_7_8_completion": false
+}
