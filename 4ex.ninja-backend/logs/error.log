@@ -328,3 +328,13 @@ Message: Error message
 Context:
   taskName: None
 ==================================================
+=== ERROR at 2025-08-09T18:31:58.790307 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: Thread-6 (run_blocking_portal) (6113226752)
+Process: MainProcess (87641)
+Message: ALERT [HIGH] System Resource Alert: CPU: CPU usage is 95.0%, exceeding threshold of 90.0% | Context: {"test": true, "endpoint": "/api/v1/alerts/test"}
+Context:
+  taskName: starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+==================================================

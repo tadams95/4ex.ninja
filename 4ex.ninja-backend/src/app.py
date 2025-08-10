@@ -18,11 +18,12 @@ from typing import AsyncGenerator
 # Add src to path for imports
 sys.path.append(os.path.dirname(__file__))
 
-from api.health import router as health_router
+from api.routes.auth import router as auth_router
 from api.routes.signals import router as signals_router
 from api.routes.market_data import router as market_data_router
 from api.routes.performance import router as performance_router
-from api.routes.auth import router as auth_router
+from api.routes.alerts import router as alerts_router
+from api.health import router as health_router
 from api.middleware.error_handler import ErrorHandlerMiddleware
 from api.middleware.logging_middleware import LoggingMiddleware
 from api.middleware.http_cache import HTTPCacheMiddleware
@@ -190,6 +191,7 @@ def create_app() -> FastAPI:
     app.include_router(signals_router, prefix="/api/v1")
     app.include_router(market_data_router, prefix="/api/v1")
     app.include_router(performance_router, prefix="/api/v1")
+    app.include_router(alerts_router)
 
     # Root endpoint
     @app.get("/")

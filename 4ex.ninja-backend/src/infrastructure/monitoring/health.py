@@ -115,7 +115,39 @@ class HealthMonitor:
             else:
                 health_results[name] = results[i]
 
+        # Trigger alerts for unhealthy systems
+        await self._check_and_send_alerts(health_results)
+
         return health_results
+
+    async def _check_and_send_alerts(self, results: Dict[str, HealthCheck]):
+        """Check health results and send alerts for critical issues."""
+        try:
+            from .alerts import alert_database_connectivity, alert_external_api_downtime
+            
+            for name, result in results.items():
+                if result.status == HealthStatus.UNHEALTHY:
+                    if name == "database":
+                        await alert_database_connectivity(
+                            message=f"Database health check failed: {result.message}",
+                            context={
+                                "health_check": name,
+                                "duration_ms": result.duration_ms,
+                                "details": result.details or {},
+                            },
+                        )
+                    elif name in ["oanda_api", "external_api"]:
+                        await alert_external_api_downtime(
+                            api_name=name,
+                            message=f"External API health check failed: {result.message}",
+                            context={
+                                "health_check": name,
+                                "duration_ms": result.duration_ms,
+                                "details": result.details or {},
+                            },
+                        )
+        except Exception as e:
+            self.logger.error(f"Failed to send health check alerts: {str(e)}")
 
     def get_overall_status(self, results: Dict[str, HealthCheck]) -> HealthStatus:
         """Determine overall health status from individual checks."""

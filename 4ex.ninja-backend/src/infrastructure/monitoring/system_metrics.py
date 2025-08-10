@@ -120,24 +120,42 @@ class SystemMetricsMonitor:
 
     async def _check_resource_alerts(self, metrics: SystemMetrics):
         """Check for resource usage alerts."""
-        alerts = []
+        from .alerts import trigger_system_resource_alert
 
-        if metrics.cpu_percent > 80:
-            alerts.append(f"High CPU usage: {metrics.cpu_percent:.1f}%")
-
-        if metrics.memory_percent > 85:
-            alerts.append(f"High memory usage: {metrics.memory_percent:.1f}%")
-
-        if metrics.disk_usage_percent > 90:
-            alerts.append(f"High disk usage: {metrics.disk_usage_percent:.1f}%")
-
-        if metrics.open_file_descriptors > 1000:
-            alerts.append(
-                f"High file descriptor usage: {metrics.open_file_descriptors}"
+        # Check CPU usage
+        if metrics.cpu_percent > 90:
+            await trigger_system_resource_alert(
+                resource_type="cpu",
+                current_value=metrics.cpu_percent,
+                threshold=90.0,
+                context={
+                    "process_count": metrics.process_count,
+                    "timestamp": metrics.timestamp,
+                },
             )
 
-        for alert in alerts:
-            self.logger.warning(f"System resource alert: {alert}")
+        # Check memory usage
+        if metrics.memory_percent > 85:
+            await trigger_system_resource_alert(
+                resource_type="memory",
+                current_value=metrics.memory_percent,
+                threshold=85.0,
+                context={
+                    "memory_used_mb": metrics.memory_used_mb,
+                    "memory_available_mb": metrics.memory_available_mb,
+                },
+            )
+
+        # Check disk usage
+        if metrics.disk_usage_percent > 90:
+            await trigger_system_resource_alert(
+                resource_type="disk",
+                current_value=metrics.disk_usage_percent,
+                threshold=90.0,
+                context={
+                    "disk_free_gb": metrics.disk_free_gb,
+                },
+            )
 
     def get_current_metrics(self) -> Optional[SystemMetrics]:
         """Get the most recent metrics snapshot."""

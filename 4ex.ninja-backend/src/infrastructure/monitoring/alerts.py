@@ -126,7 +126,7 @@ class LogAlertChannel(AlertChannel):
 
 
 class EmailAlertChannel(AlertChannel):
-    """Alert channel that sends alerts via email (placeholder implementation)."""
+    """Alert channel that sends alerts via email."""
 
     def __init__(self, smtp_config: Dict[str, Any]):
         self.smtp_config = smtp_config
@@ -139,9 +139,53 @@ class EmailAlertChannel(AlertChannel):
             return False
 
         try:
-            # Placeholder for email implementation
-            logger.info(f"Would send email alert: {alert.title}")
-            # In a real implementation, this would use SMTP to send emails
+            import smtplib
+            import os
+            from email.mime.text import MIMEText
+            from email.mime.multipart import MIMEMultipart
+
+            # Get SMTP configuration from environment
+            smtp_host = os.getenv("SMTP_HOST", self.smtp_config.get("host", ""))
+            smtp_port = int(os.getenv("SMTP_PORT", str(self.smtp_config.get("port", 587))))
+            smtp_username = os.getenv("SMTP_USERNAME", self.smtp_config.get("username", ""))
+            smtp_password = os.getenv("SMTP_PASSWORD", self.smtp_config.get("password", ""))
+            from_email = os.getenv("SMTP_FROM_EMAIL", smtp_username)
+            to_emails = os.getenv("ALERT_TO_EMAILS", "").split(",")
+
+            if not all([smtp_host, smtp_port, smtp_username, smtp_password, to_emails[0]]):
+                logger.warning("Email configuration incomplete, skipping email alert")
+                return False
+
+            # Create message
+            msg = MIMEMultipart()
+            msg["From"] = from_email
+            msg["To"] = ", ".join(to_emails)
+            msg["Subject"] = f"[{alert.severity.value.upper()}] {alert.title}"
+
+            # Create email body
+            body = f"""
+Alert Details:
+- Type: {alert.alert_type.value}
+- Severity: {alert.severity.value}
+- Time: {alert.timestamp.isoformat()}
+- Message: {alert.message}
+
+Context:
+{alert.context}
+
+Alert ID: {alert.alert_id}
+Tags: {', '.join(alert.tags)}
+            """
+
+            msg.attach(MIMEText(body, "plain"))
+
+            # Send email
+            with smtplib.SMTP(smtp_host, smtp_port) as server:
+                server.starttls()
+                server.login(smtp_username, smtp_password)
+                server.send_message(msg)
+
+            logger.info(f"Email alert sent successfully: {alert.title}")
             return True
 
         except Exception as e:
@@ -170,12 +214,75 @@ class WebhookAlertChannel(AlertChannel):
             return False
 
         try:
-            # Placeholder for webhook implementation
-            logger.info(
-                f"Would send webhook alert to {self.webhook_url}: {alert.title}"
-            )
-            # In a real implementation, this would use aiohttp to send HTTP requests
-            return True
+            import aiohttp
+            import os
+
+            webhook_url = os.getenv("DISCORD_WEBHOOK_URL", self.webhook_url)
+            if not webhook_url:
+                logger.warning("No webhook URL configured")
+                return False
+
+            # Create Discord-compatible payload
+            severity_colors = {
+                AlertSeverity.CRITICAL: 16711680,  # Red
+                AlertSeverity.HIGH: 16753920,      # Orange
+                AlertSeverity.MEDIUM: 16776960,    # Yellow
+                AlertSeverity.LOW: 65535,          # Cyan
+                AlertSeverity.INFO: 5763719,       # Blue
+            }
+
+            payload = {
+                "embeds": [
+                    {
+                        "title": f"🚨 {alert.title}",
+                        "description": alert.message,
+                        "color": severity_colors.get(alert.severity, 5763719),
+                        "fields": [
+                            {
+                                "name": "Severity",
+                                "value": alert.severity.value.upper(),
+                                "inline": True,
+                            },
+                            {
+                                "name": "Type",
+                                "value": alert.alert_type.value.replace("_", " ").title(),
+                                "inline": True,
+                            },
+                            {
+                                "name": "Time",
+                                "value": alert.timestamp.strftime("%Y-%m-%d %H:%M:%S UTC"),
+                                "inline": True,
+                            },
+                        ],
+                        "footer": {
+                            "text": f"Alert ID: {alert.alert_id}",
+                        },
+                    }
+                ]
+            }
+
+            # Add context if available
+            if alert.context:
+                context_text = "\n".join([f"**{k}**: {v}" for k, v in alert.context.items()])
+                payload["embeds"][0]["fields"].append({
+                    "name": "Context",
+                    "value": context_text[:1000],  # Discord field limit
+                    "inline": False,
+                })
+
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    webhook_url,
+                    json=payload,
+                    headers=self.headers,
+                    timeout=aiohttp.ClientTimeout(total=10),
+                ) as response:
+                    if response.status == 204:  # Discord success response
+                        logger.info(f"Webhook alert sent successfully: {alert.title}")
+                        return True
+                    else:
+                        logger.warning(f"Webhook responded with status {response.status}")
+                        return False
 
         except Exception as e:
             logger.error(f"Failed to send webhook alert: {str(e)}")
@@ -213,21 +320,29 @@ class AlertManager:
 
     def _setup_default_channels(self):
         """Setup default alert channels."""
+        import os
+        
         # Always available log channel
         self.add_channel("logs", LogAlertChannel())
 
-        # Email channel (disabled by default)
+        # Email channel (enabled if environment variables are set)
+        email_enabled = bool(
+            os.getenv("SMTP_HOST") and 
+            os.getenv("SMTP_USERNAME") and 
+            os.getenv("SMTP_PASSWORD")
+        )
         email_config = {
-            "enabled": False,
-            "host": "smtp.gmail.com",
-            "port": 587,
-            "username": "",
-            "password": "",
+            "enabled": email_enabled,
+            "host": os.getenv("SMTP_HOST", "smtp.gmail.com"),
+            "port": int(os.getenv("SMTP_PORT", "587")),
+            "username": os.getenv("SMTP_USERNAME", ""),
+            "password": os.getenv("SMTP_PASSWORD", ""),
         }
         self.add_channel("email", EmailAlertChannel(email_config))
 
-        # Webhook channel (disabled by default)
-        self.add_channel("webhook", WebhookAlertChannel(""))
+        # Webhook channel (enabled if Discord webhook URL is set)
+        webhook_url = os.getenv("DISCORD_WEBHOOK_URL", "")
+        self.add_channel("webhook", WebhookAlertChannel(webhook_url))
 
     def _setup_default_rules(self):
         """Setup default alert routing rules."""
@@ -446,7 +561,7 @@ class AlertManager:
 
         return False
 
-    async def resolve_alert(self, alert_id: str) -> bool:
+    async def resolve_alert(self, alert_id: str, resolved_by: Optional[str] = None) -> bool:
         """Resolve an alert."""
         if alert_id in self.active_alerts:
             alert = self.active_alerts[alert_id]
@@ -456,7 +571,7 @@ class AlertManager:
             # Remove from active alerts
             del self.active_alerts[alert_id]
 
-            logger.info(f"Alert resolved: {alert_id}")
+            logger.info(f"Alert resolved: {alert_id} by {resolved_by or 'system'}")
             return True
 
         return False
@@ -472,10 +587,35 @@ class AlertManager:
 
         return sorted(alerts, key=lambda x: x.timestamp, reverse=True)
 
+    def get_alerts(
+        self,
+        status: Optional[AlertStatus] = None,
+        severity: Optional[AlertSeverity] = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> List[Alert]:
+        """Get alerts with optional filtering."""
+        alerts = self.alert_history.copy()
+
+        # Filter by status
+        if status:
+            alerts = [a for a in alerts if a.status == status]
+
+        # Filter by severity
+        if severity:
+            alerts = [a for a in alerts if a.severity == severity]
+
+        # Sort by timestamp (newest first)
+        alerts.sort(key=lambda x: x.timestamp, reverse=True)
+
+        # Apply pagination
+        return alerts[offset : offset + limit]
+
     def get_alert_statistics(self) -> Dict[str, Any]:
         """Get alert statistics."""
         total_alerts = len(self.alert_history)
         active_count = len(self.active_alerts)
+        resolved_count = len([a for a in self.alert_history if a.status == AlertStatus.RESOLVED])
 
         # Count by severity
         severity_counts = {}
@@ -495,14 +635,60 @@ class AlertManager:
             status = alert.status.value
             status_counts[status] = status_counts.get(status, 0) + 1
 
+        # Calculate average resolution time
+        resolved_alerts = [
+            a for a in self.alert_history 
+            if a.resolved_at is not None and a.timestamp is not None
+        ]
+        avg_resolution_time = 0
+        if resolved_alerts:
+            total_resolution_time = 0
+            for alert in resolved_alerts:
+                if alert.resolved_at and alert.timestamp:
+                    total_resolution_time += (alert.resolved_at - alert.timestamp).total_seconds()
+            avg_resolution_time = total_resolution_time / len(resolved_alerts) if resolved_alerts else 0
+
+        # Most frequent alert types
+        most_frequent = sorted(type_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+
         return {
             "total_alerts": total_alerts,
             "active_alerts": active_count,
-            "alerts_by_severity": severity_counts,
-            "alerts_by_type": type_counts,
-            "alerts_by_status": status_counts,
+            "resolved_alerts": resolved_count,
+            "by_severity": severity_counts,
+            "by_type": type_counts,
+            "by_status": status_counts,
+            "average_resolution_time": avg_resolution_time,
+            "most_frequent_alerts": most_frequent,
+            "alerts_by_severity": severity_counts,  # Legacy compatibility
+            "alerts_by_type": type_counts,  # Legacy compatibility
+            "alerts_by_status": status_counts,  # Legacy compatibility
             "available_channels": {
                 name: channel.is_available() for name, channel in self.channels.items()
+            },
+        }
+
+    def get_channels_status(self) -> Dict[str, Any]:
+        """Get status of all alert channels."""
+        channels_info = {}
+        for name, channel in self.channels.items():
+            channels_info[name] = {
+                "name": name,
+                "type": channel.__class__.__name__,
+                "available": channel.is_available(),
+            }
+        return channels_info
+
+    def get_configuration(self) -> Dict[str, Any]:
+        """Get current alert configuration."""
+        return {
+            "alert_rules": self.alert_rules.copy(),
+            "suppression_rules": self.suppression_rules.copy(),
+            "escalation_rules": self.escalation_rules.copy(),
+            "deduplication_window": self.deduplication_window,
+            "escalation_intervals": {
+                severity.value: interval
+                for severity, interval in self.escalation_intervals.items()
             },
         }
 
@@ -512,6 +698,27 @@ alert_manager = AlertManager()
 
 
 # Convenience functions for triggering specific types of alerts
+
+
+async def trigger_system_resource_alert(
+    resource_type: str,
+    current_value: float,
+    threshold: float,
+    context: Optional[Dict[str, Any]] = None,
+    severity: AlertSeverity = AlertSeverity.HIGH,
+):
+    """Trigger a system resource exhaustion alert."""
+    alert = Alert(
+        alert_type=AlertType.SYSTEM_RESOURCE_EXHAUSTION,
+        severity=severity,
+        title=f"System Resource Alert: {resource_type.upper()}",
+        message=f"{resource_type.upper()} usage is {current_value:.1f}%, exceeding threshold of {threshold:.1f}%",
+        timestamp=datetime.now(timezone.utc),
+        context=context or {},
+        tags=["system_resources", resource_type.lower()],
+    )
+
+    return await alert_manager.trigger_alert(alert)
 
 
 async def alert_signal_processing_failure(
