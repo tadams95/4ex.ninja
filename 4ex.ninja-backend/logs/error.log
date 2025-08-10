@@ -318,3 +318,13 @@ Message: Sentry not initialized. Error: Test business logic error
 Context:
   taskName: None
 ==================================================
+=== ERROR at 2025-08-09T17:32:35.532623 ===
+Logger: test
+Module: <string>
+Function: <module>() at line 21
+Thread: MainThread (8538119936)
+Process: MainProcess (59654)
+Message: Error message
+Context:
+  taskName: None
+==================================================

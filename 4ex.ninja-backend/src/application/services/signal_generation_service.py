@@ -5,7 +5,7 @@ This service migrates the existing signal generation logic to use the new
 repository pattern for clean separation of concerns and dependency injection.
 """
 
-import logging
+from ...infrastructure.logging import get_logger
 import pandas as pd
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -32,7 +32,7 @@ from ...strategies.error_handling import (
     validate_signal_data,
 )
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class SignalGenerationService:
@@ -79,7 +79,16 @@ class SignalGenerationService:
         """
         try:
             logger.info(
-                f"Generating signals for {pair} {timeframe} using {strategy_name}"
+                "Starting signal generation",
+                extra={
+                    "pair": pair,
+                    "timeframe": timeframe,
+                    "strategy": strategy_name,
+                    "fast_ma": fast_ma,
+                    "slow_ma": slow_ma,
+                    "atr_multiplier_sl": atr_multiplier_sl,
+                    "atr_multiplier_tp": atr_multiplier_tp,
+                },
             )
 
             # Get market data repository
@@ -94,15 +103,43 @@ class SignalGenerationService:
             )
 
             if not market_data_list:
-                logger.warning(f"No market data found for {pair} {timeframe}")
+                logger.warning(
+                    "No market data found",
+                    extra={"pair": pair, "timeframe": timeframe, "data_count": 0},
+                )
                 return []
+
+            logger.debug(
+                "Market data retrieved",
+                extra={
+                    "pair": pair,
+                    "timeframe": timeframe,
+                    "data_count": len(market_data_list),
+                },
+            )
 
             # Convert market data to DataFrame for signal calculation
             df = self._convert_market_data_to_dataframe(market_data_list)
 
             if df.empty:
-                logger.warning(f"No candle data available for {pair} {timeframe}")
+                logger.warning(
+                    "No candle data available after conversion",
+                    extra={"pair": pair, "timeframe": timeframe},
+                )
                 return []
+
+            logger.debug(
+                "Market data converted to DataFrame",
+                extra={
+                    "pair": pair,
+                    "timeframe": timeframe,
+                    "df_shape": df.shape,
+                    "date_range": {
+                        "start": str(df.index.min()) if not df.empty else None,
+                        "end": str(df.index.max()) if not df.empty else None,
+                    },
+                },
+            )
 
             # Calculate moving averages and signals
             df = self._calculate_moving_averages(df, fast_ma, slow_ma)
@@ -127,7 +164,18 @@ class SignalGenerationService:
             # Store signals using repository
             await self._store_signals(signals)
 
-            logger.info(f"Generated {len(signals)} signals for {pair} {timeframe}")
+            logger.info(
+                "Signal generation completed successfully",
+                extra={
+                    "pair": pair,
+                    "timeframe": timeframe,
+                    "strategy": strategy_name,
+                    "signals_generated": len(signals),
+                    "signal_types": (
+                        [s.signal_type.value for s in signals] if signals else []
+                    ),
+                },
+            )
 
             # Track metrics
             metrics_collector.set_gauge(
@@ -140,7 +188,17 @@ class SignalGenerationService:
 
         except Exception as e:
             error_msg = f"Error generating signals for {pair} {timeframe}: {str(e)}"
-            logger.error(error_msg, exc_info=True)
+            logger.error(
+                "Signal generation failed",
+                extra={
+                    "pair": pair,
+                    "timeframe": timeframe,
+                    "strategy": strategy_name,
+                    "error": str(e),
+                    "error_type": type(e).__name__,
+                },
+                exc_info=True,
+            )
             await alert_signal_processing_failure(error_msg)
 
             metrics_collector.increment_counter(

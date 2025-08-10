@@ -5,7 +5,7 @@ This module provides high-level caching services for frequently accessed
 data with intelligent invalidation and warming strategies.
 """
 
-import logging
+from infrastructure.logging import get_logger
 import json
 from typing import Any, Dict, List, Optional, Union
 from datetime import datetime, timedelta
@@ -21,7 +21,7 @@ from infrastructure.caching.cache_manager import CacheManager
 from infrastructure.caching.redis_cache import RedisCache, REDIS_AVAILABLE
 from infrastructure.caching.cache_manager import MemoryCache
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 @dataclass

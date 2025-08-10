@@ -8,13 +8,13 @@ repository pattern with proper dependency injection and comprehensive caching.
 from fastapi import APIRouter, HTTPException, Depends, Query
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
-import logging
 import sys
 import os
 
 # Add src to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
+from infrastructure.logging import get_logger
 from api.dependencies.simple_container import get_signal_repository
 from services.cache_service import CrossoverCacheService, CacheServiceFactory
 from api.utils.response_optimization import (
@@ -28,7 +28,7 @@ from api.dependencies.auth import RequireAuthOrApiKey, OptionalAuth
 from api.auth.models import User
 
 router = APIRouter(prefix="/signals", tags=["signals"])
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 # Global cache service instance
 _cache_service: Optional[CrossoverCacheService] = None
@@ -40,9 +40,20 @@ async def get_cache_service() -> CrossoverCacheService:
     if _cache_service is None:
         try:
             _cache_service = await CacheServiceFactory.create_crossover_cache_service()
-            logger.info("Cache service initialized for signals")
+            logger.info(
+                "Cache service initialized for signals",
+                extra={"component": "signals_api", "cache_type": "crossover"},
+            )
         except Exception as e:
-            logger.error(f"Failed to initialize cache service: {e}")
+            logger.error(
+                "Failed to initialize cache service, falling back to memory cache",
+                extra={
+                    "component": "signals_api",
+                    "error": str(e),
+                    "error_type": type(e).__name__,
+                },
+                exc_info=True,
+            )
             # Create a minimal cache service
             cache_manager = await CacheServiceFactory.create_cache_manager(
                 use_redis=False, fallback_to_memory=True

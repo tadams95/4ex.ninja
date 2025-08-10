@@ -31,10 +31,12 @@ from api.middleware.rate_limiting import RateLimitMiddleware
 from api.middleware.security_headers import create_security_middleware_stack
 from api.dependencies.simple_container import get_container
 from infrastructure.monitoring.error_tracking import initialize_error_tracking
+from infrastructure.logging import setup_logging, get_logger
 from services.cache_service import CacheServiceFactory
 
-
-logger = logging.getLogger(__name__)
+# Initialize logging system early
+setup_logging()
+logger = get_logger(__name__)
 
 
 @asynccontextmanager
@@ -44,7 +46,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     Handles startup and shutdown events.
     """
     # Startup
-    logger.info("Starting 4ex.ninja Trading Platform API")
+    logger.info("🚀 Starting 4ex.ninja Trading Platform API")
+    logger.info(f"Environment: {os.getenv('ENVIRONMENT', 'development')}")
+    logger.info(f"Log Level: {logging.getLogger().level}")
 
     # Initialize error tracking if Sentry DSN is available
     sentry_dsn = os.getenv("SENTRY_DSN")
@@ -53,26 +57,32 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     if sentry_dsn:
         try:
             initialize_error_tracking(sentry_dsn, environment)
-            logger.info("Sentry error tracking initialized")
+            logger.info("✅ Sentry error tracking initialized")
         except Exception as e:
-            logger.warning(f"Failed to initialize Sentry: {e}")
+            logger.warning(f"❌ Failed to initialize Sentry: {e}")
+    else:
+        logger.info("ℹ️ Sentry DSN not configured - error tracking disabled")
 
     # Initialize dependency container
     container = get_container()
-    logger.info("Dependency container initialized")
+    logger.info("✅ Dependency container initialized")
 
     # Initialize and warm cache
     try:
         cache_service = await CacheServiceFactory.create_crossover_cache_service()
         warm_count = await cache_service.warm_cache()
-        logger.info(f"Cache warming completed. Warmed {warm_count} entries")
+        logger.info(f"✅ Cache warming completed. Warmed {warm_count} entries")
     except Exception as e:
-        logger.warning(f"Cache warming failed: {e}")
+        logger.warning(f"❌ Cache warming failed: {e}")
+
+    # Log startup completion
+    logger.info("🎯 4ex.ninja Trading Platform API startup completed successfully")
 
     yield
 
     # Shutdown
-    logger.info("Shutting down 4ex.ninja Trading Platform API")
+    logger.info("🛑 Shutting down 4ex.ninja Trading Platform API")
+    logger.info("✅ Shutdown completed successfully")
 
 
 def create_app() -> FastAPI:

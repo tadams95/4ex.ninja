@@ -99,3 +99,34 @@ Traceback (most recent call last):
 ValueError: This is a test error
 2025-08-08T22:35:12.184409 [31m[ERROR][0m infrastructure.monitoring.error_tracking:89 capture_error() - Sentry not initialized. Error: Test API error | taskName=None
 2025-08-08T22:35:12.184680 [31m[ERROR][0m infrastructure.monitoring.error_tracking:89 capture_error() - Sentry not initialized. Error: Test business logic error | taskName=None
+2025-08-09T17:32:35.422047 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: database | taskName=None
+2025-08-09T17:32:35.422362 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: oanda_api | taskName=None
+2025-08-09T17:32:35.422465 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: system_resources | taskName=None
+2025-08-09T17:32:35.431875 [32m[INFO][0m api.utils.fast_json:24 <module>() - orjson available - using fast JSON serialization | taskName=None
+2025-08-09T17:32:35.522542 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
+2025-08-09T17:32:35.532505 [32m[INFO][0m test:19 <module>() - Info message | taskName=None
+2025-08-09T17:32:35.532591 [33m[WARNING][0m test:20 <module>() - Warning message | taskName=None
+2025-08-09T17:32:35.532623 [31m[ERROR][0m test:21 <module>() - Error message | taskName=None
+2025-08-09T17:33:46.250525 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: database | taskName=None
+2025-08-09T17:33:46.250814 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: oanda_api | taskName=None
+2025-08-09T17:33:46.250907 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: system_resources | taskName=None
+2025-08-09T17:33:46.263548 [32m[INFO][0m api.utils.fast_json:24 <module>() - orjson available - using fast JSON serialization | taskName=None
+2025-08-09T17:33:46.347754 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
+2025-08-09T17:33:46.359578 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
+2025-08-09T17:34:11.697576 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=Task-1
+2025-08-09T17:34:11.707282 [32m[INFO][0m src.app:49 lifespan() - 🚀 Starting 4ex.ninja Trading Platform API | taskName=Task-2
+2025-08-09T17:34:11.707385 [32m[INFO][0m src.app:50 lifespan() - Environment: development | taskName=Task-2
+2025-08-09T17:34:11.707414 [32m[INFO][0m src.app:51 lifespan() - Log Level: 20 | taskName=Task-2
+2025-08-09T17:34:11.707440 [32m[INFO][0m src.app:64 lifespan() - ℹ️ Sentry DSN not configured - error tracking disabled | taskName=Task-2
+2025-08-09T17:34:11.707468 [32m[INFO][0m src.app:68 lifespan() - ✅ Dependency container initialized | taskName=Task-2
+2025-08-09T17:34:11.707505 [32m[INFO][0m services.cache_service:315 create_cache_manager() - Using memory cache backend | taskName=Task-2
+2025-08-09T17:34:11.707786 [32m[INFO][0m services.cache_service:238 warm_cache() - Starting cache warming for 5 filter combinations | taskName=Task-2
+2025-08-09T17:34:11.707876 [32m[INFO][0m services.cache_service:257 warm_cache() - Cache warming completed. Warmed 0 entries | taskName=Task-2
+2025-08-09T17:34:11.707915 [32m[INFO][0m src.app:74 lifespan() - ✅ Cache warming completed. Warmed 0 entries | taskName=Task-2
+2025-08-09T17:34:11.707943 [32m[INFO][0m src.app:79 lifespan() - 🎯 4ex.ninja Trading Platform API startup completed successfully | taskName=Task-2
+2025-08-09T17:38:05.441281 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: database | taskName=None
+2025-08-09T17:38:05.441391 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: oanda_api | taskName=None
+2025-08-09T17:38:05.441430 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: system_resources | taskName=None
+2025-08-09T17:38:05.448438 [32m[INFO][0m api.utils.fast_json:24 <module>() - orjson available - using fast JSON serialization | taskName=None
+2025-08-09T17:38:05.511667 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
+2025-08-09T17:38:05.520813 [32m[INFO][0m verification:30 <module>() - Test structured logging | taskName=None | component=verification | test=True
