@@ -149,7 +149,7 @@ def create_app() -> FastAPI:
 
     # Add GZip compression middleware
     app.add_middleware(GZipMiddleware, minimum_size=1000)
-    
+
     # Add comprehensive security middleware stack
     create_security_middleware_stack(app)
 

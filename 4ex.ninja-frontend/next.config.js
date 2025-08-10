@@ -16,7 +16,7 @@ const nextConfig = {
   async headers() {
     const isProduction = process.env.NODE_ENV === 'production';
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    
+
     return [
       {
         source: '/(.*)',
@@ -26,19 +26,19 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              isProduction 
+              isProduction
                 ? "script-src 'self' 'unsafe-eval' *.stripe.com"
                 : "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.stripe.com *.vercel.app vercel.live",
               "style-src 'self' 'unsafe-inline' *.stripe.com",
               "img-src 'self' data: blob: *.stripe.com",
               "font-src 'self' data:",
               `connect-src 'self' *.stripe.com wss: ws: ${apiUrl} ${apiUrl.replace('http', 'ws')}`,
-              "frame-src 'self' *.stripe.com" + (isProduction ? "" : " *.vercel.app"),
+              "frame-src 'self' *.stripe.com" + (isProduction ? '' : ' *.vercel.app'),
               "frame-ancestors 'none'",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
-              "upgrade-insecure-requests",
+              'upgrade-insecure-requests',
             ].join('; '),
           },
           // Prevent clickjacking
@@ -62,14 +62,19 @@ const nextConfig = {
             value: 'strict-origin-when-cross-origin',
           },
           // HTTPS Strict Transport Security (only in production)
-          ...(isProduction ? [{
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains; preload',
-          }] : []),
+          ...(isProduction
+            ? [
+                {
+                  key: 'Strict-Transport-Security',
+                  value: 'max-age=31536000; includeSubDomains; preload',
+                },
+              ]
+            : []),
           // Permissions Policy
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), payment=(self *.stripe.com), usb=(), interest-cohort=()',
+            value:
+              'camera=(), microphone=(), geolocation=(), payment=(self *.stripe.com), usb=(), interest-cohort=()',
           },
           // Cross-Origin Policies
           {
@@ -85,10 +90,15 @@ const nextConfig = {
             value: 'same-origin',
           },
           // Security.txt support
-          ...(isProduction ? [{
-            key: 'X-Robots-Tag',
-            value: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
-          }] : []),
+          ...(isProduction
+            ? [
+                {
+                  key: 'X-Robots-Tag',
+                  value:
+                    'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+                },
+              ]
+            : []),
         ],
       },
       // API routes - additional security
