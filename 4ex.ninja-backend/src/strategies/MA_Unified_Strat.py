@@ -28,6 +28,14 @@ from strategies.error_handling import (
 )
 from infrastructure.repositories.error_handling import database_operation
 
+# Import Discord notification infrastructure
+from infrastructure.monitoring.discord_alerts import send_signal_to_discord
+from core.entities.signal import Signal, SignalType, CrossoverType, SignalStatus
+from config.discord_config import (
+    should_send_discord_notification,
+    get_discord_channel_tier,
+)
+
 # Set up database connections
 client = MongoClient(
     MONGO_CONNECTION_STRING, tls=True, tlsAllowInvalidCertificates=True
@@ -70,6 +78,12 @@ class MovingAverageCrossStrategy:
         self.sleep_seconds = sleep_seconds
         self.min_candles = min_candles  # Kept but unused with 200-candle fetch
         self.is_jpy_pair = pair.endswith("JPY")
+
+        # Discord configuration
+        self.discord_enabled = True  # Set to False to disable Discord notifications
+        logging.info(
+            f"Discord notifications {'enabled' if self.discord_enabled else 'disabled'} for {self.pair} {self.timeframe}"
+        )
 
     def validate_signal(
         self, signal: int, atr: float, risk_reward_ratio: float
@@ -220,6 +234,139 @@ class MovingAverageCrossStrategy:
             )
             return None
 
+    async def send_signal_to_discord(self, signal_data: Dict, row: pd.Series) -> None:
+        """
+        Send trading signal to Discord using the existing Discord infrastructure.
+
+        This method converts our signal_data dictionary to a Signal entity
+        and sends it to Discord through the comprehensive notification system.
+        """
+        try:
+            # Convert signal_data to Signal entity for Discord notification
+            signal_entity = Signal(
+                signal_id=f"{self.pair}_{self.timeframe}_{signal_data['time'].strftime('%Y%m%d_%H%M%S')}",
+                pair=self.pair,
+                timeframe=self.timeframe,
+                signal_type=(
+                    SignalType.BUY if signal_data["signal"] == 1 else SignalType.SELL
+                ),
+                crossover_type=(
+                    CrossoverType.BULLISH
+                    if signal_data["signal"] == 1
+                    else CrossoverType.BEARISH
+                ),
+                entry_price=Decimal(str(signal_data["close"])),
+                current_price=Decimal(str(signal_data["close"])),
+                fast_ma=signal_data["fast_ma"],
+                slow_ma=signal_data["slow_ma"],
+                timestamp=signal_data["time"],
+                stop_loss=(
+                    Decimal(str(signal_data["stop_loss"]))
+                    if signal_data["stop_loss"]
+                    else None
+                ),
+                take_profit=(
+                    Decimal(str(signal_data["take_profit"]))
+                    if signal_data["take_profit"]
+                    else None
+                ),
+                atr_value=(
+                    Decimal(str(signal_data["atr"])) if signal_data["atr"] else None
+                ),
+                risk_reward_ratio=signal_data.get("risk_reward_ratio"),
+                strategy_name="MA Unified Strategy",
+                status=SignalStatus.ACTIVE,
+                confidence_score=0.85,  # You can calculate this based on ATR, volume, etc.
+            )
+
+            # Send to Discord using existing infrastructure
+            channel_tier = get_discord_channel_tier(signal_data)
+            discord_success = await send_signal_to_discord(
+                signal=signal_entity,
+                alert_type="crossover_signal",
+                additional_context={
+                    "market_conditions": "Live Trading Signal",
+                    "sl_pips": signal_data.get("sl_pips", 0),
+                    "tp_pips": signal_data.get("tp_pips", 0),
+                    "atr_value": signal_data.get("atr", 0),
+                    "volatility": (
+                        "Medium" if signal_data.get("atr", 0) < 50 else "High"
+                    ),
+                    "session": self._get_trading_session(),
+                    "strategy_confidence": (
+                        "High"
+                        if signal_data.get("risk_reward_ratio", 0) > 1.5
+                        else "Medium"
+                    ),
+                    "channel_tier": channel_tier,
+                    "notification_priority": (
+                        "HIGH" if channel_tier == "premium" else "NORMAL"
+                    ),
+                },
+            )
+
+            if discord_success:
+                logging.info(
+                    f"✅ Discord notification sent for {self.pair} {self.timeframe} signal"
+                )
+                # Track Discord notification success
+                metrics_collector.increment_counter(
+                    "discord_notifications_sent",
+                    1,
+                    {
+                        "pair": self.pair,
+                        "timeframe": self.timeframe,
+                        "signal_type": "crossover",
+                    },
+                )
+            else:
+                logging.warning(
+                    f"⚠️ Failed to send Discord notification for {self.pair} {self.timeframe}"
+                )
+                # Track Discord notification failure
+                metrics_collector.increment_counter(
+                    "discord_notifications_failed",
+                    1,
+                    {
+                        "pair": self.pair,
+                        "timeframe": self.timeframe,
+                        "reason": "send_failure",
+                    },
+                )
+
+        except Exception as e:
+            logging.error(
+                f"❌ Error sending Discord notification for {self.pair} {self.timeframe}: {str(e)}",
+                exc_info=True,
+            )
+            # Track Discord notification errors
+            metrics_collector.increment_counter(
+                "discord_notifications_failed",
+                1,
+                {"pair": self.pair, "timeframe": self.timeframe, "reason": "exception"},
+            )
+
+    def _get_trading_session(self) -> str:
+        """Determine current trading session for context."""
+        from datetime import datetime
+        import pytz
+
+        utc_now = datetime.now(pytz.UTC)
+        london_time = utc_now.astimezone(pytz.timezone("Europe/London"))
+        ny_time = utc_now.astimezone(pytz.timezone("America/New_York"))
+        tokyo_time = utc_now.astimezone(pytz.timezone("Asia/Tokyo"))
+
+        hour = utc_now.hour
+
+        if 0 <= hour < 7:  # Tokyo session
+            return "Tokyo Open"
+        elif 7 <= hour < 15:  # London session
+            return "London Open"
+        elif 15 <= hour < 22:  # New York session
+            return "New York Open"
+        else:  # Overlap or quiet periods
+            return "Market Overlap"
+
     async def process_dataframe(self, df: pd.DataFrame) -> None:
         """Process a dataframe of price data to generate and store signals."""
         if df.empty:
@@ -356,6 +503,14 @@ class MovingAverageCrossStrategy:
                                 record_signal_generated(
                                     self.pair, signal_data.get("risk_reward_ratio", 1.0)
                                 )
+
+                                # 🚀 DISCORD INTEGRATION: Send signal to Discord immediately after storage
+                                if (
+                                    self.discord_enabled
+                                    and should_send_discord_notification(signal_data)
+                                ):
+                                    await self.send_signal_to_discord(signal_data, row)
+
                             else:
                                 error_msg = f"Failed to store signal for {self.pair} {self.timeframe}"
                                 logging.error(error_msg)

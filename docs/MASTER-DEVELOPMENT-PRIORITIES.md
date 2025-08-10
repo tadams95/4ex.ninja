@@ -1081,9 +1081,112 @@ cpu_percent = psutil.cpu_percent(interval=None)  # Non-blocking
 - ✅ **Setup Documentation** (`docs/DISCORD-INTEGRATION-SETUP.md`): Complete setup guide
 - ✅ **Dependencies Updated** (`requirements.txt`): Discord libraries added
 
-**🚀 Ready to Proceed**: Section 2.2 Real-time Web App Notifications
+**🚀 Ready to Proceed**: Section 2.2 Critical Signal Flow Optimization
 
-#### 2.2 Real-time Web App Notifications
+### **Week 11-12: Signal Flow Performance Optimization** 
+*Priority: CRITICAL - Production system performance & reliability*
+
+#### 2.2 Signal Processing Pipeline Optimization 🚨 **HIGH PRIORITY**
+Based on comprehensive signal flow analysis, current system has critical performance bottlenecks requiring immediate attention before advanced features:
+
+**Current Performance Issues**:
+- 200-candle fetches every signal cycle (unnecessary data retrieval)
+- Blocking Discord API calls causing 2-5s latency
+- No incremental processing or caching layer
+- 90% of database queries are redundant
+
+**Target Performance Improvements**:
+- 80-90% reduction in signal generation latency
+- Non-blocking notification delivery
+- 95% reduction in unnecessary data fetching
+- Real-time signal processing under 500ms
+
+- [ ] **Day 1-2**: Implement AsyncNotificationService for non-blocking Discord delivery ⚡ **CRITICAL**
+  ```python
+  # Replace blocking Discord calls with async queue processing
+  class AsyncNotificationService:
+      async def queue_notification(self, signal_data: dict, priority: NotificationPriority)
+      async def process_notification_queue(self)  # Background worker
+      async def send_with_retry(self, notification: Notification, max_retries: int = 3)
+  ```
+  - Replace `requests.post()` calls with `aiohttp` async HTTP client
+  - Implement notification queue with priority routing (URGENT/HIGH/NORMAL/LOW)
+  - Add circuit breaker pattern for Discord API failures
+  - Background worker for queue processing without blocking signal generation
+
+- [ ] **Day 3-4**: Implement Redis caching layer for incremental data processing ⚡ **CRITICAL**
+  ```python
+  # Eliminate 200-candle fetches every cycle
+  class IncrementalSignalProcessor:
+      async def get_new_candles_only(self, symbol: str, last_candle_time: datetime)
+      async def update_moving_averages_incremental(self, new_candles: List[Candle])
+      async def cache_signal_state(self, symbol: str, ma_state: MovingAverageState)
+  ```
+  - Implement Redis caching for moving average calculations
+  - Store last processed candle timestamp per symbol
+  - Fetch only new candles since last processing (1-5 new candles vs 200)
+  - Cache moving average states to avoid recalculation
+
+- [ ] **Day 5-6**: Add signal deduplication and smart update detection 🎯 **HIGH PRIORITY**
+  ```python
+  # Prevent redundant signals and notifications
+  class SignalDeduplicationService:
+      async def is_significant_update(self, current_signal: Signal, previous_signal: Signal) -> bool
+      async def should_notify_signal_change(self, signal_change: SignalChange) -> bool
+      async def track_signal_history(self, symbol: str, signal: Signal)
+  ```
+  - Implement signal similarity detection (price thresholds, confidence changes)
+  - Track signal history to prevent duplicate notifications
+  - Smart update detection: only notify on significant signal changes (>5 pip movement, confidence change >10%)
+  - Batch processing for multiple signals to reduce notification spam
+
+- [ ] **Day 7**: Implement monitoring and performance validation 📊 **VALIDATION**
+  ```python
+  # Measure performance improvements
+  class PerformanceMetrics:
+      async def measure_signal_generation_latency(self) -> float
+      async def track_cache_hit_ratio(self) -> float
+      async def monitor_notification_queue_depth(self) -> int
+      async def validate_signal_accuracy_maintained(self) -> bool
+  ```
+  - Add comprehensive performance monitoring
+  - Validate signal accuracy is maintained during optimization
+  - Monitor cache hit ratios (target >90%)
+  - Track notification delivery times (target <1s for queue, <5s for delivery)
+  - 🚨 **REMINDER**: Update Digital Ocean droplet configuration for new infrastructure
+    - Upgrade Redis memory allocation for caching layer
+    - Configure background worker processes for async notifications
+    - Update environment variables for queue processing
+    - Scale server resources to handle optimized concurrent processing
+
+**🎯 Section 2.2 Success Criteria:**
+- [ ] Signal generation latency reduced from 2-5s to <500ms
+- [ ] Discord notifications delivered within 1 second to queue, 5 seconds to Discord
+- [ ] Cache hit ratio >90% for moving average calculations
+- [ ] Database query reduction >85% through incremental processing
+- [ ] Zero signal accuracy degradation during optimization
+- [ ] Notification queue processing <100ms per signal
+- [ ] System handles 10+ concurrent symbol processing without performance degradation
+
+**📦 Section 2.2 Deliverables:**
+- [ ] **AsyncNotificationService** (`application/services/async_notification_service.py`)
+- [ ] **IncrementalSignalProcessor** (`application/services/incremental_signal_processor.py`) 
+- [ ] **SignalDeduplicationService** (`application/services/signal_deduplication_service.py`)
+- [ ] **Redis Caching Layer** (`infrastructure/cache/redis_cache_service.py`)
+- [ ] **Performance Monitoring** (`infrastructure/monitoring/signal_performance_monitor.py`)
+- [ ] **Updated MA_Unified_Strat.py** (optimized for async processing)
+- [ ] **Performance Test Suite** (`tests/performance/test_signal_optimization.py`)
+
+**💡 Business Impact:**
+- **User Experience**: Near-instantaneous signal notifications improve trading execution
+- **System Reliability**: Non-blocking architecture prevents system slowdowns
+- **Scalability**: Optimized processing supports more users and currency pairs
+- **Cost Efficiency**: Reduced server load and API calls decrease operational costs
+- **Competitive Advantage**: Sub-second signal delivery is industry-leading performance
+
+---
+
+#### 2.3 Real-time Web App Notifications
 - [ ] **Day 1-2**: Implement WebSocket server for instant signal streaming
   - FastAPI WebSocket endpoints for live signal broadcasting
   - Connection management with user authentication and session handling
@@ -1139,10 +1242,112 @@ cpu_percent = psutil.cpu_percent(interval=None)  # Non-blocking
 
 ---
 
-## 🧠 **PHASE 3: AI/ML FOUNDATION** (Weeks 13-20)
+## 🔗 **PHASE 2.5: ONCHAIN INFRASTRUCTURE MIGRATION** (Weeks 13-16)
+*Priority: HIGH - Foundational infrastructure modernization*
+
+### **Week 13-16: Stripe to Token-Gated System Migration** 🚨 **CRITICAL INFRASTRUCTURE**
+Based on comprehensive onchain migration analysis, transition from centralized Stripe payments to decentralized token-gating using Coinbase Onchain Kit:
+
+**Current Stripe Dependencies to Replace:**
+- 8 Stripe API endpoints and webhook infrastructure  
+- Centralized subscription management and payment processing
+- Traditional authentication with subscription status checks
+- $2.9\% payment processing fees and complex compliance requirements
+
+**Target Onchain Architecture:**
+- ERC-20 access tokens + ERC-721 membership NFTs on Base network
+- Web3-native authentication using Coinbase Onchain Kit
+- Smart contract-based feature gating and access control
+- Reduced operational costs and enhanced user experience
+
+- [ ] **Day 1-2**: Smart Contract Development & Deployment ⚡ **FOUNDATION**
+  ```solidity
+  // Core contracts for token-gated access
+  - ForexNinjaToken.sol (ERC-20): Feature access tokens with configurable thresholds
+  - ForexNinjaMembership.sol (ERC-721): Tiered membership NFTs (Basic/Premium/Lifetime)
+  - FeatureGate.sol: Access control logic with multi-tier support
+  ```
+  - Deploy to Base network for low-cost transactions
+  - Implement feature threshold mapping (Realtime: 500 tokens, API: 100 tokens)
+  - Add emergency pause and upgrade mechanisms for security
+  - Create token purchase interface with ETH payments
+
+- [ ] **Day 3-4**: Onchain Kit Integration & Parallel Authentication 🔧 **INTEGRATION**
+  ```typescript
+  // Coinbase Onchain Kit integration alongside existing auth
+  - OnchainProvider with wagmi/viem configuration for Base network
+  - useOnchainAuth() hook for token balance and NFT membership checks
+  - Parallel access system: legacy Stripe OR onchain token access
+  - Migration wizard for existing users to claim tokens
+  ```
+  - Install Coinbase Onchain Kit, wagmi, viem dependencies
+  - Create wallet connection interface with multiple connector support
+  - Implement token balance caching for performance optimization
+  - Build migration code generation system for existing subscribers
+
+- [ ] **Day 5-6**: Feature Gate Migration & User Experience 🎯 **USER EXPERIENCE**
+  ```typescript
+  // Enhanced ProtectedRoute supporting both systems during transition
+  - Token-based access checks with configurable thresholds
+  - NFT membership validation with expiry handling
+  - Migration incentives: 20% bonus tokens for early adopters
+  - Seamless fallback to legacy Stripe during transition period
+  ```
+  - Update all protected routes to support onchain access
+  - Create token purchase and NFT minting interfaces
+  - Implement user education flows and onboarding tutorials
+  - Add real-time token balance updates and notifications
+
+- [ ] **Day 7**: Testing & Migration Launch 📊 **VALIDATION**
+  ```typescript
+  // Comprehensive testing and migration monitoring
+  - Smart contract security audit and formal verification
+  - End-to-end user flow testing across all access tiers
+  - Migration success rate monitoring and user support
+  - Performance validation: <2s transaction times, 99.9% uptime
+  ```
+  - Launch migration wizard for existing 500+ Stripe subscribers
+  - Monitor smart contract gas optimization and transaction success
+  - Provide dedicated migration support and troubleshooting
+  - Validate zero disruption to existing user experience
+
+**🎯 Section 2.5 Success Criteria:**
+- [ ] 80%+ existing user migration rate within 30 days of launch
+- [ ] Smart contract security: Zero critical vulnerabilities, formal audit passed
+- [ ] User experience: <2 second wallet connection, 95%+ transaction success rate
+- [ ] Cost reduction: 60% reduction in payment processing fees vs Stripe
+- [ ] Revenue neutrality: No disruption to subscription revenue during migration
+- [ ] Performance: Token balance checks <100ms, NFT validation <50ms
+- [ ] Community adoption: 25% of users actively using token-based features
+
+**📦 Section 2.5 Deliverables:**
+- [ ] **Smart Contracts** (`contracts/ForexNinjaToken.sol`, `contracts/ForexNinjaMembership.sol`)
+- [ ] **Onchain Authentication** (`hooks/useOnchainAuth.ts`, `components/OnchainProvider.tsx`)
+- [ ] **Migration System** (`api/migrate/`, `components/migration/MigrationWizard.tsx`)
+- [ ] **Token Purchase Interface** (`components/purchase/TokenPurchase.tsx`, `components/purchase/NFTMembership.tsx`)
+- [ ] **Updated Protected Routes** (`components/ProtectedRoute.tsx` with dual auth support)
+- [ ] **Migration Documentation** (`docs/ONCHAIN-MIGRATION-SETUP.md`, user guides)
+- [ ] **Smart Contract Tests** (`tests/contracts/`, security audit reports)
+
+**💡 Business Impact:**
+- **Cost Efficiency**: Eliminate $2.9\% Stripe fees, reduce payment infrastructure complexity
+- **User Empowerment**: True ownership of access tokens, transferable membership NFTs
+- **Innovation Foundation**: Enable DeFi integration, staking rewards, governance participation
+- **Competitive Advantage**: First mover in Web3-native forex signal platforms
+- **Community Building**: Token-holder governance, staking rewards, referral incentives
+
+**🔄 Migration Strategy:**
+- **Parallel Operation**: Both Stripe and onchain systems during 60-day transition
+- **User Choice**: Existing users can migrate voluntarily with bonus incentives
+- **Fallback Support**: Legacy Stripe access maintained for users who don't migrate
+- **Gradual Sunset**: Stripe system deprecated after 80% migration achieved
+
+---
+
+## 🧠 **PHASE 3: AI/ML FOUNDATION** (Weeks 17-24)
 *Priority: HIGH - Competitive advantage & profitability*
 
-### **Week 13-16: Data Pipeline & Sentiment Analysis (Free Implementation)**
+### **Week 17-20: Data Pipeline & Sentiment Analysis (Free Implementation)**
 
 #### 3.1 Free Sentiment Analysis Implementation
 - [ ] **Week 13**: Setup free sentiment data collection
@@ -1356,10 +1561,11 @@ cpu_percent = psutil.cpu_percent(interval=None)  # Non-blocking
 | Phase | Duration | Key Deliverable | Success Metric |
 |-------|----------|----------------|----------------|
 | **Phase 1** | Weeks 1-8 | Modern, scalable foundation | <200ms API, <1% errors |
-| **Phase 2** | Weeks 9-12 | Real-time notifications & PWA | +40% engagement, +25% conversion |
-| **Phase 3** | Weeks 13-20 | AI-enhanced signal generation | +20% win rate, +15% returns |
-| **Phase 4** | Weeks 21-32 | Advanced AI trading system | +100% Sharpe ratio, <10% drawdown |
-| **Phase 5** | Weeks 33+ | Scalable, market-leading platform | 10x growth, market leadership |
+| **Phase 2** | Weeks 9-12 | Real-time notifications & signal optimization | +40% engagement, 80-90% performance gains |
+| **Phase 2.5** | Weeks 13-16 | Onchain token-gated access system | 80% user migration, 60% cost reduction |
+| **Phase 3** | Weeks 17-24 | AI-enhanced signal generation | +20% win rate, +15% returns |
+| **Phase 4** | Weeks 25-36 | Advanced AI trading system | +100% Sharpe ratio, <10% drawdown |
+| **Phase 5** | Weeks 37+ | Scalable, market-leading platform | 10x growth, market leadership |
 
 ---
 
