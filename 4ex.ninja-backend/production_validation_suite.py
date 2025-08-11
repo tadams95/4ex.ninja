@@ -31,7 +31,7 @@ logging.basicConfig(
 )
 
 # Production MongoDB connection
-MONGO_CONNECTION_STRING = "mongodb+srv://tyrelle:dcvsniTYFG9ojCgn@cluster0.6h6fdf2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_CONNECTION_STRING = "mongo_connection_string"
 
 # Test configuration
 TEST_PAIRS = ["EUR_USD", "AUD_USD", "GBP_USD"]

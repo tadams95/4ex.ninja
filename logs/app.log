@@ -4118,3 +4118,13 @@
 2025-08-10T21:21:21.861383 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: database | taskName=None
 2025-08-10T21:21:21.861523 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: oanda_api | taskName=None
 2025-08-10T21:21:21.861556 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: system_resources | taskName=None
+2025-08-10T21:22:21.535218 [32m[INFO][0m src.infrastructure.database.config:88 _detect_environment() - Detected environment: testing | taskName=None
+2025-08-10T21:22:21.803251 [32m[INFO][0m infrastructure.monitoring.alerts:410 add_channel() - Alert channel 'logs' added | taskName=None
+2025-08-10T21:22:21.803393 [32m[INFO][0m infrastructure.monitoring.alerts:410 add_channel() - Alert channel 'email' added | taskName=None
+2025-08-10T21:22:21.803429 [32m[INFO][0m infrastructure.monitoring.alerts:410 add_channel() - Alert channel 'webhook' added | taskName=None
+2025-08-10T21:22:21.916328 [32m[INFO][0m src.infrastructure.monitoring.alerts:410 add_channel() - Alert channel 'logs' added | taskName=None
+2025-08-10T21:22:21.916455 [32m[INFO][0m src.infrastructure.monitoring.alerts:410 add_channel() - Alert channel 'email' added | taskName=None
+2025-08-10T21:22:21.916493 [32m[INFO][0m src.infrastructure.monitoring.alerts:410 add_channel() - Alert channel 'webhook' added | taskName=None
+2025-08-10T21:22:22.327221 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: database | taskName=None
+2025-08-10T21:22:22.327332 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: oanda_api | taskName=None
+2025-08-10T21:22:22.327363 [32m[INFO][0m infrastructure.monitoring.health:52 register_check() - Registered health check: system_resources | taskName=None
