@@ -1,6 +1,13 @@
 'use client';
 import { HeaderErrorBoundary } from '@/components/error';
-import { WalletButton, WalletProfile } from '@/components/WalletConnection';
+import { Avatar, Identity, Name } from '@coinbase/onchainkit/identity';
+import {
+  ConnectWallet,
+  Wallet,
+  WalletDropdown,
+  WalletDropdownDisconnect,
+  WalletDropdownLink,
+} from '@coinbase/onchainkit/wallet';
 import Link from 'next/link';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -118,29 +125,35 @@ const HeaderComponent = memo(function HeaderComponent() {
                 <div className="bg-gray-700 animate-pulse rounded-lg px-4 py-2 w-32 h-8"></div>
               </li>
             ) : (
-              <>
-                {/* Show Account link when connected */}
-                {isConnected && (
-                  <li className="py-2 md:py-0">
-                    <Link
-                      href="/account"
-                      onClick={handleNavClick}
-                      className="text-green-400 hover:text-green-300 transition-colors font-medium"
-                    >
-                      Account
-                    </Link>
-                  </li>
-                )}
+              <li className="py-2 md:py-0">
+                <Wallet>
+                  <ConnectWallet className="bg-transparent hover:bg-green-600/10 text-green-400 border border-green-400 hover:text-green-300 hover:border-green-300 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+                    <Avatar className="h-6 w-6" />
+                    <Name />
+                  </ConnectWallet>
+                  <WalletDropdown>
+                    <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
+                      <Avatar />
+                      <Name />
+                    </Identity>
 
-                {/* Show Connect button when disconnected, Profile when connected */}
-                <li className="py-2 md:py-0">
-                  {isConnected ? (
-                    <WalletProfile size="sm" />
-                  ) : (
-                    <WalletButton size="sm" variant="outline" />
-                  )}
-                </li>
-              </>
+                    <WalletDropdownLink
+                      icon="wallet"
+                      href="https://wallet.coinbase.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Open Wallet
+                    </WalletDropdownLink>
+
+                    <WalletDropdownLink icon="user" href="/account">
+                      Account Settings
+                    </WalletDropdownLink>
+
+                    <WalletDropdownDisconnect />
+                  </WalletDropdown>
+                </Wallet>
+              </li>
             )}
           </ul>
         </nav>

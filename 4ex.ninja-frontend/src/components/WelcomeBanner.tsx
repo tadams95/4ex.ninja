@@ -1,6 +1,12 @@
 'use client';
 
-import { WalletProfile } from '@/components/WalletConnection';
+import { Avatar, Identity, Name } from '@coinbase/onchainkit/identity';
+import {
+  Wallet,
+  WalletDropdown,
+  WalletDropdownDisconnect,
+  WalletDropdownLink,
+} from '@coinbase/onchainkit/wallet';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -25,7 +31,45 @@ export default function WelcomeBanner() {
             <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
             <span className="text-green-400 font-medium">Connected</span>
           </div>
-          <WalletProfile size="md" />
+          <Wallet>
+            <WalletDropdown>
+              <div className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer group px-3 py-2 text-sm">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <Identity
+                  address={address}
+                  schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
+                >
+                  <Avatar className="w-6 h-6" />
+                  <Name className="text-white font-medium" />
+                </Identity>
+                <svg
+                  className="w-4 h-4 text-gray-400 group-hover:text-gray-300 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+              <WalletDropdownLink
+                icon="wallet"
+                href="https://wallet.coinbase.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Wallet
+              </WalletDropdownLink>
+              <WalletDropdownLink icon="user" href="/account">
+                Account Settings
+              </WalletDropdownLink>
+              <WalletDropdownDisconnect />
+            </WalletDropdown>
+          </Wallet>
         </div>
 
         <div className="flex space-x-3">
@@ -34,12 +78,6 @@ export default function WelcomeBanner() {
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
             View Signals
-          </Link>
-          <Link
-            href="/account"
-            className="border border-green-600 text-green-400 hover:bg-green-600/10 px-4 py-2 rounded-lg font-medium transition-colors"
-          >
-            Account
           </Link>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
-import { WalletButton } from '@/components/WalletConnection';
 import WelcomeBanner from '@/components/WelcomeBanner';
+import { ConnectWallet, Wallet } from '@coinbase/onchainkit/wallet';
 import dynamic from 'next/dynamic';
 import { Suspense, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -94,7 +94,13 @@ export default function Home() {
                 }}
                 fallbackClassName="animate-fade-in"
               >
-                <WalletButton size="lg" variant="primary" />
+                <Wallet>
+                  <ConnectWallet>
+                    <button className="bg-green-600 hover:bg-green-700 text-white border border-green-600 hover:border-green-700 font-semibold rounded-lg transition-all duration-200 px-6 py-3 text-base cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+                      Connect Wallet
+                    </button>
+                  </ConnectWallet>
+                </Wallet>
               </ConditionalMotionDiv>
             )}
           </ConditionalMotionDiv>
