@@ -67,7 +67,7 @@ export default function Home() {
               fallbackClassName=""
               className="text-4xl font-bold mb-6"
             >
-              Welcome to 4ex.ninja
+              Welcome to 4EX.NINJA
             </ConditionalMotionDiv>
 
             <ConditionalMotionDiv
@@ -81,7 +81,7 @@ export default function Home() {
             >
               {isHydrated && isConnected
                 ? 'Your premium forex signals dashboard is ready. Start trading with confidence.'
-                : 'Get access to premium forex signals and boost your trading strategy.'}
+                : 'Get access to the 4EX platform.'}
             </ConditionalMotionDiv>
 
             {/* Only show connect button if not connected */}

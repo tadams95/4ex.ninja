@@ -29,11 +29,12 @@ export default function WalletButton({
     lg: 'px-6 py-3 text-base',
   };
 
-  // Variant styles
+  // Variant styles to match app's color scheme
   const variantClasses = {
-    primary: 'bg-green-600 hover:bg-green-700 text-white border-green-600',
-    secondary: 'bg-gray-700 hover:bg-gray-600 text-white border-gray-700',
-    outline: 'bg-transparent hover:bg-green-600/10 text-green-500 border-green-500',
+    primary: 'bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700',
+    secondary: 'bg-gray-700 hover:bg-gray-600 text-white border-gray-700 hover:border-gray-600',
+    outline:
+      'bg-transparent hover:bg-green-600/10 text-green-400 border-green-400 hover:text-green-300 hover:border-green-300',
   };
 
   const baseClasses = `
