@@ -628,3 +628,113 @@ Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESC
 Context:
   taskName: Task-94
 ==================================================
+=== ERROR at 2025-08-10T17:42:38.423384 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-95
+==================================================
+=== ERROR at 2025-08-10T17:57:38.428883 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 30): Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-96
+==================================================
+=== ERROR at 2025-08-10T18:12:38.437656 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 31): Alert escalated (level 30): Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-97
+==================================================
+=== ERROR at 2025-08-10T18:27:38.466074 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 32): Alert escalated (level 31): Alert escalated (level 30): Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-98
+==================================================
+=== ERROR at 2025-08-10T18:42:38.480933 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 33): Alert escalated (level 32): Alert escalated (level 31): Alert escalated (level 30): Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-99
+==================================================
+=== ERROR at 2025-08-10T18:57:38.515724 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 34): Alert escalated (level 33): Alert escalated (level 32): Alert escalated (level 31): Alert escalated (level 30): Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-100
+==================================================
+=== ERROR at 2025-08-10T19:12:38.531533 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 35): Alert escalated (level 34): Alert escalated (level 33): Alert escalated (level 32): Alert escalated (level 31): Alert escalated (level 30): Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-101
+==================================================
+=== ERROR at 2025-08-10T19:27:38.508647 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 36): Alert escalated (level 35): Alert escalated (level 34): Alert escalated (level 33): Alert escalated (level 32): Alert escalated (level 31): Alert escalated (level 30): Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-102
+==================================================
+=== ERROR at 2025-08-10T19:42:38.511748 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 37): Alert escalated (level 36): Alert escalated (level 35): Alert escalated (level 34): Alert escalated (level 33): Alert escalated (level 32): Alert escalated (level 31): Alert escalated (level 30): Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-103
+==================================================
+=== ERROR at 2025-08-10T19:57:38.537661 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 38): Alert escalated (level 37): Alert escalated (level 36): Alert escalated (level 35): Alert escalated (level 34): Alert escalated (level 33): Alert escalated (level 32): Alert escalated (level 31): Alert escalated (level 30): Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-104
+==================================================
+=== ERROR at 2025-08-10T20:12:38.546778 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: MEMORY: Alert escalated (level 39): Alert escalated (level 38): Alert escalated (level 37): Alert escalated (level 36): Alert escalated (level 35): Alert escalated (level 34): Alert escalated (level 33): Alert escalated (level 32): Alert escalated (level 31): Alert escalated (level 30): Alert escalated (level 29): Alert escalated (level 28): Alert escalated (level 27): Alert escalated (level 26): Alert escalated (level 25): Alert escalated (level 24): Alert escalated (level 23): Alert escalated (level 22): Alert escalated (level 21): Alert escalated (level 20): Alert escalated (level 19): Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): MEMORY usage is 85.9%, exceeding threshold of 85.0% | Context: {"memory_used_mb": 6579.21875, "memory_available_mb": 2304.109375}
+Context:
+  taskName: Task-105
+==================================================

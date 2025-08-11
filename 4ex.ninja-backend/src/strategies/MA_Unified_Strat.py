@@ -55,6 +55,18 @@ from infrastructure.cache.redis_cache_service import (
     get_cache_service as initialize_cache_service,
 )
 
+# Import Discord webhook sender for direct webhook notifications
+try:
+    from infrastructure.services.discord_webhook_sender import get_webhook_sender
+    import aiohttp
+
+    WEBHOOK_AVAILABLE = True
+except ImportError:
+    WEBHOOK_AVAILABLE = False
+    logging.warning(
+        "Discord webhook sender not available, using fallback notifications"
+    )
+
 # Set up database connections
 client = MongoClient(
     MONGO_CONNECTION_STRING, tls=True, tlsAllowInvalidCertificates=True
@@ -268,15 +280,99 @@ class MovingAverageCrossStrategy:
 
     async def send_signal_to_discord(self, signal_data: Dict, row: pd.Series) -> None:
         """
-        Send trading signal to Discord using the existing Discord infrastructure.
+        Send trading signal to Discord using direct webhook call with rate limiting.
 
-        This method converts our signal_data dictionary to a Signal entity
-        and sends it to Discord through the comprehensive notification system.
+        This method sends signals directly to Discord webhooks for immediate notifications.
         """
         try:
-            # Convert signal_data to Signal entity for Discord notification
+            # Check if webhook sender is available
+            if WEBHOOK_AVAILABLE:
+                try:
+                    webhook_sender = await get_webhook_sender()
+
+                    # Prepare signal data for webhook
+                    webhook_signal_data = {
+                        "instrument": self.pair,
+                        "timeframe": self.timeframe,
+                        "signal": signal_data["signal"],
+                        "close": signal_data["close"],
+                        "stop_loss": signal_data["stop_loss"],
+                        "take_profit": signal_data["take_profit"],
+                        "sl_pips": signal_data["sl_pips"],
+                        "tp_pips": signal_data["tp_pips"],
+                        "risk_reward_ratio": signal_data["risk_reward_ratio"],
+                    }
+
+                    # Determine channel based on signal quality
+                    channel = (
+                        "signals_premium"
+                        if signal_data["risk_reward_ratio"] > 2.0
+                        else "signals_free"
+                    )
+
+                    # Retry logic for rate limiting
+                    max_retries = 3
+                    base_delay = 2  # Base delay in seconds
+
+                    for attempt in range(max_retries):
+                        try:
+                            # Send webhook notification
+                            webhook_success = await webhook_sender.send_signal_webhook(
+                                webhook_signal_data, channel
+                            )
+
+                            if webhook_success:
+                                logging.info(
+                                    f"🚀 Direct Discord webhook sent to {channel} for {self.pair} {self.timeframe}"
+                                )
+                                return
+                            else:
+                                # If it failed but didn't raise an exception, break and use fallback
+                                logging.warning(
+                                    f"⚠️ Direct webhook failed (attempt {attempt + 1}/{max_retries}), falling back to infrastructure"
+                                )
+                                break
+
+                        except aiohttp.ClientResponseError as e:
+                            if e.status == 429:  # Rate limited
+                                if attempt < max_retries - 1:
+                                    # Exponential backoff: 2s, 4s, 8s
+                                    delay = base_delay * (2**attempt)
+                                    logging.warning(
+                                        f"🕒 Discord rate limited (429), retrying in {delay}s (attempt {attempt + 1}/{max_retries})"
+                                    )
+                                    await asyncio.sleep(delay)
+                                    continue
+                                else:
+                                    logging.warning(
+                                        f"🚫 Discord rate limit exceeded after {max_retries} attempts, using fallback"
+                                    )
+                                    break
+                            else:
+                                # Other HTTP errors
+                                logging.warning(
+                                    f"⚠️ Discord webhook HTTP error {e.status}: {e.message}"
+                                )
+                                break
+                        except Exception as retry_e:
+                            logging.warning(
+                                f"⚠️ Discord webhook error (attempt {attempt + 1}/{max_retries}): {retry_e}"
+                            )
+                            if attempt < max_retries - 1:
+                                delay = base_delay * (2**attempt)
+                                await asyncio.sleep(delay)
+                                continue
+                            else:
+                                break
+
+                except Exception as webhook_e:
+                    logging.warning(
+                        f"Direct webhook error: {webhook_e}, using fallback"
+                    )
+
+            # Fallback to existing comprehensive Discord infrastructure
             signal_entity = Signal(
-                signal_id=f"{self.pair}_{self.timeframe}_{signal_data['time'].strftime('%Y%m%d_%H%M%S')}",
+                signal_id=f"{self.pair}_{self.timeframe}_{pd.Timestamp(signal_data['time']).strftime('%Y%m%d_%H%M%S')}",
                 pair=self.pair,
                 timeframe=self.timeframe,
                 signal_type=(
@@ -308,13 +404,11 @@ class MovingAverageCrossStrategy:
                 risk_reward_ratio=signal_data.get("risk_reward_ratio"),
                 strategy_name="MA Unified Strategy",
                 status=SignalStatus.ACTIVE,
-                confidence_score=0.85,  # You can calculate this based on ATR, volume, etc.
+                confidence_score=0.85,
             )
 
             # Send to Discord using AsyncNotificationService for non-blocking delivery
             channel_tier = get_discord_channel_tier(signal_data)
-
-            # Determine priority and user tier based on signal quality
             priority = (
                 NotificationPriority.HIGH
                 if channel_tier == "premium"
@@ -323,7 +417,6 @@ class MovingAverageCrossStrategy:
             user_tier = UserTier.PREMIUM if channel_tier == "premium" else UserTier.FREE
 
             try:
-                # Use async notification service for non-blocking delivery
                 discord_success = await send_signal_async(
                     signal=signal_entity,
                     priority=priority,
@@ -351,29 +444,9 @@ class MovingAverageCrossStrategy:
                     logging.info(
                         f"✅ Discord notification queued for {self.pair} {self.timeframe} signal"
                     )
-                    # Track Discord notification success
-                    metrics_collector.increment_counter(
-                        "discord_notifications_sent",
-                        1,
-                        {
-                            "pair": self.pair,
-                            "timeframe": self.timeframe,
-                            "signal_type": "crossover",
-                        },
-                    )
                 else:
                     logging.warning(
                         f"⚠️ Failed to queue Discord notification for {self.pair} {self.timeframe}"
-                    )
-                    # Track Discord notification failure
-                    metrics_collector.increment_counter(
-                        "discord_notifications_failed",
-                        1,
-                        {
-                            "pair": self.pair,
-                            "timeframe": self.timeframe,
-                            "reason": "queue_failure",
-                        },
                     )
 
             except Exception as e:
@@ -381,11 +454,8 @@ class MovingAverageCrossStrategy:
                     f"⚠️ AsyncNotificationService failed for {self.pair} {self.timeframe}: {str(e)}"
                 )
 
-                # Fallback to legacy Discord notification
+                # Final fallback to legacy Discord notification
                 try:
-                    logging.info(
-                        f"Attempting legacy Discord notification for {self.pair} {self.timeframe}"
-                    )
                     discord_success = await send_signal_to_discord(
                         signal=signal_entity,
                         alert_type="crossover_signal",
@@ -393,20 +463,7 @@ class MovingAverageCrossStrategy:
                             "market_conditions": "Live Trading Signal (Fallback)",
                             "sl_pips": signal_data.get("sl_pips", 0),
                             "tp_pips": signal_data.get("tp_pips", 0),
-                            "atr_value": signal_data.get("atr", 0),
-                            "volatility": (
-                                "Medium" if signal_data.get("atr", 0) < 50 else "High"
-                            ),
                             "session": self._get_trading_session(),
-                            "strategy_confidence": (
-                                "High"
-                                if signal_data.get("risk_reward_ratio", 0) > 1.5
-                                else "Medium"
-                            ),
-                            "channel_tier": channel_tier,
-                            "notification_priority": (
-                                "HIGH" if channel_tier == "premium" else "NORMAL"
-                            ),
                         },
                     )
 
@@ -414,45 +471,14 @@ class MovingAverageCrossStrategy:
                         logging.info(
                             f"✅ Legacy Discord notification sent for {self.pair} {self.timeframe} signal"
                         )
-                        # Track Discord notification success
-                        metrics_collector.increment_counter(
-                            "discord_notifications_sent",
-                            1,
-                            {
-                                "pair": self.pair,
-                                "timeframe": self.timeframe,
-                                "signal_type": "crossover_fallback",
-                            },
-                        )
                     else:
                         logging.warning(
-                            f"⚠️ Legacy Discord notification also failed for {self.pair} {self.timeframe}"
-                        )
-                        # Track Discord notification failure
-                        metrics_collector.increment_counter(
-                            "discord_notifications_failed",
-                            1,
-                            {
-                                "pair": self.pair,
-                                "timeframe": self.timeframe,
-                                "reason": "fallback_failure",
-                            },
+                            f"⚠️ All Discord notification methods failed for {self.pair} {self.timeframe}"
                         )
 
                 except Exception as fallback_e:
                     logging.error(
-                        f"❌ Legacy Discord notification also failed for {self.pair} {self.timeframe}: {str(fallback_e)}",
-                        exc_info=True,
-                    )
-                    # Track Discord notification errors
-                    metrics_collector.increment_counter(
-                        "discord_notifications_failed",
-                        1,
-                        {
-                            "pair": self.pair,
-                            "timeframe": self.timeframe,
-                            "reason": "exception",
-                        },
+                        f"❌ All Discord notification methods failed for {self.pair} {self.timeframe}: {str(fallback_e)}"
                     )
 
         except Exception as e:
