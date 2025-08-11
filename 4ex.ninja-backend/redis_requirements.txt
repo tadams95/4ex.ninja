@@ -1,0 +1,8 @@
+# Redis Caching Dependencies
+# Add these packages to your requirements.txt for Redis caching functionality
+
+redis[hiredis]==5.0.1  # Redis Python client with high-performance hiredis parser
+hiredis==2.2.3         # C extension for faster Redis parsing (optional but recommended)
+
+# Performance monitoring (if not already included)
+prometheus-client==0.19.0  # For metrics collection and monitoring
