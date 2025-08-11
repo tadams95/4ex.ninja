@@ -1,8 +1,10 @@
 'use client';
+import { WalletButton } from '@/components/WalletConnection';
+import WelcomeBanner from '@/components/WelcomeBanner';
 import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 import { ConditionalMotionDiv } from '../components/ui';
-import SubscribeButton from './components/SubscribeButton';
 
 // Lazy load CurrencyTicker component (WebSocket + animation heavy)
 const CurrencyTicker = dynamic(() => import('./components/CurrencyTicker'), {
@@ -15,6 +17,13 @@ const CurrencyTicker = dynamic(() => import('./components/CurrencyTicker'), {
 });
 
 export default function Home() {
+  const { isConnected } = useAccount();
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Suspense
@@ -36,6 +45,21 @@ export default function Home() {
             }}
             fallbackClassName="animate-fade-in"
           >
+            {/* Welcome Banner for Connected Users */}
+            {isHydrated && isConnected && (
+              <ConditionalMotionDiv
+                motionProps={{
+                  initial: { opacity: 0, y: -10 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { duration: 0.5 },
+                }}
+                fallbackClassName="animate-fade-in"
+                className="mb-8"
+              >
+                <WelcomeBanner />
+              </ConditionalMotionDiv>
+            )}
+
             <ConditionalMotionDiv
               motionProps={{
                 whileHover: { scale: 1.05 },
@@ -45,6 +69,7 @@ export default function Home() {
             >
               Welcome to 4ex.ninja
             </ConditionalMotionDiv>
+
             <ConditionalMotionDiv
               motionProps={{
                 initial: { opacity: 0 },
@@ -54,18 +79,24 @@ export default function Home() {
               fallbackClassName="animate-fade-in"
               className="mb-4 text-lg"
             >
-              Get access to premium forex signals and boost your trading strategy.
+              {isHydrated && isConnected
+                ? 'Your premium forex signals dashboard is ready. Start trading with confidence.'
+                : 'Get access to premium forex signals and boost your trading strategy.'}
             </ConditionalMotionDiv>
-            <ConditionalMotionDiv
-              motionProps={{
-                initial: { opacity: 0 },
-                animate: { opacity: 1 },
-                transition: { delay: 0.6 },
-              }}
-              fallbackClassName="animate-fade-in"
-            >
-              <SubscribeButton />
-            </ConditionalMotionDiv>
+
+            {/* Only show connect button if not connected */}
+            {isHydrated && !isConnected && (
+              <ConditionalMotionDiv
+                motionProps={{
+                  initial: { opacity: 0 },
+                  animate: { opacity: 1 },
+                  transition: { delay: 0.6 },
+                }}
+                fallbackClassName="animate-fade-in"
+              >
+                <WalletButton size="lg" variant="primary" />
+              </ConditionalMotionDiv>
+            )}
           </ConditionalMotionDiv>
         </div>
       </div>

@@ -1,12 +1,20 @@
 'use client';
 import { HeaderErrorBoundary } from '@/components/error';
-import WalletConnectionOnchain from '@/components/WalletConnectionOnchain';
+import { WalletButton, WalletProfile } from '@/components/WalletConnection';
 import Link from 'next/link';
 import { memo, useCallback, useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 const HeaderComponent = memo(function HeaderComponent() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isHydrated, setIsHydrated] = useState<boolean>(false);
+  const { isConnected } = useAccount();
+
+  // Handle hydration
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   // Check screen size on component mount and resize
   useEffect(() => {
@@ -74,31 +82,66 @@ const HeaderComponent = memo(function HeaderComponent() {
             md:flex md:items-center md:space-x-4 md:static md:shadow-none md:p-0 md:w-auto
           `}
           >
+            {/* Navigation Links */}
             <li className="py-2 md:py-0">
-              <Link href="/" onClick={handleNavClick}>
+              <Link
+                href="/"
+                onClick={handleNavClick}
+                className="hover:text-green-400 transition-colors"
+              >
                 Home
               </Link>
             </li>
             <li className="py-2 md:py-0">
-              <Link href="/about" onClick={handleNavClick}>
+              <Link
+                href="/about"
+                onClick={handleNavClick}
+                className="hover:text-green-400 transition-colors"
+              >
                 About
               </Link>
             </li>
             <li className="py-2 md:py-0">
-              <Link href="/feed" onClick={handleNavClick}>
+              <Link
+                href="/feed"
+                onClick={handleNavClick}
+                className="hover:text-green-400 transition-colors"
+              >
                 Signals
               </Link>
             </li>
-            <li className="py-2 md:py-0">
-              <Link href="/account" onClick={handleNavClick} className="text-green-500">
-                Account
-              </Link>
-            </li>
 
-            {/* Wallet Connection - Primary authentication method */}
-            <li className="py-2 md:py-0">
-              <WalletConnectionOnchain />
-            </li>
+            {/* Wallet Connection */}
+            {!isHydrated ? (
+              // Hydration placeholder
+              <li className="py-2 md:py-0">
+                <div className="bg-gray-700 animate-pulse rounded-lg px-4 py-2 w-32 h-8"></div>
+              </li>
+            ) : (
+              <>
+                {/* Show Account link when connected */}
+                {isConnected && (
+                  <li className="py-2 md:py-0">
+                    <Link
+                      href="/account"
+                      onClick={handleNavClick}
+                      className="text-green-400 hover:text-green-300 transition-colors font-medium"
+                    >
+                      Account
+                    </Link>
+                  </li>
+                )}
+
+                {/* Show Connect button when disconnected, Profile when connected */}
+                <li className="py-2 md:py-0">
+                  {isConnected ? (
+                    <WalletProfile size="sm" />
+                  ) : (
+                    <WalletButton size="sm" variant="outline" />
+                  )}
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </div>

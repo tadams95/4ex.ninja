@@ -15,7 +15,6 @@ export { default as PricingErrorBoundary } from './PricingErrorBoundary';
 export { default as AuthProviderErrorBoundary } from './AuthProviderErrorBoundary';
 export { default as HeaderErrorBoundary } from './HeaderErrorBoundary';
 export { default as ProtectedRouteErrorBoundary } from './ProtectedRouteErrorBoundary';
-export { default as SubscribeButtonErrorBoundary } from './SubscribeButtonErrorBoundary';
 
 // API Error Handling Components (Day 4)
 export { default as OfflineErrorFallback } from './OfflineErrorFallback';

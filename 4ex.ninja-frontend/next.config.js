@@ -145,6 +145,17 @@ const nextConfig = {
     optimizePackageImports: ['@tanstack/react-query', 'framer-motion'],
   },
 
+  // Turbopack configuration (moved from experimental.turbo)
+  turbopack: {
+    rules: {
+      // Configure any specific file loaders for Turbopack if needed
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+  },
+
   // Webpack configuration for performance monitoring
   webpack: (config, { dev, isServer }) => {
     // Add performance budget plugin in production
