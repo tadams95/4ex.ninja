@@ -1,15 +1,11 @@
 /**
  * Simple Wallet Connection Hook
- * 
+ *
  * Provides basic wallet connection functionality without WebSocket complexity
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { 
-  walletService, 
-  type WalletConnectionState,
-  type AccessTier 
-} from '@/utils/onchain-notification-manager';
+import { walletService, type WalletConnectionState } from '@/utils/onchain-notification-manager';
+import { useCallback, useEffect, useState } from 'react';
 
 // Simple wallet connection hook
 export function useWallet() {

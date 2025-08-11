@@ -1,19 +1,19 @@
 /**
  * WalletConnection Component
- * 
+ *
  * Simple wallet connection component for the header
  * Shows connection status and allows users to connect/disconnect
  */
 
 'use client';
 
-import React, { useState } from 'react';
 import { useWallet } from '@/hooks/useNotificationConnection';
-import { 
-  formatTokenBalance, 
-  getAccessTierLabel, 
-  getAccessTierColor 
+import {
+  formatTokenBalance,
+  getAccessTierColor,
+  getAccessTierLabel,
 } from '@/utils/onchain-notification-manager';
+import { useState } from 'react';
 
 export default function WalletConnection() {
   const { walletState, isConnecting, connectWallet, disconnectWallet } = useWallet();
@@ -22,7 +22,7 @@ export default function WalletConnection() {
 
   const handleConnect = async () => {
     if (!walletInput.trim()) return;
-    
+
     const success = await connectWallet(walletInput.trim());
     if (success) {
       setWalletInput('');
@@ -46,7 +46,11 @@ export default function WalletConnection() {
           <span className="text-sm font-medium">
             {walletState.address?.slice(0, 6)}...{walletState.address?.slice(-4)}
           </span>
-          <span className={`text-xs px-2 py-1 rounded ${getAccessTierColor(walletState.accessTier || 'public')} bg-gray-700`}>
+          <span
+            className={`text-xs px-2 py-1 rounded ${getAccessTierColor(
+              walletState.accessTier || 'public'
+            )} bg-gray-700`}
+          >
             {walletState.accessTier?.toUpperCase() || 'PUBLIC'}
           </span>
         </button>
@@ -55,23 +59,28 @@ export default function WalletConnection() {
           <div className="absolute right-0 top-12 w-80 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50">
             <div className="p-4">
               <h3 className="text-white font-medium mb-3">Wallet Connected</h3>
-              
+
               <div className="space-y-3">
                 <div className="bg-gray-800 rounded p-3">
                   <p className="text-gray-400 text-sm">Address</p>
                   <p className="text-white font-mono text-sm">{walletState.address}</p>
                 </div>
-                
+
                 <div className="bg-gray-800 rounded p-3">
                   <p className="text-gray-400 text-sm">Balance</p>
                   <p className="text-white font-medium">
-                    {walletState.tokenBalance ? formatTokenBalance(walletState.tokenBalance) : '0'} $4EX
+                    {walletState.tokenBalance ? formatTokenBalance(walletState.tokenBalance) : '0'}{' '}
+                    $4EX
                   </p>
                 </div>
-                
+
                 <div className="bg-gray-800 rounded p-3">
                   <p className="text-gray-400 text-sm">Access Tier</p>
-                  <p className={`font-medium ${getAccessTierColor(walletState.accessTier || 'public')}`}>
+                  <p
+                    className={`font-medium ${getAccessTierColor(
+                      walletState.accessTier || 'public'
+                    )}`}
+                  >
                     {getAccessTierLabel(walletState.accessTier || 'public')}
                   </p>
                 </div>
@@ -111,21 +120,19 @@ export default function WalletConnection() {
         <div className="absolute right-0 top-12 w-80 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50">
           <div className="p-4">
             <h3 className="text-white font-medium mb-3">Connect Wallet</h3>
-            
+
             <div className="space-y-3">
               <div>
-                <label className="block text-gray-400 text-sm mb-2">
-                  Wallet Address
-                </label>
+                <label className="block text-gray-400 text-sm mb-2">Wallet Address</label>
                 <input
                   type="text"
                   value={walletInput}
-                  onChange={(e) => setWalletInput(e.target.value)}
+                  onChange={e => setWalletInput(e.target.value)}
                   placeholder="Enter wallet address (0x...)"
                   className="w-full bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              
+
               {/* Test Addresses */}
               <div className="bg-gray-800 rounded p-3">
                 <p className="text-gray-400 text-xs mb-2">Quick test addresses:</p>
@@ -185,7 +192,7 @@ export default function WalletConnection() {
 
       {/* Backdrop to close modal */}
       {showConnectionModal && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={() => setShowConnectionModal(false)}
         />

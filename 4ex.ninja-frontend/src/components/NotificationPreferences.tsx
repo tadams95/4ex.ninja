@@ -1,36 +1,42 @@
 /**
  * NotificationPreferences Component
- * 
+ *
  * UI for managing wallet connections, notification settings,
  * and token tier visualization with real onchain integration
  */
 
 'use client';
 
-import React, { useState } from 'react';
-import { 
-  useWalletNotifications, 
-  useNotificationPreferences, 
-  useConnectionStatus 
+import {
+  useConnectionStatus,
+  useNotificationPreferences,
+  useWalletNotifications,
 } from '@/hooks/useNotificationConnection';
-import { 
-  formatTokenBalance, 
-  getAccessTierLabel, 
+import {
+  formatTokenBalance,
   getAccessTierColor,
-  type AccessTier 
+  getAccessTierLabel,
 } from '@/utils/onchain-notification-manager';
+import { useState } from 'react';
 
 export default function NotificationPreferences() {
-  const { walletState, connectWallet, disconnectWallet, getAvailableChannels } = useWalletNotifications();
-  const { preferences, updatePreferences, hasPermission, requestNotificationPermission, sendTestNotification } = useNotificationPreferences();
+  const { walletState, connectWallet, disconnectWallet, getAvailableChannels } =
+    useWalletNotifications();
+  const {
+    preferences,
+    updatePreferences,
+    hasPermission,
+    requestNotificationPermission,
+    sendTestNotification,
+  } = useNotificationPreferences();
   const connectionStatus = useConnectionStatus();
-  
+
   const [walletInput, setWalletInput] = useState('');
   const [isConnecting, setIsConnecting] = useState(false);
 
   const handleConnectWallet = async () => {
     if (!walletInput.trim()) return;
-    
+
     setIsConnecting(true);
     try {
       const success = await connectWallet(walletInput.trim());
@@ -70,18 +76,18 @@ export default function NotificationPreferences() {
       {/* Wallet Connection Section */}
       <div className="border border-gray-700 rounded-lg p-4 space-y-4">
         <h3 className="text-lg font-semibold text-white">Wallet Connection</h3>
-        
+
         {!walletState.isConnected ? (
           <div className="space-y-3">
             <p className="text-gray-300 text-sm">
               Connect your wallet to access token-gated notifications and premium features.
             </p>
-            
+
             <div className="flex space-x-2">
               <input
                 type="text"
                 value={walletInput}
-                onChange={(e) => setWalletInput(e.target.value)}
+                onChange={e => setWalletInput(e.target.value)}
                 placeholder="Enter wallet address (0x...)"
                 className="flex-1 bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -133,11 +139,17 @@ export default function NotificationPreferences() {
                   {walletState.address?.slice(0, 6)}...{walletState.address?.slice(-4)}
                 </p>
                 <p className="text-gray-300 text-sm">
-                  Balance: {walletState.tokenBalance ? formatTokenBalance(walletState.tokenBalance) : '0'} $4EX
+                  Balance:{' '}
+                  {walletState.tokenBalance ? formatTokenBalance(walletState.tokenBalance) : '0'}{' '}
+                  $4EX
                 </p>
               </div>
               <div className="text-right">
-                <p className={`font-medium ${getAccessTierColor(walletState.accessTier || 'public')}`}>
+                <p
+                  className={`font-medium ${getAccessTierColor(
+                    walletState.accessTier || 'public'
+                  )}`}
+                >
                   {getAccessTierLabel(walletState.accessTier || 'public')}
                 </p>
                 <button
@@ -154,7 +166,7 @@ export default function NotificationPreferences() {
               <h4 className="text-white font-medium mb-2">Your Access Benefits:</h4>
               <div className="space-y-1 text-sm">
                 {availableChannels.length > 0 ? (
-                  availableChannels.map((channel) => (
+                  availableChannels.map(channel => (
                     <div key={channel} className="flex items-center space-x-2">
                       <span className="text-green-400">✓</span>
                       <span className="text-gray-300 capitalize">{channel.replace('_', ' ')}</span>
@@ -175,7 +187,7 @@ export default function NotificationPreferences() {
       {/* Notification Settings */}
       <div className="border border-gray-700 rounded-lg p-4 space-y-4">
         <h3 className="text-lg font-semibold text-white">Notification Settings</h3>
-        
+
         {/* Sound Notifications */}
         <div className="flex items-center justify-between">
           <div>
@@ -203,9 +215,7 @@ export default function NotificationPreferences() {
             <p className="text-gray-400 text-sm">Get notifications even when tab is closed</p>
           </div>
           <div className="flex items-center space-x-2">
-            {hasPermission === 'denied' && (
-              <span className="text-red-400 text-xs">Blocked</span>
-            )}
+            {hasPermission === 'denied' && <span className="text-red-400 text-xs">Blocked</span>}
             <button
               onClick={handleBrowserPushToggle}
               disabled={hasPermission === 'denied'}
@@ -236,12 +246,12 @@ export default function NotificationPreferences() {
         <div>
           <p className="text-white font-medium mb-2">Signal Types</p>
           <div className="space-y-2">
-            {['BUY', 'SELL', 'ALERT'].map((type) => (
+            {['BUY', 'SELL', 'ALERT'].map(type => (
               <label key={type} className="flex items-center space-x-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={preferences.signalTypes.includes(type)}
-                  onChange={(e) => {
+                  onChange={e => {
                     const newTypes = e.target.checked
                       ? [...preferences.signalTypes, type]
                       : preferences.signalTypes.filter(t => t !== type);
@@ -266,7 +276,7 @@ export default function NotificationPreferences() {
             max="95"
             step="5"
             value={preferences.minimumConfidence}
-            onChange={(e) => updatePreferences({ minimumConfidence: parseInt(e.target.value) })}
+            onChange={e => updatePreferences({ minimumConfidence: parseInt(e.target.value) })}
             className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
           />
           <div className="flex justify-between text-xs text-gray-400 mt-1">
@@ -280,8 +290,8 @@ export default function NotificationPreferences() {
       <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
         <h3 className="text-blue-400 font-medium mb-2">🚀 Onchain Migration Ready</h3>
         <p className="text-gray-300 text-sm mb-3">
-          When the $4EX token launches, your preferences will automatically migrate to onchain storage 
-          for enhanced security and cross-device synchronization.
+          When the $4EX token launches, your preferences will automatically migrate to onchain
+          storage for enhanced security and cross-device synchronization.
         </p>
         <div className="space-y-1 text-xs">
           <div className="flex items-center space-x-2">

@@ -1,6 +1,6 @@
 /**
  * Simplified Onchain Wallet Service
- * 
+ *
  * Provides basic wallet connection and token balance checking
  * without the complexity of WebSocket integration
  */
@@ -30,9 +30,9 @@ export const TOKEN_CONFIG = {
 
 // Token thresholds for access tiers
 export const ACCESS_THRESHOLDS = {
-  holders: BigInt(1000 * Math.pow(10, TOKEN_CONFIG.DECIMALS)),   // 1,000 $4EX
-  premium: BigInt(10000 * Math.pow(10, TOKEN_CONFIG.DECIMALS)),  // 10,000 $4EX
-  whale: BigInt(100000 * Math.pow(10, TOKEN_CONFIG.DECIMALS)),   // 100,000 $4EX
+  holders: BigInt(1000 * Math.pow(10, TOKEN_CONFIG.DECIMALS)), // 1,000 $4EX
+  premium: BigInt(10000 * Math.pow(10, TOKEN_CONFIG.DECIMALS)), // 10,000 $4EX
+  whale: BigInt(100000 * Math.pow(10, TOKEN_CONFIG.DECIMALS)), // 100,000 $4EX
 } as const;
 
 // ERC20 ABI for token balance checking
@@ -175,7 +175,7 @@ class SimpleWalletService {
     this.listeners.add(listener);
     // Send current state immediately
     listener(this.connectionState);
-    
+
     return () => {
       this.listeners.delete(listener);
     };
@@ -210,7 +210,7 @@ class SimpleWalletService {
     if (this.isValidAddress(address)) {
       (TOKEN_CONFIG as any).ADDRESS = address;
       console.log(`Token address updated to: ${address}`);
-      
+
       // Refresh balance if connected
       if (this.connectionState.isConnected && this.connectionState.address) {
         this.connectWallet(this.connectionState.address);
@@ -223,37 +223,50 @@ class SimpleWalletService {
 export const walletService = new SimpleWalletService();
 
 // Export utility functions
-export function formatTokenBalance(balance: bigint, decimals: number = TOKEN_CONFIG.DECIMALS): string {
+export function formatTokenBalance(
+  balance: bigint,
+  decimals: number = TOKEN_CONFIG.DECIMALS
+): string {
   const divisor = BigInt(Math.pow(10, decimals));
   const wholePart = balance / divisor;
   const fractionalPart = balance % divisor;
-  
+
   if (fractionalPart === BigInt(0)) {
     return wholePart.toString();
   }
-  
+
   const fractionalStr = fractionalPart.toString().padStart(decimals, '0');
   const trimmedFractional = fractionalStr.replace(/0+$/, '');
-  
+
   return trimmedFractional ? `${wholePart}.${trimmedFractional}` : wholePart.toString();
 }
 
 export function getAccessTierLabel(tier: AccessTier): string {
   switch (tier) {
-    case 'whale': return 'Whale (100,000+ $4EX)';
-    case 'premium': return 'Premium (10,000+ $4EX)';
-    case 'holders': return 'Holder (1,000+ $4EX)';
-    case 'public': return 'Public (0 $4EX)';
-    default: return 'Unknown';
+    case 'whale':
+      return 'Whale (100,000+ $4EX)';
+    case 'premium':
+      return 'Premium (10,000+ $4EX)';
+    case 'holders':
+      return 'Holder (1,000+ $4EX)';
+    case 'public':
+      return 'Public (0 $4EX)';
+    default:
+      return 'Unknown';
   }
 }
 
 export function getAccessTierColor(tier: AccessTier): string {
   switch (tier) {
-    case 'whale': return 'text-purple-400';
-    case 'premium': return 'text-yellow-400';
-    case 'holders': return 'text-blue-400';
-    case 'public': return 'text-gray-400';
-    default: return 'text-gray-400';
+    case 'whale':
+      return 'text-purple-400';
+    case 'premium':
+      return 'text-yellow-400';
+    case 'holders':
+      return 'text-blue-400';
+    case 'public':
+      return 'text-gray-400';
+    default:
+      return 'text-gray-400';
   }
 }

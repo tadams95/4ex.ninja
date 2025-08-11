@@ -1,14 +1,19 @@
 /**
  * Test page for Simple Onchain Integration
- * 
+ *
  * Validates wallet connection and token balance checking functionality
  */
 
 'use client';
 
-import React, { useState } from 'react';
 import { useWallet } from '@/hooks/useNotificationConnection';
-import { formatTokenBalance, TOKEN_CONFIG, getAccessTierLabel, getAccessTierColor } from '@/utils/onchain-notification-manager';
+import {
+  formatTokenBalance,
+  getAccessTierColor,
+  getAccessTierLabel,
+  TOKEN_CONFIG,
+} from '@/utils/onchain-notification-manager';
+import { useState } from 'react';
 
 export default function TestOnchainIntegration() {
   const { walletState, isConnecting, connectWallet, disconnectWallet } = useWallet();
@@ -23,7 +28,6 @@ export default function TestOnchainIntegration() {
   return (
     <div className="min-h-screen bg-gray-950 p-6">
       <div className="max-w-4xl mx-auto space-y-6">
-        
         {/* Header */}
         <div className="bg-gray-900 rounded-lg p-6">
           <h1 className="text-3xl font-bold text-white mb-2">
@@ -32,7 +36,7 @@ export default function TestOnchainIntegration() {
           <p className="text-gray-300">
             Simple wallet integration with Coinbase Onchain Kit for token balance checking
           </p>
-          
+
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-gray-800 rounded p-3">
               <p className="text-gray-400 text-sm">Wallet Status</p>
@@ -44,22 +48,24 @@ export default function TestOnchainIntegration() {
                 )}
               </p>
             </div>
-            
+
             <div className="bg-gray-800 rounded p-3">
               <p className="text-gray-400 text-sm">Access Tier</p>
-              <p className={`font-medium mt-1 ${getAccessTierColor(walletState.accessTier || 'public')}`}>
+              <p
+                className={`font-medium mt-1 ${getAccessTierColor(
+                  walletState.accessTier || 'public'
+                )}`}
+              >
                 {walletState.accessTier?.toUpperCase() || 'PUBLIC'}
               </p>
             </div>
-            
+
             <div className="bg-gray-800 rounded p-3">
               <p className="text-gray-400 text-sm">Token Balance</p>
               <p className="text-white font-medium mt-1">
-                {walletState.tokenBalance ? (
-                  `${formatTokenBalance(walletState.tokenBalance)} $4EX`
-                ) : (
-                  '0 $4EX'
-                )}
+                {walletState.tokenBalance
+                  ? `${formatTokenBalance(walletState.tokenBalance)} $4EX`
+                  : '0 $4EX'}
               </p>
             </div>
           </div>
@@ -79,11 +85,10 @@ export default function TestOnchainIntegration() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
               {/* Day 1-2: Foundation Setup */}
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold text-white">✅ Day 1-2: Foundation Setup</h3>
-                
+
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <span className="text-green-400">✓</span>
@@ -107,7 +112,7 @@ export default function TestOnchainIntegration() {
               {/* Day 3-4: Token Integration */}
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold text-white">✅ Day 3-4: Token Integration</h3>
-                
+
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <span className="text-green-400">✓</span>
@@ -151,8 +156,9 @@ export default function TestOnchainIntegration() {
 
             <div className="mt-4 bg-yellow-900/20 border border-yellow-500/30 rounded p-3">
               <p className="text-yellow-400 text-sm">
-                <strong>Current State:</strong> Implementation uses simulation for testing until $4EX token is deployed. 
-                Real contract calls will be enabled automatically when token address is updated.
+                <strong>Current State:</strong> Implementation uses simulation for testing until
+                $4EX token is deployed. Real contract calls will be enabled automatically when token
+                address is updated.
               </p>
             </div>
           </div>
@@ -160,26 +166,23 @@ export default function TestOnchainIntegration() {
 
         {/* Live Demo Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
           {/* Wallet Connection Demo */}
           <div className="bg-gray-900 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-white mb-4">Wallet Connection Demo</h3>
-            
+
             {!walletState.isConnected ? (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-gray-400 text-sm mb-2">
-                    Enter Wallet Address
-                  </label>
+                  <label className="block text-gray-400 text-sm mb-2">Enter Wallet Address</label>
                   <input
                     type="text"
                     value={walletInput}
-                    onChange={(e) => setWalletInput(e.target.value)}
+                    onChange={e => setWalletInput(e.target.value)}
                     placeholder="0x..."
                     className="w-full bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-                
+
                 <button
                   onClick={handleConnect}
                   disabled={isConnecting || !walletInput.trim()}
@@ -193,10 +196,26 @@ export default function TestOnchainIntegration() {
                   <p className="text-gray-400 text-xs mb-2">Quick test addresses:</p>
                   <div className="space-y-1">
                     {[
-                      { addr: '0x1234567890abcdef1234567890abcdef12345670', tier: 'Whale', color: 'text-purple-400' },
-                      { addr: '0x1234567890abcdef1234567890abcdef12345671', tier: 'Premium', color: 'text-yellow-400' },
-                      { addr: '0x1234567890abcdef1234567890abcdef12345672', tier: 'Holder', color: 'text-blue-400' },
-                      { addr: '0x1234567890abcdef1234567890abcdef12345673', tier: 'Free', color: 'text-gray-400' },
+                      {
+                        addr: '0x1234567890abcdef1234567890abcdef12345670',
+                        tier: 'Whale',
+                        color: 'text-purple-400',
+                      },
+                      {
+                        addr: '0x1234567890abcdef1234567890abcdef12345671',
+                        tier: 'Premium',
+                        color: 'text-yellow-400',
+                      },
+                      {
+                        addr: '0x1234567890abcdef1234567890abcdef12345672',
+                        tier: 'Holder',
+                        color: 'text-blue-400',
+                      },
+                      {
+                        addr: '0x1234567890abcdef1234567890abcdef12345673',
+                        tier: 'Free',
+                        color: 'text-gray-400',
+                      },
                     ].map(({ addr, tier, color }) => (
                       <button
                         key={addr}
@@ -213,21 +232,24 @@ export default function TestOnchainIntegration() {
               <div className="space-y-4">
                 <div className="bg-gray-800 rounded p-3">
                   <p className="text-gray-400 text-sm">Connected Address</p>
-                  <p className="text-white font-mono text-sm break-all">
-                    {walletState.address}
-                  </p>
+                  <p className="text-white font-mono text-sm break-all">{walletState.address}</p>
                 </div>
-                
+
                 <div className="bg-gray-800 rounded p-3">
                   <p className="text-gray-400 text-sm">Token Balance</p>
                   <p className="text-white font-medium">
-                    {walletState.tokenBalance ? formatTokenBalance(walletState.tokenBalance) : '0'} $4EX
+                    {walletState.tokenBalance ? formatTokenBalance(walletState.tokenBalance) : '0'}{' '}
+                    $4EX
                   </p>
                 </div>
-                
+
                 <div className="bg-gray-800 rounded p-3">
                   <p className="text-gray-400 text-sm">Access Tier</p>
-                  <p className={`font-medium ${getAccessTierColor(walletState.accessTier || 'public')}`}>
+                  <p
+                    className={`font-medium ${getAccessTierColor(
+                      walletState.accessTier || 'public'
+                    )}`}
+                  >
                     {getAccessTierLabel(walletState.accessTier || 'public')}
                   </p>
                 </div>
@@ -251,21 +273,18 @@ export default function TestOnchainIntegration() {
           {/* Token Configuration */}
           <div className="bg-gray-900 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-white mb-4">Token Configuration</h3>
-            
+
             <div className="space-y-3">
               <div className="bg-gray-800 rounded p-3">
                 <p className="text-gray-400 text-sm">Contract Address</p>
-                <p className="text-white font-mono text-sm break-all">
-                  {TOKEN_CONFIG.ADDRESS}
-                </p>
+                <p className="text-white font-mono text-sm break-all">{TOKEN_CONFIG.ADDRESS}</p>
                 <p className="text-yellow-400 text-xs mt-1">
-                  {TOKEN_CONFIG.ADDRESS === '0x0000000000000000000000000000000000000000' 
+                  {TOKEN_CONFIG.ADDRESS === '0x0000000000000000000000000000000000000000'
                     ? 'Placeholder - will be updated when $4EX token is deployed'
-                    : 'Live contract address'
-                  }
+                    : 'Live contract address'}
                 </p>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-gray-800 rounded p-3">
                   <p className="text-gray-400 text-sm">Symbol</p>
@@ -301,7 +320,7 @@ export default function TestOnchainIntegration() {
         {/* Success Summary */}
         <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
           <h2 className="text-xl font-bold text-green-400 mb-4">🎉 Section 3.1 Complete!</h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h3 className="text-lg font-semibold text-white mb-3">✅ Delivered</h3>
@@ -313,7 +332,7 @@ export default function TestOnchainIntegration() {
                 <li>• No breaking changes to existing features</li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-white mb-3">🚀 Ready for Next Steps</h3>
               <ul className="space-y-2 text-gray-300">
@@ -327,10 +346,11 @@ export default function TestOnchainIntegration() {
 
           <div className="mt-6 bg-green-800/20 border border-green-600/30 rounded p-4">
             <p className="text-green-300">
-              <strong>Success:</strong> Onchain integration infrastructure is now live and ready for real 
-              wallet connections. Users can connect wallets via the header, see their token balances, 
-              and view their access tiers. The system seamlessly falls back to simulation during 
-              development and will automatically use real contract calls when the $4EX token is deployed.
+              <strong>Success:</strong> Onchain integration infrastructure is now live and ready for
+              real wallet connections. Users can connect wallets via the header, see their token
+              balances, and view their access tiers. The system seamlessly falls back to simulation
+              during development and will automatically use real contract calls when the $4EX token
+              is deployed.
             </p>
           </div>
         </div>

@@ -131,7 +131,7 @@ const HeaderComponent = memo(function HeaderComponent() {
                 </li>
               </>
             )}
-            
+
             {/* Wallet Connection - Always visible */}
             <li className="py-2 md:py-0">
               <WalletConnection />
