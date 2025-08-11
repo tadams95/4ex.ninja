@@ -22,7 +22,6 @@ from infrastructure.services.notification_integration import (
     NotificationPriority as AsyncNotificationPriority,
     ensure_async_notifications_started,
 )
-from infrastructure.services.websocket_notification_bridge import get_websocket_bridge
 
 logger = logging.getLogger(__name__)
 
@@ -152,21 +151,6 @@ class SignalNotificationService:
                         f"Discord notification error for signal {signal.signal_id}: {e}"
                     )
                     results["discord"] = False
-
-            # Send to WebSocket connections (NEW)
-            try:
-                websocket_bridge = get_websocket_bridge()
-                async_priority = self._map_priority_to_async(priority)
-                await websocket_bridge.broadcast_signal(signal, async_priority)
-                results["websocket"] = True
-                logger.info(
-                    f"Signal {signal.signal_id} broadcast to WebSocket connections"
-                )
-            except Exception as e:
-                logger.error(
-                    f"WebSocket notification error for signal {signal.signal_id}: {e}"
-                )
-                results["websocket"] = False
 
             # Send to Email if enabled and priority is high enough
             if NotificationChannel.EMAIL in self.enabled_channels and priority in [

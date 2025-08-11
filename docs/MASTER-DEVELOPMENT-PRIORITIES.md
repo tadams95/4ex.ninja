@@ -190,168 +190,119 @@ Based on comprehensive signal flow analysis, current system has critical perform
 - ✅ **Production Ready**: Validated performance improvements in live system
 - ✅ **Cost Efficiency**: 95% reduction in unnecessary database queries
 
-**🚀 READY TO PROCEED**: Section 2.3 Day 3-4 Frontend WebSocket Integration
-
----
-
-#### 2.3 Real-time Web App Notifications (Onchain-Ready Architecture)
-- [x] **Day 1-2**: Implement Hybrid WebSocket server for wallet-first authentication ⚡ **HYBRID AUTH** ✅ **COMPLETED**
-  ```typescript
-  // Enhanced WebSocket with wallet + session authentication
-  interface WebSocketAuth {
-    walletAddress?: string;     // Primary: wallet-based authentication
-    signature?: string;         // Optional: signed message verification
-    sessionToken?: string;      // Fallback: legacy session auth
-    anonymousId?: string;       // Anonymous users get limited access
-  }
-  
-  interface NotificationTarget {
-    type: 'wallet' | 'session' | 'anonymous';
-    identifier: string;
-    tokenBalance?: bigint;      // For token-gated features
-    accessTier: 'free' | 'premium' | 'holder' | 'whale';
-  }
-  ```
-  - ✅ FastAPI WebSocket endpoints with dual authentication support (wallet + session)
-  - ✅ Token-gated notification channels based on $4EX holdings (prepared)
-  - ✅ Progressive enhancement: anonymous → session → wallet authentication
-  - ✅ Integration with existing AsyncNotificationService for Discord delivery
-  
-  **✅ IMPLEMENTATION COMPLETE (Day 1-2)**:
-  - ✅ WebSocketNotificationBridge with hybrid authentication (428 lines)
-  - ✅ FastAPI WebSocket routes: `/ws/notifications` endpoint
-  - ✅ Multi-auth support: walletAddress, sessionToken, anonymousId
-  - ✅ Progressive access tiers: FREE/PREMIUM/HOLDER/WHALE
-  - ✅ Signal broadcasting enhanced for dual delivery (Discord + WebSocket)
-  - ✅ Redis integration for connection state management
-  - ✅ Zero breaking changes, full backwards compatibility
+#### 2.3 User Notification Optimization (Completed System)
+- [x] **Discord Notifications**: Real-time signal delivery via AsyncNotificationService ✅ **ALREADY ACHIEVED**
+  - ✅ Discord notifications delivered within 5 seconds of signal generation
+  - ✅ Critical system alerts automatically routed to Discord admin channels
+  - ✅ Multi-tier user preference system with role-based access
   - ✅ Production-ready error handling and monitoring
-  - ✅ Token-gated channel preparation for future $4EX integration
-  
-  📄 **Documentation**: `WEBSOCKET-DAY1-2-COMPLETE.md`
 
-- [x] **Day 3-4**: Create onchain-aware WebSocket client with multi-auth support 🔗 **WALLET INTEGRATION** ✅ **COMPLETED**
-  ```typescript
-  // Client-side wallet integration for notifications
-  class OnchainNotificationManager {
-    async connectWithWallet(walletAddress: string): Promise<WebSocketConnection>
-    async connectWithSession(sessionToken: string): Promise<WebSocketConnection>
-    async connectAnonymous(): Promise<WebSocketConnection>
-    
-    // Token-gated notification channels
-    getAvailableChannels(tokenBalance: bigint): NotificationChannel[]
-    subscribeToTokenGatedSignals(tier: AccessTier): void
-  }
-  ```
-  - ✅ Enhanced notification store with wallet address awareness
-  - ✅ Local preference storage (preparing for onchain migration)
-  - ✅ Real-time token balance monitoring for access tier updates (simulated)
-  - ✅ Browser push notifications with wallet-based targeting
-  
-  **✅ IMPLEMENTATION COMPLETE (Day 3-4)**:
-  - ✅ OnchainNotificationManager with multi-auth support (418 lines)
-  - ✅ React hooks for easy integration (useNotificationConnection, useWalletNotifications)
-  - ✅ Token-gated channel access based on simulated $4EX holdings
-  - ✅ Progressive authentication: anonymous → session → wallet
-  - ✅ NotificationPreferences and RealTimeNotifications UI components
-  - ✅ SSR-safe implementation with proper client-side initialization
-  - ✅ Zero breaking changes, full backwards compatibility
-  - ✅ Production-ready error handling and testing interface
-  - ✅ Complete onchain migration readiness framework
-  
-  📄 **Documentation**: `ONCHAIN-WEBSOCKET-DAY3-4-COMPLETE.md`
+- [x] **Signal Feed Interface**: Frontend display system with data fetching ✅ **ALREADY ACHIEVED**
+  - ✅ Real-time signal feed updates via standard HTTP requests
+  - ✅ Session-based authentication for user preferences
+  - ✅ Responsive UI with crossover visualization
+  - ✅ Signal filtering and search capabilities
 
-- [ ] **Day 5-6**: Implement token-gated notification features and preference management 🎯 **TOKEN UTILITY**
-  ```typescript
-  // Token-based notification tiers
-  const NOTIFICATION_TIERS = {
-    public: [],                    // Free signals for everyone
-    holders: ['premium_signals'],  // Token holder exclusive
-    premium: ['whale_signals'],    // High-value signals
-    whale: ['alpha_signals']       // Ultra-premium for large holders
-  };
-  
-  // Local preference storage (future onchain migration ready)
-  interface OnchainNotificationPrefs {
-    walletAddress?: string;
-    sounds: boolean;
-    browserPush: boolean;
-    signalTypes: string[];
-    minimumConfidence: number;
-    // Future: stored onchain via smart contract
-  }
-  ```
-  - Token balance-based notification channel access
-  - Local preference management with onchain migration path
-  - Real-time signal feed with wallet-aware features
-  - Signal interaction features (favorites, notes) linked to wallet address
-  - Premium notification delivery for token holders
-
-- [ ] **Day 7**: Test wallet-based notification delivery and migration compatibility 📊 **VALIDATION**
-  - Wallet connection flow testing (Coinbase Wallet, MetaMask, WalletConnect)
-  - Token balance threshold testing for notification access
-  - Session-to-wallet migration user experience testing
-  - Anonymous user progressive enhancement validation
-  - Cross-device notification consistency (wallet-based identity)
-
-**🎯 Week 9-10 Success Criteria:**
-- [ ] Discord notifications delivered within 5 seconds of signal generation ✅ **ALREADY ACHIEVED**
-- [ ] **Critical system alerts automatically routed to Discord admin channels** ✅ **ALREADY ACHIEVED**
-- [ ] Real-time web app updates working with wallet-first authentication
-- [ ] Token-gated notification channels operational for $4EX holders
-- [ ] Progressive authentication: anonymous → session → wallet migration path
-- [ ] Browser push notifications working with wallet-based targeting
-- [ ] Local notification preferences with onchain migration readiness
-- [ ] Seamless user experience across all authentication methods
+**🎯 Section 2.3 Status**: System working perfectly for 4HR/D1 timeframes. Discord provides instant notifications while feed fetching handles signal display efficiently. No real-time WebSocket complexity needed for low-frequency signals (7-10 per day maximum).
 
 ---
 
-## 🔗 **INTEGRATED PHASE 2: REAL-TIME NOTIFICATIONS & ONCHAIN MIGRATION** (Weeks 9-16)
-*Priority: CRITICAL - Foundation for Web3-native user experience*
+### **Week 11-12: Wallet Infrastructure & Real Onchain Integration** 
+*Priority: HIGH - Foundation for real token-gated features*
 
-### **Week 9-10: WebSocket Foundation & Basic Authentication** 
-*Building on existing AsyncNotificationService and WebSocket infrastructure*
+**⚠️ DEPENDENCY NOTICE**: The following features require Onchain Kit installation and real wallet integration. The simulation framework from Day 3-4 will be replaced with real onchain functionality.
 
-#### 2.3.1 WebSocket Server Enhancement (Days 1-3)
-- [x] **Day 1**: Extend existing FastAPI with WebSocket endpoints ⚡ **BUILD ON EXISTING** ✅ **COMPLETED**
-  ```python
-  # Leverage existing AsyncNotificationService infrastructure
-  class WebSocketNotificationBridge:
-      def __init__(self, async_notification_service: AsyncNotificationService):
-          self.discord_service = async_notification_service
-          self.websocket_connections = {}
-      
-      async def broadcast_signal(self, signal: Signal, targets: List[NotificationTarget]):
-          # Discord notifications (already working)
-          await self.discord_service.queue_notification(signal, priority)
-          # WebSocket notifications (new)
-          await self.broadcast_to_websockets(signal, targets)
-  ```
-  - ✅ Integrate with existing AsyncNotificationService for unified notification delivery
-  - ✅ Use existing Redis cache for connection state management
-  - ✅ Leverage current signal generation pipeline (already optimized to <500ms)
-
-- [x] **Day 2**: Implement multi-tier authentication system 🔐 **PROGRESSIVE AUTH** ✅ **COMPLETED**
-  ```python
-  # Three-tier authentication supporting migration path
-  async def authenticate_websocket(websocket: WebSocket, auth_data: dict):
-      if auth_data.get('walletAddress'):
-          return await authenticate_wallet(auth_data)  # Future-ready
-      elif auth_data.get('sessionToken'):
-          return await authenticate_session(auth_data)  # Current NextAuth
-      else:
-          return await create_anonymous_session(auth_data)  # Public access
-  ```
-  - ✅ Anonymous access for public signals (leverage existing free tier logic)
-  - ✅ Session-based auth using existing NextAuth.js infrastructure
-  - ✅ Wallet auth placeholder (preparation for token launch)
-
-- [x] **Day 3**: Connection management and fallback systems 🔄 **RELIABILITY** ✅ **COMPLETED**
-  - ✅ Use existing WebSocket worker infrastructure (`websocket-worker.js`)
-  - ✅ Implement graceful degradation to Discord-only if WebSocket fails
-  - ✅ Connection pooling and auto-reconnection (build on existing patterns)
+#### 2.4 Onchain Integration Infrastructure (Days 1-4)
+- [ ] **Day 1-2**: Install and configure Coinbase Onchain Kit 🔧 **FOUNDATION**
+  ```bash
+  # Frontend: Install Onchain Kit
+  npm install @coinbase/onchainkit
   
-  **📄 Documentation**: `WEBSOCKET-DAY1-2-COMPLETE.md`
+  # Backend: Add Web3 infrastructure
+  pip install web3 eth-account
+  ```
+  - Replace simulated wallet connections with real wallet integration
+  - Add support for Coinbase Wallet, MetaMask, WalletConnect
+  - Configure Base network for future $4EX token integration
+
+- [ ] **Day 3-4**: Implement real token balance checking 🪙 **TOKEN INTEGRATION**
+  ```typescript
+  // Replace simulation in OnchainNotificationManager
+  private async getTokenBalance(walletAddress: string): Promise<bigint> {
+    // BEFORE (simulation):
+    // return walletAddress.endsWith('0') ? BigInt(100000) : BigInt(0);
+    
+    // AFTER (real onchain):
+    const tokenContract = new Contract(TOKEN_ADDRESS, ERC20_ABI, provider);
+    return await tokenContract.balanceOf(walletAddress);
+  }
+  ```
+  - Replace all simulated token balance calls with real contract calls
+  - Add real-time balance monitoring via Web3 events
+  - Implement dynamic access tier updates based on actual holdings
+
+#### 2.5 Token-Gated Features Implementation (Days 5-7)
+- [ ] **Day 5-6**: Enable real token-gated notification channels 🎯 **TOKEN UTILITY**
+  ```typescript
+  // Real token-based notification tiers
+  const REAL_NOTIFICATION_TIERS = {
+    public: [],                    // Free signals for everyone
+    holders: ['premium_signals'],  // 1,000+ $4EX token holders
+    premium: ['whale_signals'],    // 10,000+ $4EX token holders  
+    whale: ['alpha_signals']       // 100,000+ $4EX token holders
+  };
+  ```
+  - Convert simulated token-gated features to real functionality
+  - Real-time access tier updates based on actual token holdings
+  - Token balance-based notification channel access
+  - Premium notification delivery for actual token holders
+
+- [ ] **Day 7**: Test real wallet-based notification delivery � **VALIDATION**
+  - Real wallet connection flow testing (Coinbase Wallet, MetaMask, WalletConnect)
+  - Actual token balance threshold testing for notification access
+  - Session-to-wallet migration user experience testing
+  - Cross-device notification consistency with real wallet-based identity
+
+---
+
+### **Week 13-16: Token Launch & Full Production** 
+*Priority: CRITICAL - $4EX token launch and complete onchain migration*
+
+#### 2.6 $4EX Token Launch via Clanker (Days 1-4)
+- [ ] **Day 1**: Deploy $4EX token via Clanker bot 🚀 **LAUNCH**
+  ```bash
+  # Farcaster post to @clanker
+  "@clanker deploy a token for 4ex.ninja - the leading forex signal platform
+  Name: 4EX Forex Signals
+  Symbol: $4EX
+  Supply: 100000000000
+  Description: Premium forex signals and real-time notifications"
+  ```
+  - Monitor token deployment on Base network
+  - Verify Uniswap V4 pool creation and initial liquidity
+  - Record contract address and update frontend configuration
+
+- [ ] **Day 2**: Configure production token integration 🔧 **CONFIGURATION**
+  - Update Discord notification system with token-gated channels
+  - Configure token balance caching (use existing Redis infrastructure)
+  - Test token balance queries and tier assignment
+
+- [ ] **Day 3**: Enable token-gated Discord features � **TOKEN UTILITY**
+  ```python
+  # Production token-gated Discord channels
+  async def get_user_discord_access(wallet_address: str) -> List[str]:
+      balance = await get_token_balance(wallet_address)
+      tier = calculate_access_tier(balance)
+      return get_discord_roles_for_tier(tier)
+  ```
+  - Enable real token balance checks for Discord role assignment
+  - Activate token-gated Discord channels for premium signals
+  - Real-time token balance monitoring for role updates
+
+- [ ] **Day 4**: Launch user onboarding flow � **USER MIGRATION**
+  - Deploy wallet connection interface for existing users
+  - Launch airdrop campaign for current Discord subscribers
+  - Begin community marketing on Farcaster and X
 
 #### 2.3.2 Frontend WebSocket Integration (Days 4-6)
 - [ ] **Day 4**: Enhance existing notification store for WebSocket support 📱 **FRONTEND**
@@ -454,19 +405,19 @@ Based on comprehensive signal flow analysis, current system has critical perform
   - Create wallet connection UI components
   - Test wallet connection flow (MetaMask, Coinbase Wallet, WalletConnect)
 
-- [ ] **Day 3-4**: Implement wallet authentication for WebSocket 🔗 **INTEGRATION**
+- [ ] **Day 3-4**: Implement wallet authentication for Discord roles 🔗 **INTEGRATION**
   ```typescript
-  // Extend existing WebSocket auth to support wallets
-  interface WalletWebSocketAuth {
+  // Wallet-based Discord role assignment
+  interface WalletDiscordAuth {
     walletAddress: string;
-    signature?: string;  // Signed message for verification
-    message?: string;    // Anti-replay message
-    timestamp: number;
+    discordUserId?: string;
+    tokenBalance: bigint;
+    accessTier: 'free' | 'holder' | 'premium' | 'whale';
   }
   ```
-  - Add wallet signature verification to WebSocket server
+  - Add wallet signature verification for Discord role assignment
   - Create wallet connection hooks (`useWalletAuth`, `useTokenBalance`)
-  - Test wallet-based WebSocket authentication
+  - Test wallet-based Discord role updates
 
 #### 2.4.2 Token-Gated Features Preparation (Days 5-7)
 - [ ] **Day 5**: Design token tier system and thresholds 🎯 **TOKENOMICS**
@@ -474,9 +425,9 @@ Based on comprehensive signal flow analysis, current system has critical perform
   // Token tier configuration (ready for actual token)
   const TOKEN_TIERS = {
     FREE: 0n,           // Anyone
-    HOLDER: 100_000n,   // 100K tokens
-    PREMIUM: 1_000_000n, // 1M tokens  
-    WHALE: 10_000_000n   // 10M tokens
+    HOLDER: 1_000_000n,   // 1M tokens
+    PREMIUM: 10_000_000n, // 10M tokens  
+    WHALE: 100_000_000n   // 100M tokens
   };
   ```
   - Define notification channel access levels
@@ -508,22 +459,22 @@ Based on comprehensive signal flow analysis, current system has critical perform
   - Record contract address and update frontend configuration
 
 - [ ] **Day 2**: Configure production token integration 🔧 **CONFIGURATION**
-  - Update WebSocket server with real token contract address
-  - Configure token balance caching (use existing Redis infrastructure)
+  - Update Discord notification system with token-gated channels
+  - Configure token balance caching (use existing Redis infrastructure)  
   - Test token balance queries and tier assignment
 
 #### 2.5.2 Production Migration (Days 3-5) 🔄 **MIGRATION**
-- [ ] **Day 3**: Deploy token-gated WebSocket features 📡 **WEBSOCKET TOKENS**
+- [ ] **Day 3**: Deploy token-gated Discord features 📡 **TOKEN UTILITY**
   ```python
-  # Production token-gated notification channels
-  async def get_user_notification_channels(wallet_address: str) -> List[str]:
+  # Production token-gated Discord channels
+  async def get_user_discord_access(wallet_address: str) -> List[str]:
       balance = await get_token_balance(wallet_address)
       tier = calculate_access_tier(balance)
-      return get_channels_for_tier(tier)
+      return get_discord_roles_for_tier(tier)
   ```
-  - Enable real token balance checks in WebSocket authentication
-  - Activate token-gated notification channels
-  - Real-time token balance monitoring for tier updates
+  - Enable real token balance checks for Discord role assignment
+  - Activate token-gated Discord channels for premium signals
+  - Real-time token balance monitoring for role updates
 
 - [ ] **Day 4**: Launch user migration flow 👥 **USER MIGRATION**
   - Deploy migration wizard for existing users
@@ -543,7 +494,7 @@ Based on comprehensive signal flow analysis, current system has critical perform
 
 - [ ] **Day 7**: Performance validation and optimization ⚡ **OPTIMIZATION**
   - Validate <2s wallet connection performance
-  - Monitor notification delivery <1s for token holders
+  - Monitor Discord notification delivery <5s for token holders
   - Optimize token balance caching and tier calculations
 
 ---
@@ -551,30 +502,30 @@ Based on comprehensive signal flow analysis, current system has critical perform
 ### **🎯 Integrated Success Criteria (Weeks 9-16):**
 
 **Week 9-10 Milestones:**
-- [ ] Real-time WebSocket notifications operational (<1s delivery)
-- [ ] Multi-tier authentication working (anonymous/session/wallet ready)
-- [ ] Integration with existing Discord notifications (no disruption)
-- [ ] Production deployment on existing infrastructure
+- [ ] Discord notifications optimized (<5s delivery, already achieved)
+- [ ] Signal feed interface performance improved (<2s load times)
+- [ ] User authentication working (session/wallet ready)
+- [ ] Frontend performance on existing infrastructure
 
 **Week 11-12 Milestones:**
 - [ ] Wallet connection infrastructure ready (>90% connection success)
-- [ ] Token-gated features prepared and tested
+- [ ] Token-gated Discord features prepared and tested
 - [ ] User education and migration flows designed
 
 **Week 13-16 Milestones:**
 - [ ] $4EX token successfully launched and trading on Uniswap V4
 - [ ] 60% reduction in payment processing costs vs Stripe
 - [ ] 80%+ existing user migration rate within 30 days
-- [ ] Token-gated notifications functional with real-time balance updates
+- [ ] Token-gated Discord notifications functional with real-time balance updates
 - [ ] <100ms token balance checks, <2s wallet integration performance
 
 **📦 Integrated Deliverables:**
-- [ ] **Enhanced WebSocket Service** (builds on AsyncNotificationService)
-- [ ] **Wallet-Integrated Frontend** (extends existing notification store)
+- [ ] **Enhanced Discord Service** (builds on AsyncNotificationService)
+- [ ] **Wallet-Integrated Frontend** (extends existing signal feed)
 - [ ] **$4EX Token Contract** (Base network via Clanker)
 - [ ] **Token Purchase Interface** (Uniswap V4 integration)
 - [ ] **Migration System** (seamless user transition)
-- [ ] **Token-Gated Notifications** (premium signal channels)
+- [ ] **Token-Gated Discord Channels** (premium signal access)
 
 **� Strategic Benefits:**
 - **Efficiency**: Builds on existing optimized infrastructure (Redis, AsyncNotificationService)
@@ -749,7 +700,7 @@ Based on comprehensive signal flow analysis, current system has critical perform
 - [ ] **Test Coverage**: >80% coverage on critical paths
 
 ### **Phase 2 Success Metrics** (Business Features - Weeks 9-16)
-- [ ] **Real-Time Notifications**: WebSocket delivery <1s, 99%+ reliability
+- [ ] **Real-Time Notifications**: Discord delivery <5s, 99%+ reliability
 - [ ] **Wallet Integration**: >90% successful connection rate across devices
 - [ ] **Token Launch Success**: $4EX trading on Uniswap V4 with healthy liquidity
 - [ ] **User Migration**: 80%+ existing users migrate to token-based access

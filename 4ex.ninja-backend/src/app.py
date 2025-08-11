@@ -23,7 +23,6 @@ from api.routes.signals import router as signals_router
 from api.routes.market_data import router as market_data_router
 from api.routes.performance import router as performance_router
 from api.routes.alerts import router as alerts_router
-from api.routes.websocket import router as websocket_router
 from api.health import router as health_router
 from api.middleware.error_handler import ErrorHandlerMiddleware
 from api.middleware.logging_middleware import LoggingMiddleware
@@ -86,17 +85,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         logger.info("✅ System metrics monitoring started")
     except Exception as e:
         logger.warning(f"❌ System metrics monitoring failed to start: {e}")
-
-    # Initialize WebSocket notification bridge
-    try:
-        from infrastructure.services.websocket_notification_bridge import (
-            initialize_websocket_bridge,
-        )
-
-        await initialize_websocket_bridge()
-        logger.info("✅ WebSocket notification bridge initialized")
-    except Exception as e:
-        logger.warning(f"❌ WebSocket notification bridge failed to initialize: {e}")
 
     # Log startup completion
     logger.info("🎯 4ex.ninja Trading Platform API startup completed successfully")
@@ -199,7 +187,6 @@ def create_app() -> FastAPI:
 
     # Include routers
     app.include_router(health_router)
-    app.include_router(websocket_router)  # WebSocket routes
     app.include_router(auth_router, prefix="/api/v1")
     app.include_router(signals_router, prefix="/api/v1")
     app.include_router(market_data_router, prefix="/api/v1")
