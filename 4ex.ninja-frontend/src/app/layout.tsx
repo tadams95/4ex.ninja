@@ -1,3 +1,4 @@
+import '@coinbase/onchainkit/styles.css';
 import { Metadata } from 'next';
 import { Exo } from 'next/font/google';
 import { ChunkLoadErrorBoundary, GlobalErrorBoundary } from '../components/error';

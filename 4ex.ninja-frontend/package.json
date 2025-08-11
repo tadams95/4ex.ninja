@@ -29,6 +29,7 @@
     "@tanstack/react-query": "^5.84.1",
     "@tanstack/react-query-devtools": "^5.84.1",
     "@types/react-window": "^1.8.8",
+    "@wagmi/core": "^2.19.0",
     "bcryptjs": "^3.0.2",
     "crypto": "^1.0.1",
     "dompurify": "^3.2.6",
@@ -43,6 +44,8 @@
     "react-window": "^1.8.11",
     "react-window-infinite-loader": "^1.0.10",
     "stripe": "^17.6.0",
+    "viem": "^2.33.3",
+    "wagmi": "^2.16.2",
     "web-vitals": "^5.1.0",
     "zod": "^4.0.17",
     "zustand": "^5.0.7"

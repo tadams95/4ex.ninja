@@ -4,12 +4,16 @@ import { ErrorNotificationProvider } from '@/components/error/ErrorNotificationS
 import ProvidersErrorBoundary from '@/components/error/ProvidersErrorBoundary';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { queryClient } from '@/lib/queryClient';
+import { wagmiConfig } from '@/lib/wagmi';
 import { BaseComponentProps } from '@/types';
 import { initializeServiceWorker } from '@/utils/service-worker';
+import { OnchainKitProvider } from '@coinbase/onchainkit';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
+import { WagmiProvider } from 'wagmi';
+import { base } from 'wagmi/chains';
 
 // Lazy load React Query devtools only in development
 const ReactQueryDevtools = dynamic(
@@ -36,17 +40,23 @@ function ProvidersComponent({ children }: ProvidersProps) {
   }, []);
 
   return (
-    <SessionProvider>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <ErrorNotificationProvider>
-            {children}
-            {/* Only show devtools in development */}
-            {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
-          </ErrorNotificationProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </SessionProvider>
+    <OnchainKitProvider apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY} chain={base}>
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
+          <SessionProvider>
+            <AuthProvider>
+              <ErrorNotificationProvider>
+                {children}
+                {/* Only show devtools in development */}
+                {process.env.NODE_ENV === 'development' && (
+                  <ReactQueryDevtools initialIsOpen={false} />
+                )}
+              </ErrorNotificationProvider>
+            </AuthProvider>
+          </SessionProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </OnchainKitProvider>
   );
 }
 

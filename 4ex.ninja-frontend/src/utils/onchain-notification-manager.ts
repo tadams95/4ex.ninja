@@ -8,6 +8,19 @@
 import { createPublicClient, http } from 'viem';
 import { base } from 'viem/chains';
 
+// Browser wallet detection
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      isMetaMask?: boolean;
+      isCoinbaseWallet?: boolean;
+      on?: (event: string, handler: (...args: any[]) => void) => void;
+      removeListener?: (event: string, handler: (...args: any[]) => void) => void;
+    };
+  }
+}
+
 // Types
 export type AccessTier = 'public' | 'holders' | 'premium' | 'whale';
 
@@ -52,6 +65,7 @@ class SimpleWalletService {
     isConnected: false,
   };
   private listeners: Set<(state: WalletConnectionState) => void> = new Set();
+  private cleanupListeners?: () => void;
 
   constructor() {
     this.initializeClient();
@@ -70,16 +84,40 @@ class SimpleWalletService {
   }
 
   /**
-   * Connect wallet and get token balance
+   * Connect to browser wallet (MetaMask, Coinbase Wallet, etc.)
    */
-  public async connectWallet(walletAddress: string): Promise<boolean> {
+  public async connectWallet(): Promise<boolean> {
     try {
       this.updateConnectionState({ isConnecting: true });
 
+      // Check if we're in a browser environment
+      if (typeof window === 'undefined') {
+        throw new Error('Wallet connection is only available in browser environments');
+      }
+
+      // Check if wallet is available
+      if (!window.ethereum) {
+        throw new Error('No wallet found. Please install MetaMask or Coinbase Wallet.');
+      }
+
+      // Request account access
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts found. Please unlock your wallet.');
+      }
+
+      const walletAddress = accounts[0];
+
       // Validate wallet address
       if (!this.isValidAddress(walletAddress)) {
-        throw new Error('Invalid wallet address');
+        throw new Error('Invalid wallet address received');
       }
+
+      // Switch to Base network if needed
+      await this.switchToBaseNetwork();
 
       // Get token balance (real or simulated)
       const tokenBalance = await this.getTokenBalance(walletAddress);
@@ -95,6 +133,9 @@ class SimpleWalletService {
         error: undefined,
       });
 
+      // Set up account change listener
+      this.setupWalletListeners();
+
       return true;
     } catch (error) {
       console.error('Wallet connection failed:', error);
@@ -105,6 +146,111 @@ class SimpleWalletService {
       });
       return false;
     }
+  }
+
+  /**
+   * Switch to Base network
+   */
+  private async switchToBaseNetwork(): Promise<void> {
+    if (typeof window === 'undefined' || !window.ethereum) return;
+
+    try {
+      // Try to switch to Base network
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x2105' }], // Base mainnet chain ID
+      });
+    } catch (switchError: any) {
+      // If Base network is not added, add it
+      if (switchError.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: '0x2105',
+                chainName: 'Base',
+                nativeCurrency: {
+                  name: 'Ethereum',
+                  symbol: 'ETH',
+                  decimals: 18,
+                },
+                rpcUrls: ['https://mainnet.base.org'],
+                blockExplorerUrls: ['https://basescan.org'],
+              },
+            ],
+          });
+        } catch (addError) {
+          console.error('Failed to add Base network:', addError);
+          throw new Error('Failed to add Base network to wallet');
+        }
+      } else {
+        console.error('Failed to switch to Base network:', switchError);
+        // Don't throw here - we can still connect to other networks for testing
+      }
+    }
+  }
+
+  /**
+   * Set up wallet event listeners
+   */
+  private setupWalletListeners(): void {
+    if (typeof window === 'undefined' || !window.ethereum) return;
+
+    // Handle account changes
+    const handleAccountsChanged = (accounts: string[]) => {
+      if (accounts.length === 0) {
+        // User disconnected wallet
+        this.disconnect();
+      } else if (accounts[0] !== this.connectionState.address) {
+        // User changed account - reconnect
+        this.connectWallet();
+      }
+    };
+
+    // Handle chain changes
+    const handleChainChanged = () => {
+      // Reconnect to get updated balances for new chain
+      if (this.connectionState.isConnected) {
+        this.connectWallet();
+      }
+    };
+
+    // Add listeners
+    window.ethereum.on?.('accountsChanged', handleAccountsChanged);
+    window.ethereum.on?.('chainChanged', handleChainChanged);
+
+    // Store cleanup function
+    this.cleanupListeners = () => {
+      window.ethereum?.removeListener?.('accountsChanged', handleAccountsChanged);
+      window.ethereum?.removeListener?.('chainChanged', handleChainChanged);
+    };
+  }
+
+  /**
+   * Detect available wallet types
+   */
+  public getAvailableWallets(): string[] {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') {
+      return [];
+    }
+
+    const wallets: string[] = [];
+
+    if (window.ethereum) {
+      if (window.ethereum.isMetaMask) {
+        wallets.push('MetaMask');
+      }
+      if (window.ethereum.isCoinbaseWallet) {
+        wallets.push('Coinbase Wallet');
+      }
+      if (!window.ethereum.isMetaMask && !window.ethereum.isCoinbaseWallet) {
+        wallets.push('Browser Wallet');
+      }
+    }
+
+    return wallets;
   }
 
   /**
@@ -158,6 +304,12 @@ class SimpleWalletService {
    * Disconnect wallet
    */
   public disconnect(): void {
+    // Clean up listeners
+    if (this.cleanupListeners) {
+      this.cleanupListeners();
+      this.cleanupListeners = undefined;
+    }
+
     this.updateConnectionState({
       isConnected: false,
       address: undefined,
@@ -213,7 +365,7 @@ class SimpleWalletService {
 
       // Refresh balance if connected
       if (this.connectionState.isConnected && this.connectionState.address) {
-        this.connectWallet(this.connectionState.address);
+        this.connectWallet();
       }
     }
   }

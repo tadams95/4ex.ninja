@@ -18,11 +18,11 @@ export function useWallet() {
     return unsubscribe;
   }, []);
 
-  // Connect wallet
-  const connectWallet = useCallback(async (address: string) => {
+  // Connect wallet via browser wallet popup
+  const connectWallet = useCallback(async () => {
     setIsConnecting(true);
     try {
-      const success = await walletService.connectWallet(address);
+      const success = await walletService.connectWallet();
       return success;
     } finally {
       setIsConnecting(false);
@@ -34,10 +34,16 @@ export function useWallet() {
     walletService.disconnect();
   }, []);
 
+  // Get available wallets
+  const getAvailableWallets = useCallback(() => {
+    return walletService.getAvailableWallets();
+  }, []);
+
   return {
     walletState,
     isConnecting,
     connectWallet,
     disconnectWallet,
+    getAvailableWallets,
   };
 }

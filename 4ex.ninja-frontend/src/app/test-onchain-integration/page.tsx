@@ -16,14 +16,16 @@ import {
 import { useState } from 'react';
 
 export default function TestOnchainIntegration() {
-  const { walletState, isConnecting, connectWallet, disconnectWallet } = useWallet();
-  const [walletInput, setWalletInput] = useState('');
+  const { walletState, isConnecting, connectWallet, disconnectWallet, getAvailableWallets } =
+    useWallet();
   const [showImplementationStatus, setShowImplementationStatus] = useState(true);
 
   const handleConnect = async () => {
-    if (!walletInput.trim()) return;
-    await connectWallet(walletInput.trim());
+    await connectWallet();
   };
+
+  const availableWallets = getAvailableWallets();
+  const hasWallet = availableWallets.length > 0;
 
   return (
     <div className="min-h-screen bg-gray-950 p-6">
@@ -172,61 +174,63 @@ export default function TestOnchainIntegration() {
 
             {!walletState.isConnected ? (
               <div className="space-y-4">
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">Enter Wallet Address</label>
-                  <input
-                    type="text"
-                    value={walletInput}
-                    onChange={e => setWalletInput(e.target.value)}
-                    placeholder="0x..."
-                    className="w-full bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <button
-                  onClick={handleConnect}
-                  disabled={isConnecting || !walletInput.trim()}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-2 rounded-md font-medium transition-colors"
-                >
-                  {isConnecting ? 'Connecting...' : 'Connect Wallet'}
-                </button>
-
-                {/* Test Addresses */}
-                <div className="bg-gray-800 rounded p-3">
-                  <p className="text-gray-400 text-xs mb-2">Quick test addresses:</p>
-                  <div className="space-y-1">
-                    {[
-                      {
-                        addr: '0x1234567890abcdef1234567890abcdef12345670',
-                        tier: 'Whale',
-                        color: 'text-purple-400',
-                      },
-                      {
-                        addr: '0x1234567890abcdef1234567890abcdef12345671',
-                        tier: 'Premium',
-                        color: 'text-yellow-400',
-                      },
-                      {
-                        addr: '0x1234567890abcdef1234567890abcdef12345672',
-                        tier: 'Holder',
-                        color: 'text-blue-400',
-                      },
-                      {
-                        addr: '0x1234567890abcdef1234567890abcdef12345673',
-                        tier: 'Free',
-                        color: 'text-gray-400',
-                      },
-                    ].map(({ addr, tier, color }) => (
-                      <button
-                        key={addr}
-                        onClick={() => setWalletInput(addr)}
-                        className={`block w-full text-left ${color} hover:opacity-80 text-xs p-1 rounded hover:bg-gray-700`}
+                {!hasWallet ? (
+                  <div className="bg-red-900/20 border border-red-500/30 rounded p-3">
+                    <p className="text-red-400 text-sm mb-3">
+                      No wallet detected. Please install MetaMask or Coinbase Wallet to test wallet
+                      connection.
+                    </p>
+                    <div className="space-y-2">
+                      <a
+                        href="https://metamask.io/download/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-md text-center font-medium transition-colors"
                       >
-                        {tier}: {addr.slice(0, 6)}...{addr.slice(-4)}
-                      </button>
-                    ))}
+                        Install MetaMask
+                      </a>
+                      <a
+                        href="https://www.coinbase.com/wallet"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-md text-center font-medium transition-colors"
+                      >
+                        Install Coinbase Wallet
+                      </a>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="bg-green-900/20 border border-green-500/30 rounded p-3">
+                      <p className="text-green-400 text-sm mb-2">
+                        ✓ Wallet detected: {availableWallets.join(', ')}
+                      </p>
+                      <p className="text-gray-400 text-xs">
+                        Click "Connect" below to connect your wallet and see your token balance.
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={handleConnect}
+                      disabled={isConnecting}
+                      className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-2 rounded-md font-medium transition-colors"
+                    >
+                      {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+                    </button>
+
+                    <div className="bg-gray-800 rounded p-3">
+                      <h4 className="text-white text-sm font-medium mb-2">
+                        What happens when you connect:
+                      </h4>
+                      <ul className="text-gray-300 text-xs space-y-1">
+                        <li>• Your wallet will prompt you to connect</li>
+                        <li>• We'll check your $4EX token balance (simulated for testing)</li>
+                        <li>• Your access tier will be calculated</li>
+                        <li>• No transactions will be made</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="space-y-4">

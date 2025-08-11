@@ -2,7 +2,7 @@
  * WalletConnection Component
  *
  * Simple wallet connection component for the header
- * Shows connection status and allows users to connect/disconnect
+ * Shows connection status and allows users to connect/disconnect via browser wallet
  */
 
 'use client';
@@ -16,16 +16,13 @@ import {
 import { useState } from 'react';
 
 export default function WalletConnection() {
-  const { walletState, isConnecting, connectWallet, disconnectWallet } = useWallet();
+  const { walletState, isConnecting, connectWallet, disconnectWallet, getAvailableWallets } =
+    useWallet();
   const [showConnectionModal, setShowConnectionModal] = useState(false);
-  const [walletInput, setWalletInput] = useState('');
 
   const handleConnect = async () => {
-    if (!walletInput.trim()) return;
-
-    const success = await connectWallet(walletInput.trim());
+    const success = await connectWallet();
     if (success) {
-      setWalletInput('');
       setShowConnectionModal(false);
     }
   };
@@ -34,6 +31,9 @@ export default function WalletConnection() {
     disconnectWallet();
     setShowConnectionModal(false);
   };
+
+  const availableWallets = getAvailableWallets();
+  const hasWallet = availableWallets.length > 0;
 
   if (walletState.isConnected) {
     return (
@@ -121,49 +121,55 @@ export default function WalletConnection() {
           <div className="p-4">
             <h3 className="text-white font-medium mb-3">Connect Wallet</h3>
 
-            <div className="space-y-3">
-              <div>
-                <label className="block text-gray-400 text-sm mb-2">Wallet Address</label>
-                <input
-                  type="text"
-                  value={walletInput}
-                  onChange={e => setWalletInput(e.target.value)}
-                  placeholder="Enter wallet address (0x...)"
-                  className="w-full bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+            {!hasWallet ? (
+              <div className="space-y-4">
+                <div className="bg-red-900/20 border border-red-500/30 rounded p-3">
+                  <p className="text-red-400 text-sm">
+                    No wallet detected. Please install MetaMask or Coinbase Wallet to connect.
+                  </p>
+                </div>
 
-              {/* Test Addresses */}
-              <div className="bg-gray-800 rounded p-3">
-                <p className="text-gray-400 text-xs mb-2">Quick test addresses:</p>
-                <div className="space-y-1">
-                  <button
-                    onClick={() => setWalletInput('0x1234567890abcdef1234567890abcdef12345670')}
-                    className="block w-full text-left text-purple-400 hover:text-purple-300 text-xs p-1 rounded hover:bg-gray-700"
+                <div className="space-y-2">
+                  <a
+                    href="https://metamask.io/download/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-md text-center font-medium transition-colors"
                   >
-                    Whale: 0x...70 (100,000+ $4EX)
-                  </button>
-                  <button
-                    onClick={() => setWalletInput('0x1234567890abcdef1234567890abcdef12345671')}
-                    className="block w-full text-left text-yellow-400 hover:text-yellow-300 text-xs p-1 rounded hover:bg-gray-700"
+                    Install MetaMask
+                  </a>
+                  <a
+                    href="https://www.coinbase.com/wallet"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-md text-center font-medium transition-colors"
                   >
-                    Premium: 0x...71 (10,000+ $4EX)
-                  </button>
-                  <button
-                    onClick={() => setWalletInput('0x1234567890abcdef1234567890abcdef12345672')}
-                    className="block w-full text-left text-blue-400 hover:text-blue-300 text-xs p-1 rounded hover:bg-gray-700"
-                  >
-                    Holder: 0x...72 (1,000+ $4EX)
-                  </button>
-                  <button
-                    onClick={() => setWalletInput('0x1234567890abcdef1234567890abcdef12345673')}
-                    className="block w-full text-left text-gray-400 hover:text-gray-300 text-xs p-1 rounded hover:bg-gray-700"
-                  >
-                    Free: 0x...73 (0 $4EX)
-                  </button>
+                    Install Coinbase Wallet
+                  </a>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="bg-blue-900/20 border border-blue-500/30 rounded p-3">
+                  <p className="text-blue-400 text-sm mb-2">
+                    Click "Connect" to connect your {availableWallets.join(' or ')} wallet.
+                  </p>
+                  <p className="text-gray-400 text-xs">
+                    You'll be prompted to sign a message to verify wallet ownership.
+                  </p>
+                </div>
+
+                <div className="bg-gray-800 rounded p-3">
+                  <h4 className="text-white text-sm font-medium mb-2">What happens next:</h4>
+                  <ul className="text-gray-300 text-xs space-y-1">
+                    <li>• Your wallet will prompt you to connect</li>
+                    <li>• We'll check your $4EX token balance</li>
+                    <li>• Your access tier will be determined</li>
+                    <li>• No transactions will be made</li>
+                  </ul>
+                </div>
+              </div>
+            )}
 
             <div className="mt-4 flex space-x-2">
               <button
@@ -172,13 +178,15 @@ export default function WalletConnection() {
               >
                 Cancel
               </button>
-              <button
-                onClick={handleConnect}
-                disabled={isConnecting || !walletInput.trim()}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-2 rounded-md font-medium transition-colors"
-              >
-                {isConnecting ? 'Connecting...' : 'Connect'}
-              </button>
+              {hasWallet && (
+                <button
+                  onClick={handleConnect}
+                  disabled={isConnecting}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-2 rounded-md font-medium transition-colors"
+                >
+                  {isConnecting ? 'Connecting...' : 'Connect'}
+                </button>
+              )}
             </div>
 
             {walletState.error && (
