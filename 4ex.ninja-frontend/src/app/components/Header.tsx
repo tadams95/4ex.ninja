@@ -1,6 +1,6 @@
 'use client';
 import { HeaderErrorBoundary } from '@/components/error';
-import WalletConnection from '@/components/WalletConnection';
+import WalletConnectionOnchain from '@/components/WalletConnectionOnchain';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { memo, useCallback, useEffect, useState } from 'react';
@@ -134,7 +134,7 @@ const HeaderComponent = memo(function HeaderComponent() {
 
             {/* Wallet Connection - Always visible */}
             <li className="py-2 md:py-0">
-              <WalletConnection />
+              <WalletConnectionOnchain />
             </li>
           </ul>
         </nav>
