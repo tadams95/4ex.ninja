@@ -1,12 +1,10 @@
 'use client';
 import { HeaderErrorBoundary } from '@/components/error';
 import WalletConnectionOnchain from '@/components/WalletConnectionOnchain';
-import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { memo, useCallback, useEffect, useState } from 'react';
 
 const HeaderComponent = memo(function HeaderComponent() {
-  const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
@@ -29,11 +27,6 @@ const HeaderComponent = memo(function HeaderComponent() {
   const toggleMenu = useCallback((): void => {
     setIsMenuOpen(!isMenuOpen);
   }, [isMenuOpen]);
-
-  const handleSignOut = useCallback(() => {
-    signOut({ callbackUrl: '/' });
-    if (isMobile) setIsMenuOpen(false);
-  }, [isMobile]);
 
   const handleNavClick = useCallback(() => {
     if (isMobile) setIsMenuOpen(false);
@@ -91,48 +84,18 @@ const HeaderComponent = memo(function HeaderComponent() {
                 About
               </Link>
             </li>
-            {/* Only show feed link if authenticated */}
-            {status === 'authenticated' && (
-              <li className="py-2 md:py-0">
-                <Link href="/feed" onClick={handleNavClick}>
-                  Signals
-                </Link>
-              </li>
-            )}
+            <li className="py-2 md:py-0">
+              <Link href="/feed" onClick={handleNavClick}>
+                Signals
+              </Link>
+            </li>
+            <li className="py-2 md:py-0">
+              <Link href="/account" onClick={handleNavClick} className="text-green-500">
+                Account
+              </Link>
+            </li>
 
-            {/* Authentication links */}
-            {status === 'authenticated' ? (
-              <>
-                <li className="py-2 md:py-0">
-                  <Link href="/account" onClick={handleNavClick} className="text-green-500">
-                    Account
-                  </Link>
-                </li>
-                <li className="py-2 md:py-0">
-                  <button
-                    onClick={handleSignOut}
-                    className="text-red-500"
-                    data-testid="sign-out-button"
-                  >
-                    Sign Out
-                  </button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="py-2 md:py-0">
-                  <Link
-                    href="/login"
-                    onClick={handleNavClick}
-                    className="bg-green-700 hover:bg-green-800 px-4 py-1 rounded"
-                  >
-                    Log in
-                  </Link>
-                </li>
-              </>
-            )}
-
-            {/* Wallet Connection - Always visible */}
+            {/* Wallet Connection - Primary authentication method */}
             <li className="py-2 md:py-0">
               <WalletConnectionOnchain />
             </li>
