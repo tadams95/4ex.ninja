@@ -194,160 +194,368 @@ Based on comprehensive signal flow analysis, current system has critical perform
 
 ---
 
-#### 2.3 Real-time Web App Notifications
-- [ ] **Day 1-2**: Implement WebSocket server for instant signal streaming
-  - FastAPI WebSocket endpoints for live signal broadcasting
-  - Connection management with user authentication and session handling
-  - Graceful fallback mechanisms for connection failures and reconnection
-  - User preference integration (notification types, sound alerts, frequency)
+#### 2.3 Real-time Web App Notifications (Onchain-Ready Architecture)
+- [ ] **Day 1-2**: Implement Hybrid WebSocket server for wallet-first authentication ⚡ **HYBRID AUTH**
+  ```typescript
+  // Enhanced WebSocket with wallet + session authentication
+  interface WebSocketAuth {
+    walletAddress?: string;     // Primary: wallet-based authentication
+    signature?: string;         // Optional: signed message verification
+    sessionToken?: string;      // Fallback: legacy session auth
+    anonymousId?: string;       // Anonymous users get limited access
+  }
+  
+  interface NotificationTarget {
+    type: 'wallet' | 'session' | 'anonymous';
+    identifier: string;
+    tokenBalance?: bigint;      // For token-gated features
+    accessTier: 'free' | 'premium' | 'holder' | 'whale';
+  }
+  ```
+  - FastAPI WebSocket endpoints with dual authentication support (wallet + session)
+  - Token-gated notification channels based on $4EX holdings
+  - Progressive enhancement: anonymous → session → wallet authentication
+  - Integration with existing AsyncNotificationService for Discord delivery
 
-- [ ] **Day 3-4**: Create WebSocket client integration with modern UI/UX
-  - Real-time signal updates without page refresh using WebSocket connections
-  - Toast notifications for new signals with customizable styling and positioning
-  - Browser push notification API integration for background notifications
-  - Sound alerts for critical signals (user configurable, respectful of user preferences)
+- [ ] **Day 3-4**: Create onchain-aware WebSocket client with multi-auth support 🔗 **WALLET INTEGRATION**
+  ```typescript
+  // Client-side wallet integration for notifications
+  class OnchainNotificationManager {
+    async connectWithWallet(walletAddress: string): Promise<WebSocketConnection>
+    async connectWithSession(sessionToken: string): Promise<WebSocketConnection>
+    async connectAnonymous(): Promise<WebSocketConnection>
+    
+    // Token-gated notification channels
+    getAvailableChannels(tokenBalance: bigint): NotificationChannel[]
+    subscribeToTokenGatedSignals(tier: AccessTier): void
+  }
+  ```
+  - Enhanced notification store with wallet address awareness
+  - Local preference storage (preparing for onchain migration)
+  - Real-time token balance monitoring for access tier updates
+  - Browser push notifications with wallet-based targeting
 
-- [ ] **Day 5-6**: Add real-time signal feed enhancements and interactivity
-  - Live signal feed with auto-updating entries and smooth animations
-  - Signal interaction features (mark as favorite, add notes, share)
-  - Real-time signal confidence updates and market regime changes
-  - Notification preference controls (sound, visual, frequency, signal types)
-  - Offline handling and notification queuing for when users return
+- [ ] **Day 5-6**: Implement token-gated notification features and preference management 🎯 **TOKEN UTILITY**
+  ```typescript
+  // Token-based notification tiers
+  const NOTIFICATION_TIERS = {
+    public: [],                    // Free signals for everyone
+    holders: ['premium_signals'],  // Token holder exclusive
+    premium: ['whale_signals'],    // High-value signals
+    whale: ['alpha_signals']       // Ultra-premium for large holders
+  };
+  
+  // Local preference storage (future onchain migration ready)
+  interface OnchainNotificationPrefs {
+    walletAddress?: string;
+    sounds: boolean;
+    browserPush: boolean;
+    signalTypes: string[];
+    minimumConfidence: number;
+    // Future: stored onchain via smart contract
+  }
+  ```
+  - Token balance-based notification channel access
+  - Local preference management with onchain migration path
+  - Real-time signal feed with wallet-aware features
+  - Signal interaction features (favorites, notes) linked to wallet address
+  - Premium notification delivery for token holders
 
-- [ ] **Day 7**: Test real-time notification delivery across devices and scenarios
-  - Cross-device testing (desktop, mobile, tablet) for consistent experience
-  - Network interruption and reconnection testing
-  - Performance testing with high-frequency signal generation
-  - User experience testing for notification fatigue prevention
+- [ ] **Day 7**: Test wallet-based notification delivery and migration compatibility 📊 **VALIDATION**
+  - Wallet connection flow testing (Coinbase Wallet, MetaMask, WalletConnect)
+  - Token balance threshold testing for notification access
+  - Session-to-wallet migration user experience testing
+  - Anonymous user progressive enhancement validation
+  - Cross-device notification consistency (wallet-based identity)
 
 **🎯 Week 9-10 Success Criteria:**
-- [ ] Discord notifications delivered within 5 seconds of signal generation
-- [ ] **Critical system alerts automatically routed to Discord admin channels**
-- [ ] Real-time web app updates working seamlessly without manual refresh
-- [ ] User notification preferences fully functional for both Discord and Web App
-- [ ] Mobile Discord notifications working reliably with proper rich formatting
-- [ ] Browser push notifications working across major browsers and devices
-- [ ] Community engagement features active with user feedback mechanisms
+- [ ] Discord notifications delivered within 5 seconds of signal generation ✅ **ALREADY ACHIEVED**
+- [ ] **Critical system alerts automatically routed to Discord admin channels** ✅ **ALREADY ACHIEVED**
+- [ ] Real-time web app updates working with wallet-first authentication
+- [ ] Token-gated notification channels operational for $4EX holders
+- [ ] Progressive authentication: anonymous → session → wallet migration path
+- [ ] Browser push notifications working with wallet-based targeting
+- [ ] Local notification preferences with onchain migration readiness
+- [ ] Seamless user experience across all authentication methods
 
 ---
 
-### **Week 11-12: Enhanced User Experience**
+## 🔗 **INTEGRATED PHASE 2: REAL-TIME NOTIFICATIONS & ONCHAIN MIGRATION** (Weeks 9-16)
+*Priority: CRITICAL - Foundation for Web3-native user experience*
 
-#### 2.3 Mobile & PWA Optimization
-- [ ] **Day 1-3**: Implement PWA functionality with service worker
-- [ ] **Day 4-5**: Add push notification support for mobile
-- [ ] **Day 6-7**: Optimize mobile touch interactions and responsiveness
+### **Week 9-10: WebSocket Foundation & Basic Authentication** 
+*Building on existing AsyncNotificationService and WebSocket infrastructure*
 
-#### 2.4 Advanced Feed Features
-- [ ] **Day 1-2**: Add filtering and sorting to crossover feed
-- [ ] **Day 3-4**: Implement infinite scroll and pagination
-- [ ] **Day 5-7**: Add signal favoriting and historical analysis
+#### 2.3.1 WebSocket Server Enhancement (Days 1-3)
+- [x] **Day 1**: Extend existing FastAPI with WebSocket endpoints ⚡ **BUILD ON EXISTING** ✅ **COMPLETED**
+  ```python
+  # Leverage existing AsyncNotificationService infrastructure
+  class WebSocketNotificationBridge:
+      def __init__(self, async_notification_service: AsyncNotificationService):
+          self.discord_service = async_notification_service
+          self.websocket_connections = {}
+      
+      async def broadcast_signal(self, signal: Signal, targets: List[NotificationTarget]):
+          # Discord notifications (already working)
+          await self.discord_service.queue_notification(signal, priority)
+          # WebSocket notifications (new)
+          await self.broadcast_to_websockets(signal, targets)
+  ```
+  - ✅ Integrate with existing AsyncNotificationService for unified notification delivery
+  - ✅ Use existing Redis cache for connection state management
+  - ✅ Leverage current signal generation pipeline (already optimized to <500ms)
 
-**🎯 Week 11-12 Success Criteria:**
-- [ ] PWA installable on mobile devices
-- [ ] Push notifications working across devices
-- [ ] Enhanced feed experience with advanced filtering
+- [x] **Day 2**: Implement multi-tier authentication system 🔐 **PROGRESSIVE AUTH** ✅ **COMPLETED**
+  ```python
+  # Three-tier authentication supporting migration path
+  async def authenticate_websocket(websocket: WebSocket, auth_data: dict):
+      if auth_data.get('walletAddress'):
+          return await authenticate_wallet(auth_data)  # Future-ready
+      elif auth_data.get('sessionToken'):
+          return await authenticate_session(auth_data)  # Current NextAuth
+      else:
+          return await create_anonymous_session(auth_data)  # Public access
+  ```
+  - ✅ Anonymous access for public signals (leverage existing free tier logic)
+  - ✅ Session-based auth using existing NextAuth.js infrastructure
+  - ✅ Wallet auth placeholder (preparation for token launch)
 
----
+- [x] **Day 3**: Connection management and fallback systems 🔄 **RELIABILITY** ✅ **COMPLETED**
+  - ✅ Use existing WebSocket worker infrastructure (`websocket-worker.js`)
+  - ✅ Implement graceful degradation to Discord-only if WebSocket fails
+  - ✅ Connection pooling and auto-reconnection (build on existing patterns)
+  
+  **📄 Documentation**: `WEBSOCKET-DAY1-2-COMPLETE.md`
 
-## 🔗 **PHASE 2.5: ONCHAIN INFRASTRUCTURE MIGRATION** (Weeks 13-16)
-*Priority: HIGH - Foundational infrastructure modernization*
+#### 2.3.2 Frontend WebSocket Integration (Days 4-6)
+- [ ] **Day 4**: Enhance existing notification store for WebSocket support 📱 **FRONTEND**
+  ```typescript
+  // Extend existing notificationStore.ts
+  interface EnhancedNotificationState extends NotificationState {
+    websocketConnection: WebSocketConnection | null;
+    connectionType: 'anonymous' | 'session' | 'wallet';
+    realTimeSignals: Signal[];
+    
+    // New WebSocket actions
+    connectWebSocket: (authType: AuthType) => Promise<void>;
+    subscribeToSignals: (preferences: NotificationPreferences) => void;
+  }
+  ```
+  - Build on existing `notificationStore.ts` and `useOptimizedWebSocket.ts`
+  - Integrate with current NextAuth session management
+  - Real-time signal feed using existing UI components
 
-### **Week 13-16: Stripe to Token-Gated System Migration** 🚨 **CRITICAL INFRASTRUCTURE**
-Based on comprehensive onchain migration analysis, transition from centralized Stripe payments to decentralized token-gating using Coinbase Onchain Kit:
+- [ ] **Day 5**: Real-time signal display and interaction 🎯 **USER EXPERIENCE**
+  - Enhance existing crossover feed with WebSocket updates
+  - Toast notifications using existing notification system
+  - Sound alerts and browser push notifications (build on current implementation)
 
-**Current Stripe Dependencies to Replace:**
-- 8 Stripe API endpoints and webhook infrastructure  
-- Centralized subscription management and payment processing
-- Traditional authentication with subscription status checks
-- $2.9\% payment processing fees and complex compliance requirements
+- [ ] **Day 6**: Testing and performance validation � **VALIDATION**
+  - Cross-device testing using existing infrastructure
+  - Performance testing with current signal generation (already <500ms)
+  - Integration testing with Discord notifications (ensure both work simultaneously)
 
-**Target Onchain Architecture:**
-- $4EX ERC-20 token launched via Clanker bot on Base network
-- Web3-native authentication using Coinbase Onchain Kit
-- Token balance-based feature gating and access control
-- Reduced operational costs and enhanced user experience
-
-- [ ] **Day 1-2**: Token Launch & Integration Setup ⚡ **FOUNDATION**
+#### 2.3.3 Production Deployment (Day 7)
+- [ ] **Day 7**: Deploy WebSocket infrastructure to production 🚀 **DEPLOYMENT**
   ```bash
-  # Launch $4EX token via Clanker (Farcaster bot)
-  # Post: "@clanker deploy 4EX $4EX 100000000000 total supply"
-  # Result: ERC-20 contract deployed on Base with Uniswap V4 pool
+  # Required Digital Ocean droplet updates for WebSocket support
+  
+  # 1. Update nginx configuration for WebSocket proxy
+  # Add to nginx/4ex-ninja.conf under API server:
+  location /ws/ {
+      proxy_pass http://backend;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      
+      # WebSocket specific timeouts
+      proxy_read_timeout 86400s;
+      proxy_send_timeout 86400s;
+      proxy_connect_timeout 60s;
+      
+      # Disable buffering for real-time communication
+      proxy_buffering off;
+      proxy_cache off;
+  }
+  
+  # 2. Update Content Security Policy for WebSocket connections
+  # Modify CSP header to include WebSocket connections:
+  # connect-src 'self' *.stripe.com wss://api.4ex.ninja wss://4ex.ninja ws: wss:
+  
+  # 3. Environment variables for WebSocket service
+  # Add to docker-compose.prod.yml backend environment:
+  - WEBSOCKET_ENABLED=true
+  - WEBSOCKET_MAX_CONNECTIONS=1000
+  - WEBSOCKET_CONNECTION_TIMEOUT=300
+  - WEBSOCKET_HEARTBEAT_INTERVAL=30
+  
+  # 4. Redis configuration updates (already installed, just optimization)
+  # Update Redis memory allocation for WebSocket session storage:
+  # Current Redis container handles this automatically
+  
+  # 5. Process management updates
+  # No changes needed - WebSocket runs within existing FastAPI app
+  
+  # 6. Monitoring updates
+  # Add WebSocket metrics to existing real_time_monitor.py:
+  # - Active WebSocket connections count
+  # - Message delivery latency
+  # - Connection success/failure rates
   ```
-  - Launch $4EX token using Clanker launcher bot (100B total supply)
-  - Automatic Uniswap V4 pool creation with starting liquidity
-  - Record contract address for frontend integration
-  - Configure token thresholds: Premium (1M+ tokens), Basic (100K+ tokens), Free (0+ tokens)
+  - ✅ Deploy to existing Digital Ocean droplet (leveraging current Redis setup)
+  - ✅ Nginx already configured with WebSocket upgrade headers (lines 102-104)
+  - [ ] **REQUIRED**: Add `/ws/` location block to nginx configuration
+  - [ ] **REQUIRED**: Update CSP headers to allow WebSocket connections  
+  - [ ] **REQUIRED**: Add WebSocket environment variables to docker-compose.prod.yml
+  - [ ] **OPTIONAL**: Enhanced monitoring for WebSocket connections
+  - [ ] Monitor performance using existing `real_time_monitor.py`
 
-- [ ] **Day 3-4**: Onchain Kit Integration & Token-Based Authentication 🔧 **INTEGRATION**
+---
+
+### **Week 11-12: Wallet Integration Preparation** 
+*Preparing infrastructure for token launch*
+
+#### 2.4.1 Wallet Connection Infrastructure (Days 1-4)
+- [ ] **Day 1-2**: Install and configure Coinbase Onchain Kit 🔧 **FOUNDATION**
+  ```bash
+  npm install @coinbase/onchainkit wagmi viem @rainbow-me/rainbowkit
+  ```
+  - Setup Base network configuration
+  - Create wallet connection UI components
+  - Test wallet connection flow (MetaMask, Coinbase Wallet, WalletConnect)
+
+- [ ] **Day 3-4**: Implement wallet authentication for WebSocket 🔗 **INTEGRATION**
   ```typescript
-  // Coinbase Onchain Kit integration for token-based access
-  - OnchainProvider with wagmi/viem configuration for Base network
-  - useTokenAuth() hook for $4EX token balance checks and feature gating
-  - Parallel access system: legacy Stripe OR token balance requirements
-  - Migration wizard for existing users to transition to token-based access
+  // Extend existing WebSocket auth to support wallets
+  interface WalletWebSocketAuth {
+    walletAddress: string;
+    signature?: string;  // Signed message for verification
+    message?: string;    // Anti-replay message
+    timestamp: number;
+  }
   ```
-  - Install Coinbase Onchain Kit, wagmi, viem dependencies
-  - Create wallet connection interface with Coinbase Wallet integration
-  - Implement token balance caching and real-time updates
-  - Build user education flow for Web3 transition
+  - Add wallet signature verification to WebSocket server
+  - Create wallet connection hooks (`useWalletAuth`, `useTokenBalance`)
+  - Test wallet-based WebSocket authentication
 
-- [ ] **Day 5-6**: Feature Gate Migration & Token Purchase Interface 🎯 **USER EXPERIENCE**
+#### 2.4.2 Token-Gated Features Preparation (Days 5-7)
+- [ ] **Day 5**: Design token tier system and thresholds 🎯 **TOKENOMICS**
   ```typescript
-  // Enhanced ProtectedRoute supporting token-based access during transition
-  - Token balance-based access checks with configurable thresholds
-  - Migration incentives: Airdrop tokens to existing subscribers
-  - Seamless fallback to legacy Stripe during transition period
-  - Uniswap V4 integration for $4EX token purchasing
+  // Token tier configuration (ready for actual token)
+  const TOKEN_TIERS = {
+    FREE: 0n,           // Anyone
+    HOLDER: 100_000n,   // 100K tokens
+    PREMIUM: 1_000_000n, // 1M tokens  
+    WHALE: 10_000_000n   // 10M tokens
+  };
   ```
-  - Update all protected routes to support token balance requirements
-  - Create token purchase interface linked to Uniswap V4 pool
-  - Implement airdrop system for existing subscriber migration
-  - Add real-time token balance updates and purchase notifications
+  - Define notification channel access levels
+  - Create mock token balance system for testing
+  - Design user education flow for token benefits
 
-- [ ] **Day 7**: Testing & Community Launch 📊 **VALIDATION**
-  ```typescript
-  // Comprehensive testing and community onboarding
-  - Token contract security validation via Basescan verification
-  - End-to-end user flow testing across all access tiers
-  - Community launch with Farcaster/X marketing campaign
-  - Performance validation: <2s wallet connection, 99.9% uptime
+- [ ] **Day 6-7**: Testing and user experience validation 📊 **VALIDATION**
+  - End-to-end wallet connection testing
+  - Mock token-gated feature testing
+  - User experience flow documentation
+
+---
+
+### **Week 13-16: Token Launch & Full Migration** 
+*Complete transition to onchain infrastructure*
+
+#### 2.5.1 Token Launch (Days 1-2) ⚡ **TOKEN DEPLOYMENT**
+- [ ] **Day 1**: Launch $4EX token via Clanker bot 🚀 **LAUNCH**
+  ```bash
+  # Farcaster post to @clanker
+  "@clanker deploy a token for 4ex.ninja - the leading forex signal platform
+  Name: 4EX Forex Signals
+  Symbol: $4EX
+  Supply: 100000000000
+  Description: Premium forex signals and real-time notifications"
   ```
-  - Launch $4EX token marketing campaign on Farcaster and X
-  - Monitor Uniswap V4 trading activity and liquidity health
-  - Provide dedicated migration support and troubleshooting
-  - Validate zero disruption to existing user experience
+  - Monitor token deployment on Base network
+  - Verify Uniswap V4 pool creation and initial liquidity
+  - Record contract address and update frontend configuration
 
-**🎯 Section 2.5 Success Criteria:**
-- [ ] 80%+ existing user migration rate within 30 days of launch
-- [ ] Token launch success: $4EX trading on Uniswap V4 with healthy liquidity
-- [ ] User experience: <2 second wallet connection, 95%+ transaction success rate
-- [ ] Cost reduction: 60% reduction in payment processing fees vs Stripe
-- [ ] Revenue neutrality: No disruption to subscription revenue during migration
-- [ ] Performance: Token balance checks <100ms, wallet integration <2s
-- [ ] Community adoption: 25% of users actively holding $4EX tokens
+- [ ] **Day 2**: Configure production token integration 🔧 **CONFIGURATION**
+  - Update WebSocket server with real token contract address
+  - Configure token balance caching (use existing Redis infrastructure)
+  - Test token balance queries and tier assignment
 
-**📦 Section 2.5 Deliverables:**
-- [ ] **$4EX Token Contract** (launched via Clanker on Base network)
-- [ ] **Token-Based Authentication** (`hooks/useTokenAuth.ts`, `components/OnchainProvider.tsx`)
-- [ ] **Migration System** (`api/migrate/`, `components/migration/TokenMigration.tsx`)
-- [ ] **Token Purchase Interface** (`components/purchase/TokenPurchase.tsx` with Uniswap integration)
-- [ ] **Updated Protected Routes** (`components/ProtectedRoute.tsx` with token balance support)
-- [ ] **Migration Documentation** (`docs/TOKEN-MIGRATION-SETUP.md`, user guides)
-- [ ] **Community Launch Materials** (Farcaster posts, X campaigns, tutorials)
+#### 2.5.2 Production Migration (Days 3-5) 🔄 **MIGRATION**
+- [ ] **Day 3**: Deploy token-gated WebSocket features 📡 **WEBSOCKET TOKENS**
+  ```python
+  # Production token-gated notification channels
+  async def get_user_notification_channels(wallet_address: str) -> List[str]:
+      balance = await get_token_balance(wallet_address)
+      tier = calculate_access_tier(balance)
+      return get_channels_for_tier(tier)
+  ```
+  - Enable real token balance checks in WebSocket authentication
+  - Activate token-gated notification channels
+  - Real-time token balance monitoring for tier updates
 
-**💡 Business Impact:**
-- **Cost Efficiency**: Eliminate $2.9\% Stripe fees, reduce payment infrastructure complexity
-- **User Empowerment**: True ownership of $4EX tokens, tradeable on Uniswap V4
-- **Innovation Foundation**: Enable DeFi integration, staking rewards, governance participation
-- **Competitive Advantage**: First mover in Web3-native forex signal platforms
-- **Community Building**: Token-holder rewards, referral incentives, social trading features
+- [ ] **Day 4**: Launch user migration flow 👥 **USER MIGRATION**
+  - Deploy migration wizard for existing users
+  - Launch airdrop campaign for current subscribers
+  - Begin community marketing on Farcaster and X
 
-**🔄 Migration Strategy:**
-- **Parallel Operation**: Both Stripe and token-based access during 60-day transition
-- **User Choice**: Existing users can purchase tokens or receive airdrop incentives
-- **Fallback Support**: Legacy Stripe access maintained for users who don't migrate
-- **Gradual Sunset**: Stripe system deprecated after 80% user adoption of tokens
+- [ ] **Day 5**: Token purchase integration 💰 **PURCHASE FLOW**
+  - Deploy Uniswap V4 integration for token purchases
+  - Test purchase → immediate access flow
+  - Monitor token trading activity and liquidity
+
+#### 2.5.3 Community Launch & Validation (Days 6-7) 📊 **LAUNCH & MONITOR**
+- [ ] **Day 6**: Community launch campaign 📢 **MARKETING**
+  - Launch comprehensive marketing campaign
+  - Monitor token adoption metrics
+  - Provide user support and migration assistance
+
+- [ ] **Day 7**: Performance validation and optimization ⚡ **OPTIMIZATION**
+  - Validate <2s wallet connection performance
+  - Monitor notification delivery <1s for token holders
+  - Optimize token balance caching and tier calculations
+
+---
+
+### **🎯 Integrated Success Criteria (Weeks 9-16):**
+
+**Week 9-10 Milestones:**
+- [ ] Real-time WebSocket notifications operational (<1s delivery)
+- [ ] Multi-tier authentication working (anonymous/session/wallet ready)
+- [ ] Integration with existing Discord notifications (no disruption)
+- [ ] Production deployment on existing infrastructure
+
+**Week 11-12 Milestones:**
+- [ ] Wallet connection infrastructure ready (>90% connection success)
+- [ ] Token-gated features prepared and tested
+- [ ] User education and migration flows designed
+
+**Week 13-16 Milestones:**
+- [ ] $4EX token successfully launched and trading on Uniswap V4
+- [ ] 60% reduction in payment processing costs vs Stripe
+- [ ] 80%+ existing user migration rate within 30 days
+- [ ] Token-gated notifications functional with real-time balance updates
+- [ ] <100ms token balance checks, <2s wallet integration performance
+
+**📦 Integrated Deliverables:**
+- [ ] **Enhanced WebSocket Service** (builds on AsyncNotificationService)
+- [ ] **Wallet-Integrated Frontend** (extends existing notification store)
+- [ ] **$4EX Token Contract** (Base network via Clanker)
+- [ ] **Token Purchase Interface** (Uniswap V4 integration)
+- [ ] **Migration System** (seamless user transition)
+- [ ] **Token-Gated Notifications** (premium signal channels)
+
+**� Strategic Benefits:**
+- **Efficiency**: Builds on existing optimized infrastructure (Redis, AsyncNotificationService)
+- **User Experience**: Progressive enhancement without disrupting current users
+- **Token Utility**: Real value for $4EX holders through premium notifications
+- **Cost Reduction**: Eliminate Stripe fees while improving performance
+- **Innovation**: First Web3-native forex signal platform with token-gated features
 
 ---
 
@@ -514,11 +722,15 @@ Based on comprehensive onchain migration analysis, transition from centralized S
 - [ ] **Reliability**: >99% uptime, <1% error rate
 - [ ] **Test Coverage**: >80% coverage on critical paths
 
-### **Phase 2 Success Metrics** (Business Features)
-- [ ] **User Engagement**: +40% increase in daily active users
-- [ ] **Notification Delivery**: >95% delivery rate within 30 seconds
-- [ ] **Mobile Usage**: +60% improvement in mobile interactions
-- [ ] **Conversion Rate**: +25% improvement in subscriptions
+### **Phase 2 Success Metrics** (Business Features - Weeks 9-16)
+- [ ] **Real-Time Notifications**: WebSocket delivery <1s, 99%+ reliability
+- [ ] **Wallet Integration**: >90% successful connection rate across devices
+- [ ] **Token Launch Success**: $4EX trading on Uniswap V4 with healthy liquidity
+- [ ] **User Migration**: 80%+ existing users migrate to token-based access
+- [ ] **Cost Efficiency**: 60% reduction in payment processing fees vs Stripe
+- [ ] **Token Utility**: Premium notifications functional for token holders
+- [ ] **Performance**: Token balance checks <100ms, wallet integration <2s
+- [ ] **Community Growth**: 25% of users actively holding $4EX tokens
 
 ### **Phase 3 Success Metrics** (AI Foundation)
 - [ ] **Signal Quality**: +20% improvement in win rate
@@ -537,6 +749,154 @@ Based on comprehensive onchain migration analysis, transition from centralized S
 - [ ] **Global Performance**: <100ms response times globally
 - [ ] **Business Growth**: 10x user base and revenue growth
 - [ ] **Market Leadership**: Top 3 in forex signals market
+
+---
+
+## 🏗️ **DIGITAL OCEAN INFRASTRUCTURE REQUIREMENTS**
+
+### **Current Infrastructure Status ✅**
+- ✅ **Docker Compose Production Setup**: Complete with nginx, FastAPI, Next.js, MongoDB, Redis
+- ✅ **SSL/HTTPS Configuration**: Let's Encrypt certificates with auto-renewal
+- ✅ **Redis Caching Layer**: Installed and operational for signal optimization
+- ✅ **Rate Limiting & Security**: Comprehensive nginx security headers and rate limiting
+- ✅ **Monitoring Stack**: Prometheus & Grafana available for system monitoring
+
+### **WebSocket Infrastructure Requirements 🔄**
+
+#### **REQUIRED: Nginx Configuration Updates**
+- [ ] **Add WebSocket Location Block** to `/nginx/4ex-ninja.conf`:
+  ```nginx
+  # Add under API server block (api.4ex.ninja)
+  location /ws/ {
+      proxy_pass http://backend;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      
+      # WebSocket specific timeouts (24 hour connections)
+      proxy_read_timeout 86400s;
+      proxy_send_timeout 86400s;
+      proxy_connect_timeout 60s;
+      
+      # Disable buffering for real-time communication
+      proxy_buffering off;
+      proxy_cache off;
+  }
+  ```
+
+- [ ] **Update Content Security Policy** in both server blocks:
+  ```nginx
+  # Current CSP line (around line 173):
+  # connect-src 'self' *.stripe.com wss: ws: api.4ex.ninja
+  
+  # Update to:
+  connect-src 'self' *.stripe.com wss://api.4ex.ninja wss://4ex.ninja ws: wss: api.4ex.ninja
+  ```
+
+#### **REQUIRED: Docker Compose Environment Variables**
+- [ ] **Add to `docker-compose.prod.yml` backend environment**:
+  ```yaml
+  environment:
+    # ... existing variables ...
+    - WEBSOCKET_ENABLED=true
+    - WEBSOCKET_MAX_CONNECTIONS=1000
+    - WEBSOCKET_CONNECTION_TIMEOUT=300
+    - WEBSOCKET_HEARTBEAT_INTERVAL=30
+    - WEBSOCKET_REDIS_PREFIX=ws_sessions
+  ```
+
+#### **OPTIONAL: Enhanced Monitoring**
+- [ ] **WebSocket Metrics Integration**:
+  ```python
+  # Add to existing real_time_monitor.py
+  websocket_metrics = {
+      "active_connections": await websocket_bridge.get_connection_count(),
+      "messages_per_minute": await websocket_bridge.get_message_rate(),
+      "connection_success_rate": await websocket_bridge.get_success_rate(),
+      "average_latency_ms": await websocket_bridge.get_avg_latency()
+  }
+  ```
+
+### **Token Launch Infrastructure Preparation 🪙**
+
+#### **Week 11-12: Wallet Infrastructure Readiness**
+- [ ] **Environment Variables for Token Integration**:
+  ```yaml
+  # Add to docker-compose.prod.yml
+  - TOKEN_CONTRACT_ADDRESS=  # Set after Clanker deployment
+  - BASE_RPC_URL=https://mainnet.base.org
+  - BASE_CHAIN_ID=8453
+  - TOKEN_CACHE_TTL=300  # 5 minutes
+  - WALLET_SESSION_TIMEOUT=3600  # 1 hour
+  ```
+
+- [ ] **Redis Memory Optimization**:
+  ```bash
+  # Update Redis container configuration for token balance caching
+  # Current setup handles this automatically with existing memory allocation
+  # Monitor and scale if needed during token launch
+  ```
+
+#### **Week 13-16: Production Token Launch**
+- [ ] **Load Balancer Configuration** (if needed for high traffic):
+  ```yaml
+  # Digital Ocean Load Balancer settings
+  # WebSocket sticky sessions: enabled
+  # Health checks: /health endpoint
+  # SSL passthrough: disabled (nginx handles SSL)
+  ```
+
+### **Deployment Checklist 📋**
+
+#### **Before WebSocket Deployment**
+- [ ] Backup current nginx configuration
+- [ ] Test nginx configuration changes in staging
+- [ ] Prepare rollback scripts
+- [ ] Schedule maintenance window (if needed)
+
+#### **During WebSocket Deployment**
+- [ ] Update nginx configuration
+- [ ] Reload nginx (`nginx -s reload`)
+- [ ] Update docker-compose.prod.yml
+- [ ] Restart backend service: `docker-compose restart backend`
+- [ ] Verify WebSocket endpoint: `wscat -c wss://api.4ex.ninja/ws/notifications`
+
+#### **After WebSocket Deployment**
+- [ ] Monitor WebSocket connection logs
+- [ ] Validate Discord notifications still working
+- [ ] Test real-time signal delivery
+- [ ] Monitor system performance impact
+
+#### **Before Token Launch**
+- [ ] Configure token contract addresses
+- [ ] Test wallet connection flow
+- [ ] Validate token balance caching
+- [ ] Load test WebSocket with token-gated features
+
+### **Cost Impact Analysis 💰**
+
+#### **Current Infrastructure Costs (Estimated)**
+- ✅ **Digital Ocean Droplet**: $40-80/month (existing)
+- ✅ **Domain & SSL**: $15/year (existing)  
+- ✅ **Redis**: $0 (containerized, no additional cost)
+- ✅ **MongoDB**: $0 (containerized, no additional cost)
+
+#### **WebSocket Infrastructure Additions**
+- ✅ **WebSocket Implementation**: $0 (uses existing FastAPI app)
+- ✅ **Nginx WebSocket Proxy**: $0 (configuration update only)
+- ✅ **Redis Session Storage**: $0 (uses existing Redis instance)
+- 📊 **Monitoring Enhanced**: $0 (extends existing monitoring)
+
+#### **Token Launch Infrastructure**
+- 🔮 **Base Network RPC**: $0 (using public RPC, may upgrade to paid if needed)
+- 🔮 **Token Contract**: ~$50-200 (one-time deployment cost)
+- 🔮 **Increased Load**: May require droplet upgrade (+$20-40/month if needed)
+
+**Total Additional Monthly Cost: $0-40** (only if traffic requires droplet scaling)
 
 ---
 
@@ -568,7 +928,7 @@ Based on comprehensive onchain migration analysis, transition from centralized S
 | Phase | Duration | Key Deliverable | Success Metric |
 |-------|----------|----------------|----------------|
 | **Phase 1** | Weeks 1-8 | Modern, scalable foundation | <200ms API, <1% errors |
-| **Phase 2** | Weeks 9-12 | Real-time notifications & signal optimization | +40% engagement, 80-90% performance gains |
+| **Phase 2** | Weeks 9-16 | Integrated real-time notifications & onchain migration | <1s notifications, 80% user migration |
 | **Phase 2.5** | Weeks 13-16 | Onchain token-gated access system | 80% user migration, 60% cost reduction |
 | **Phase 3** | Weeks 17-24 | AI-enhanced signal generation | +20% win rate, +15% returns |
 | **Phase 4** | Weeks 25-36 | Advanced AI trading system | +100% Sharpe ratio, <10% drawdown |
