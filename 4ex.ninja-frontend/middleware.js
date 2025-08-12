@@ -1,4 +1,3 @@
-import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server';
 
 export async function middleware(request) {
@@ -41,20 +40,12 @@ export async function middleware(request) {
   }
 
   if (isProtectedRoute) {
-    const token = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
+    // For OnchainKit/Web3 apps, route protection is handled client-side
+    // through wallet connection state. Server-side middleware just adds
+    // security headers and CORS policies.
 
-    // If not authenticated, redirect to login
-    if (!token) {
-      const url = new URL('/login', request.url);
-      url.searchParams.set('callbackUrl', path);
-      return NextResponse.redirect(url);
-    }
-
-    // No longer checking subscription here
-    // This will be handled by the ProtectedRoute component which calls the API
+    // Add Web3-specific headers
+    response.headers.set('X-Web3-App', 'true');
   }
 
   return response;

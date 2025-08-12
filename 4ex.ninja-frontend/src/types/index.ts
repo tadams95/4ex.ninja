@@ -5,6 +5,7 @@ export interface User {
   email: string;
   name?: string;
   image?: string;
+  walletAddress?: string;
   isSubscribed?: boolean;
   subscriptionEnds?: string | Date;
   createdAt?: Date;

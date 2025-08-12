@@ -2378,3 +2378,23 @@ Message: ALERT [HIGH] ESCALATED: ESCALATED: System Resource Alert: CPU: Alert es
 Context:
   taskName: Task-268
 ==================================================
+=== ERROR at 2025-08-12T01:49:08.052567 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: CPU: Alert escalated (level 18): Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): CPU usage is 99.0%, exceeding threshold of 90.0% | Context: {"process_count": 1984, "timestamp": 1754972347.858678}
+Context:
+  taskName: Task-269
+==================================================
+=== ERROR at 2025-08-12T01:54:41.183149 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: System Resource Alert: CPU: Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): CPU usage is 99.2%, exceeding threshold of 90.0% | Context: {"process_count": 2075, "timestamp": 1754986181.159704}
+Context:
+  taskName: Task-270
+==================================================

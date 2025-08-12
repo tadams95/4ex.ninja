@@ -1,14 +1,15 @@
 'use client';
 
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
-
 import { motion } from 'framer-motion';
-import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useDisconnect } from 'wagmi';
 
-export default function AccountPage() {
+function AccountPageContent() {
   const { user, isAuthenticated, loading } = useAuth();
+  const { disconnect } = useDisconnect();
   const [activeTab, setActiveTab] = useState('subscription');
   const [updateLoading, setUpdateLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
@@ -25,9 +26,10 @@ export default function AccountPage() {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.push('/login?callbackUrl=/account');
-    }
+    // No longer need to redirect since ProtectedRoute handles this
+    // if (!loading && !isAuthenticated) {
+    //   router.push('/login?callbackUrl=/account');
+    // }
 
     if (user) {
       setName(user.name || '');
@@ -185,10 +187,11 @@ export default function AccountPage() {
       setNewPassword('');
       setConfirmNewPassword('');
 
-      // If email was changed, need to sign out and back in
+      // If email was changed, need to disconnect and reconnect wallet
       if (email !== user.email) {
         setTimeout(() => {
-          signOut({ callbackUrl: '/login' });
+          disconnect();
+          router.push('/login');
         }, 2000);
       }
     } catch (error) {
@@ -601,5 +604,14 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Wrap with ProtectedRoute
+export default function AccountPage() {
+  return (
+    <ProtectedRoute requireWallet={true}>
+      <AccountPageContent />
+    </ProtectedRoute>
   );
 }

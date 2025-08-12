@@ -1,18 +1,14 @@
-import { MongoClient, ObjectId } from 'mongodb';
-import { getServerSession } from 'next-auth/next';
+import { MongoClient } from 'mongodb';
 import { NextResponse } from 'next/server';
-import { authOptions } from '../auth/[...nextauth]/auth-options';
 
 export async function GET(request) {
   try {
-    // Get current session to verify user
-    const session = await getServerSession(authOptions);
+    // Get wallet address from query parameters
+    const { searchParams } = new URL(request.url);
+    const walletAddress = searchParams.get('walletAddress');
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'You must be logged in to view your profile' },
-        { status: 401 }
-      );
+    if (!walletAddress) {
+      return NextResponse.json({ error: 'Wallet address is required' }, { status: 401 });
     }
 
     const client = new MongoClient(process.env.MONGO_CONNECTION_STRING);
@@ -22,9 +18,9 @@ export async function GET(request) {
       const db = client.db('users');
       const usersCollection = db.collection('subscribers');
 
-      // Find user by ID
+      // Find user by wallet address
       const user = await usersCollection.findOne({
-        _id: new ObjectId(session.user.id),
+        walletAddress: walletAddress,
       });
 
       if (!user) {
@@ -34,6 +30,7 @@ export async function GET(request) {
       // Return user profile data (excluding sensitive information)
       const profileData = {
         id: user._id.toString(),
+        walletAddress: user.walletAddress,
         name: user.name || '',
         email: user.email || '',
         createdAt: user.createdAt,

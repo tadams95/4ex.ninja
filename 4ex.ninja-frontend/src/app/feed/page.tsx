@@ -1,8 +1,10 @@
 'use client';
 
 import { FeedErrorBoundary } from '@/components/error';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { LoadingSequence } from '@/components/ui';
 import VirtualizedCrossoverList from '@/components/VirtualizedCrossoverList';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLatestCrossovers } from '@/hooks/api';
 import {
   usePageNavigationTracking,
@@ -13,6 +15,9 @@ import { Crossover } from '@/types';
 import React, { useCallback, useEffect, useMemo } from 'react';
 
 function SignalsPage() {
+  // Get auth context for user info
+  const { user, isAuthenticated } = useAuth();
+
   // Performance monitoring hooks
   useRenderPerformance('SignalsPage');
   usePageNavigationTracking('feed');
@@ -103,7 +108,22 @@ function SignalsPage() {
 
   return (
     <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 max-w-2xl bg-black min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Latest MA Crossover Signals</h1>
+      {/* Welcome Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-white">Latest MA Crossover Signals</h1>
+          <p className="text-gray-400 text-sm mt-1">
+            Connected:{' '}
+            {user?.walletAddress
+              ? `${user.walletAddress.slice(0, 6)}...${user.walletAddress.slice(-4)}`
+              : 'Wallet'}
+          </p>
+        </div>
+        <div className="flex items-center space-x-2 text-sm text-gray-400">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span>Live</span>
+        </div>
+      </div>
 
       {/* Signal statistics - only show when we have data */}
       {!loading && !error && processedData.stats.totalSignals > 0 && (
@@ -166,11 +186,13 @@ function SignalsPage() {
   );
 }
 
-// Wrap the component with FeedErrorBoundary (no auth protection needed since wallet connection is now handled globally)
+// Wrap the component with ProtectedRoute and FeedErrorBoundary
 export default function ProtectedSignalsPage(): React.ReactElement {
   return (
-    <FeedErrorBoundary>
-      <SignalsPage />
-    </FeedErrorBoundary>
+    <ProtectedRoute requireWallet={true}>
+      <FeedErrorBoundary>
+        <SignalsPage />
+      </FeedErrorBoundary>
+    </ProtectedRoute>
   );
 }

@@ -1,8 +1,8 @@
 'use client';
 
 import { BaseComponentProps, User } from '@/types';
-import { useSession } from 'next-auth/react';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -21,27 +21,36 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { data: session, status } = useSession();
+  const { isConnected, address, isConnecting } = useAccount();
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    if (session?.user) {
-      // Check if user has an active subscription
-      const user = session.user as User;
-      const subscriptionEnds = user.subscriptionEnds ? new Date(user.subscriptionEnds) : null;
+    if (isConnected && address) {
+      // Create a user object from wallet connection
+      const walletUser: User = {
+        id: address,
+        email: '', // Will be populated from API if available
+        name: '', // Will be populated from API if available
+        walletAddress: address,
+        isSubscribed: false, // Will be checked from API
+      };
+      setUser(walletUser);
 
-      const isActive = subscriptionEnds && subscriptionEnds > new Date();
-      setIsSubscribed(!!isActive);
+      // Check subscription status from API
+      // This would typically make an API call to check user's subscription
+      setIsSubscribed(false); // Default to false
     } else {
+      setUser(null);
       setIsSubscribed(false);
     }
-  }, [session]);
+  }, [isConnected, address]);
 
   const value: AuthContextType = {
-    isAuthenticated: !!session,
+    isAuthenticated: isConnected,
     isSubscribed,
-    loading: status === 'loading',
-    user: (session?.user as User) || null,
+    loading: isConnecting,
+    user,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
