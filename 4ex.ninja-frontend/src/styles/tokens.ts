@@ -22,7 +22,7 @@ export const colors = {
     950: '#052e16',
   },
 
-  // Neutral colors (Grays)
+  // Neutral colors (Grays) - Enhanced for better accessibility
   neutral: {
     50: '#f9fafb',
     100: '#f3f4f6',
@@ -31,40 +31,72 @@ export const colors = {
     400: '#9ca3af',
     500: '#6b7280',
     600: '#4b5563',
-    700: '#374151', // Current secondary
-    800: '#1f2937', // Current card background
-    900: '#111827', // Current darker background
-    950: '#030712',
+    700: '#374151',
+    800: '#1f2937',
+    900: '#111827',
+    925: '#0c1220', // Enhanced: Softer than pure black
+    950: '#080b14', // Enhanced: New darkest level
+    975: '#040507', // Enhanced: Near black but not pure
   },
 
-  // Semantic colors
+  // Enhanced semantic colors with better accessibility
   semantic: {
-    success: '#22c55e', // Green
+    success: '#22c55e', // Green - kept for brand consistency
     warning: '#f59e0b', // Amber
     error: '#ef4444', // Red
     info: '#3b82f6', // Blue
+    // New additions for better semantic range
+    neutral: '#6b7280', // For neutral actions
+    'info-secondary': '#06b6d4', // Cyan for secondary info
+    destructive: '#dc2626', // Stronger red for destructive actions
+    positive: '#059669', // Emerald for positive feedback
   },
 
-  // Background colors
+  // Enhanced background colors with smoother transitions
   background: {
-    primary: '#000000', // Main black background
-    secondary: '#1f2937', // Gray-800
-    tertiary: '#374151', // Gray-700
+    primary: '#080b14', // Enhanced: Softer than pure black
+    secondary: '#0c1220', // Enhanced: Better transition
+    tertiary: '#1f2937', // Current gray-800
+    quaternary: '#374151', // Current gray-700 - added level
+    elevated: '#4b5563', // Enhanced: For elevated components
   },
 
-  // Text colors
+  // Enhanced text colors with better contrast ratios
   text: {
-    primary: '#ffffff', // White
-    secondary: '#d1d5db', // Gray-300
-    tertiary: '#9ca3af', // Gray-400
-    muted: '#6b7280', // Gray-500
+    primary: '#f8fafc', // Enhanced: Softer white for better readability
+    secondary: '#e2e8f0', // Enhanced: Better contrast
+    tertiary: '#cbd5e1', // Enhanced: Improved hierarchy
+    muted: '#94a3b8', // Enhanced: Better muted text
+    'on-primary': '#ffffff', // Enhanced: Text on primary green
+    'on-surface': '#f1f5f9', // Enhanced: General surface text
+    disabled: '#64748b', // Enhanced: Clear disabled state
   },
 
-  // Border colors
+  // Enhanced border colors with better definition
   border: {
-    primary: '#374151', // Gray-700
-    secondary: '#4b5563', // Gray-600
-    muted: '#1f2937', // Gray-800
+    primary: '#334155', // Enhanced: Better visibility
+    secondary: '#475569', // Enhanced: Secondary borders
+    muted: '#1e293b', // Enhanced: Subtle borders
+    focus: '#3b82f6', // Enhanced: Dedicated focus color
+    'focus-ring': 'rgba(59, 130, 246, 0.5)', // Enhanced: Focus ring
+  },
+
+  // New: Interactive state colors for better UX
+  interactive: {
+    'hover-primary': 'rgba(34, 197, 94, 0.1)', // Green hover overlay
+    'hover-secondary': 'rgba(148, 163, 184, 0.1)', // Neutral hover
+    'hover-surface': 'rgba(248, 250, 252, 0.05)', // Surface hover
+    'active-primary': 'rgba(34, 197, 94, 0.2)', // Green active state
+    'active-secondary': 'rgba(148, 163, 184, 0.2)', // Neutral active
+  },
+
+  // New: Accent colors for better variety and color-blind accessibility
+  accent: {
+    blue: '#3b82f6', // Complementary to green
+    purple: '#8b5cf6', // Additional accent
+    cyan: '#06b6d4', // Info accent
+    orange: '#f97316', // Warning accent
+    pink: '#ec4899', // Special accent
   },
 } as const;
 

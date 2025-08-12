@@ -9,11 +9,14 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const buttonVariants = {
-  primary: 'bg-primary-700 hover:bg-primary-800 text-white font-semibold border-transparent',
-  secondary: 'bg-neutral-700 hover:bg-neutral-800 text-white font-semibold border-transparent',
+  primary:
+    'bg-primary-700 hover:bg-primary-800 active:bg-primary-900 text-white font-semibold border-transparent focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50',
+  secondary:
+    'bg-neutral-700 hover:bg-neutral-600 active:bg-neutral-500 text-white font-semibold border-transparent focus:ring-2 focus:ring-neutral-400 focus:ring-opacity-50',
   outline:
-    'bg-transparent hover:bg-primary-700/10 text-primary-400 font-semibold border border-primary-400 hover:border-primary-300 hover:text-primary-300',
-  ghost: 'bg-transparent hover:bg-neutral-800 text-white font-medium border-transparent',
+    'bg-transparent hover:bg-primary-700/10 active:bg-primary-700/20 text-primary-400 font-semibold border border-primary-400 hover:border-primary-300 hover:text-primary-300 focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50',
+  ghost:
+    'bg-transparent hover:bg-neutral-800 active:bg-neutral-700 text-white font-medium border-transparent focus:ring-2 focus:ring-neutral-400 focus:ring-opacity-30',
 };
 
 const buttonSizes = {

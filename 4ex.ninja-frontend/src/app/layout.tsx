@@ -33,7 +33,7 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         {/* Resource hints for critical assets */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />

@@ -83,14 +83,13 @@ const HeaderComponent = memo(function HeaderComponent() {
             className={`
             ${
               isMobile
-                ? 'flex flex-col absolute right-0 top-20 bg-black p-6 w-48 shadow-lg z-50'
+                ? 'flex flex-col absolute right-0 top-16 bg-black p-6 w-48 shadow-lg z-50'
                 : 'flex space-x-6 items-center'
             } 
             md:flex md:items-center md:space-x-6 md:static md:shadow-none md:p-0 md:w-auto
           `}
           >
             {/* Navigation Links */}
-            <li className="py-3 md:py-0"></li>
             <li className="py-3 md:py-0">
               <Link
                 href="/about"

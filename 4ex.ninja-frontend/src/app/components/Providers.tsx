@@ -48,7 +48,7 @@ function ProvidersComponent({ children }: ProvidersProps) {
         config={{
           appearance: {
             mode: 'dark',
-            theme: 'dark',
+            theme: 'custom',
           },
         }}
       >

@@ -47,7 +47,7 @@
   --background: #ffffff;
   --foreground: #171717;
 
-  /* === DESIGN TOKEN VARIABLES === */
+  /* === ENHANCED DESIGN TOKEN VARIABLES === */
 
   /* Primary Colors (Green Brand) */
   --color-primary-50: #f0fdf4;
@@ -62,7 +62,7 @@
   --color-primary-900: #14532d;
   --color-primary-950: #052e16;
 
-  /* Neutral Colors (Grays) */
+  /* Enhanced Neutral Colors (Better Accessibility) */
   --color-neutral-50: #f9fafb;
   --color-neutral-100: #f3f4f6;
   --color-neutral-200: #e5e7eb;
@@ -73,29 +73,56 @@
   --color-neutral-700: #374151;
   --color-neutral-800: #1f2937;
   --color-neutral-900: #111827;
-  --color-neutral-950: #030712;
+  --color-neutral-925: #0c1220;
+  --color-neutral-950: #080b14;
+  --color-neutral-975: #040507;
 
-  /* Semantic Colors */
+  /* Enhanced Semantic Colors */
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-info: #3b82f6;
+  --color-neutral-semantic: #6b7280;
+  --color-info-secondary: #06b6d4;
+  --color-destructive: #dc2626;
+  --color-positive: #059669;
 
-  /* Background Colors */
-  --color-background-primary: #000000;
-  --color-background-secondary: #1f2937;
-  --color-background-tertiary: #374151;
+  /* Enhanced Background Colors (Smoother Transitions) */
+  --color-background-primary: #080b14;
+  --color-background-secondary: #0c1220;
+  --color-background-tertiary: #1f2937;
+  --color-background-quaternary: #374151;
+  --color-background-elevated: #4b5563;
 
-  /* Text Colors */
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #d1d5db;
-  --color-text-tertiary: #9ca3af;
-  --color-text-muted: #6b7280;
+  /* Enhanced Text Colors (Better Contrast) */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #e2e8f0;
+  --color-text-tertiary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-on-primary: #ffffff;
+  --color-text-on-surface: #f1f5f9;
+  --color-text-disabled: #64748b;
 
-  /* Border Colors */
-  --color-border-primary: #374151;
-  --color-border-secondary: #4b5563;
-  --color-border-muted: #1f2937;
+  /* Enhanced Border Colors */
+  --color-border-primary: #334155;
+  --color-border-secondary: #475569;
+  --color-border-muted: #1e293b;
+  --color-border-focus: #3b82f6;
+  --color-border-focus-ring: rgba(59, 130, 246, 0.5);
+
+  /* New: Interactive State Colors */
+  --color-hover-primary: rgba(34, 197, 94, 0.1);
+  --color-hover-secondary: rgba(148, 163, 184, 0.1);
+  --color-hover-surface: rgba(248, 250, 252, 0.05);
+  --color-active-primary: rgba(34, 197, 94, 0.2);
+  --color-active-secondary: rgba(148, 163, 184, 0.2);
+
+  /* New: Accent Colors for Variety */
+  --color-accent-blue: #3b82f6;
+  --color-accent-purple: #8b5cf6;
+  --color-accent-cyan: #06b6d4;
+  --color-accent-orange: #f97316;
+  --color-accent-pink: #ec4899;
 
   /* Typography */
   --font-size-xs: 0.75rem;
@@ -213,9 +240,94 @@
   }
 }
 
-/* === UTILITY CLASSES === */
+/* === ENHANCED ACCESSIBILITY UTILITIES === */
 
-/* Theme-aware utility classes for common patterns */
+/* Enhanced Focus Styles for Better Keyboard Navigation */
+.focus-ring {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+.focus-ring-inset {
+  box-shadow: 0 0 0 2px var(--color-border-focus-ring);
+  outline: none;
+}
+
+/* Enhanced Interactive States */
+.interactive-hover {
+  transition: all 0.2s ease-in-out;
+}
+
+.interactive-hover:hover {
+  background-color: var(--color-hover-surface);
+  transform: translateY(-1px);
+}
+
+.interactive-hover:active {
+  transform: translateY(0);
+  background-color: var(--color-active-secondary);
+}
+
+/* Enhanced Color Utilities for Better Semantic Meaning */
+.text-success {
+  color: var(--color-success);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.text-info {
+  color: var(--color-info);
+}
+
+.text-positive {
+  color: var(--color-positive);
+}
+
+.text-destructive {
+  color: var(--color-destructive);
+}
+
+/* Enhanced Background Utilities */
+.bg-surface-elevated {
+  background-color: var(--color-background-elevated);
+}
+
+.bg-interactive-hover {
+  background-color: var(--color-hover-primary);
+}
+
+/* Enhanced Border Utilities */
+.border-focus {
+  border-color: var(--color-border-focus);
+}
+
+.border-elevated {
+  border-color: var(--color-border-secondary);
+}
+
+/* Enhanced Accent Color Utilities */
+.text-accent-blue {
+  color: var(--color-accent-blue);
+}
+
+.text-accent-purple {
+  color: var(--color-accent-purple);
+}
+
+.text-accent-cyan {
+  color: var(--color-accent-cyan);
+}
+
+/* === ENHANCED UTILITY CLASSES === */
+
+/* Enhanced Theme-aware utility classes for common patterns */
 .theme-bg-primary {
   background-color: var(--color-background-primary);
 }
@@ -226,6 +338,10 @@
 
 .theme-bg-tertiary {
   background-color: var(--color-background-tertiary);
+}
+
+.theme-bg-elevated {
+  background-color: var(--color-background-elevated);
 }
 
 .theme-text-primary {
@@ -240,8 +356,16 @@
   color: var(--color-text-muted);
 }
 
+.theme-text-on-surface {
+  color: var(--color-text-on-surface);
+}
+
 .theme-border {
   border-color: var(--color-border-primary);
+}
+
+.theme-border-elevated {
+  border-color: var(--color-border-secondary);
 }
 
 .theme-transition {
@@ -474,102 +598,78 @@ body {
   will-change: transform;
 }
 
-/* OnchainKit Dark Theme Overrides */
-/* Force dark theme for OnchainKit components to match 4ex.ninja theme */
-[data-onchainkit-theme='dark'] {
-  --ock-bg-default: var(--color-background-primary);
-  --ock-bg-secondary: var(--color-background-secondary);
-  --ock-text: var(--color-text-primary);
-  --ock-text-secondary: var(--color-text-secondary);
-  --ock-border: #16a34a;
+/* Enhanced OnchainKit Custom Theme Integration */
+@layer base {
+  .custom-dark {
+    /* Font and Shape */
+    --ock-font-family: 'Exo 2', sans-serif;
+    --ock-border-radius: 0.75rem;
+    --ock-border-radius-inner: 0.5rem;
+
+    /* Enhanced Text Colors with Better Contrast */
+    --ock-text-inverse: var(--color-background-primary);
+    --ock-text-foreground: var(--color-text-primary);
+    --ock-text-foreground-muted: var(--color-text-secondary);
+    --ock-text-error: var(--color-error);
+    --ock-text-primary: var(--color-primary-600);
+    --ock-text-success: var(--color-success);
+    --ock-text-warning: var(--color-warning);
+    --ock-text-disabled: var(--color-text-disabled);
+
+    /* Enhanced Background Colors with Smoother Transitions */
+    --ock-bg-default: var(--color-background-primary);
+    --ock-bg-default-hover: var(--color-background-secondary);
+    --ock-bg-default-active: var(--color-background-tertiary);
+    --ock-bg-alternate: var(--color-background-secondary);
+    --ock-bg-alternate-hover: var(--color-background-tertiary);
+    --ock-bg-alternate-active: var(--color-background-quaternary);
+    --ock-bg-inverse: var(--color-text-primary);
+    --ock-bg-inverse-hover: var(--color-text-secondary);
+    --ock-bg-inverse-active: var(--color-text-tertiary);
+
+    /* Enhanced Primary Colors with Better Accessibility */
+    --ock-bg-primary: var(--color-primary-700);
+    --ock-bg-primary-hover: var(--color-primary-800);
+    --ock-bg-primary-active: var(--color-primary-900);
+    --ock-bg-primary-washed: var(--color-hover-primary);
+    --ock-bg-primary-disabled: rgba(21, 128, 61, 0.4);
+
+    /* Enhanced Secondary and State Colors */
+    --ock-bg-secondary: var(--color-background-secondary);
+    --ock-bg-secondary-hover: var(--color-background-tertiary);
+    --ock-bg-secondary-active: var(--color-background-quaternary);
+    --ock-bg-error: rgba(239, 68, 68, 0.1);
+    --ock-bg-warning: rgba(245, 158, 11, 0.1);
+    --ock-bg-success: rgba(34, 197, 94, 0.1);
+    --ock-bg-default-reverse: var(--color-text-on-surface);
+
+    /* Enhanced Icon Colors */
+    --ock-icon-color-primary: var(--color-primary-600);
+    --ock-icon-color-foreground: var(--color-text-primary);
+    --ock-icon-color-foreground-muted: var(--color-text-secondary);
+    --ock-icon-color-inverse: var(--color-background-primary);
+    --ock-icon-color-error: var(--color-error);
+    --ock-icon-color-success: var(--color-success);
+    --ock-icon-color-warning: var(--color-warning);
+
+    /* Enhanced Border Colors with Focus States */
+    --ock-border-line-primary: var(--color-border-primary);
+    --ock-border-line-default: var(--color-border-secondary);
+    --ock-border-line-heavy: var(--color-border-focus);
+    --ock-border-line-inverse: var(--color-text-secondary);
+  }
 }
 
-/* Redesigned wallet dropdown to match 4ex.ninja theme */
+/* OnchainKit Component Refinements */
+/* Additional styling for enhanced visual consistency */
 [class*='ock-wallet-dropdown'] {
-  background-color: #111827 !important; /* gray-900 */
-  border: 1px solid #16a34a !important; /* green-600 border */
-  color: #ffffff !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
-  border-radius: 0.75rem !important; /* rounded-xl */
-  backdrop-filter: blur(8px) !important;
-  background-image: linear-gradient(to bottom right, #111827, #0f172a) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
 }
 
-/* Dropdown items styling */
-[class*='ock-wallet-dropdown-item'] {
-  color: #ffffff !important;
-  background-color: transparent !important;
-  border-radius: 0.5rem !important; /* rounded-lg */
-  margin: 0.25rem !important; /* m-1 */
-  padding: 0.75rem 1rem !important; /* px-4 py-3 */
-  transition: all 0.2s ease-in-out !important;
-  border: 1px solid transparent !important;
-}
-
-[class*='ock-wallet-dropdown-item']:hover {
-  background-color: #15803d !important; /* green-700 - consistent with primary buttons */
-  color: #ffffff !important;
-  border-color: #166534 !important; /* green-800 */
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
-}
-
-[class*='ock-wallet-dropdown-item']:active {
-  transform: translateY(0) !important;
-  background-color: #166534 !important; /* green-800 - consistent with button active states */
-}
-
-/* Ensure all text in dropdown is white */
-[class*='ock-wallet-dropdown'] * {
-  color: #ffffff !important;
-}
-
-[class*='ock-wallet-dropdown'] a {
-  color: #ffffff !important;
-  text-decoration: none !important;
-}
-
-[class*='ock-wallet-dropdown'] a:hover {
-  color: #ffffff !important;
-}
-
-[class*='ock-wallet-dropdown'] button {
-  color: #ffffff !important;
-  font-weight: 500 !important;
-}
-
-/* Disconnect button special styling */
-[class*='ock-wallet-dropdown'] [class*='disconnect'] {
-  color: #fca5a5 !important; /* red-300 for disconnect action */
-}
-
-[class*='ock-wallet-dropdown'] [class*='disconnect']:hover {
-  background-color: #dc2626 !important; /* red-600 */
-  color: #ffffff !important;
-  border-color: #b91c1c !important; /* red-700 */
-}
-
-/* Icons in dropdown */
-[class*='ock-wallet-dropdown'] svg {
-  color: #10b981 !important; /* green-500 for icons */
-}
-
-[class*='ock-wallet-dropdown-item']:hover svg {
-  color: #ffffff !important; /* white icons on hover */
-}
-
-/* Override any OnchainKit component text that might be black */
-[class*='ock-'] {
-  color: #ffffff;
-}
-
-[class*='ock-text'] {
-  color: #ffffff !important;
-}
-
-/* Subtle animation for dropdown appearance */
+/* Smooth dropdown animation */
 [class*='ock-wallet-dropdown'] {
-  animation: dropdownSlideIn 0.2s ease-out !important;
+  animation: dropdownSlideIn 0.2s ease-out;
 }
 
 @keyframes dropdownSlideIn {

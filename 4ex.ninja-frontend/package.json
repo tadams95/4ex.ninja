@@ -33,7 +33,7 @@
     "bcryptjs": "^3.0.2",
     "crypto": "^1.0.1",
     "dompurify": "^3.2.6",
-    "framer-motion": "^12.4.7",
+    "framer-motion": "^12.23.12",
     "immer": "^10.1.1",
     "mongodb": "^6.13.1",
     "next": "^15.4.2-canary.37",

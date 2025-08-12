@@ -7,6 +7,8 @@ export default {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: ['class'],
+  safelist: ['dark'],
   theme: {
     extend: {
       // Design Token Integration
@@ -20,11 +22,17 @@ export default {
         neutral: designTokens.colors.neutral,
         semantic: designTokens.colors.semantic,
 
+        // Enhanced: Add new color categories
+        accent: designTokens.colors.accent,
+        interactive: designTokens.colors.interactive,
+
         // Semantic aliases for better DX
         success: designTokens.colors.semantic.success,
         warning: designTokens.colors.semantic.warning,
         error: designTokens.colors.semantic.error,
         info: designTokens.colors.semantic.info,
+        positive: designTokens.colors.semantic.positive,
+        destructive: designTokens.colors.semantic.destructive,
       },
 
       // Typography

@@ -170,7 +170,7 @@ function SignalsPage() {
 // Wrap the component with ProtectedRoute and FeedErrorBoundary
 export default function ProtectedSignalsPage(): React.ReactElement {
   return (
-    <ProtectedRoute requireSubscription={true}>
+    <ProtectedRoute>
       <FeedErrorBoundary>
         <SignalsPage />
       </FeedErrorBoundary>
