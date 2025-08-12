@@ -54,33 +54,12 @@ export const handlers = [
     return HttpResponse.json({ success: true });
   }),
 
-  // Subscription endpoints
-  http.get('/api/subscription-status', () => {
+  // Token access endpoints (wallet-based)
+  http.get('/api/token-balance', () => {
     return HttpResponse.json({
-      isSubscribed: mockUser.isSubscribed,
-      subscriptionStatus: mockUser.subscriptionStatus,
-      subscriptionEnds: mockUser.subscriptionEnds,
-    });
-  }),
-
-  http.post('/api/verify-subscription', () => {
-    return HttpResponse.json({
-      valid: true,
-      subscriptionStatus: 'active',
-    });
-  }),
-
-  http.post('/api/create-checkout-session', () => {
-    return HttpResponse.json({
-      url: 'https://checkout.stripe.com/test-session',
-      sessionId: 'cs_test_123456789',
-    });
-  }),
-
-  http.post('/api/cancel-subscription', () => {
-    return HttpResponse.json({
-      success: true,
-      message: 'Subscription cancelled successfully',
+      balance: '0', // Mock: no tokens until deployment
+      tier: 'free',
+      hasAccess: true,
     });
   }),
 

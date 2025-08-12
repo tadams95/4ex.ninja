@@ -11,7 +11,6 @@ import {
 } from '@/hooks/usePerformance';
 import { Crossover } from '@/types';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import ProtectedRoute from '../components/ProtectedRoute';
 
 function SignalsPage() {
   // Performance monitoring hooks
@@ -167,13 +166,11 @@ function SignalsPage() {
   );
 }
 
-// Wrap the component with ProtectedRoute and FeedErrorBoundary
+// Wrap the component with FeedErrorBoundary (no auth protection needed since wallet connection is now handled globally)
 export default function ProtectedSignalsPage(): React.ReactElement {
   return (
-    <ProtectedRoute>
-      <FeedErrorBoundary>
-        <SignalsPage />
-      </FeedErrorBoundary>
-    </ProtectedRoute>
+    <FeedErrorBoundary>
+      <SignalsPage />
+    </FeedErrorBoundary>
   );
 }
