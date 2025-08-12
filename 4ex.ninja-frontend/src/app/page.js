@@ -1,6 +1,13 @@
 'use client';
 import WelcomeBanner from '@/components/WelcomeBanner';
-import { ConnectWallet, Wallet } from '@coinbase/onchainkit/wallet';
+import { Avatar, Identity, Name } from '@coinbase/onchainkit/identity';
+import {
+  ConnectWallet,
+  Wallet,
+  WalletDropdown,
+  WalletDropdownDisconnect,
+  WalletDropdownLink,
+} from '@coinbase/onchainkit/wallet';
 import dynamic from 'next/dynamic';
 import { Suspense, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -45,21 +52,6 @@ export default function Home() {
             }}
             fallbackClassName="animate-fade-in"
           >
-            {/* Welcome Banner for Connected Users */}
-            {isHydrated && isConnected && (
-              <ConditionalMotionDiv
-                motionProps={{
-                  initial: { opacity: 0, y: -10 },
-                  animate: { opacity: 1, y: 0 },
-                  transition: { duration: 0.5 },
-                }}
-                fallbackClassName="animate-fade-in"
-                className="mb-8"
-              >
-                <WelcomeBanner />
-              </ConditionalMotionDiv>
-            )}
-
             <ConditionalMotionDiv
               motionProps={{
                 whileHover: { scale: 1.05 },
@@ -84,6 +76,21 @@ export default function Home() {
                 : 'Get access to the 4EX platform.'}
             </ConditionalMotionDiv>
 
+            {/* Welcome Banner for Connected Users */}
+            {isHydrated && isConnected && (
+              <ConditionalMotionDiv
+                motionProps={{
+                  initial: { opacity: 0, y: -10 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { duration: 0.5 },
+                }}
+                fallbackClassName="animate-fade-in"
+                className="mb-8"
+              >
+                <WelcomeBanner />
+              </ConditionalMotionDiv>
+            )}
+
             {/* Only show connect button if not connected */}
             {isHydrated && !isConnected && (
               <ConditionalMotionDiv
@@ -93,13 +100,31 @@ export default function Home() {
                   transition: { delay: 0.6 },
                 }}
                 fallbackClassName="animate-fade-in"
+                className="flex justify-center"
               >
                 <Wallet>
-                  <ConnectWallet>
-                    <button className="bg-green-700 hover:bg-green-800 text-white border border-green-700 hover:border-green-800 font-semibold rounded-lg transition-all duration-200 px-6 py-3 text-base cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
-                      Connect Wallet
-                    </button>
+                  <ConnectWallet className="bg-green-700 hover:bg-green-700/10 text-green-400 border border-green-400 hover:text-green-300 hover:border-green-300 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+                    <Avatar className="h-6 w-6" />
+                    <Name />
                   </ConnectWallet>
+                  <WalletDropdown>
+                    <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
+                      <Avatar />
+                      <Name />
+                    </Identity>
+                    <WalletDropdownLink
+                      icon="wallet"
+                      href="https://wallet.coinbase.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Open Wallet
+                    </WalletDropdownLink>
+                    <WalletDropdownLink icon="user" href="/account">
+                      Account Settings
+                    </WalletDropdownLink>
+                    <WalletDropdownDisconnect />
+                  </WalletDropdown>
                 </Wallet>
               </ConditionalMotionDiv>
             )}
