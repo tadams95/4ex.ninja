@@ -111,7 +111,6 @@ const HeaderComponent = memo(function HeaderComponent() {
               </Link>
             </li>
 
-            {/* Wallet Connection */}
             {!isHydrated ? (
               // Hydration placeholder
               <li className="py-3 md:py-0">
