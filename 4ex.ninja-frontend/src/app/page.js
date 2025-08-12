@@ -72,7 +72,7 @@ export default function Home() {
               className="mb-4 text-lg"
             >
               {isHydrated && isConnected
-                ? 'Your premium forex signals dashboard is ready. Start trading with confidence.'
+                ? 'Your 4EX dashboard is ready. Approach the markets with confidence.'
                 : 'Get access to the 4EX platform.'}
             </ConditionalMotionDiv>
 

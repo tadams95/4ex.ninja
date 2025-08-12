@@ -75,18 +75,18 @@ export default function WelcomeBanner() {
         <div className="flex space-x-4">
           <Link
             href="/feed"
-            className="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+            className="bg-green-700 hover:bg-green-900  text-white border border-green-900 hover:text-green-100 hover:border-green-300 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
           >
-            View Signals
+            View Dashboard
           </Link>
         </div>
       </div>
 
-      <div className="mt-4 text-gray-300">
+      {/* <div className="mt-4 text-gray-300">
         <p className="text-sm">
           Welcome back! You can now access premium forex signals and manage your trading strategy.
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }

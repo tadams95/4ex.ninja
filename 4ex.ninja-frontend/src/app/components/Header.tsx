@@ -120,7 +120,7 @@ const HeaderComponent = memo(function HeaderComponent() {
             ) : (
               <li className="py-3 md:py-0">
                 <Wallet>
-                  <ConnectWallet className="bg-green-700 hover:bg-green-500  text-white border border-green-700 hover:text-green-100 hover:border-green-300 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+                  <ConnectWallet className="bg-green-700 hover:bg-green-900  text-white border border-green-900 hover:text-green-100 hover:border-green-900 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
                     <Avatar className="h-6 w-6" />
                     <Name />
                   </ConnectWallet>
