@@ -245,8 +245,60 @@
 }
 
 .theme-transition {
-  transition-duration: var(--transition-normal);
-  transition-timing-function: var(--transition-ease);
+  transition: all 0.2s ease-in-out;
+}
+
+/* === SEMANTIC COLOR UTILITIES === */
+
+/* Semantic text colors */
+.text-success {
+  color: var(--color-success);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.text-info {
+  color: var(--color-info);
+}
+
+/* Semantic background colors */
+.bg-success {
+  background-color: var(--color-success);
+}
+
+.bg-warning {
+  background-color: var(--color-warning);
+}
+
+.bg-error {
+  background-color: var(--color-error);
+}
+
+.bg-info {
+  background-color: var(--color-info);
+}
+
+/* Semantic border colors */
+.border-success {
+  border-color: var(--color-success);
+}
+
+.border-warning {
+  border-color: var(--color-warning);
+}
+
+.border-error {
+  border-color: var(--color-error);
+}
+
+.border-info {
+  border-color: var(--color-info);
 }
 
 body {
@@ -425,10 +477,10 @@ body {
 /* OnchainKit Dark Theme Overrides */
 /* Force dark theme for OnchainKit components to match 4ex.ninja theme */
 [data-onchainkit-theme='dark'] {
-  --ock-bg-default: #000000;
-  --ock-bg-secondary: #111827;
-  --ock-text: #ffffff;
-  --ock-text-secondary: #9ca3af;
+  --ock-bg-default: var(--color-background-primary);
+  --ock-bg-secondary: var(--color-background-secondary);
+  --ock-text: var(--color-text-primary);
+  --ock-text-secondary: var(--color-text-secondary);
   --ock-border: #16a34a;
 }
 
@@ -455,16 +507,16 @@ body {
 }
 
 [class*='ock-wallet-dropdown-item']:hover {
-  background-color: #16a34a !important; /* green-600 */
+  background-color: #15803d !important; /* green-700 - consistent with primary buttons */
   color: #ffffff !important;
-  border-color: #15803d !important; /* green-700 */
+  border-color: #166534 !important; /* green-800 */
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
 }
 
 [class*='ock-wallet-dropdown-item']:active {
   transform: translateY(0) !important;
-  background-color: #15803d !important; /* green-700 */
+  background-color: #166534 !important; /* green-800 - consistent with button active states */
 }
 
 /* Ensure all text in dropdown is white */

@@ -48,8 +48,8 @@ const HeaderComponent = memo(function HeaderComponent() {
   }, [isMobile]);
 
   return (
-    <header className="bg-black text-white pt-4 pb-4">
-      <div className="container mx-auto flex justify-between items-center px-4">
+    <header className="bg-black text-white py-6">
+      <div className="container mx-auto flex justify-between items-center px-4 md:px-6 lg:px-8">
         <Link href="/" className="text-2xl font-bold">
           4ex.ninja
         </Link>
@@ -83,15 +83,15 @@ const HeaderComponent = memo(function HeaderComponent() {
             className={`
             ${
               isMobile
-                ? 'flex flex-col absolute right-0 top-16 bg-black p-4 w-48 shadow-lg z-50'
-                : 'flex space-x-4 items-center'
+                ? 'flex flex-col absolute right-0 top-20 bg-black p-6 w-48 shadow-lg z-50'
+                : 'flex space-x-6 items-center'
             } 
-            md:flex md:items-center md:space-x-4 md:static md:shadow-none md:p-0 md:w-auto
+            md:flex md:items-center md:space-x-6 md:static md:shadow-none md:p-0 md:w-auto
           `}
           >
             {/* Navigation Links */}
-            <li className="py-2 md:py-0"></li>
-            <li className="py-2 md:py-0">
+            <li className="py-3 md:py-0"></li>
+            <li className="py-3 md:py-0">
               <Link
                 href="/about"
                 onClick={handleNavClick}
@@ -100,7 +100,7 @@ const HeaderComponent = memo(function HeaderComponent() {
                 About
               </Link>
             </li>
-            <li className="py-2 md:py-0">
+            <li className="py-3 md:py-0">
               <Link
                 href="/feed"
                 onClick={handleNavClick}
@@ -113,13 +113,13 @@ const HeaderComponent = memo(function HeaderComponent() {
             {/* Wallet Connection */}
             {!isHydrated ? (
               // Hydration placeholder
-              <li className="py-2 md:py-0">
+              <li className="py-3 md:py-0">
                 <div className="bg-gray-700 animate-pulse rounded-lg px-4 py-2 w-32 h-8"></div>
               </li>
             ) : (
-              <li className="py-2 md:py-0">
+              <li className="py-3 md:py-0">
                 <Wallet>
-                  <ConnectWallet className="bg-transparent hover:bg-green-600/10 text-green-400 border border-green-400 hover:text-green-300 hover:border-green-300 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+                  <ConnectWallet className="bg-transparent hover:bg-green-700/10 text-green-400 border border-green-400 hover:text-green-300 hover:border-green-300 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
                     <Avatar className="h-6 w-6" />
                     <Name />
                   </ConnectWallet>

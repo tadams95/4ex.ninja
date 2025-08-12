@@ -5,7 +5,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   variant?: 'default' | 'elevated' | 'outlined';
-  padding?: 'none' | 'sm' | 'md' | 'lg';
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
   hover?: boolean;
 }
 
@@ -30,6 +30,7 @@ export const Card: React.FC<CardProps> = ({
     sm: 'p-3',
     md: 'p-4',
     lg: 'p-6',
+    xl: 'p-8',
   };
 
   const cardClasses =

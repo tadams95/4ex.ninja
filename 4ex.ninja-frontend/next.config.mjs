@@ -69,6 +69,8 @@ const nextConfig = {
     if (!isServer) {
       config.optimization.splitChunks = {
         chunks: 'all',
+        minSize: 20000,
+        maxSize: 244000,
         cacheGroups: {
           // Separate React vendor chunks
           react: {
@@ -76,6 +78,15 @@ const nextConfig = {
             chunks: 'all',
             test: /[\/]node_modules[\/](react|react-dom)[\/]/,
             priority: 40,
+            enforce: true,
+          },
+          // OnchainKit and Viem chunks
+          onchain: {
+            name: 'onchain',
+            chunks: 'all',
+            test: /[\/]node_modules[\/](@coinbase\/onchainkit|viem)[\/]/,
+            priority: 38,
+            enforce: true,
           },
           // Vendor chunk for framer-motion
           framerMotion: {
@@ -83,6 +94,7 @@ const nextConfig = {
             chunks: 'all',
             test: /[\/]node_modules[\/]framer-motion[\/]/,
             priority: 35,
+            enforce: true,
           },
           // Vendor chunk for React Query
           reactQuery: {
@@ -90,6 +102,7 @@ const nextConfig = {
             chunks: 'all',
             test: /[\/]node_modules[\/]@tanstack[\/]react-query[\/]/,
             priority: 33,
+            enforce: true,
           },
           // Stripe chunk for financial components
           stripe: {
@@ -97,6 +110,7 @@ const nextConfig = {
             chunks: 'all',
             test: /[\/]node_modules[\/]@stripe[\/]/,
             priority: 30,
+            enforce: true,
           },
           // Vendor chunk for NextAuth
           nextAuth: {
@@ -104,6 +118,7 @@ const nextConfig = {
             chunks: 'all',
             test: /[\/]node_modules[\/]next-auth[\/]/,
             priority: 25,
+            enforce: true,
           },
           // Common vendor libraries
           vendor: {
@@ -111,14 +126,15 @@ const nextConfig = {
             chunks: 'all',
             test: /[\/]node_modules[\/]/,
             priority: 20,
+            reuseExistingChunk: true,
           },
         },
       };
 
       // Performance budgets
       config.performance = {
-        maxAssetSize: 250000, // 250KB
-        maxEntrypointSize: 250000, // 250KB
+        maxAssetSize: 350000, // Increased from 250KB to 350KB
+        maxEntrypointSize: 350000, // Increased from 250KB to 350KB
         hints: process.env.NODE_ENV === 'production' ? 'warning' : false,
       };
     }

@@ -12,7 +12,7 @@ const buttonVariants = {
   primary: 'bg-primary-700 hover:bg-primary-800 text-white font-semibold border-transparent',
   secondary: 'bg-neutral-700 hover:bg-neutral-800 text-white font-semibold border-transparent',
   outline:
-    'bg-transparent hover:bg-neutral-800 text-white font-semibold border border-neutral-600 hover:border-neutral-500',
+    'bg-transparent hover:bg-primary-700/10 text-primary-400 font-semibold border border-primary-400 hover:border-primary-300 hover:text-primary-300',
   ghost: 'bg-transparent hover:bg-neutral-800 text-white font-medium border-transparent',
 };
 

@@ -96,7 +96,7 @@ export default function Home() {
               >
                 <Wallet>
                   <ConnectWallet>
-                    <button className="bg-green-600 hover:bg-green-700 text-white border border-green-600 hover:border-green-700 font-semibold rounded-lg transition-all duration-200 px-6 py-3 text-base cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+                    <button className="bg-green-700 hover:bg-green-800 text-white border border-green-700 hover:border-green-800 font-semibold rounded-lg transition-all duration-200 px-6 py-3 text-base cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
                       Connect Wallet
                     </button>
                   </ConnectWallet>

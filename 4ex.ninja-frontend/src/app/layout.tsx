@@ -39,9 +39,17 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 
+        {/* Preconnect to OnchainKit and wallet services */}
+        <link rel="preconnect" href="https://api.coinbase.com" />
+        <link rel="preconnect" href="https://mainnet.base.org" />
+
         {/* Preload critical assets */}
         <link rel="preload" href="/next.svg" as="image" type="image/svg+xml" />
         <link rel="preload" href="/vercel.svg" as="image" type="image/svg+xml" />
+
+        {/* Preload critical JavaScript modules */}
+        <link rel="modulepreload" href="/_next/static/chunks/framework.js" />
+        <link rel="modulepreload" href="/_next/static/chunks/main.js" />
 
         {/* Optimize favicon loading */}
         <link rel="icon" href="/favicon.ico" sizes="any" />

@@ -27,13 +27,17 @@ const nextConfig = {
             value: [
               "default-src 'self'",
               isProduction
-                ? "script-src 'self' 'unsafe-eval' *.stripe.com"
-                : "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.stripe.com *.vercel.app vercel.live",
-              "style-src 'self' 'unsafe-inline' *.stripe.com",
-              "img-src 'self' data: blob: *.stripe.com",
+                ? "script-src 'self' 'unsafe-eval' *.stripe.com *.coinbase.com"
+                : "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.stripe.com *.coinbase.com *.vercel.app vercel.live",
+              "style-src 'self' 'unsafe-inline' *.stripe.com *.coinbase.com",
+              "img-src 'self' data: blob: *.stripe.com *.coinbase.com",
               "font-src 'self' data:",
-              `connect-src 'self' *.stripe.com wss: ws: ${apiUrl} ${apiUrl.replace('http', 'ws')}`,
-              "frame-src 'self' *.stripe.com" + (isProduction ? '' : ' *.vercel.app'),
+              `connect-src 'self' *.stripe.com *.coinbase.com *.walletconnect.com *.walletconnect.org wss: ws: ${apiUrl} ${apiUrl.replace(
+                'http',
+                'ws'
+              )} wss://relay.walletconnect.com wss://relay.walletconnect.org`,
+              "frame-src 'self' *.stripe.com *.coinbase.com" +
+                (isProduction ? '' : ' *.vercel.app'),
               "frame-ancestors 'none'",
               "object-src 'none'",
               "base-uri 'self'",
@@ -70,24 +74,24 @@ const nextConfig = {
                 },
               ]
             : []),
-          // Permissions Policy
+          // Permissions Policy (wallet-friendly)
           {
             key: 'Permissions-Policy',
             value:
-              'camera=(), microphone=(), geolocation=(), payment=(self *.stripe.com), usb=(), interest-cohort=()',
+              'camera=(), microphone=(), geolocation=(), payment=(self *.stripe.com *.coinbase.com), usb=(), interest-cohort=(), clipboard-read=(self *.coinbase.com), clipboard-write=(self *.coinbase.com)',
           },
-          // Cross-Origin Policies
+          // Cross-Origin Policies (wallet-friendly configuration)
           {
             key: 'Cross-Origin-Embedder-Policy',
             value: 'credentialless',
           },
           {
             key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin-allow-popups',
+            value: isProduction ? 'same-origin-allow-popups' : 'unsafe-none',
           },
           {
             key: 'Cross-Origin-Resource-Policy',
-            value: 'same-origin',
+            value: 'cross-origin',
           },
           // Security.txt support
           ...(isProduction
@@ -157,7 +161,7 @@ const nextConfig = {
   },
 
   // Webpack configuration for performance monitoring
-  webpack: (config, { dev, isServer }) => {
+  webpack: (config, { dev, isServer, webpack }) => {
     // Add performance budget plugin in production
     if (!dev && !isServer) {
       config.plugins.push(new PerformanceBudgetPlugin());
@@ -167,6 +171,23 @@ const nextConfig = {
     if (config.optimization) {
       config.optimization.usedExports = true;
       config.optimization.sideEffects = false;
+    }
+
+    // Optimize Lit components for production
+    if (!dev) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'lit/dev-mode.js': false,
+        'lit/lib/dev-mode.js': false,
+      };
+
+      // Define production mode for Lit and other libraries
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'process.env.LIT_DEV_MODE': JSON.stringify(false),
+          'process.env.NODE_ENV': JSON.stringify('production'),
+        })
+      );
     }
 
     return config;

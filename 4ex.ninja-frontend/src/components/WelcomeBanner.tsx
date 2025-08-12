@@ -26,14 +26,14 @@ export default function WelcomeBanner() {
   return (
     <div className="bg-gradient-to-r from-green-900/20 to-green-800/20 border border-green-700/30 rounded-xl p-6 mb-8">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3">
             <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
             <span className="text-green-400 font-medium">Connected</span>
           </div>
           <Wallet>
             <WalletDropdown>
-              <div className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer group px-3 py-2 text-sm">
+              <div className="flex items-center space-x-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer group px-3 py-2 text-sm">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                 <Identity
                   address={address}
@@ -72,10 +72,10 @@ export default function WelcomeBanner() {
           </Wallet>
         </div>
 
-        <div className="flex space-x-3">
+        <div className="flex space-x-4">
           <Link
             href="/feed"
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+            className="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
             View Signals
           </Link>

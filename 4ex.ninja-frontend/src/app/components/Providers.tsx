@@ -1,6 +1,7 @@
 'use client';
 
 import { ErrorNotificationProvider } from '@/components/error/ErrorNotificationSystem';
+import { OnchainKitErrorBoundary } from '@/components/error/OnchainKitErrorBoundary';
 import ProvidersErrorBoundary from '@/components/error/ProvidersErrorBoundary';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { queryClient } from '@/lib/queryClient';
@@ -40,32 +41,34 @@ function ProvidersComponent({ children }: ProvidersProps) {
   }, []);
 
   return (
-    <OnchainKitProvider
-      apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
-      chain={base}
-      config={{
-        appearance: {
-          mode: 'dark',
-          theme: 'dark',
-        },
-      }}
-    >
-      <WagmiProvider config={wagmiConfig}>
-        <QueryClientProvider client={queryClient}>
-          <SessionProvider>
-            <AuthProvider>
-              <ErrorNotificationProvider>
-                {children}
-                {/* Only show devtools in development */}
-                {process.env.NODE_ENV === 'development' && (
-                  <ReactQueryDevtools initialIsOpen={false} />
-                )}
-              </ErrorNotificationProvider>
-            </AuthProvider>
-          </SessionProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
-    </OnchainKitProvider>
+    <OnchainKitErrorBoundary>
+      <OnchainKitProvider
+        apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
+        chain={base}
+        config={{
+          appearance: {
+            mode: 'dark',
+            theme: 'dark',
+          },
+        }}
+      >
+        <WagmiProvider config={wagmiConfig}>
+          <QueryClientProvider client={queryClient}>
+            <SessionProvider>
+              <AuthProvider>
+                <ErrorNotificationProvider>
+                  {children}
+                  {/* Only show devtools in development */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <ReactQueryDevtools initialIsOpen={false} />
+                  )}
+                </ErrorNotificationProvider>
+              </AuthProvider>
+            </SessionProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
+      </OnchainKitProvider>
+    </OnchainKitErrorBoundary>
   );
 }
 

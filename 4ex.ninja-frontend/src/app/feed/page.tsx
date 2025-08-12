@@ -72,7 +72,7 @@ function SignalsPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-2xl bg-black min-h-screen">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 max-w-2xl bg-black min-h-screen">
         <h1 className="text-3xl font-bold mb-6">Latest Forex Signals</h1>
         <div className="bg-red-500/20 text-red-400 p-6 rounded-md flex flex-col items-center">
           <svg
@@ -103,26 +103,24 @@ function SignalsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl bg-black min-h-screen">
+    <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 max-w-2xl bg-black min-h-screen">
       <h1 className="text-3xl font-bold mb-6">Latest MA Crossover Signals</h1>
 
       {/* Signal statistics - only show when we have data */}
       {!loading && !error && processedData.stats.totalSignals > 0 && (
-        <div className="bg-gray-800 rounded-lg p-4 mb-6 grid grid-cols-3 gap-4 text-center">
+        <div className="bg-gray-800 rounded-lg p-6 mb-8 grid grid-cols-3 gap-6 text-center">
           <div>
-            <div className="text-2xl font-bold text-green-500">
+            <div className="text-2xl font-bold text-success">
               {processedData.stats.bullishCount}
             </div>
             <div className="text-sm text-gray-400">Bullish</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-red-500">
-              {processedData.stats.bearishCount}
-            </div>
+            <div className="text-2xl font-bold text-error">{processedData.stats.bearishCount}</div>
             <div className="text-sm text-gray-400">Bearish</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-blue-500">
+            <div className="text-2xl font-bold text-info">
               {processedData.stats.bullishPercentage}%
             </div>
             <div className="text-sm text-gray-400">Bullish Rate</div>
