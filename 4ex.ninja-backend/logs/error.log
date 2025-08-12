@@ -1828,3 +1828,13 @@ Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESC
 Context:
   taskName: Task-213
 ==================================================
+=== ERROR at 2025-08-11T19:00:46.573749 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8538119936)
+Process: MainProcess (11257)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: ESCALATED: System Resource Alert: CPU: Alert escalated (level 17): Alert escalated (level 16): Alert escalated (level 15): Alert escalated (level 14): Alert escalated (level 13): Alert escalated (level 12): Alert escalated (level 11): Alert escalated (level 10): Alert escalated (level 9): Alert escalated (level 8): Alert escalated (level 7): Alert escalated (level 6): Alert escalated (level 5): Alert escalated (level 4): Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): CPU usage is 99.2%, exceeding threshold of 90.0% | Context: {"process_count": 2028, "timestamp": 1754948746.444149}
+Context:
+  taskName: Task-214
+==================================================
