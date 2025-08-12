@@ -94,7 +94,7 @@ const HeaderComponent = memo(function HeaderComponent() {
               <Link
                 href="/about"
                 onClick={handleNavClick}
-                className="hover:text-green-400 transition-colors"
+                className="hover:text-green-500 transition-colors"
               >
                 About
               </Link>
@@ -103,7 +103,7 @@ const HeaderComponent = memo(function HeaderComponent() {
               <Link
                 href="/feed"
                 onClick={handleNavClick}
-                className="hover:text-green-400 transition-colors"
+                className="hover:text-green-500 transition-colors"
               >
                 Signals
               </Link>
@@ -118,7 +118,7 @@ const HeaderComponent = memo(function HeaderComponent() {
             ) : (
               <li className="py-3 md:py-0">
                 <Wallet>
-                  <ConnectWallet className="bg-green-700 hover:bg-green-700/10 text-green-400 border border-green-400 hover:text-green-300 hover:border-green-300 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+                  <ConnectWallet className="bg-green-700 hover:bg-green-500  text-white border border-green-700 hover:text-green-100 hover:border-green-300 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
                     <Avatar className="h-6 w-6" />
                     <Name />
                   </ConnectWallet>
