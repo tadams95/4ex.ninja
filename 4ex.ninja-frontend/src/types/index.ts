@@ -1,15 +1,14 @@
 // Core type definitions for 4ex.ninja frontend
 
 export interface User {
-  id?: string;
-  email?: string | null;
-  name?: string | null;
-  image?: string | null;
+  id: string;
+  email: string;
+  name?: string;
+  image?: string;
   isSubscribed?: boolean;
   subscriptionEnds?: string | Date;
-  stripeCustomerId?: string;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface Crossover {

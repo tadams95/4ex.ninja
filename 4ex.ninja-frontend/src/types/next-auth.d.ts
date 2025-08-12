@@ -8,7 +8,6 @@ declare module 'next-auth' {
     image?: string | null;
     isSubscribed?: boolean;
     subscriptionEnds?: string | Date;
-    stripeCustomerId?: string;
   }
 
   interface Session {
@@ -20,6 +19,5 @@ declare module 'next-auth/jwt' {
   interface JWT {
     isSubscribed?: boolean;
     subscriptionEnds?: string | Date;
-    stripeCustomerId?: string;
   }
 }

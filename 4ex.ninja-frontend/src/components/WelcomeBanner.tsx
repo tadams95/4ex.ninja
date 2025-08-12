@@ -33,14 +33,25 @@ export default function WelcomeBanner() {
           </div>
           <Wallet>
             <WalletDropdown>
-              <div className="flex items-center space-x-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer group px-3 py-2 text-sm">
+              <div
+                className="flex items-center space-x-3 bg-gray-800 hover:bg-gray-700/80 
+                rounded-lg transition-all duration-200 cursor-pointer group px-3 py-2 text-sm
+                min-h-[44px] focus-within:ring-2 focus-within:ring-green-500/50"
+              >
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                 <Identity
                   address={address}
                   schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
+                  className="flex items-center space-x-2"
                 >
-                  <Avatar className="w-6 h-6" />
-                  <Name className="text-white font-medium" />
+                  <Avatar
+                    className="w-6 h-6 transition-all duration-200 group-hover:scale-105"
+                    aria-hidden="true"
+                  />
+                  <Name
+                    className="text-white font-medium group-hover:text-green-100"
+                    aria-label="Connected wallet name"
+                  />
                 </Identity>
                 <svg
                   className="w-4 h-4 text-gray-400 group-hover:text-gray-300 transition-colors"
@@ -57,17 +68,33 @@ export default function WelcomeBanner() {
                 </svg>
               </div>
               <WalletDropdownLink
+                className="flex items-center px-4 py-3 hover:bg-neutral-800/50 
+                  transition-all duration-200 group min-h-[44px] rounded-md mx-2 my-1
+                  focus:outline-none focus:ring-2 focus:ring-green-500/50"
                 icon="wallet"
                 href="https://wallet.coinbase.com"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Open Coinbase Wallet in new tab"
               >
                 Open Wallet
               </WalletDropdownLink>
-              <WalletDropdownLink icon="user" href="/account">
+              <WalletDropdownLink
+                className="flex items-center px-4 py-3 hover:bg-neutral-800/50 
+                  transition-all duration-200 group min-h-[44px] rounded-md mx-2 my-1
+                  focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                icon="user"
+                href="/account"
+                aria-label="Go to account settings"
+              >
                 Account Settings
               </WalletDropdownLink>
-              <WalletDropdownDisconnect />
+              <WalletDropdownDisconnect
+                className="mx-2 my-1 hover:bg-red-500/10 hover:text-red-300 
+                  transition-all duration-200 min-h-[44px] rounded-md
+                  focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                aria-label="Disconnect wallet"
+              />
             </WalletDropdown>
           </Wallet>
         </div>
@@ -75,7 +102,16 @@ export default function WelcomeBanner() {
         <div className="flex space-x-4">
           <Link
             href="/feed"
-            className="bg-green-700 hover:bg-green-900  text-white border border-green-900 hover:text-green-100 hover:border-green-300 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+            className="bg-green-700 hover:bg-green-800 active:bg-green-900
+              text-white border border-green-600 hover:border-green-500 
+              hover:text-green-100 font-semibold rounded-xl 
+              transition-all duration-300 ease-out px-4 py-2.5 text-sm 
+              cursor-pointer outline-none hover:shadow-lg 
+              hover:shadow-green-500/25 hover:scale-[1.02] active:scale-[0.98]
+              focus-visible:ring-2 focus-visible:ring-green-500 
+              focus-visible:ring-offset-2 focus-visible:ring-offset-green-900/20
+              min-h-[44px] flex items-center justify-center"
+            aria-label="View trading signals dashboard"
           >
             View Dashboard
           </Link>

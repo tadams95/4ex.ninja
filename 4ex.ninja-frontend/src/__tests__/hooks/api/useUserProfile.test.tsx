@@ -15,27 +15,24 @@ const mockFetch = jest.fn();
 global.fetch = mockFetch;
 
 // Mock user data
-const mockUser: User = {
-  id: 'user-123',
-  name: 'Test User',
+const mockUserData: User = {
+  id: '123',
   email: 'test@example.com',
+  name: 'Test User',
   isSubscribed: true,
-  subscriptionEnds: '2024-12-31',
-  stripeCustomerId: 'cus_123',
-  createdAt: '2024-01-01T00:00:00Z',
-  updatedAt: '2024-01-01T00:00:00Z',
+  subscriptionEnds: new Date('2024-12-31'),
 };
 
 const mockSuccessResponse = {
   success: true,
-  user: mockUser,
+  user: mockUserData,
 };
 
 const mockUpdateResponse = {
   success: true,
   message: 'Profile updated successfully',
   user: {
-    ...mockUser,
+    ...mockUserData,
     name: 'Updated User',
     updatedAt: '2024-01-02T00:00:00Z',
   },
@@ -87,7 +84,7 @@ describe('useUserProfile', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(result.current.data).toEqual(mockUser);
+      expect(result.current.data).toEqual(mockUserData);
       expect(result.current.error).toBeNull();
       expect(mockFetch).toHaveBeenCalledWith('/api/user-profile');
     });
@@ -221,7 +218,7 @@ describe('useUserProfile', () => {
       });
 
       expect(mockFetch).toHaveBeenCalledTimes(3);
-      expect(result.current.data).toEqual(mockUser);
+      expect(result.current.data).toEqual(mockUserData);
     });
   });
 });
@@ -475,7 +472,7 @@ describe('useProfileManagement', () => {
     });
 
     // Should provide all expected properties and methods
-    expect(result.current.profile).toEqual(mockUser);
+    expect(result.current.profile).toEqual(mockUserData);
     expect(result.current.isLoading).toBe(false);
     expect(result.current.isUpdatingProfile).toBe(false);
     expect(result.current.isUpdatingPassword).toBe(false);

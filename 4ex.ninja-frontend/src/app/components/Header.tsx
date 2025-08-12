@@ -54,24 +54,29 @@ const HeaderComponent = memo(function HeaderComponent() {
           4ex.ninja
         </Link>
 
-        {/* Hamburger Icon - only visible on mobile */}
+        {/* Hamburger Icon - enhanced for touch accessibility */}
         <button
-          className="md:hidden flex flex-col justify-center items-center"
+          className="md:hidden flex flex-col justify-center items-center
+            min-h-[44px] min-w-[44px] p-2 rounded-lg hover:bg-neutral-800/50
+            transition-all duration-200 focus:outline-none focus:ring-2 
+            focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-black
+            active:bg-neutral-700/50"
           onClick={toggleMenu}
           aria-label="Toggle navigation menu"
+          aria-expanded={isMenuOpen}
         >
           <span
-            className={`block w-6 h-0.5 bg-white mb-1.5 transition-all ${
+            className={`block w-6 h-0.5 bg-white mb-1.5 transition-all duration-300 ${
               isMenuOpen ? 'rotate-45 translate-y-2' : ''
             }`}
           ></span>
           <span
-            className={`block w-6 h-0.5 bg-white mb-1.5 transition-all ${
+            className={`block w-6 h-0.5 bg-white mb-1.5 transition-all duration-300 ${
               isMenuOpen ? 'opacity-0' : 'opacity-100'
             }`}
           ></span>
           <span
-            className={`block w-6 h-0.5 bg-white transition-all ${
+            className={`block w-6 h-0.5 bg-white transition-all duration-300 ${
               isMenuOpen ? '-rotate-45 -translate-y-2' : ''
             }`}
           ></span>
@@ -89,13 +94,17 @@ const HeaderComponent = memo(function HeaderComponent() {
             md:flex md:items-center md:space-x-6 md:static md:shadow-none md:p-0 md:w-auto
           `}
           >
-            {/* Navigation Links */}
+            {/* Navigation Links - enhanced for touch */}
             <li className="py-3 md:py-0">
               <Link
                 href="/about"
                 prefetch={true}
                 onClick={handleNavClick}
-                className="hover:text-green-500 transition-colors"
+                className="hover:text-green-500 transition-colors duration-200
+                  focus:outline-none focus:text-green-400 focus:ring-2 
+                  focus:ring-green-500/50 rounded-md px-2 py-1 min-h-[44px] 
+                  flex items-center"
+                aria-label="About page"
               >
                 About
               </Link>
@@ -105,44 +114,95 @@ const HeaderComponent = memo(function HeaderComponent() {
                 href="/feed"
                 prefetch={true}
                 onClick={handleNavClick}
-                className="hover:text-green-500 transition-colors"
+                className="hover:text-green-500 transition-colors duration-200
+                  focus:outline-none focus:text-green-400 focus:ring-2 
+                  focus:ring-green-500/50 rounded-md px-2 py-1 min-h-[44px] 
+                  flex items-center"
+                aria-label="Dashboard"
               >
-                Signals
+                Dashboard
               </Link>
             </li>
 
             {!isHydrated ? (
-              // Hydration placeholder
+              // Enhanced hydration placeholder with better skeleton
               <li className="py-3 md:py-0">
-                <div className="bg-gray-700 animate-pulse rounded-lg px-4 py-2 w-32 h-8"></div>
+                <div
+                  className="bg-gradient-to-r from-neutral-800 via-neutral-700 to-neutral-800 
+                  animate-shimmer rounded-xl px-4 py-2.5 w-32 h-10 
+                  bg-[length:200%_100%] flex items-center justify-center
+                  border border-neutral-700"
+                >
+                  <div className="w-5 h-5 bg-neutral-600 rounded-full mr-2 animate-pulse"></div>
+                  <div className="w-16 h-3 bg-neutral-600 rounded animate-pulse"></div>
+                </div>
               </li>
             ) : (
               <li className="py-3 md:py-0">
                 <Wallet>
-                  <ConnectWallet className="bg-green-700 hover:bg-green-900  text-white border border-green-900 hover:text-green-100 hover:border-green-900 font-semibold rounded-lg transition-all duration-200 px-3 py-1.5 text-sm cursor-pointer outline-none hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
-                    <Avatar className="h-6 w-6" />
-                    <Name />
+                  <ConnectWallet
+                    className="bg-green-700 hover:bg-green-800 active:bg-green-900
+                      text-white border border-green-600 hover:border-green-500 
+                      hover:text-green-100 font-semibold 
+                      rounded-xl transition-all duration-300 ease-out 
+                      px-4 py-2.5 text-sm cursor-pointer outline-none 
+                      hover:shadow-lg hover:shadow-green-500/25 hover:scale-[1.02] 
+                      active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-green-500 
+                      focus-visible:ring-offset-2 focus-visible:ring-offset-black
+                      min-h-[44px] flex items-center justify-center"
+                    aria-label="Connect your crypto wallet"
+                  >
+                    <Avatar className="h-6 w-6" aria-hidden="true" />
+                    <Name aria-label="Wallet display name" />
                   </ConnectWallet>
                   <WalletDropdown>
-                    <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
-                      <Avatar />
-                      <Name />
+                    <Identity
+                      className="px-4 pt-3 pb-2 group hover:bg-neutral-800/50 
+                        transition-colors duration-200 rounded-t-lg min-h-[44px] 
+                        flex items-center focus-within:ring-2 focus-within:ring-green-500/50"
+                      hasCopyAddressOnClick
+                    >
+                      <Avatar
+                        className="ring-2 ring-green-500/20 group-hover:ring-green-500/40 
+                        transition-all duration-200"
+                        aria-hidden="true"
+                      />
+                      <Name
+                        className="font-medium text-white group-hover:text-green-100"
+                        aria-label="Connected wallet name"
+                      />
                     </Identity>
 
                     <WalletDropdownLink
+                      className="flex items-center px-4 py-3 hover:bg-neutral-800/50 
+                        transition-all duration-200 group min-h-[44px] rounded-md mx-2 my-1
+                        focus:outline-none focus:ring-2 focus:ring-green-500/50"
                       icon="wallet"
                       href="https://wallet.coinbase.com"
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="Open Coinbase Wallet in new tab"
                     >
                       Open Wallet
                     </WalletDropdownLink>
 
-                    <WalletDropdownLink icon="user" href="/account">
+                    <WalletDropdownLink
+                      className="flex items-center px-4 py-3 hover:bg-neutral-800/50 
+                        transition-all duration-200 group min-h-[44px] rounded-md mx-2 my-1
+                        focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                      icon="user"
+                      href="/account"
+                      aria-label="Go to account settings"
+                    >
                       Account Settings
                     </WalletDropdownLink>
 
-                    <WalletDropdownDisconnect />
+                    <WalletDropdownDisconnect
+                      className="mx-2 my-1 hover:bg-red-500/10 hover:text-red-300 
+                        transition-all duration-200 min-h-[44px] rounded-md
+                        focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                      aria-label="Disconnect wallet"
+                    />
                   </WalletDropdown>
                 </Wallet>
               </li>

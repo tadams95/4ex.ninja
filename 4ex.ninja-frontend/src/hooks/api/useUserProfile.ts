@@ -131,7 +131,7 @@ export const useUpdateProfile = () => {
           ...old,
           name: newData.name ?? old.name,
           email: newData.email ?? old.email,
-          updatedAt: new Date().toISOString(),
+          updatedAt: new Date(),
         };
       });
 

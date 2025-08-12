@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { handleCheckout } from '@/utils/checkout-helpers';
+
 import { motion } from 'framer-motion';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
