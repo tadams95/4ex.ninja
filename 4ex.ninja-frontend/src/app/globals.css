@@ -421,3 +421,112 @@ body {
   animation: scroll-ticker 50s linear infinite;
   will-change: transform;
 }
+
+/* OnchainKit Dark Theme Overrides */
+/* Force dark theme for OnchainKit components to match 4ex.ninja theme */
+[data-onchainkit-theme='dark'] {
+  --ock-bg-default: #000000;
+  --ock-bg-secondary: #111827;
+  --ock-text: #ffffff;
+  --ock-text-secondary: #9ca3af;
+  --ock-border: #16a34a;
+}
+
+/* Redesigned wallet dropdown to match 4ex.ninja theme */
+[class*='ock-wallet-dropdown'] {
+  background-color: #111827 !important; /* gray-900 */
+  border: 1px solid #16a34a !important; /* green-600 border */
+  color: #ffffff !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 0.75rem !important; /* rounded-xl */
+  backdrop-filter: blur(8px) !important;
+  background-image: linear-gradient(to bottom right, #111827, #0f172a) !important;
+}
+
+/* Dropdown items styling */
+[class*='ock-wallet-dropdown-item'] {
+  color: #ffffff !important;
+  background-color: transparent !important;
+  border-radius: 0.5rem !important; /* rounded-lg */
+  margin: 0.25rem !important; /* m-1 */
+  padding: 0.75rem 1rem !important; /* px-4 py-3 */
+  transition: all 0.2s ease-in-out !important;
+  border: 1px solid transparent !important;
+}
+
+[class*='ock-wallet-dropdown-item']:hover {
+  background-color: #16a34a !important; /* green-600 */
+  color: #ffffff !important;
+  border-color: #15803d !important; /* green-700 */
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+}
+
+[class*='ock-wallet-dropdown-item']:active {
+  transform: translateY(0) !important;
+  background-color: #15803d !important; /* green-700 */
+}
+
+/* Ensure all text in dropdown is white */
+[class*='ock-wallet-dropdown'] * {
+  color: #ffffff !important;
+}
+
+[class*='ock-wallet-dropdown'] a {
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+[class*='ock-wallet-dropdown'] a:hover {
+  color: #ffffff !important;
+}
+
+[class*='ock-wallet-dropdown'] button {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* Disconnect button special styling */
+[class*='ock-wallet-dropdown'] [class*='disconnect'] {
+  color: #fca5a5 !important; /* red-300 for disconnect action */
+}
+
+[class*='ock-wallet-dropdown'] [class*='disconnect']:hover {
+  background-color: #dc2626 !important; /* red-600 */
+  color: #ffffff !important;
+  border-color: #b91c1c !important; /* red-700 */
+}
+
+/* Icons in dropdown */
+[class*='ock-wallet-dropdown'] svg {
+  color: #10b981 !important; /* green-500 for icons */
+}
+
+[class*='ock-wallet-dropdown-item']:hover svg {
+  color: #ffffff !important; /* white icons on hover */
+}
+
+/* Override any OnchainKit component text that might be black */
+[class*='ock-'] {
+  color: #ffffff;
+}
+
+[class*='ock-text'] {
+  color: #ffffff !important;
+}
+
+/* Subtle animation for dropdown appearance */
+[class*='ock-wallet-dropdown'] {
+  animation: dropdownSlideIn 0.2s ease-out !important;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

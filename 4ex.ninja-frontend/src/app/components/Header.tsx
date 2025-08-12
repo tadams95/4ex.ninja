@@ -90,15 +90,7 @@ const HeaderComponent = memo(function HeaderComponent() {
           `}
           >
             {/* Navigation Links */}
-            <li className="py-2 md:py-0">
-              <Link
-                href="/"
-                onClick={handleNavClick}
-                className="hover:text-green-400 transition-colors"
-              >
-                Home
-              </Link>
-            </li>
+            <li className="py-2 md:py-0"></li>
             <li className="py-2 md:py-0">
               <Link
                 href="/about"

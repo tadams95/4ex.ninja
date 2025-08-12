@@ -40,7 +40,16 @@ function ProvidersComponent({ children }: ProvidersProps) {
   }, []);
 
   return (
-    <OnchainKitProvider apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY} chain={base}>
+    <OnchainKitProvider
+      apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
+      chain={base}
+      config={{
+        appearance: {
+          mode: 'dark',
+          theme: 'dark',
+        },
+      }}
+    >
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <SessionProvider>
