@@ -10,7 +10,6 @@ import { BaseComponentProps } from '@/types';
 import { initializeServiceWorker } from '@/utils/service-worker';
 import { OnchainKitProvider } from '@coinbase/onchainkit';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { SessionProvider } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { WagmiProvider } from 'wagmi';
@@ -54,17 +53,15 @@ function ProvidersComponent({ children }: ProvidersProps) {
       >
         <WagmiProvider config={wagmiConfig}>
           <QueryClientProvider client={queryClient}>
-            <SessionProvider>
-              <AuthProvider>
-                <ErrorNotificationProvider>
-                  {children}
-                  {/* Only show devtools in development */}
-                  {process.env.NODE_ENV === 'development' && (
-                    <ReactQueryDevtools initialIsOpen={false} />
-                  )}
-                </ErrorNotificationProvider>
-              </AuthProvider>
-            </SessionProvider>
+            <AuthProvider>
+              <ErrorNotificationProvider>
+                {children}
+                {/* Only show devtools in development */}
+                {process.env.NODE_ENV === 'development' && (
+                  <ReactQueryDevtools initialIsOpen={false} />
+                )}
+              </ErrorNotificationProvider>
+            </AuthProvider>
           </QueryClientProvider>
         </WagmiProvider>
       </OnchainKitProvider>
