@@ -21,13 +21,15 @@ function formatTokenAmount(amount: bigint): string {
 function getTierBenefits(tier: string): string[] {
   switch (tier) {
     case 'whale':
-      return ['Premium Signals', 'Whale Signals', 'Alpha Signals', 'Priority Support'];
+      return ['Basic Signals', 'Premium Signals', 'Whale Signals', 'Priority Support'];
     case 'premium':
-      return ['Premium Signals', 'Whale Signals', 'Enhanced Analytics'];
-    case 'holders':
-      return ['Premium Signals', 'Basic Analytics'];
+      return ['Basic Signals', 'Premium Signals', 'Enhanced Analytics'];
+    case 'basic':
+      return ['Basic Signals', 'Premium Signals'];
+    case 'holder':
+      return ['Basic Signals'];
     default:
-      return ['Basic Signals Only'];
+      return ['No Access - Get 1 $4EX Token to Start'];
   }
 }
 
@@ -35,11 +37,13 @@ function getTierBenefits(tier: string): string[] {
 function getNextTierInfo(tier: string): { name: string; requirement: string } | null {
   switch (tier) {
     case 'public':
-      return { name: 'Holders', requirement: '1,000 $4EX tokens' };
-    case 'holders':
-      return { name: 'Premium', requirement: '10,000 $4EX tokens' };
+      return { name: 'Holder', requirement: '1 $4EX token' };
+    case 'holder':
+      return { name: 'Basic', requirement: '1,000,000 $4EX tokens' };
+    case 'basic':
+      return { name: 'Premium', requirement: '10,000,000 $4EX tokens' };
     case 'premium':
-      return { name: 'Whale', requirement: '100,000 $4EX tokens' };
+      return { name: 'Whale', requirement: '100,000,000 $4EX tokens' };
     default:
       return null;
   }
@@ -76,14 +80,16 @@ export default function TokenTierDashboard() {
 
   const tierColors = {
     public: 'text-gray-400 border-gray-600',
-    holders: 'text-green-400 border-green-600',
+    holder: 'text-yellow-400 border-yellow-600',
+    basic: 'text-green-400 border-green-600',
     premium: 'text-blue-400 border-blue-600',
     whale: 'text-purple-400 border-purple-600',
   };
 
   const tierBadgeColors = {
     public: 'bg-gray-600 text-gray-100',
-    holders: 'bg-green-600 text-green-100',
+    holder: 'bg-yellow-600 text-yellow-100',
+    basic: 'bg-green-600 text-green-100',
     premium: 'bg-blue-600 text-blue-100',
     whale: 'bg-purple-600 text-purple-100',
   };

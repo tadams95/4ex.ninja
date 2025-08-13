@@ -13,24 +13,27 @@ export const TOKEN_CONFIG = {
   chainId: 8453 as const, // Base mainnet
 } as const;
 
-// Token tier thresholds (in wei, 18 decimals)
+// Token tier thresholds (in wei, 18 decimals) - Following official TierStructure.md
 export const TOKEN_TIERS = {
-  FREE: BigInt(0),
-  HOLDERS: BigInt(1000) * BigInt(10) ** BigInt(18), // 1,000 4EX
-  PREMIUM: BigInt(10000) * BigInt(10) ** BigInt(18), // 10,000 4EX
-  WHALE: BigInt(100000) * BigInt(10) ** BigInt(18), // 100,000 4EX
+  PUBLIC: BigInt(0), // 0 tokens - No access
+  HOLDER: BigInt(1) * BigInt(10) ** BigInt(18), // 1 4EX - Holder tier
+  BASIC: BigInt(1000000) * BigInt(10) ** BigInt(18), // 1,000,000 4EX - Basic tier
+  PREMIUM: BigInt(10000000) * BigInt(10) ** BigInt(18), // 10,000,000 4EX - Premium tier
+  WHALE: BigInt(100000000) * BigInt(10) ** BigInt(18), // 100,000,000 4EX - Whale tier
 } as const;
 
-export type AccessTier = 'public' | 'holders' | 'premium' | 'whale';
+export type AccessTier = 'public' | 'holder' | 'basic' | 'premium' | 'whale';
 
 /**
  * Calculate access tier based on token balance
+ * Follows official tier structure: 1 token = holder, 1M = basic, 10M = premium, 100M = whale
  */
 export function calculateAccessTier(balance: bigint): AccessTier {
-  if (balance >= TOKEN_TIERS.WHALE) return 'whale';
-  if (balance >= TOKEN_TIERS.PREMIUM) return 'premium';
-  if (balance >= TOKEN_TIERS.HOLDERS) return 'holders';
-  return 'public';
+  if (balance >= TOKEN_TIERS.WHALE) return 'whale'; // 100M+ tokens
+  if (balance >= TOKEN_TIERS.PREMIUM) return 'premium'; // 10M+ tokens
+  if (balance >= TOKEN_TIERS.BASIC) return 'basic'; // 1M+ tokens
+  if (balance >= TOKEN_TIERS.HOLDER) return 'holder'; // 1+ tokens
+  return 'public'; // 0 tokens
 }
 
 /**
@@ -39,9 +42,10 @@ export function calculateAccessTier(balance: bigint): AccessTier {
 export function getNotificationChannels(tier: AccessTier): string[] {
   const channels = {
     public: [],
-    holders: ['premium_signals'],
-    premium: ['premium_signals', 'whale_signals'],
-    whale: ['premium_signals', 'whale_signals', 'alpha_signals'],
+    holder: ['basic_signals'],
+    basic: ['basic_signals', 'premium_signals'],
+    premium: ['basic_signals', 'premium_signals'],
+    whale: ['basic_signals', 'premium_signals', 'whale_signals'],
   };
 
   return channels[tier] || [];

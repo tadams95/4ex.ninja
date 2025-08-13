@@ -6,7 +6,6 @@ import { WalletButton, WalletProfile } from '@/components/WalletConnection';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTokenBalance } from '@/hooks/useTokenBalanceSimple';
 import { TOKEN_CONFIG } from '@/lib/token';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
 
