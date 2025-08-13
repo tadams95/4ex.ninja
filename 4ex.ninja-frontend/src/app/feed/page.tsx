@@ -12,6 +12,7 @@ import {
   useSignalLoadTracking,
 } from '@/hooks/usePerformance';
 import { Crossover } from '@/types';
+import Link from 'next/link';
 import React, { useCallback, useEffect, useMemo } from 'react';
 
 function SignalsPage() {
@@ -119,9 +120,17 @@ function SignalsPage() {
               : 'Wallet'}
           </p>
         </div>
-        <div className="flex items-center space-x-2 text-sm text-gray-400">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span>Live</span>
+        <div className="flex items-center space-x-4">
+          <Link
+            href="/account"
+            className="px-3 py-2 text-sm bg-gray-800 text-gray-300 rounded-md hover:bg-gray-700 transition-colors"
+          >
+            Account
+          </Link>
+          <div className="flex items-center space-x-2 text-sm text-gray-400">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span>Live</span>
+          </div>
         </div>
       </div>
 

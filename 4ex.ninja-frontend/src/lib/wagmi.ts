@@ -15,8 +15,8 @@ export const wagmiConfig = createConfig({
     }),
   ],
   transports: {
-    [base.id]: http(),
-    [baseSepolia.id]: http(),
+    [base.id]: http('https://mainnet.base.org'),
+    [baseSepolia.id]: http('https://sepolia.base.org'),
   },
 });
 
