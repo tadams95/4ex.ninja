@@ -16,7 +16,6 @@ const customJestConfig = {
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
     '!src/**/index.{js,jsx,ts,tsx}',
-    '!src/test-utils/**',
     '!src/mocks/**',
   ],
   coveragePathIgnorePatterns: ['/node_modules/', '/.next/', '/coverage/', '/public/'],

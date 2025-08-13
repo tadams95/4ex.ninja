@@ -2,9 +2,33 @@
  * @jest-environment jsdom
  */
 
-import { createTestCrossover, createTestUser } from '@/test-utils/database';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
+
+// Test utility functions for inline use
+const createTestUser = (overrides = {}) => ({
+  id: 'test-user-123',
+  name: 'Test User',
+  email: 'test@example.com',
+  isSubscribed: true,
+  subscriptionStatus: 'active',
+  subscriptionEnds: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+  ...overrides,
+});
+
+const createTestCrossover = (overrides = {}) => ({
+  id: 'test-crossover-123',
+  pair: 'EUR/USD',
+  signal: 'BUY',
+  confidence: 85,
+  entry_price: 1.095,
+  stop_loss: 1.09,
+  take_profit: 1.1,
+  created_at: new Date().toISOString(),
+  strategy: 'MA_CROSSOVER',
+  timeframe: 'H4',
+  ...overrides,
+});
 
 describe('Testing Infrastructure Setup', () => {
   describe('Jest Configuration', () => {

@@ -16,15 +16,17 @@ try:
     from web3.exceptions import Web3Exception  # type: ignore
     from eth_account import Account  # type: ignore
     from eth_account.messages import encode_defunct  # type: ignore
+
     WEB3_AVAILABLE = True
 except ImportError as e:
     WEB3_AVAILABLE = False
-    
+
     # Mock classes for graceful degradation when web3 is not available
     class MockWeb3:
         class HTTPProvider:
-            def __init__(self, url): pass
-        
+            def __init__(self, url):
+                pass
+
         class eth:
             @staticmethod
             def contract(*args, **kwargs):
@@ -33,41 +35,61 @@ except ImportError as e:
                         @staticmethod
                         def balanceOf(address):
                             class MockCall:
-                                def call(self): return 0
+                                def call(self):
+                                    return 0
+
                             return MockCall()
+
                         @staticmethod
                         def symbol():
                             class MockCall:
-                                def call(self): return "4EX"
+                                def call(self):
+                                    return "4EX"
+
                             return MockCall()
+
                         @staticmethod
                         def decimals():
                             class MockCall:
-                                def call(self): return 18
+                                def call(self):
+                                    return 18
+
                             return MockCall()
+
                 return MockContract()
-        
+
         @staticmethod
-        def is_address(address): return len(address) == 42 and address.startswith('0x')
+        def is_address(address):
+            return len(address) == 42 and address.startswith("0x")
+
         @staticmethod
-        def to_checksum_address(address): return address
-        def is_connected(self): return False
-        def __init__(self, provider): pass
-    
+        def to_checksum_address(address):
+            return address
+
+        def is_connected(self):
+            return False
+
+        def __init__(self, provider):
+            pass
+
     Web3 = MockWeb3
-    
-    class Web3Exception(Exception): pass
-    
+
+    class Web3Exception(Exception):
+        pass
+
     class MockAccount:
         @staticmethod
-        def recover_message(message_hash, signature): return "0x0000000000000000000000000000000000000000"
-    
+        def recover_message(message_hash, signature):
+            return "0x0000000000000000000000000000000000000000"
+
     Account = MockAccount
-    
-    def encode_defunct(text): 
+
+    def encode_defunct(text):
         class MockMessage:
             pass
+
         return MockMessage()
+
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -148,9 +170,11 @@ class OnchainIntegrationService:
 
         # Initialize Web3 connection to Base network
         self.base_rpc_url = base_rpc_url or "https://mainnet.base.org"
-        
+
         if not WEB3_AVAILABLE:
-            logger.warning("Web3 dependencies not available. Install with: pip install web3 eth-account")
+            logger.warning(
+                "Web3 dependencies not available. Install with: pip install web3 eth-account"
+            )
             logger.info("Running in simulation mode")
             self.web3 = Web3(Web3.HTTPProvider(self.base_rpc_url))
         else:
@@ -174,7 +198,7 @@ class OnchainIntegrationService:
         if not WEB3_AVAILABLE:
             logger.info("Web3 not available, using simulation")
             return self._get_simulated_balance(wallet_address)
-            
+
         try:
             # Validate wallet address format
             if not self.web3.is_address(wallet_address):
@@ -278,7 +302,7 @@ class OnchainIntegrationService:
         if not WEB3_AVAILABLE:
             logger.warning("Web3 not available, cannot verify wallet signature")
             return False
-            
+
         try:
             # Convert to checksum address
             wallet_address = self.web3.to_checksum_address(wallet_address)
@@ -293,7 +317,7 @@ class OnchainIntegrationService:
 
             # Check if recovered address matches provided address
             is_valid = recovered_address.lower() == wallet_address.lower()
-            
+
             logger.info(f"Signature verification for {wallet_address}: {is_valid}")
             return is_valid
 
@@ -313,13 +337,17 @@ class OnchainIntegrationService:
         """
         try:
             # Basic validation even without Web3
-            if not new_address or len(new_address) != 42 or not new_address.startswith('0x'):
+            if (
+                not new_address
+                or len(new_address) != 42
+                or not new_address.startswith("0x")
+            ):
                 raise ValueError(f"Invalid contract address format: {new_address}")
 
             if WEB3_AVAILABLE and self.web3.is_address(new_address):
                 # Convert to checksum address if Web3 is available
                 new_address = self.web3.to_checksum_address(new_address)
-            
+
             # Update the token configuration
             self.token_config.address = new_address
 
