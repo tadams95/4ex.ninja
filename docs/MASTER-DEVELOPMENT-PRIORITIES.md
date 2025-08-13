@@ -5,7 +5,11 @@
 This document provid- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIGRATION**
   - Deploy wallet connection interface for existing users
   - Launch airdrop campaign for current Discord subscribers
-  - Begin community marketing on Farcaster and X
+  - Begin comm#### **Week 17**: Data preparation and feature engineering
+  - **MongoDB MCP Setup**: Enable AI-assisted complex aggregation pipeline development
+  - Extract OHLCV + technical indicators from MongoDB using AI-optimized queries
+  - Create sequence data for LSTM training (50, 100, 200 candle lookbacks)
+  - Integrate sentiment features from free implementationy marketing on Farcaster and X
 
 ---strategic, ordered approach to implementing remaining planned improvements for 4ex.ninja. **Phase 1 (Foundation) and Phase 2 (Business-Critical Features) have been completed** and moved to `COMPLETED-PRIORITIES.md` to keep this working document focused and manageable.
 
@@ -28,93 +32,105 @@ This document provid- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIG
 **⚠️ DEPENDENCY NOTICE**: The following features require Onchain Kit installation and real wallet integration. The simulation framework from Day 3-4 will be replaced with real onchain functionality.
 
 #### 3.1 Onchain Integration Infrastructure (Days 1-4)
-- [ ] **Day 1-2**: Install and configure Coinbase Onchain Kit 🔧 **FOUNDATION**
+- [x] **Day 1-2**: Install and configure Coinbase Onchain Kit 🔧 **FOUNDATION**
   ```bash
-  # Frontend: Install Onchain Kit
-  npm install @coinbase/onchainkit
+  # Frontend: Install Onchain Kit ✅ COMPLETED
+  npm install @coinbase/onchainkit  # Version 0.38.19 installed
   
-  # Backend: Add Web3 infrastructure
-  pip install web3 eth-account
+  # Backend: Add Web3 infrastructure ✅ COMPLETED
+  pip install web3 eth-account  # web3 v7.13.0, eth-account v0.13.7
   ```
-  - Replace simulated wallet connections with real wallet integration
-  - Add support for Coinbase Wallet, MetaMask, WalletConnect
-  - Configure Base network for future $4EX token integration
+  - ✅ Replaced simulated wallet connections with real wallet integration
+  - ✅ Added support for Coinbase Wallet, MetaMask, WalletConnect (wagmi config)
+  - ✅ Configured Base network for $4EX token integration (base & baseSepolia chains)
 
-- [ ] **Day 3-4**: Implement real token balance checking 🪙 **TOKEN INTEGRATION**
-  ```typescript
-  // Replace simulation in OnchainNotificationManager
-  private async getTokenBalance(walletAddress: string): Promise<bigint> {
-    // BEFORE (simulation):
-    // return walletAddress.endsWith('0') ? BigInt(100000) : BigInt(0);
-    
-    // AFTER (real onchain):
-    const tokenContract = new Contract(TOKEN_ADDRESS, ERC20_ABI, provider);
-    return await tokenContract.balanceOf(walletAddress);
-  }
+- [x] **Day 3-4**: Implement real token balance checking 🪙 **TOKEN INTEGRATION**
+  ```python
+  # Real onchain implementation with simulation fallback ✅ COMPLETED
+  async def get_token_balance(self, wallet_address: str) -> int:
+      # Validates address, connects to Base RPC
+      # Uses real contract calls when token deployed
+      # Falls back to simulation during pre-deployment testing
+      contract = self.web3.eth.contract(address=self.token_config.address, abi=ERC20_ABI)
+      return contract.functions.balanceOf(wallet_address).call()
   ```
-  - Replace all simulated token balance calls with real contract calls
-  - Add real-time balance monitoring via Web3 events
-  - Implement dynamic access tier updates based on actual holdings
+  - ✅ Implemented real contract calls with simulation fallback system
+  - ✅ Added Base network RPC connection and address validation  
+  - ✅ Built dynamic access tier calculation (holders/premium/whale tiers)
 
 #### 3.2 Token-Gated Features Implementation (Days 5-7)
-- [ ] **Day 5-6**: Enable real token-gated notification channels 🎯 **TOKEN UTILITY**
-  ```typescript
-  // Real token-based notification tiers
-  const REAL_NOTIFICATION_TIERS = {
-    public: [],                    // Free signals for everyone
-    holders: ['premium_signals'],  // 1,000+ $4EX token holders
-    premium: ['whale_signals'],    // 10,000+ $4EX token holders  
-    whale: ['alpha_signals']       // 100,000+ $4EX token holders
-  };
+- [x] **Day 5-6**: Enable real token-gated notification channels 🎯 **TOKEN UTILITY**
+  ```python
+  # Real token-based notification tiers ✅ IMPLEMENTED
+  NOTIFICATION_TIERS = {
+      "public": [],                    # Free signals for everyone
+      "holders": ["premium_signals"],  # 100,000+ $4EX token holders
+      "premium": ["whale_signals"],    # 1,000,000+ $4EX token holders  
+      "whale": ["alpha_signals"]       # 100,000,000+ $4EX token holders
+  }
+  # Implemented in onchain_integration.py get_notification_channels()
   ```
-  - Convert simulated token-gated features to real functionality
-  - Real-time access tier updates based on actual token holdings
-  - Token balance-based notification channel access
-  - Premium notification delivery for actual token holders
+  - ✅ Built token-gated notification channel framework (ready for production)
+  - ✅ Implemented access tier calculation with real-time balance updates  
+  - ✅ Created Discord service integration with tier-based routing
+  - 🕒 **PENDING**: Production activation (awaits $4EX token deployment)
 
-- [ ] **Day 7**: Test real wallet-based notification delivery � **VALIDATION**
-  - Real wallet connection flow testing (Coinbase Wallet, MetaMask, WalletConnect)
-  - Actual token balance threshold testing for notification access
-  - Session-to-wallet migration user experience testing
-  - Cross-device notification consistency with real wallet-based identity
+- [ ] **Day 7**: Test real wallet-based notification delivery 🧪 **VALIDATION**
+  - [ ] Real wallet connection flow testing (Coinbase Wallet, MetaMask, WalletConnect)
+  - [ ] Actual token balance threshold testing for notification access  
+  - [ ] Session-to-wallet migration user experience testing
+  - [ ] Cross-device notification consistency with real wallet-based identity
+
+**🎯 SECTION 3.1 STATUS: ✅ INFRASTRUCTURE COMPLETE**
+- **Frontend**: OnchainKit v0.38.19 + wagmi + Base network configured
+- **Backend**: Web3 v7.13.0 + eth-account + real contract integration
+- **Integration**: Token balance system with simulation fallback ready
+- **Remaining**: $4EX token deployment via Clanker to activate production features
+
+**🚀 MAJOR MILESTONE: $4EX TOKEN DEPLOYED!**
+- **Contract**: 0x3Aa87C18d7080484e4839afA3540e520452ccA3E (Base)
+- **Platform**: streme.fun deployment successful
+- **Status**: Backend updated, production-ready for token-gated features
+- **Next**: Activate real token balance checking and Discord integration
 
 ---
 
 ### **Week 13-16: Token Launch & Full Production** 
 *Priority: CRITICAL - $4EX token launch and complete onchain migration*
 
-#### 3.3 $4EX Token Launch via Clanker (Days 1-4)
-- [ ] **Day 1**: Deploy $4EX token via Clanker bot 🚀 **LAUNCH**
+#### 3.3 $4EX Token Launch via streme.fun (Days 1-4) ✅ **LAUNCHED**
+- [x] **Day 1**: Deploy $4EX token via streme.fun 🚀 **LAUNCH COMPLETE**
   ```bash
-  # Farcaster post to @clanker
-  "@clanker deploy a token for 4ex.ninja - the leading forex signal platform
-  Name: 4EX Forex Signals
+  # ✅ COMPLETED: Token deployed via streme.fun
+  Contract Address: 0x3Aa87C18d7080484e4839afA3540e520452ccA3E
+  Network: Base (Chain ID: 8453)
+  Token Name: 4EX
   Symbol: $4EX
-  Supply: 100000000000
-  Description: Premium forex signals and real-time notifications"
   ```
-  - Monitor token deployment on Base network
-  - Verify Uniswap V4 pool creation and initial liquidity
-  - Record contract address and update frontend configuration
+  - ✅ Token successfully deployed on Base network via streme.fun
+  - 🔄 **NEXT**: Verify liquidity pool and trading functionality
+  - 🔄 **NEXT**: Update backend configuration with real contract address
 
 - [ ] **Day 2**: Configure production token integration 🔧 **CONFIGURATION**
   - Update Discord notification system with token-gated channels
-  - Configure token balance caching (use existing Redis infrastructure)
-  - Test token balance queries and tier assignment
+  - ✅ Update backend with real contract address (0x3Aa87C18d7080484e4839afA3540e520452ccA3E)
+  - ✅ Add web3 dependencies to requirements.txt
+  - [ ] Configure token balance caching (use existing Redis infrastructure)
+  - [ ] Test token balance queries with real holders and tier assignment
 
-- [ ] **Day 3**: Enable token-gated Discord features � **TOKEN UTILITY**
+- [ ] **Day 3**: Enable token-gated Discord features 🎯 **TOKEN UTILITY** 
   ```python
-  # Production token-gated Discord channels
+  # Production token-gated Discord channels ✅ READY FOR ACTIVATION
   async def get_user_discord_access(wallet_address: str) -> List[str]:
-      balance = await get_token_balance(wallet_address)
+      balance = await get_token_balance(wallet_address)  # Now uses real contract!
       tier = calculate_access_tier(balance)
       return get_discord_roles_for_tier(tier)
   ```
-  - Enable real token balance checks for Discord role assignment
-  - Activate token-gated Discord channels for premium signals
-  - Real-time token balance monitoring for role updates
+  - [ ] Enable real token balance checks for Discord role assignment
+  - [ ] Activate token-gated Discord channels for premium signals
+  - [ ] Real-time token balance monitoring for role updates
 
-- [ ] **Day 4**: Launch user onboarding flow � **USER MIGRATION**
+- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIGRATION**
   - Deploy wallet connection interface for existing users
   - Launch airdrop campaign for current Discord subscribers
   - Begin community marketing on Farcaster and X
@@ -266,21 +282,51 @@ This document provid- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIG
 ## 🧠 **PHASE 4: AI/ML FOUNDATION** (Weeks 17-24)
 *Priority: HIGH - Competitive advantage & profitability*
 
-### **Week 17-20: Data Pipeline & Sentiment Analysis (Free Implementation)**
+### **Week 17-20: Data Pipeline & AI Development Infrastructure**
 
-#### 4.1 Free Sentiment Analysis Implementation
-- [ ] **Week 13**: Setup free sentiment data collection
+#### 4.1 MongoDB MCP Server Setup (Week 17, Days 1-2)
+- [ ] **Day 1**: Local MCP Development Setup 🔧 **LOCAL DEVELOPMENT**
+  ```bash
+  # Create local MCP server for development and testing
+  mkdir 4ex.ninja-backend/mcp-server
+  cd 4ex.ninja-backend/mcp-server
+  pip install mcp anthropic-mcp-server pymongo redis
+  
+  # Local development with docker-compose.dev.yml
+  docker-compose -f docker-compose.dev.yml up -d
+  ```
+  - **LOCAL SETUP**: Create MCP server for local development and debugging
+  - **Development Environment**: Connect to local MongoDB for safe testing
+  - **IDE Integration**: Configure VS Code/cursor for MCP client connections
+  - **Query Testing**: Validate AI-assisted MongoDB queries locally
+  - **Security Testing**: Test authentication and access controls safely
+
+- [ ] **Day 2**: Production Deployment to Digital Ocean Droplet 🚀 **PRODUCTION DEPLOYMENT**
+  ```bash
+  # Deploy to droplet after local validation
+  scp -r mcp-server/ user@droplet:/path/to/4ex.ninja-backend/
+  docker-compose -f docker-compose.prod.yml up -d mongodb-mcp
+  nginx -s reload
+  ```
+  - **DROPLET DEPLOYMENT**: Deploy validated MCP server to production infrastructure
+  - **Production MongoDB Access**: Connect to production database for real data analysis
+  - **Remote Development Access**: Configure secure tunnel for development team access
+  - **Performance Validation**: Test production-level query performance
+  - **Monitoring Setup**: Enable logging and performance tracking
+
+#### 4.2 Free Sentiment Analysis Implementation (Week 17-20)
+- [ ] **Week 17 (Days 3-7)**: Setup free sentiment data collection
   - RSS feed parsers for major financial news
   - Reddit sentiment analysis via RSS feeds
   - Free FinBERT model integration from Hugging Face
-- [ ] **Week 14**: Build sentiment analysis pipeline
+- [ ] **Week 18**: Build sentiment analysis pipeline
   - News sentiment scoring with keyword analysis
   - Social media sentiment aggregation
   - Economic calendar impact analysis
-- [ ] **Week 15**: Create sentiment-technical fusion model
+- [ ] **Week 19**: Create sentiment-technical fusion model
   - Simple neural network for sentiment integration
   - Sentiment-technical correlation analysis
-- [ ] **Week 16**: Integration and testing
+- [ ] **Week 20**: Integration and testing
   - Add sentiment features to existing signal generation
   - A/B test sentiment-enhanced vs pure technical signals
 
@@ -437,10 +483,12 @@ This document provid- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIG
 - [ ] **Community Growth**: 25% of users actively holding $4EX tokens
 
 ### **Phase 4 Success Metrics** (AI Foundation)
+- [ ] **MongoDB MCP Server**: AI-assisted query development reducing development time by 40%
 - [ ] **Signal Quality**: +20% improvement in win rate
 - [ ] **False Signal Reduction**: -30% reduction in whipsaws
 - [ ] **Sentiment Accuracy**: >75% accuracy in market direction prediction
 - [ ] **Performance**: AI inference <100ms per signal
+- [ ] **Development Efficiency**: 50% faster feature engineering with AI assistance
 
 ### **Phase 4 Success Metrics** (Advanced AI)
 - [ ] **Risk-Adjusted Returns**: +100% improvement in Sharpe ratio
@@ -456,7 +504,7 @@ This document provid- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIG
 
 ---
 
-## 🏗️ **DIGITAL OCEAN INFRASTRUCTURE REQUIREMENTS**
+### **DIGITAL OCEAN INFRASTRUCTURE REQUIREMENTS**
 
 ### **Current Infrastructure Status ✅**
 - ✅ **Docker Compose Production Setup**: Complete with nginx, FastAPI, Next.js, MongoDB, Redis
@@ -464,6 +512,96 @@ This document provid- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIG
 - ✅ **Redis Caching Layer**: Installed and operational for signal optimization
 - ✅ **Rate Limiting & Security**: Comprehensive nginx security headers and rate limiting
 - ✅ **Monitoring Stack**: Prometheus & Grafana available for system monitoring
+
+### **MCP Server Infrastructure Deployment 🔄** (Week 17 - Phase 4)
+
+#### **LOCAL DEVELOPMENT SETUP**
+- [ ] **Add MCP Service to docker-compose.dev.yml**:
+  ```yaml
+  services:
+    mongodb-mcp-dev:
+      build: ./mcp-server
+      container_name: mongodb-mcp-dev
+      environment:
+        - MONGODB_URI=mongodb://mongodb:27017/forex_db_dev
+        - MCP_PORT=3001
+        - MCP_HOST=localhost
+        - REDIS_URL=redis://redis:6379
+        - MCP_AUTH_TOKEN=dev-token-12345
+        - MCP_ENV=development
+      ports:
+        - "3001:3001"
+      depends_on:
+        - mongodb
+        - redis
+      networks:
+        - app-network
+      volumes:
+        - ./mcp-server:/app
+        - ./logs:/app/logs
+      restart: unless-stopped
+  ```
+
+#### **PRODUCTION DEPLOYMENT SETUP**
+- [ ] **Add MCP Service to docker-compose.prod.yml**:
+  ```yaml
+  services:
+    mongodb-mcp:
+      build: ./mcp-server
+      container_name: mongodb-mcp
+      environment:
+        - MONGODB_URI=mongodb://mongodb:27017/forex_db
+        - MCP_PORT=3001
+        - MCP_HOST=0.0.0.0
+        - REDIS_URL=redis://redis:6379
+        - MCP_AUTH_TOKEN=${MCP_AUTH_TOKEN}
+        - MCP_ENV=production
+      ports:
+        - "3001:3001"
+      depends_on:
+        - mongodb
+        - redis
+      networks:
+        - app-network
+      restart: unless-stopped
+  ```
+
+#### **REQUIRED: Nginx Configuration Updates**
+- [ ] **Add MCP Location Block** to `/nginx/4ex-ninja.conf`:
+  ```nginx
+  # Add under API server block (api.4ex.ninja)
+  location /mcp/ {
+      proxy_pass http://mongodb-mcp:3001/;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-MCP-Client $http_x_mcp_client;
+      proxy_buffering off;
+  }
+  ```
+
+#### **PRODUCTION: Environment Variables**
+- [ ] **Add to docker-compose.prod.yml backend environment**:
+  ```yaml
+  environment:
+    # ... existing variables ...
+    - MCP_SERVER_URL=http://mongodb-mcp:3001
+    - MCP_AUTH_TOKEN=${MCP_AUTH_TOKEN}
+    - MCP_ENABLED=true
+    - MCP_ENV=production
+  ```
+
+#### **LOCAL DEVELOPMENT: Environment Variables**
+- [ ] **Add to docker-compose.dev.yml backend environment**:
+  ```yaml
+  environment:
+    # ... existing variables ...
+    - MCP_SERVER_URL=http://mongodb-mcp-dev:3001
+    - MCP_AUTH_TOKEN=dev-token-12345
+    - MCP_ENABLED=true
+    - MCP_ENV=development
+  ```
 
 ### **WebSocket Infrastructure Requirements 🔄**
 
@@ -473,21 +611,6 @@ This document provid- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIG
   # Add under API server block (api.4ex.ninja)
   location /ws/ {
       proxy_pass http://backend;
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection "upgrade";
-      proxy_set_header Host $host;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
-      
-      # WebSocket specific timeouts (24 hour connections)
-      proxy_read_timeout 86400s;
-      proxy_send_timeout 86400s;
-      proxy_connect_timeout 60s;
-      
-      # Disable buffering for real-time communication
-      proxy_buffering off;
       proxy_cache off;
   }
   ```
@@ -506,10 +629,6 @@ This document provid- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIG
   ```yaml
   environment:
     # ... existing variables ...
-    - WEBSOCKET_ENABLED=true
-    - WEBSOCKET_MAX_CONNECTIONS=1000
-    - WEBSOCKET_CONNECTION_TIMEOUT=300
-    - WEBSOCKET_HEARTBEAT_INTERVAL=30
     - WEBSOCKET_REDIS_PREFIX=ws_sessions
   ```
 
@@ -556,6 +675,34 @@ This document provid- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIG
 
 ### **Deployment Checklist 📋**
 
+#### **Local Development Setup (Week 17, Day 1)**
+- [ ] Create MCP server application code and Dockerfile
+- [ ] Update docker-compose.dev.yml with mongodb-mcp-dev service
+- [ ] Set development environment variables (dev database, simple auth token)
+- [ ] Start local MCP server: `docker-compose -f docker-compose.dev.yml up -d mongodb-mcp-dev`
+- [ ] Test local MCP endpoint: `curl http://localhost:3001/health`
+- [ ] Configure IDE (VS Code/Cursor) for local MCP client connections
+- [ ] Validate AI-assisted MongoDB queries against local development data
+
+#### **Production Deployment (Week 17, Day 2)**
+- [ ] Validate local MCP server functionality and performance
+- [ ] Create production-ready configuration files
+- [ ] Update docker-compose.prod.yml with mongodb-mcp service
+- [ ] Update nginx configuration with /mcp/ location block on droplet
+- [ ] Set secure MCP_AUTH_TOKEN environment variable on droplet
+- [ ] Upload MCP server code to droplet: `scp -r mcp-server/ user@droplet:/path/to/4ex.ninja-backend/`
+- [ ] Build and start production MCP container: `docker-compose -f docker-compose.prod.yml up -d mongodb-mcp`
+- [ ] Reload nginx: `nginx -s reload`
+- [ ] Verify production MCP endpoint: `curl https://api.4ex.ninja/mcp/health`
+
+#### **Post-Deployment Validation**
+- [ ] Test AI-assisted MongoDB query development (local and production)
+- [ ] Configure development team access to both local and production MCP servers
+- [ ] Validate MCP server performance and response times
+- [ ] Monitor container logs for errors and optimization opportunities
+- [ ] Document MCP integration workflows and best practices
+- [ ] Setup alerts for MCP server health and performance metrics
+
 #### **Before WebSocket Deployment**
 - [ ] Backup current nginx configuration
 - [ ] Test nginx configuration changes in staging
@@ -588,6 +735,16 @@ This document provid- [ ] **Day 4**: Launch user onboarding flow 👥 **USER MIG
 - ✅ **Domain & SSL**: $15/year (existing)  
 - ✅ **Redis**: $0 (containerized, no additional cost)
 - ✅ **MongoDB**: $0 (containerized, no additional cost)
+
+#### **MCP Server Infrastructure Additions (Week 17)**
+- ✅ **Local MCP Development**: $0 (uses existing local Docker environment)
+- ✅ **Production MCP Deployment**: $0 (uses existing production Docker stack)
+- ✅ **MongoDB Integration**: $0 (connects to existing MongoDB instances)
+- ✅ **Nginx MCP Proxy**: $0 (configuration update only)
+- 📊 **Development Productivity**: +40% faster AI-assisted query development
+- 💾 **Local Resource Usage**: +100-200MB memory during development
+- 💾 **Production Resource Usage**: +100-200MB memory (minimal impact)
+- 🔧 **Dual Environment Benefits**: Safe local testing + production power
 
 #### **WebSocket Infrastructure Additions**
 - ✅ **WebSocket Implementation**: $0 (uses existing FastAPI app)

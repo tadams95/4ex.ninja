@@ -84,3 +84,7 @@ email-validator==2.2.0
 
 # Testing dependencies
 httpx==0.28.1
+
+# Web3 and blockchain dependencies
+web3==7.13.0
+eth-account==0.13.7
