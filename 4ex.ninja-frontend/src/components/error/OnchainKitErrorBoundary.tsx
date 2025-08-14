@@ -35,6 +35,16 @@ export class OnchainKitErrorBoundary extends Component<Props, State> {
       // Silently handle analytics errors
       return;
     }
+
+    // Handle CSP-related errors
+    if (
+      error.message?.includes('Content Security Policy') ||
+      error.message?.includes('CSP') ||
+      error.message?.includes('Refused to connect')
+    ) {
+      console.warn('CSP-related error detected, attempting graceful fallback');
+      return;
+    }
   }
 
   render() {
@@ -42,6 +52,17 @@ export class OnchainKitErrorBoundary extends Component<Props, State> {
       // Check if it's an analytics-related error
       if (this.state.error?.message?.includes('Failed to fetch')) {
         // For analytics errors, just render children without the error
+        return this.props.children;
+      }
+
+      // Check if it's a CSP-related error
+      if (
+        this.state.error?.message?.includes('Content Security Policy') ||
+        this.state.error?.message?.includes('CSP') ||
+        this.state.error?.message?.includes('Refused to connect')
+      ) {
+        // For CSP errors, log and continue rendering
+        console.warn('CSP error handled gracefully:', this.state.error?.message);
         return this.props.children;
       }
 

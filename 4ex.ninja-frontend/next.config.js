@@ -35,7 +35,7 @@ const nextConfig = {
               `connect-src 'self' *.stripe.com *.coinbase.com *.walletconnect.com *.walletconnect.org wss: ws: ${apiUrl} ${apiUrl.replace(
                 'http',
                 'ws'
-              )} wss://relay.walletconnect.com wss://relay.walletconnect.org`,
+              )} wss://relay.walletconnect.com wss://relay.walletconnect.org https://mainnet.base.org https://sepolia.base.org https://base.llamarpc.com https://1rpc.io https://base.blockpi.network https://base-mainnet.public.blastapi.io https://base.drpc.org https://gateway.tenderly.co https://eth.merkle.io https://api.ensideas.com https://cloudflare-eth.com`,
               "frame-src 'self' *.stripe.com *.coinbase.com" +
                 (isProduction ? '' : ' *.vercel.app'),
               "frame-ancestors 'none'",
