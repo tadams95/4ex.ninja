@@ -29,7 +29,7 @@ const fourExToken: Token = {
   decimals: TOKEN_CONFIG.decimals,
   name: TOKEN_CONFIG.name,
   symbol: TOKEN_CONFIG.symbol,
-  image: '', // Add logo URL if available
+  image: '/4EX.png',
 };
 
 export default function SwapPage() {
@@ -40,7 +40,7 @@ export default function SwapPage() {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <div className="inline-block mb-6">
-              <div className="bg-gray-800 border border-gray-700 rounded-full px-6 py-2 text-sm font-medium text-green-400">
+              <div className="bg-gray-800 border border-gray-700 rounded-full px-6 py-2 text-sm font-medium text-blue-500">
                 ⚡ Powered by Base
               </div>
             </div>

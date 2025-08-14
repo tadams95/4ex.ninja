@@ -30,6 +30,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 
+        {/* Google Fonts - Exo */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+
         {/* Preconnect to OnchainKit and wallet services */}
         <link rel="preconnect" href="https://api.coinbase.com" />
         <link rel="preconnect" href="https://mainnet.base.org" />
