@@ -124,6 +124,21 @@ const HeaderComponent = memo(function HeaderComponent() {
               </Link>
             </li>
 
+            <li className="py-3 md:py-0">
+              <Link
+                href="/swap"
+                prefetch={true}
+                onClick={handleNavClick}
+                className="hover:text-green-500 transition-colors duration-200
+                  focus:outline-none focus:text-green-400 focus:ring-2 
+                  focus:ring-green-500/50 rounded-md px-2 py-1 min-h-[44px] 
+                  flex items-center"
+                aria-label="Buy $4EX tokens"
+              >
+                Swap
+              </Link>
+            </li>
+
             {!isHydrated ? (
               // Enhanced hydration placeholder with better skeleton
               <li className="py-3 md:py-0">
