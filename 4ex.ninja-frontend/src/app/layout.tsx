@@ -1,6 +1,5 @@
 import '@coinbase/onchainkit/styles.css';
 import { Metadata } from 'next';
-import { Exo } from 'next/font/google';
 import { ChunkLoadErrorBoundary, GlobalErrorBoundary } from '../components/error';
 import HydrationErrorBoundary from '../components/error/HydrationErrorBoundary';
 import PerformanceDashboard from '../components/PerformanceDashboard';
@@ -8,14 +7,6 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import Providers from './components/Providers';
 import './globals.css';
-
-const exo = Exo({
-  subsets: ['latin'],
-  weight: ['400', '700'], // Available weights for Exo
-  display: 'swap', // Optimize font loading with font-display: swap
-  preload: true, // Preload the font
-  fallback: ['system-ui', 'arial'], // Fallback fonts
-});
 
 export const metadata: Metadata = {
   title: '4ex.ninja',
@@ -73,7 +64,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           }}
         />
       </head>
-      <body className={exo.className}>
+      <body className="font-exo">
         {/* Progressive enhancement noscript fallback */}
         <noscript>
           <div

@@ -41,7 +41,7 @@ export default function SwapPage() {
           <div className="text-center mb-16">
             <div className="inline-block mb-6">
               <div className="bg-gray-800 border border-gray-700 rounded-full px-6 py-2 text-sm font-medium text-green-400">
-                ⚡ Powered by Base Network
+                ⚡ Powered by Base
               </div>
             </div>
 
