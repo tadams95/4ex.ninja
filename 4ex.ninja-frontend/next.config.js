@@ -146,16 +146,7 @@ const nextConfig = {
 
   // Bundle optimization
   experimental: {
-    optimizePackageImports: ['@tanstack/react-query', 'framer-motion', '@coinbase/onchainkit'],
-    webVitalsAttribution: ['CLS', 'LCP'],
-  },
-
-  serverExternalPackages: ['mongodb', 'bcryptjs', 'nodemailer'],
-
-  // Image optimization improvements
-  images: {
-    formats: ['image/webp', 'image/avif'],
-    minimumCacheTTL: 60,
+    optimizePackageImports: ['@tanstack/react-query', 'framer-motion'],
   },
 
   // Turbopack configuration (moved from experimental.turbo)
@@ -170,10 +161,35 @@ const nextConfig = {
   },
 
   // Webpack configuration for performance monitoring
-  webpack: (config, { dev, isServer }) => {
+  webpack: (config, { dev, isServer, webpack }) => {
+    // Add performance budget plugin in production
     if (!dev && !isServer) {
       config.plugins.push(new PerformanceBudgetPlugin());
     }
+
+    // Tree-shaking optimizations
+    if (config.optimization) {
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = false;
+    }
+
+    // Optimize Lit components for production
+    if (!dev) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'lit/dev-mode.js': false,
+        'lit/lib/dev-mode.js': false,
+      };
+
+      // Define production mode for Lit and other libraries
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'process.env.LIT_DEV_MODE': JSON.stringify(false),
+          'process.env.NODE_ENV': JSON.stringify('production'),
+        })
+      );
+    }
+
     return config;
   },
 };
