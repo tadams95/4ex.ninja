@@ -83,7 +83,7 @@ export const ConditionalMotionDiv: React.FC<ConditionalMotionDivProps> = ({
     );
   }
 
-  // Optimize motion props for mobile devices
+  // Optimize motion props for mobile devices and low-end devices
   const optimizedMotionProps = { ...motionProps };
   if (isMobile || isLowEnd) {
     // Reduce animation duration and complexity for mobile
@@ -91,14 +91,39 @@ export const ConditionalMotionDiv: React.FC<ConditionalMotionDivProps> = ({
       optimizedMotionProps.transition = {
         ...optimizedMotionProps.transition,
         duration: Math.min(optimizedMotionProps.transition.duration || 0.3, 0.2),
+        ease: 'easeOut',
       };
     } else {
       optimizedMotionProps.transition = { duration: 0.2, ease: 'easeOut' };
+    }
+
+    // Simplify animations for low-end devices
+    if (isLowEnd) {
+      // Remove complex animations on low-end devices
+      if (optimizedMotionProps.whileHover) {
+        optimizedMotionProps.whileHover = undefined;
+      }
+      if (optimizedMotionProps.whileTap) {
+        optimizedMotionProps.whileTap = { scale: 0.98 }; // Simple scale only
+      }
     }
   }
 
   // Use framer-motion when available
   const MotionDiv = motion.div;
+
+  // Safety check to ensure motion.div is properly loaded
+  if (!MotionDiv || typeof MotionDiv !== 'object') {
+    console.warn(
+      'ConditionalMotionDiv: motion.div not properly loaded, falling back to regular div'
+    );
+    return (
+      <div className={`${optimizedClasses} ${fallbackClassName}`} {...divProps}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <MotionDiv className={optimizedClasses} {...optimizedMotionProps} {...divProps}>
       {children}

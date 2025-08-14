@@ -6,7 +6,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' *.stripe.com *.vercel.app vercel.live; style-src 'self' 'unsafe-inline' *.stripe.com; img-src 'self' data: blob: *.stripe.com; font-src 'self' data:; connect-src 'self' *.stripe.com wss: ws: https://api.4ex.ninja; frame-src 'self' *.stripe.com *.vercel.app; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' *.stripe.com *.coinbase.com *.vercel.app vercel.live; style-src 'self' 'unsafe-inline' *.stripe.com *.coinbase.com fonts.googleapis.com; img-src 'self' data: blob: *.stripe.com *.coinbase.com *.amazonaws.com *.cloudfront.net wallet-api-production.s3.amazonaws.com d3r81g40ycuhqg.cloudfront.net cdn.jsdelivr.net raw.githubusercontent.com *.trustwallet.com; font-src 'self' data: fonts.gstatic.com; connect-src 'self' *.stripe.com *.coinbase.com *.walletconnect.com *.walletconnect.org wss: ws: https://api.4ex.ninja wss://api.4ex.ninja wss://relay.walletconnect.com wss://relay.walletconnect.org https://mainnet.base.org https://sepolia.base.org https://base.llamarpc.com https://1rpc.io https://base.blockpi.network https://base-mainnet.public.blastapi.io https://base.drpc.org https://gateway.tenderly.co https://eth.merkle.io https://api.ensideas.com https://cloudflare-eth.com api.web3modal.org *.web3modal.org; frame-src 'self' *.stripe.com *.coinbase.com *.vercel.app; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';"
         },
         {
           "key": "X-Frame-Options",
@@ -26,7 +26,7 @@
         },
         {
           "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=(), payment=(self *.stripe.com), usb=(), interest-cohort=()"
+          "value": "camera=(), microphone=(), geolocation=(), payment=(self \"https://*.stripe.com\" \"https://*.coinbase.com\"), usb=(), interest-cohort=(), clipboard-read=(self \"https://*.coinbase.com\"), clipboard-write=(self \"https://*.coinbase.com\")"
         },
         {
           "key": "Cross-Origin-Embedder-Policy",

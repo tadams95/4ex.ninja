@@ -29,13 +29,13 @@ const nextConfig = {
               isProduction
                 ? "script-src 'self' 'unsafe-eval' *.stripe.com *.coinbase.com"
                 : "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.stripe.com *.coinbase.com *.vercel.app vercel.live",
-              "style-src 'self' 'unsafe-inline' *.stripe.com *.coinbase.com",
-              "img-src 'self' data: blob: *.stripe.com *.coinbase.com",
-              "font-src 'self' data:",
+              "style-src 'self' 'unsafe-inline' *.stripe.com *.coinbase.com fonts.googleapis.com",
+              "img-src 'self' data: blob: *.stripe.com *.coinbase.com *.amazonaws.com *.cloudfront.net wallet-api-production.s3.amazonaws.com d3r81g40ycuhqg.cloudfront.net cdn.jsdelivr.net raw.githubusercontent.com *.trustwallet.com",
+              "font-src 'self' data: fonts.gstatic.com",
               `connect-src 'self' *.stripe.com *.coinbase.com *.walletconnect.com *.walletconnect.org wss: ws: ${apiUrl} ${apiUrl.replace(
                 'http',
                 'ws'
-              )} wss://relay.walletconnect.com wss://relay.walletconnect.org https://mainnet.base.org https://sepolia.base.org https://base.llamarpc.com https://1rpc.io https://base.blockpi.network https://base-mainnet.public.blastapi.io https://base.drpc.org https://gateway.tenderly.co https://eth.merkle.io https://api.ensideas.com https://cloudflare-eth.com`,
+              )} wss://relay.walletconnect.com wss://relay.walletconnect.org https://mainnet.base.org https://sepolia.base.org https://base.llamarpc.com https://1rpc.io https://base.blockpi.network https://base-mainnet.public.blastapi.io https://base.drpc.org https://gateway.tenderly.co https://eth.merkle.io https://api.ensideas.com https://cloudflare-eth.com api.web3modal.org *.web3modal.org`,
               "frame-src 'self' *.stripe.com *.coinbase.com" +
                 (isProduction ? '' : ' *.vercel.app'),
               "frame-ancestors 'none'",
@@ -78,7 +78,7 @@ const nextConfig = {
           {
             key: 'Permissions-Policy',
             value:
-              'camera=(), microphone=(), geolocation=(), payment=(self *.stripe.com *.coinbase.com), usb=(), interest-cohort=(), clipboard-read=(self *.coinbase.com), clipboard-write=(self *.coinbase.com)',
+              'camera=(), microphone=(), geolocation=(), payment=(self "https://*.stripe.com" "https://*.coinbase.com"), usb=(), interest-cohort=(), clipboard-read=(self "https://*.coinbase.com"), clipboard-write=(self "https://*.coinbase.com")',
           },
           // Cross-Origin Policies (wallet-friendly configuration)
           {

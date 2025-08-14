@@ -94,28 +94,11 @@ export const useConditionalMotion = () => {
     if (prefersReduced || isLoaded) return;
 
     try {
-      // On low-end devices, use reduced motion features
-      if (isLowEnd || isMobile) {
-        const { motion, AnimatePresence } = await import('framer-motion');
-        // Create lightweight motion components for mobile
-        const lightweightMotion = {
-          ...motion,
-          div: (props: any) =>
-            motion.div({
-              ...props,
-              transition: {
-                duration: 0.2,
-                ease: 'easeOut',
-                ...props.transition,
-              },
-            }),
-        };
-        setMotionComponents({ motion: lightweightMotion, AnimatePresence });
-      } else {
-        const { motion, AnimatePresence } = await import('framer-motion');
-        setMotionComponents({ motion, AnimatePresence });
-      }
+      // Load framer-motion components
+      const { motion, AnimatePresence } = await import('framer-motion');
 
+      // For low-end devices, we'll just use motion directly but apply optimizations at the component level
+      setMotionComponents({ motion, AnimatePresence });
       setIsLoaded(true);
     } catch (error) {
       console.error('Failed to load framer-motion:', error);
