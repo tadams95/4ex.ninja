@@ -111,7 +111,7 @@ export default function WelcomeBanner() {
               focus-visible:ring-2 focus-visible:ring-green-500 
               focus-visible:ring-offset-2 focus-visible:ring-offset-green-900/20
               min-h-[44px] flex items-center justify-center"
-            aria-label="View trading signals dashboard"
+            aria-label="View trading insights dashboard"
           >
             View Dashboard
           </Link>

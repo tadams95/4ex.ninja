@@ -57,7 +57,7 @@ export default function ProtectedRoute({
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-white mb-4">Connect Your Wallet</h1>
             <p className="text-gray-400 text-lg">
-              You need to connect your wallet to access the trading signals dashboard.
+              You need to connect your wallet to access the trading insights dashboard.
             </p>
           </div>
 
