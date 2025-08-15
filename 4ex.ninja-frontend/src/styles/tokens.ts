@@ -102,6 +102,29 @@ export const colors = {
 
 // Typography Scale
 export const typography = {
+  fontFamilies: {
+    sans: [
+      'Exo',
+      'system-ui',
+      '-apple-system',
+      'BlinkMacSystemFont',
+      'Segoe UI',
+      'Roboto',
+      'Helvetica Neue',
+      'Arial',
+      'sans-serif',
+    ],
+    mono: [
+      'ui-monospace',
+      'SFMono-Regular',
+      'Monaco',
+      'Consolas',
+      'Liberation Mono',
+      'Courier New',
+      'monospace',
+    ],
+  },
+
   fontSizes: {
     xs: '0.75rem', // 12px
     sm: '0.875rem', // 14px

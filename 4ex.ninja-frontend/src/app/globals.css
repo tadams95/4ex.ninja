@@ -43,6 +43,10 @@
 }
 
 :root {
+  /* === FONT FAMILY VARIABLES === */
+  --font-exo: 'Exo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Helvetica Neue', Arial, sans-serif;
+
   /* === EXISTING VARIABLES (maintained for backward compatibility) === */
   --background: #ffffff;
   --foreground: #171717;
@@ -771,4 +775,61 @@ body {
   );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
+}
+
+/* Exo Font Utilities */
+@layer utilities {
+  .font-exo {
+    font-family: var(--font-exo);
+  }
+
+  .font-exo-thin {
+    font-family: var(--font-exo);
+    font-weight: 100;
+  }
+
+  .font-exo-extra-light {
+    font-family: var(--font-exo);
+    font-weight: 200;
+  }
+
+  .font-exo-light {
+    font-family: var(--font-exo);
+    font-weight: 300;
+  }
+
+  .font-exo-normal {
+    font-family: var(--font-exo);
+    font-weight: 400;
+  }
+
+  .font-exo-medium {
+    font-family: var(--font-exo);
+    font-weight: 500;
+  }
+
+  .font-exo-semibold {
+    font-family: var(--font-exo);
+    font-weight: 600;
+  }
+
+  .font-exo-bold {
+    font-family: var(--font-exo);
+    font-weight: 700;
+  }
+
+  .font-exo-extra-bold {
+    font-family: var(--font-exo);
+    font-weight: 800;
+  }
+
+  .font-exo-black {
+    font-family: var(--font-exo);
+    font-weight: 900;
+  }
+
+  .font-exo-italic {
+    font-family: var(--font-exo);
+    font-style: italic;
+  }
 }

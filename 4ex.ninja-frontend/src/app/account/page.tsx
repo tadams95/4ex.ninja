@@ -198,7 +198,7 @@ function AccountPage() {
         <div className="text-center">
           <Link
             href="/feed"
-            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -208,7 +208,7 @@ function AccountPage() {
                 d="M9 19l-7-7 7-7m8 14l-7-7 7-7"
               />
             </svg>
-            Back to Signals Feed
+            Back to Dashboard
           </Link>
         </div>
       </div>

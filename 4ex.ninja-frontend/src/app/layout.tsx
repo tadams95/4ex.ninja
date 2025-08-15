@@ -32,7 +32,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
         {/* Google Fonts - Exo */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet"
         />
 

@@ -36,6 +36,10 @@ export default {
       },
 
       // Typography
+      fontFamily: {
+        sans: designTokens.typography.fontFamilies.sans,
+        mono: designTokens.typography.fontFamilies.mono,
+      },
       fontSize: designTokens.typography.fontSizes,
       fontWeight: designTokens.typography.fontWeights,
       lineHeight: designTokens.typography.lineHeights,
