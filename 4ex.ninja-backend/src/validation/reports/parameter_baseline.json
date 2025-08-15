@@ -1,0 +1,212 @@
+{
+  "EUR_USD_H4": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_EUR_USD_H4_strat.py",
+      "last_modified": "2025-08-08T19:16:33.373812",
+      "extraction_timestamp": "2025-08-14T20:21:54.488666"
+    }
+  },
+  "NZD_USD_D": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_NZD_USD_D_strat.py",
+      "last_modified": "2025-08-08T19:16:33.375785",
+      "extraction_timestamp": "2025-08-14T20:21:54.488936"
+    }
+  },
+  "GBP_JPY_D": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_GBP_JPY_D_strat.py",
+      "last_modified": "2025-08-08T19:16:33.374236",
+      "extraction_timestamp": "2025-08-14T20:21:54.489158"
+    }
+  },
+  "NZD_USD_H4": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_NZD_USD_H4_strat.py",
+      "last_modified": "2025-08-08T19:16:33.376279",
+      "extraction_timestamp": "2025-08-14T20:21:54.489351"
+    }
+  },
+  "GBP_JPY_H4": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_GBP_JPY_H4_strat.py",
+      "last_modified": "2025-08-08T19:16:33.374614",
+      "extraction_timestamp": "2025-08-14T20:21:54.489577"
+    }
+  },
+  "AUD_USD_D": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_AUD_USD_D_strat.py",
+      "last_modified": "2025-08-08T19:16:33.371665",
+      "extraction_timestamp": "2025-08-14T20:21:54.489820"
+    }
+  },
+  "USD_CAD_D": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_USD_CAD_D_strat.py",
+      "last_modified": "2025-08-08T19:16:33.376897",
+      "extraction_timestamp": "2025-08-14T20:21:54.490183"
+    }
+  },
+  "GBP_USD_H4": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_GBP_USD_H4_strat.py",
+      "last_modified": "2025-08-08T19:16:33.375403",
+      "extraction_timestamp": "2025-08-14T20:21:54.490424"
+    }
+  },
+  "EUR_GBP_D": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_EUR_GBP_D_strat.py",
+      "last_modified": "2025-08-08T19:16:33.372467",
+      "extraction_timestamp": "2025-08-14T20:21:54.490548"
+    }
+  },
+  "EUR_USD_D": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_EUR_USD_D_strat.py",
+      "last_modified": "2025-08-08T19:16:33.373485",
+      "extraction_timestamp": "2025-08-14T20:21:54.490660"
+    }
+  },
+  "AUD_USD_H4": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_AUD_USD_H4_strat.py",
+      "last_modified": "2025-08-08T19:16:33.372062",
+      "extraction_timestamp": "2025-08-14T20:21:54.490768"
+    }
+  },
+  "GBP_USD_D": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_GBP_USD_D_strat.py",
+      "last_modified": "2025-08-08T19:16:33.374992",
+      "extraction_timestamp": "2025-08-14T20:21:54.490876"
+    }
+  },
+  "USD_JPY_H4": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_USD_JPY_H4_strat.py",
+      "last_modified": "2025-08-08T19:16:33.377958",
+      "extraction_timestamp": "2025-08-14T20:21:54.490969"
+    }
+  },
+  "USD_CAD_H4": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_USD_CAD_H4_strat.py",
+      "last_modified": "2025-08-08T19:16:33.377271",
+      "extraction_timestamp": "2025-08-14T20:21:54.491059"
+    }
+  },
+  "USD_JPY_D": {
+    "slow_ma_assigned": true,
+    "fast_ma_assigned": true,
+    "atr_period_assigned": true,
+    "sl_atr_multiplier_assigned": true,
+    "tp_atr_multiplier_assigned": true,
+    "min_atr_value_assigned": true,
+    "min_rr_ratio_assigned": true,
+    "_metadata": {
+      "file_path": "/Users/tyrelle/Desktop/4ex.ninja/4ex.ninja-backend/src/strategies/MA_USD_JPY_D_strat.py",
+      "last_modified": "2025-08-08T19:16:33.377668",
+      "extraction_timestamp": "2025-08-14T20:21:54.491150"
+    }
+  }
+}

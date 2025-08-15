@@ -1,0 +1,66 @@
+{
+  "test_timestamp": "2025-08-14T20:37:16.082148",
+  "redis_info": {
+    "error": "Redis not connected"
+  },
+  "basic_operations": {
+    "set_operations_per_second": 8500.0,
+    "get_operations_per_second": 12000.0,
+    "delete_operations_per_second": 9200.0,
+    "avg_set_latency_ms": 0.12,
+    "avg_get_latency_ms": 0.08,
+    "avg_delete_latency_ms": 0.11,
+    "total_test_time_seconds": 0.32,
+    "note": "Mock results - Redis not available"
+  },
+  "high_frequency_simulation": {
+    "strategy_cycles_per_second": 95.2,
+    "avg_cycle_latency_ms": 10.5,
+    "total_operations": 400,
+    "operations_per_second": 380.8,
+    "total_test_time_seconds": 1.05,
+    "note": "Mock results - Redis not available"
+  },
+  "memory_usage": {
+    "initial_memory_bytes": 1048576,
+    "final_memory_bytes": 2097152,
+    "memory_increase_bytes": 1048576,
+    "memory_increase_mb": 1.0,
+    "objects_created": 1110,
+    "avg_object_size_bytes": 944,
+    "memory_efficiency_score": 85.5,
+    "note": "Mock results - Redis not available"
+  },
+  "concurrent_access": {
+    "total_workers": 5,
+    "operations_per_worker": 200,
+    "total_operations": 1000,
+    "successful_operations": 985,
+    "failed_operations": 15,
+    "total_test_time_seconds": 1.2,
+    "aggregate_ops_per_second": 820.8,
+    "error_rate": 0.015,
+    "note": "Mock results - Redis not available"
+  },
+  "failover_recovery": {
+    "connection_test": "SIMULATED",
+    "timeout_settings": {
+      "socket_timeout": 1,
+      "socket_connect_timeout": 1
+    },
+    "test_time_seconds": 0.05,
+    "failover_readiness": "READY",
+    "recovery_time_estimate_seconds": 2.5,
+    "note": "Mock results - Redis not available"
+  },
+  "cache_efficiency": {
+    "cache_hits": 800,
+    "cache_misses": 200,
+    "total_requests": 1000,
+    "hit_ratio": 0.8,
+    "miss_ratio": 0.2,
+    "cache_warming_time_seconds": 0.025,
+    "efficiency_score": 92.5,
+    "note": "Mock results - Redis not available"
+  }
+}
