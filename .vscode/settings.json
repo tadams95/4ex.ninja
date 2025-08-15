@@ -111,5 +111,23 @@
     "typescript": true,
     "javascriptreact": true,
     "typescriptreact": true
-  }
+  },
+  "cSpell.words": [
+    "asyncio",
+    "Backtest",
+    "backtesting",
+    "drawdowns",
+    "fastapi",
+    "journalctl",
+    "nohup",
+    "onchainkit",
+    "overfitting",
+    "pkill",
+    "recalc",
+    "supervisorctl",
+    "timestamping",
+    "uvicorn",
+    "venv",
+    "wagmi"
+  ]
 }
