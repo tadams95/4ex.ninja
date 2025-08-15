@@ -7,36 +7,36 @@ export default function TermsPage() {
         <section>
           <h2 className="text-xl font-bold mb-3">1. Service Description</h2>
           <p>
-            4ex.ninja provides algorithmic forex trading signals through a
-            subscription-based service. Our signals are generated using
-            technical analysis and are provided for informational purposes only.
+            4ex.ninja provides algorithmic forex trading insights and recommendations through a
+            token-based service. Our insights are generated using technical analysis and are
+            provided for informational purposes only.
           </p>
         </section>
 
         <section>
-          <h2 className="text-xl font-bold mb-3">2. Subscription Terms</h2>
+          <h2 className="text-xl font-bold mb-3">2. Token Terms</h2>
           <p>
-            Access to our signals requires an active subscription. Subscriptions
-            are billed on a monthly basis and can be cancelled at any time.
-            Refunds are provided at our discretion.
+            Access to our insights and recommendations requires tokens. Tokens are purchased and
+            utilized when accessing premium features and recommendations. Token purchases occur on
+            the market and are not controlled by 4ex.ninja.
           </p>
         </section>
 
         <section>
           <h2 className="text-xl font-bold mb-3">3. Risk Disclosure</h2>
           <p>
-            Forex trading involves substantial risk. Our signals do not
-            guarantee profits. Users are solely responsible for their trading
-            decisions and potential losses.
+            Forex trading involves substantial risk. Our insights and recommendations do not
+            guarantee profits. Users are solely responsible for their trading decisions and
+            potential losses.
           </p>
         </section>
 
         <section>
           <h2 className="text-xl font-bold mb-3">4. Service Availability</h2>
           <p>
-            While we strive for 24/7 availability, we cannot guarantee
-            uninterrupted access to our services. Technical issues, market
-            conditions, or maintenance may affect signal delivery.
+            While we strive for 24/7 availability, we cannot guarantee uninterrupted access to our
+            services. Technical issues, market conditions, or maintenance may affect insight and
+            recommendation delivery.
           </p>
         </section>
       </div>
