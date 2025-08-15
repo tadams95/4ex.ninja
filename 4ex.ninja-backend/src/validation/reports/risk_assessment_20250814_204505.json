@@ -1,0 +1,691 @@
+{
+  "overall_risk_level": "LOW",
+  "parameter_risks": {
+    "EUR_USD_H4": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 140,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 40,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    "NZD_USD_D": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 40,
+          "risk_score": 1.0,
+          "status": "TOO_LOW"
+        },
+        "fast_ma": {
+          "value": 30,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [
+        "slow_ma value 40 is outside safe range"
+      ],
+      "recommendations": [
+        "Increase slow_ma from 40 to at least 50"
+      ]
+    },
+    "GBP_JPY_D": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 160,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 20,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.03,
+          "risk_score": 1.0,
+          "status": "TOO_HIGH"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [
+        "min_atr_value value 0.03 is outside safe range"
+      ],
+      "recommendations": [
+        "Decrease min_atr_value from 0.03 to at most 0.001"
+      ]
+    },
+    "NZD_USD_H4": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 110,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 50,
+          "risk_score": 0.7,
+          "status": "ABOVE_OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [],
+      "recommendations": [
+        "Consider adjusting fast_ma to optimal range 20-40"
+      ]
+    },
+    "GBP_JPY_H4": {
+      "risk_level": "MEDIUM",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 70,
+          "risk_score": 0.7,
+          "status": "BELOW_OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 10,
+          "risk_score": 0.7,
+          "status": "BELOW_OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.03,
+          "risk_score": 1.0,
+          "status": "TOO_HIGH"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [
+        "min_atr_value value 0.03 is outside safe range"
+      ],
+      "recommendations": [
+        "Consider adjusting slow_ma to optimal range 80-160",
+        "Consider adjusting fast_ma to optimal range 20-40",
+        "Decrease min_atr_value from 0.03 to at most 0.001"
+      ]
+    },
+    "AUD_USD_D": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 60,
+          "risk_score": 0.7,
+          "status": "BELOW_OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 40,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [],
+      "recommendations": [
+        "Consider adjusting slow_ma to optimal range 80-160"
+      ]
+    },
+    "USD_CAD_D": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 100,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 40,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    "GBP_USD_H4": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 50,
+          "risk_score": 0.7,
+          "status": "BELOW_OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 40,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [],
+      "recommendations": [
+        "Consider adjusting slow_ma to optimal range 80-160"
+      ]
+    },
+    "EUR_GBP_D": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 60,
+          "risk_score": 0.7,
+          "status": "BELOW_OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 10,
+          "risk_score": 0.7,
+          "status": "BELOW_OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [],
+      "recommendations": [
+        "Consider adjusting slow_ma to optimal range 80-160",
+        "Consider adjusting fast_ma to optimal range 20-40"
+      ]
+    },
+    "EUR_USD_D": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 20,
+          "risk_score": 1.0,
+          "status": "TOO_LOW"
+        },
+        "fast_ma": {
+          "value": 10,
+          "risk_score": 0.7,
+          "status": "BELOW_OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [
+        "slow_ma value 20 is outside safe range"
+      ],
+      "recommendations": [
+        "Increase slow_ma from 20 to at least 50",
+        "Consider adjusting fast_ma to optimal range 20-40"
+      ]
+    },
+    "AUD_USD_H4": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 160,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 50,
+          "risk_score": 0.7,
+          "status": "ABOVE_OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [],
+      "recommendations": [
+        "Consider adjusting fast_ma to optimal range 20-40"
+      ]
+    },
+    "GBP_USD_D": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 80,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 10,
+          "risk_score": 0.7,
+          "status": "BELOW_OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [],
+      "recommendations": [
+        "Consider adjusting fast_ma to optimal range 20-40"
+      ]
+    },
+    "USD_JPY_H4": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 140,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 40,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.03,
+          "risk_score": 1.0,
+          "status": "TOO_HIGH"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [
+        "min_atr_value value 0.03 is outside safe range"
+      ],
+      "recommendations": [
+        "Decrease min_atr_value from 0.03 to at most 0.001"
+      ]
+    },
+    "USD_CAD_H4": {
+      "risk_level": "LOW",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 140,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "fast_ma": {
+          "value": 40,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.0003,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    "USD_JPY_D": {
+      "risk_level": "MEDIUM",
+      "parameter_scores": {
+        "slow_ma": {
+          "value": 20,
+          "risk_score": 1.0,
+          "status": "TOO_LOW"
+        },
+        "fast_ma": {
+          "value": 10,
+          "risk_score": 0.7,
+          "status": "BELOW_OPTIMAL"
+        },
+        "atr_period": {
+          "value": 14,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "sl_atr_multiplier": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "tp_atr_multiplier": {
+          "value": 2.0,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        },
+        "min_atr_value": {
+          "value": 0.03,
+          "risk_score": 1.0,
+          "status": "TOO_HIGH"
+        },
+        "min_rr_ratio": {
+          "value": 1.5,
+          "risk_score": 0.2,
+          "status": "OPTIMAL"
+        }
+      },
+      "issues": [
+        "slow_ma value 20 is outside safe range",
+        "min_atr_value value 0.03 is outside safe range"
+      ],
+      "recommendations": [
+        "Increase slow_ma from 20 to at least 50",
+        "Consider adjusting fast_ma to optimal range 20-40",
+        "Decrease min_atr_value from 0.03 to at most 0.001"
+      ]
+    }
+  },
+  "recommendations": [],
+  "risk_statistics": {
+    "total_strategies": 15,
+    "risk_distribution": {
+      "LOW": 13,
+      "MEDIUM": 2,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "high_risk_percentage": 0.0
+  },
+  "critical_strategies": [],
+  "assessment_timestamp": "2025-08-14T20:45:05.319616"
+}
