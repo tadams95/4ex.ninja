@@ -9,6 +9,7 @@ import asyncio
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 import logging
+import io
 from fastapi import (
     FastAPI,
     WebSocket,
@@ -17,7 +18,7 @@ from fastapi import (
     BackgroundTasks,
 )
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import json
 import redis
 from pydantic import BaseModel
@@ -305,6 +306,236 @@ async def get_strategy_health():
     except Exception as e:
         logger.error(f"Error getting strategy health: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ===== EXPORT ENDPOINTS =====
+
+
+@app.get("/export/regime-data")
+async def export_regime_data(
+    format: str = "csv",
+    timeframe: str = "24h",
+    pairs: str = "EUR/USD,GBP/USD,USD/JPY,AUD/USD",
+):
+    """Export regime analysis data"""
+    try:
+        # Get regime history data
+        history_data = await regime_monitor.get_regime_history(timeframe=timeframe)
+
+        if format.lower() == "csv":
+            # Convert to CSV
+            csv_data = await _convert_to_csv(history_data, pairs.split(","))
+
+            return StreamingResponse(
+                io.StringIO(csv_data),
+                media_type="text/csv",
+                headers={
+                    "Content-Disposition": f"attachment; filename=regime_data_{timeframe}.csv"
+                },
+            )
+
+        # Default JSON response
+        return {
+            "timeframe": timeframe,
+            "pairs": pairs.split(","),
+            "data": history_data,
+            "exported_at": datetime.now().isoformat(),
+        }
+
+    except Exception as e:
+        logger.error(f"Export failed: {e}")
+        raise HTTPException(status_code=500, detail="Export failed")
+
+
+@app.get("/export/performance-summary")
+async def export_performance_summary(format: str = "csv"):
+    """Export performance attribution data"""
+    try:
+        performance_data = await performance_tracker.get_performance_by_regime()
+
+        if format.lower() == "csv":
+            csv_data = await _convert_performance_to_csv(performance_data)
+            return StreamingResponse(
+                io.StringIO(csv_data),
+                media_type="text/csv",
+                headers={
+                    "Content-Disposition": "attachment; filename=performance_summary.csv"
+                },
+            )
+
+        return {"data": performance_data, "exported_at": datetime.now().isoformat()}
+
+    except Exception as e:
+        logger.error(f"Performance export failed: {e}")
+        raise HTTPException(status_code=500, detail="Performance export failed")
+
+
+# ===== CHART DATA ENDPOINTS =====
+
+
+@app.get("/charts/regime-timeline")
+async def get_regime_timeline_data(timeframe: str = "24h"):
+    """Get chart data for regime timeline visualization"""
+    try:
+        regime_history = await regime_monitor.get_regime_history(timeframe=timeframe)
+
+        # Format for Chart.js
+        chart_data = {
+            "labels": [entry["timestamp"] for entry in regime_history],
+            "datasets": [
+                {
+                    "label": "Market Regime",
+                    "data": [
+                        _regime_to_numeric(entry["regime"]) for entry in regime_history
+                    ],
+                    "borderColor": "rgb(59, 130, 246)",
+                    "backgroundColor": "rgba(59, 130, 246, 0.1)",
+                    "tension": 0.1,
+                },
+                {
+                    "label": "Confidence",
+                    "data": [entry["confidence"] * 100 for entry in regime_history],
+                    "borderColor": "rgb(16, 185, 129)",
+                    "backgroundColor": "rgba(16, 185, 129, 0.1)",
+                    "yAxisID": "confidence",
+                },
+            ],
+        }
+
+        return chart_data
+
+    except Exception as e:
+        logger.error(f"Chart data failed: {e}")
+        raise HTTPException(status_code=500, detail="Chart data failed")
+
+
+@app.get("/charts/performance-overview")
+async def get_performance_chart_data(timeframe: str = "24h"):
+    """Get chart data for performance overview visualization"""
+    try:
+        performance_data = await performance_tracker.get_chart_data(
+            timeframe=timeframe, chart_type="equity_curve"
+        )
+
+        # Format for Chart.js
+        chart_data = {
+            "labels": performance_data.get("timestamps", []),
+            "datasets": [
+                {
+                    "label": "Equity Curve",
+                    "data": performance_data.get("equity_values", []),
+                    "borderColor": "rgb(34, 197, 94)",
+                    "backgroundColor": "rgba(34, 197, 94, 0.1)",
+                    "tension": 0.1,
+                }
+            ],
+        }
+
+        return chart_data
+
+    except Exception as e:
+        logger.error(f"Performance chart data failed: {e}")
+        raise HTTPException(status_code=500, detail="Performance chart data failed")
+
+
+# ===== HELPER FUNCTIONS =====
+
+
+async def _convert_to_csv(data: List[Dict], pairs: List[str]) -> str:
+    """Convert regime data to CSV format"""
+    try:
+        import pandas as pd
+    except ImportError:
+        # Fallback to manual CSV creation if pandas not available
+        return await _convert_to_csv_manual(data, pairs)
+
+    # Flatten regime data for CSV
+    csv_rows = []
+    for entry in data:
+        row = {
+            "timestamp": entry.get("timestamp", ""),
+            "regime": entry.get("regime", ""),
+            "confidence": entry.get("confidence", 0),
+            "volatility": entry.get("volatility", 0),
+            "trend_direction": entry.get("trend_direction", ""),
+        }
+
+        # Add pair-specific data if available
+        for pair in pairs:
+            if pair in entry.get("pair_data", {}):
+                pair_info = entry["pair_data"][pair]
+                row[f"{pair}_price"] = pair_info.get("price", "")
+                row[f"{pair}_volume"] = pair_info.get("volume", "")
+
+        csv_rows.append(row)
+
+    df = pd.DataFrame(csv_rows)
+    return df.to_csv(index=False)
+
+
+async def _convert_to_csv_manual(data: List[Dict], pairs: List[str]) -> str:
+    """Manual CSV conversion fallback"""
+    headers = ["timestamp", "regime", "confidence", "volatility", "trend_direction"]
+    for pair in pairs:
+        headers.extend([f"{pair}_price", f"{pair}_volume"])
+
+    csv_lines = [",".join(headers)]
+
+    for entry in data:
+        row = [
+            str(entry.get("timestamp", "")),
+            str(entry.get("regime", "")),
+            str(entry.get("confidence", 0)),
+            str(entry.get("volatility", 0)),
+            str(entry.get("trend_direction", "")),
+        ]
+
+        # Add pair-specific data
+        for pair in pairs:
+            if pair in entry.get("pair_data", {}):
+                pair_info = entry["pair_data"][pair]
+                row.extend(
+                    [str(pair_info.get("price", "")), str(pair_info.get("volume", ""))]
+                )
+            else:
+                row.extend(["", ""])
+
+        csv_lines.append(",".join(row))
+
+    return "\n".join(csv_lines)
+
+
+async def _convert_performance_to_csv(data: List[Dict]) -> str:
+    """Convert performance data to CSV format"""
+    try:
+        import pandas as pd
+
+        df = pd.DataFrame(data)
+        return df.to_csv(index=False)
+    except ImportError:
+        # Manual CSV creation fallback
+        if not data:
+            return "No data available"
+
+        headers = list(data[0].keys()) if data else []
+        csv_lines = [",".join(headers)]
+
+        for entry in data:
+            row = [str(entry.get(header, "")) for header in headers]
+            csv_lines.append(",".join(row))
+
+        return "\n".join(csv_lines)
+
+
+def _regime_to_numeric(regime: str) -> float:
+    """Convert regime names to numeric values for charting"""
+    regime_map = {
+        "trending_high_vol": 4,
+        "trending_low_vol": 3,
+        "ranging_high_vol": 2,
+        "ranging_low_vol": 1,
+    }
+    return regime_map.get(regime, 1)
 
 
 # WebSocket endpoint for real-time updates
