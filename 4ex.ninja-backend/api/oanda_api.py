@@ -15,12 +15,23 @@ class OandaAPI:
         self.session = requests.Session()
         self.session.headers.update(SECURE_HEADER)
 
+    def _handle_response(self, response):
+        """Convert generator response to dict if needed"""
+        if hasattr(response, "__iter__") and not isinstance(response, (dict, list)):
+            # If it's a generator, try to convert it to a dict
+            try:
+                return dict(response) if hasattr(response, "items") else list(response)
+            except:
+                return None
+        return response
+
     def get_accounts(self):
         """Get a list of all accounts authorized for the provided token"""
         try:
             r = accounts.AccountList()
             response = self.client.request(r)
-            return response["accounts"]
+            response = self._handle_response(response)
+            return response.get("accounts") if isinstance(response, dict) else None
         except Exception as error:
             print(f"Error getting accounts: {error}")
             return None
@@ -31,7 +42,8 @@ class OandaAPI:
             acc_id = account_id if account_id else self.account_id
             r = accounts.AccountDetails(accountID=acc_id)
             response = self.client.request(r)
-            return response["account"]
+            response = self._handle_response(response)
+            return response.get("account") if isinstance(response, dict) else None
         except Exception as error:
             print(f"Error getting account details: {error}")
             return None
@@ -42,7 +54,8 @@ class OandaAPI:
             acc_id = account_id if account_id else self.account_id
             r = accounts.AccountSummary(accountID=acc_id)
             response = self.client.request(r)
-            return response["account"]
+            response = self._handle_response(response)
+            return response.get("account") if isinstance(response, dict) else None
         except Exception as error:
             print(f"Error getting account summary: {error}")
             return None
@@ -52,7 +65,8 @@ class OandaAPI:
         try:
             r = accounts.AccountInstruments(accountID=self.account_id)
             response = self.client.request(r)
-            return response["instruments"]
+            response = self._handle_response(response)
+            return response.get("instruments") if isinstance(response, dict) else None
         except Exception as error:
             print(f"Error getting instruments: {error}")
             return None
@@ -62,7 +76,8 @@ class OandaAPI:
         try:
             r = instruments.InstrumentsCandles(instrument=instrument, params=params)
             response = self.client.request(r)
-            return response["candles"]
+            response = self._handle_response(response)
+            return response.get("candles") if isinstance(response, dict) else None
         except Exception as error:
             print(f"Error getting instrument candles: {error}")
             return None
@@ -88,8 +103,9 @@ class OandaAPI:
 
             r = instruments.InstrumentsCandles(instrument=instrument, params=params)
             response = self.client.request(r)
+            response = self._handle_response(response)
 
-            if response and "candles" in response:
+            if response and isinstance(response, dict) and "candles" in response:
                 return response["candles"]
             return []
         except Exception as error:
@@ -102,7 +118,15 @@ class OandaAPI:
             params = {"instruments": instrument}
             r = pricing.PricingInfo(accountID=self.account_id, params=params)
             response = self.client.request(r)
-            return float(response["prices"][0]["closeoutAsk"])
+            response = self._handle_response(response)
+            if (
+                response
+                and isinstance(response, dict)
+                and "prices" in response
+                and response["prices"]
+            ):
+                return float(response["prices"][0]["closeoutAsk"])
+            return None
         except Exception as error:
             print(f"Error getting current price: {error}")
             return None
@@ -142,7 +166,8 @@ class OandaAPI:
         try:
             r = trades.OpenTrades(accountID=self.account_id)
             response = self.client.request(r)
-            return response["trades"]
+            response = self._handle_response(response)
+            return response.get("trades") if isinstance(response, dict) else None
         except Exception as error:
             print(f"Error getting open trades: {error}")
             return None
