@@ -10,12 +10,12 @@ const getApiBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_MONITORING_API_URL) {
     return process.env.NEXT_PUBLIC_MONITORING_API_URL;
   }
-
+  
   // For production deployments, try HTTPS first, fallback to HTTP
   if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
     return 'https://157.230.58.248:8081';
   }
-
+  
   // Default to HTTP for development
   return 'http://157.230.58.248:8081';
 };
@@ -101,63 +101,89 @@ export const useRegimeData = () => {
         }
       };
 
-      // Create individual fetch requests with better error handling and protocol fallback
+      // Enhanced request function with multiple fallback URLs and timeout
       const createRequest = async (endpoint: string) => {
-        const primaryUrl = `${API_BASE_URL}${endpoint}`;
-        const fallbackUrl = API_BASE_URL.startsWith('https:')
-          ? `http://157.230.58.248:8081${endpoint}`
-          : `https://157.230.58.248:8081${endpoint}`;
+        // Multiple URL options to try in order of preference
+        const urlsToTry = [
+          `${API_BASE_URL}${endpoint}`,
+          `https://157.230.58.248:8081${endpoint}`,
+          `http://157.230.58.248:8081${endpoint}`,
+          // Add more fallback URLs if you have them
+        ];
 
-        const requestOptions = {
-          method: 'GET' as const,
+        const requestOptions: RequestInit = {
+          method: 'GET',
           headers: {
-            Accept: 'application/json',
+            'Accept': 'application/json',
             'Content-Type': 'application/json',
           },
-          cache: 'no-cache' as const,
-          mode: 'cors' as const,
-          credentials: 'omit' as const, // Don't send cookies to avoid CORS issues
+          cache: 'no-cache',
+          mode: 'cors',
+          credentials: 'omit', // Don't send cookies to avoid CORS issues
         };
 
-        try {
-          console.log(`[RegimeData] Trying primary URL: ${primaryUrl}`);
-          const response = await fetch(primaryUrl, requestOptions);
-          if (response.ok) {
-            return response;
-          }
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        } catch (primaryError) {
-          console.warn(`[RegimeData] Primary URL failed (${primaryUrl}):`, primaryError);
+        // Try each URL with a timeout
+        const tryUrl = async (url: string, timeout = 15000) => {
+          console.log(`[RegimeData] Trying URL: ${url}`);
+          
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), timeout);
 
           try {
-            console.log(`[RegimeData] Trying fallback URL: ${fallbackUrl}`);
-            const response = await fetch(fallbackUrl, requestOptions);
+            const response = await fetch(url, {
+              ...requestOptions,
+              signal: controller.signal,
+            });
+            clearTimeout(timeoutId);
+            
             if (response.ok) {
+              console.log(`[RegimeData] Success with URL: ${url}`);
               return response;
             }
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          } catch (fallbackError) {
-            console.error(`[RegimeData] Both URLs failed for ${endpoint}:`, {
-              primary: primaryError,
-              fallback: fallbackError,
-            });
+          } catch (error: any) {
+            clearTimeout(timeoutId);
+            
+            // Handle different types of errors
+            if (error.name === 'AbortError') {
+              throw new Error(`Request timeout (${timeout}ms) for ${url}`);
+            } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+              throw new Error(`Network error: Cannot connect to ${url} (CORS or server down)`);
+            }
+            throw error;
+          }
+        };
 
-            // Return a mock response for failed requests to prevent Promise.all from failing
-            return new Response(
-              JSON.stringify({
-                error: `Network error: Both ${primaryUrl} and ${fallbackUrl} failed`,
-                primaryError:
-                  primaryError instanceof Error ? primaryError.message : String(primaryError),
-                fallbackError:
-                  fallbackError instanceof Error ? fallbackError.message : String(fallbackError),
-              }),
-              {
-                status: 500,
-                headers: { 'Content-Type': 'application/json' },
-              }
-            );
+        let lastError: Error | null = null;
+        
+        // Try each URL in sequence
+        for (const url of urlsToTry) {
+          try {
+            const response = await tryUrl(url);
+            return response;
+          } catch (error) {
+            lastError = error instanceof Error ? error : new Error(String(error));
+            console.warn(`[RegimeData] Failed URL ${url}:`, lastError.message);
           }
         }
+
+        console.error(`[RegimeData] All URLs failed for ${endpoint}. Last error:`, lastError);
+
+        // Return a mock response indicating the API is unavailable
+        return new Response(
+          JSON.stringify({
+            error: `API unavailable: All URLs failed for ${endpoint}`,
+            lastError: lastError?.message || 'Unknown error',
+            timestamp: new Date().toISOString(),
+            endpoint,
+            availableEndpoints: [],
+            isApiDown: true,
+          }),
+          {
+            status: 503, // Service Unavailable
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
       };
 
       // Fetch all data in parallel with individual error handling
@@ -173,7 +199,7 @@ export const useRegimeData = () => {
       );
 
       // Process regime data
-      if (regimeRes.ok && regimeRes.status !== 500) {
+      if (regimeRes.ok && regimeRes.status !== 503) {
         try {
           const regimeData = await safeJsonParse(regimeRes, '/regime/current');
           console.log('[RegimeData] Regime data:', regimeData);
@@ -187,17 +213,19 @@ export const useRegimeData = () => {
           regimeRes.status,
           regimeRes.statusText
         );
-        // Log the response text for failed requests
+        // Check if it's an API unavailable response
         try {
-          const errorText = await regimeRes.text();
-          console.error('[RegimeData] Regime error response:', errorText.substring(0, 200));
+          const errorData = await regimeRes.json();
+          if (errorData.isApiDown) {
+            setError(`Monitoring API is currently unavailable: ${errorData.lastError}`);
+          }
         } catch (e) {
-          console.error('[RegimeData] Could not read error response');
+          // Ignore JSON parse errors for error responses
         }
       }
 
       // Process alerts data
-      if (alertsRes.ok && alertsRes.status !== 500) {
+      if (alertsRes.ok && alertsRes.status !== 503) {
         try {
           const alertsData = await safeJsonParse(alertsRes, '/alerts/recent');
           console.log('[RegimeData] Alerts data:', alertsData);
@@ -214,7 +242,7 @@ export const useRegimeData = () => {
       }
 
       // Process health data
-      if (healthRes.ok && healthRes.status !== 500) {
+      if (healthRes.ok && healthRes.status !== 503) {
         try {
           const healthData = await safeJsonParse(healthRes, '/strategy/health');
           console.log('[RegimeData] Health data:', healthData);
@@ -231,7 +259,7 @@ export const useRegimeData = () => {
       }
 
       // Process performance data
-      if (performanceRes.ok && performanceRes.status !== 500) {
+      if (performanceRes.ok && performanceRes.status !== 503) {
         try {
           const performanceData = await safeJsonParse(performanceRes, '/performance/summary');
           console.log('[RegimeData] Performance data:', performanceData);
@@ -277,7 +305,6 @@ export const useRegimeData = () => {
 
   // Auto-refresh data every 30 seconds
   useEffect(() => {
-    let retryCount = 0;
     const maxRetries = 3;
 
     // Initial fetch with improved retry logic
@@ -299,7 +326,7 @@ export const useRegimeData = () => {
             setTimeout(() => attemptFetch(attempt + 1), delay);
           } else {
             console.error('[RegimeData] All fetch attempts failed');
-            setError('Failed to connect to monitoring API after multiple attempts');
+            setError('Failed to connect to monitoring API after multiple attempts. Please check if the monitoring service is running.');
             setLoading(false);
           }
         }
