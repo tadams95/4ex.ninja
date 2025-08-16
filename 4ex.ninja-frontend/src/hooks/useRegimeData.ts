@@ -2,10 +2,25 @@
  * Custom hook for fetching and managing regime monitoring data
  * Connects to the Phase 2 monitoring API
  */
-
 import { useCallback, useEffect, useState } from 'react';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_MONITORING_API_URL || 'http://157.230.58.248:8081';
+// Dynamic API URL configuration for different environments
+const getApiBaseUrl = () => {
+  // Use environment variable if set
+  if (process.env.NEXT_PUBLIC_MONITORING_API_URL) {
+    return process.env.NEXT_PUBLIC_MONITORING_API_URL;
+  }
+
+  // For production deployments, try HTTPS first, fallback to HTTP
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+    return 'https://157.230.58.248:8081';
+  }
+
+  // Default to HTTP for development
+  return 'http://157.230.58.248:8081';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export interface RegimeStatus {
   current_regime: string;
@@ -86,25 +101,63 @@ export const useRegimeData = () => {
         }
       };
 
-      // Create individual fetch requests with better error handling
-      const createRequest = (endpoint: string) => {
-        return fetch(`${API_BASE_URL}${endpoint}`, {
-          method: 'GET',
+      // Create individual fetch requests with better error handling and protocol fallback
+      const createRequest = async (endpoint: string) => {
+        const primaryUrl = `${API_BASE_URL}${endpoint}`;
+        const fallbackUrl = API_BASE_URL.startsWith('https:')
+          ? `http://157.230.58.248:8081${endpoint}`
+          : `https://157.230.58.248:8081${endpoint}`;
+
+        const requestOptions = {
+          method: 'GET' as const,
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
-          cache: 'no-cache',
-          mode: 'cors',
-          credentials: 'omit', // Don't send cookies to avoid CORS issues
-        }).catch(error => {
-          console.error(`[RegimeData] Network error for ${endpoint}:`, error);
-          // Return a mock response for failed requests to prevent Promise.all from failing
-          return new Response(JSON.stringify({ error: `Network error: ${error.message}` }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-          });
-        });
+          cache: 'no-cache' as const,
+          mode: 'cors' as const,
+          credentials: 'omit' as const, // Don't send cookies to avoid CORS issues
+        };
+
+        try {
+          console.log(`[RegimeData] Trying primary URL: ${primaryUrl}`);
+          const response = await fetch(primaryUrl, requestOptions);
+          if (response.ok) {
+            return response;
+          }
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        } catch (primaryError) {
+          console.warn(`[RegimeData] Primary URL failed (${primaryUrl}):`, primaryError);
+
+          try {
+            console.log(`[RegimeData] Trying fallback URL: ${fallbackUrl}`);
+            const response = await fetch(fallbackUrl, requestOptions);
+            if (response.ok) {
+              return response;
+            }
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          } catch (fallbackError) {
+            console.error(`[RegimeData] Both URLs failed for ${endpoint}:`, {
+              primary: primaryError,
+              fallback: fallbackError,
+            });
+
+            // Return a mock response for failed requests to prevent Promise.all from failing
+            return new Response(
+              JSON.stringify({
+                error: `Network error: Both ${primaryUrl} and ${fallbackUrl} failed`,
+                primaryError:
+                  primaryError instanceof Error ? primaryError.message : String(primaryError),
+                fallbackError:
+                  fallbackError instanceof Error ? fallbackError.message : String(fallbackError),
+              }),
+              {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+              }
+            );
+          }
+        }
       };
 
       // Fetch all data in parallel with individual error handling
