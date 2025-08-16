@@ -27,13 +27,17 @@ export interface ServiceEndpoint {
 
 class MonitoringHealthChecker {
   private baseUrls = [
+    // For production HTTPS sites, we need a proxy or the HTTPS endpoint to work
+    // HTTP won't work from HTTPS pages due to mixed content policies
     'https://157.230.58.248:8081',
     'http://157.230.58.248:8081',
+    // Add your backend proxy endpoint if you have one
+    // '/api/monitoring-proxy', // This would be a Next.js API route that proxies to HTTP
   ];
 
   private endpoints = [
     '/regime/current',
-    '/alerts/recent', 
+    '/alerts/recent',
     '/strategy/health',
     '/performance/summary',
   ];
@@ -41,10 +45,14 @@ class MonitoringHealthChecker {
   /**
    * Perform a quick health check on a single endpoint
    */
-  async checkEndpoint(baseUrl: string, endpoint: string, timeout = 10000): Promise<HealthCheckResult> {
+  async checkEndpoint(
+    baseUrl: string,
+    endpoint: string,
+    timeout = 10000
+  ): Promise<HealthCheckResult> {
     const fullUrl = `${baseUrl}${endpoint}`;
     const startTime = Date.now();
-    
+
     const result: HealthCheckResult = {
       isHealthy: false,
       status: 'unhealthy',
@@ -65,7 +73,7 @@ class MonitoringHealthChecker {
       const response = await fetch(fullUrl, {
         method: 'GET',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         mode: 'cors',
@@ -89,10 +97,9 @@ class MonitoringHealthChecker {
         result.error = `HTTP ${response.status}: ${response.statusText}`;
         result.status = 'degraded';
       }
-
     } catch (error: any) {
       result.responseTime = Date.now() - startTime;
-      
+
       if (error.name === 'AbortError') {
         result.error = `Timeout after ${timeout}ms`;
       } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
@@ -135,11 +142,11 @@ class MonitoringHealthChecker {
 
     if (healthyResults.length > 0) {
       // Find the best performing endpoint
-      const bestResult = healthyResults.reduce((best, current) => 
+      const bestResult = healthyResults.reduce((best, current) =>
         current.responseTime < best.responseTime ? current : best
       );
       bestEndpoint = bestResult.endpoint.replace(/\/[^\/]*$/, ''); // Remove endpoint path
-      
+
       if (healthyResults.length === results.length) {
         overall = 'healthy';
       } else {
@@ -152,7 +159,9 @@ class MonitoringHealthChecker {
       recommendations.push('Both HTTP and HTTPS are working - prefer HTTPS for production');
     } else if (httpResults.some(r => r.isHealthy)) {
       recommendations.push('Only HTTP is working - HTTPS has SSL/TLS configuration issues');
-      recommendations.push('Consider fixing SSL certificate or use HTTP with proper security headers');
+      recommendations.push(
+        'Consider fixing SSL certificate or use HTTP with proper security headers'
+      );
     } else if (httpsResults.some(r => r.isHealthy)) {
       recommendations.push('HTTPS is working correctly');
     } else {
@@ -204,10 +213,10 @@ class MonitoringHealthChecker {
     intervalMs = 30000
   ): () => void {
     let isRunning = true;
-    
+
     const monitor = async () => {
       if (!isRunning) return;
-      
+
       const bestEndpoint = await this.findBestEndpoint();
       if (bestEndpoint) {
         const result = await this.checkEndpoint(bestEndpoint, '/regime/current');
@@ -227,7 +236,7 @@ class MonitoringHealthChecker {
           },
         });
       }
-      
+
       if (isRunning) {
         setTimeout(monitor, intervalMs);
       }

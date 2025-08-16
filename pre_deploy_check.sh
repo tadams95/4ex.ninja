@@ -92,4 +92,12 @@ deployment_check() {
 deployment_check
 
 echo ""
-echo "🔍 For detailed health check, run: ./check_monitoring_service.sh"
+echo "� Vercel Deployment Instructions:"
+echo "1. Set environment variable in Vercel:"
+echo "   NEXT_PUBLIC_MONITORING_API_URL=/api/monitoring"
+echo ""
+echo "2. After deployment, test these endpoints:"
+echo "   - https://your-app.vercel.app/api/monitoring-health"
+echo "   - https://your-app.vercel.app/api/monitoring/regime/current"
+echo ""
+echo "�🔍 For detailed health check, run: ./check_monitoring_service.sh"

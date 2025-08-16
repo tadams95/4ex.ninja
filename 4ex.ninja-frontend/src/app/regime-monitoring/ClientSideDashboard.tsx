@@ -5,10 +5,10 @@
 
 'use client';
 
+import { MonitoringHealthStatus } from '../../components/MonitoringHealthStatus';
 import { PerformanceByRegime } from '../../components/PerformanceByRegime';
 import { RegimeMonitor } from '../../components/RegimeMonitor';
 import { StrategyHealthPanel } from '../../components/StrategyHealthPanel';
-import { MonitoringHealthStatus } from '../../components/MonitoringHealthStatus';
 import { useRegimeData } from '../../hooks/useRegimeData';
 
 export default function ClientSideDashboard() {
@@ -57,7 +57,10 @@ export default function ClientSideDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Monitoring Service Health Status */}
         <div className="mb-6">
-          <MonitoringHealthStatus showDetails={true} className="bg-neutral-800 border-neutral-700" />
+          <MonitoringHealthStatus
+            showDetails={true}
+            className="bg-neutral-800 border-neutral-700"
+          />
         </div>
 
         {/* Debug Info for Development */}
@@ -67,13 +70,31 @@ export default function ClientSideDashboard() {
             <div className="text-xs text-blue-300 space-y-1">
               <div>
                 API URL:{' '}
-                {process.env.NEXT_PUBLIC_MONITORING_API_URL || 'http://157.230.58.248:8081'}
+                {process.env.NEXT_PUBLIC_MONITORING_API_URL || '/api/monitoring (auto-detected)'}
+              </div>
+              <div>
+                Environment: {typeof window !== 'undefined' ? window.location.protocol : 'server'}
+              </div>
+              <div>
+                Is HTTPS:{' '}
+                {typeof window !== 'undefined' && window.location.protocol === 'https:'
+                  ? 'Yes (using proxy)'
+                  : 'No (direct connection)'}
               </div>
               <div>Loading: {loading ? 'Yes' : 'No'}</div>
               <div>Error: {error || 'None'}</div>
               <div>Regime Status: {regimeStatus ? 'Loaded' : 'Not loaded'}</div>
               <div>Alerts Count: {alerts.length}</div>
               <div>Last Update: {lastUpdate.toISOString()}</div>
+            </div>
+            <div className="mt-2 pt-2 border-t border-blue-500/20">
+              <a
+                href="/api/monitoring-health"
+                target="_blank"
+                className="text-xs text-blue-400 hover:text-blue-300 underline"
+              >
+                Test Proxy Health Check →
+              </a>
             </div>
           </div>
         )}

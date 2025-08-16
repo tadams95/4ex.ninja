@@ -9,23 +9,26 @@ import { getRecommendedApiBaseUrl } from '../utils/monitoringHealthCheck';
 const getApiBaseUrl = async () => {
   // Use environment variable if set
   if (process.env.NEXT_PUBLIC_MONITORING_API_URL) {
+    console.log(
+      `[RegimeData] Using environment variable: ${process.env.NEXT_PUBLIC_MONITORING_API_URL}`
+    );
     return process.env.NEXT_PUBLIC_MONITORING_API_URL;
   }
-  
-  // Try to get the best endpoint from health check
+
+  // In production (HTTPS), use the proxy to avoid mixed content issues
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+    console.log('[RegimeData] Using proxy endpoint for HTTPS production environment');
+    return '/api/monitoring';
+  }
+
+  // Try to get the best endpoint from health check for development
   const recommendedUrl = await getRecommendedApiBaseUrl();
   if (recommendedUrl) {
     console.log(`[RegimeData] Using recommended endpoint: ${recommendedUrl}`);
     return recommendedUrl;
   }
-  
-  // Fallback logic based on current environment
-  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
-    // In production HTTPS, try HTTP first since HTTPS has SSL issues
-    return 'http://157.230.58.248:8081';
-  }
-  
-  // Default to HTTP for development
+
+  // Default to HTTP for local development
   return 'http://157.230.58.248:8081';
 };
 
@@ -90,7 +93,7 @@ export const useRegimeData = () => {
   const fetchData = useCallback(async () => {
     try {
       setError(null);
-      
+
       // Update API base URL with the best available endpoint
       API_BASE_URL = await getApiBaseUrl();
       console.log(`[RegimeData] Fetching data from: ${API_BASE_URL}`);
@@ -114,31 +117,40 @@ export const useRegimeData = () => {
         }
       };
 
-      // Enhanced request function with multiple fallback URLs and timeout
+      // Enhanced request function with proxy support and fallback URLs
       const createRequest = async (endpoint: string) => {
-        // Multiple URL options to try in order of preference
-        const urlsToTry = [
-          `${API_BASE_URL}${endpoint}`,
-          `https://157.230.58.248:8081${endpoint}`,
-          `http://157.230.58.248:8081${endpoint}`,
-          // Add more fallback URLs if you have them
-        ];
+        // Check if we're using the proxy endpoint
+        const isUsingProxy = API_BASE_URL === '/api/monitoring';
+
+        let urlsToTry: string[];
+
+        if (isUsingProxy) {
+          // When using proxy, just use the proxy endpoint
+          urlsToTry = [`${API_BASE_URL}${endpoint}`];
+        } else {
+          // Multiple URL options for direct API access
+          urlsToTry = [
+            `${API_BASE_URL}${endpoint}`,
+            `https://157.230.58.248:8081${endpoint}`,
+            `http://157.230.58.248:8081${endpoint}`,
+          ];
+        }
 
         const requestOptions: RequestInit = {
           method: 'GET',
           headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Content-Type': 'application/json',
           },
           cache: 'no-cache',
-          mode: 'cors',
-          credentials: 'omit', // Don't send cookies to avoid CORS issues
+          // Only set CORS mode for direct API calls, not for same-origin proxy calls
+          ...(isUsingProxy ? {} : { mode: 'cors', credentials: 'omit' }),
         };
 
         // Try each URL with a timeout
         const tryUrl = async (url: string, timeout = 15000) => {
-          console.log(`[RegimeData] Trying URL: ${url}`);
-          
+          console.log(`[RegimeData] Trying URL: ${url} (proxy: ${isUsingProxy})`);
+
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -148,27 +160,44 @@ export const useRegimeData = () => {
               signal: controller.signal,
             });
             clearTimeout(timeoutId);
-            
+
             if (response.ok) {
               console.log(`[RegimeData] Success with URL: ${url}`);
               return response;
             }
+
+            // Handle proxy error responses
+            if (isUsingProxy && response.status >= 500) {
+              const errorData = await response.json().catch(() => ({}));
+              if (errorData.isProxyError) {
+                throw new Error(`Proxy error: ${errorData.error} - ${errorData.details || ''}`);
+              }
+            }
+
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           } catch (error: any) {
             clearTimeout(timeoutId);
-            
+
             // Handle different types of errors
             if (error.name === 'AbortError') {
               throw new Error(`Request timeout (${timeout}ms) for ${url}`);
             } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-              throw new Error(`Network error: Cannot connect to ${url} (CORS or server down)`);
+              if (isUsingProxy) {
+                throw new Error(
+                  `Proxy connection failed: Cannot reach monitoring service via ${url}`
+                );
+              } else {
+                throw new Error(
+                  `Direct connection failed: Cannot connect to ${url} (CORS or mixed content policy)`
+                );
+              }
             }
             throw error;
           }
         };
 
         let lastError: Error | null = null;
-        
+
         // Try each URL in sequence
         for (const url of urlsToTry) {
           try {
@@ -183,20 +212,24 @@ export const useRegimeData = () => {
         console.error(`[RegimeData] All URLs failed for ${endpoint}. Last error:`, lastError);
 
         // Return a mock response indicating the API is unavailable
-        return new Response(
-          JSON.stringify({
-            error: `API unavailable: All URLs failed for ${endpoint}`,
-            lastError: lastError?.message || 'Unknown error',
-            timestamp: new Date().toISOString(),
-            endpoint,
-            availableEndpoints: [],
-            isApiDown: true,
-          }),
-          {
-            status: 503, // Service Unavailable
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
+        const errorDetails = {
+          error: `API unavailable: All URLs failed for ${endpoint}`,
+          lastError: lastError?.message || 'Unknown error',
+          timestamp: new Date().toISOString(),
+          endpoint,
+          isApiDown: true,
+          usingProxy: isUsingProxy,
+          testedUrls: urlsToTry,
+          environment: typeof window !== 'undefined' ? window.location.protocol : 'server',
+          troubleshooting: isUsingProxy
+            ? 'Proxy endpoint failed - check if monitoring service is running and accessible from server'
+            : 'Direct connection failed - may be CORS or mixed content policy issue',
+        };
+
+        return new Response(JSON.stringify(errorDetails), {
+          status: 503, // Service Unavailable
+          headers: { 'Content-Type': 'application/json' },
+        });
       };
 
       // Fetch all data in parallel with individual error handling
@@ -339,7 +372,9 @@ export const useRegimeData = () => {
             setTimeout(() => attemptFetch(attempt + 1), delay);
           } else {
             console.error('[RegimeData] All fetch attempts failed');
-            setError('Failed to connect to monitoring API after multiple attempts. Please check if the monitoring service is running.');
+            setError(
+              'Failed to connect to monitoring API after multiple attempts. Please check if the monitoring service is running.'
+            );
             setLoading(false);
           }
         }

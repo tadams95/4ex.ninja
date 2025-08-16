@@ -2,8 +2,8 @@
  * Monitoring Service Health Status Component
  * Displays real-time health status of the monitoring API
  */
-import React, { useState, useEffect } from 'react';
-import { monitoringHealthChecker, HealthCheckResult } from '../utils/monitoringHealthCheck';
+import React, { useEffect, useState } from 'react';
+import { HealthCheckResult, monitoringHealthChecker } from '../utils/monitoringHealthCheck';
 
 interface HealthStatusProps {
   showDetails?: boolean;
@@ -22,7 +22,7 @@ export const MonitoringHealthStatus: React.FC<HealthStatusProps> = ({
     let cleanup: (() => void) | null = null;
 
     // Start continuous monitoring
-    cleanup = monitoringHealthChecker.startContinuousMonitoring((result) => {
+    cleanup = monitoringHealthChecker.startContinuousMonitoring(result => {
       setHealthResult(result);
       setIsChecking(false);
     }, 30000); // Check every 30 seconds
@@ -98,11 +98,12 @@ export const MonitoringHealthStatus: React.FC<HealthStatusProps> = ({
               </span>
             </div>
             <div className="text-sm text-gray-500">
-              Response time: {healthResult.responseTime}ms | {healthResult.details.protocol.toUpperCase()}
+              Response time: {healthResult.responseTime}ms |{' '}
+              {healthResult.details.protocol.toUpperCase()}
             </div>
           </div>
         </div>
-        
+
         {showDetails && (
           <button
             onClick={runFullHealthCheck}
@@ -143,21 +144,22 @@ export const ProductionHealthCheck: React.FC = () => {
     try {
       const report = await monitoringHealthChecker.performFullHealthCheck();
       setFullReport(report);
-      
+
       // Log detailed report for debugging
       console.group('🏥 Production Health Check Report');
       console.log('Overall Status:', report.overall);
       console.log('Best Endpoint:', report.bestEndpoint);
       console.log('Recommendations:', report.recommendations);
-      console.table(report.results.map(r => ({
-        endpoint: r.endpoint,
-        status: r.status,
-        responseTime: `${r.responseTime}ms`,
-        protocol: r.details.protocol,
-        error: r.error || 'None',
-      })));
+      console.table(
+        report.results.map(r => ({
+          endpoint: r.endpoint,
+          status: r.status,
+          responseTime: `${r.responseTime}ms`,
+          protocol: r.details.protocol,
+          error: r.error || 'None',
+        }))
+      );
       console.groupEnd();
-      
     } catch (error) {
       console.error('Health check failed:', error);
     } finally {
@@ -174,24 +176,31 @@ export const ProductionHealthCheck: React.FC = () => {
           disabled={isLoading}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
         >
-          {isLoading && <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>}
+          {isLoading && (
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+          )}
           <span>{isLoading ? 'Checking...' : 'Run Health Check'}</span>
         </button>
       </div>
 
       {fullReport && (
         <div className="space-y-4">
-          <div className={`p-3 rounded-lg ${
-            fullReport.overall === 'healthy' ? 'bg-green-50 border border-green-200' :
-            fullReport.overall === 'degraded' ? 'bg-yellow-50 border border-yellow-200' :
-            'bg-red-50 border border-red-200'
-          }`}>
+          <div
+            className={`p-3 rounded-lg ${
+              fullReport.overall === 'healthy'
+                ? 'bg-green-50 border border-green-200'
+                : fullReport.overall === 'degraded'
+                ? 'bg-yellow-50 border border-yellow-200'
+                : 'bg-red-50 border border-red-200'
+            }`}
+          >
             <div className="font-medium">
               Overall Status: <span className="uppercase">{fullReport.overall}</span>
             </div>
             {fullReport.bestEndpoint && (
               <div className="text-sm mt-1">
-                Recommended Endpoint: <code className="bg-gray-100 px-2 py-1 rounded">{fullReport.bestEndpoint}</code>
+                Recommended Endpoint:{' '}
+                <code className="bg-gray-100 px-2 py-1 rounded">{fullReport.bestEndpoint}</code>
               </div>
             )}
           </div>
@@ -226,7 +235,9 @@ export const ProductionHealthCheck: React.FC = () => {
                     <tr key={index} className="border-b">
                       <td className="p-2 font-mono text-xs">{result.endpoint}</td>
                       <td className="p-2">
-                        <span className={`px-2 py-1 rounded text-xs ${getStatusColor(result.status)}`}>
+                        <span
+                          className={`px-2 py-1 rounded text-xs ${getStatusColor(result.status)}`}
+                        >
                           {result.status}
                         </span>
                       </td>
