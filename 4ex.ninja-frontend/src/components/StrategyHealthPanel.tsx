@@ -59,14 +59,16 @@ export const StrategyHealthPanel: React.FC<StrategyHealthPanelProps> = ({
 }) => {
   if (loading) {
     return (
-      <Card className="animate-pulse">
-        <div className="h-6 bg-neutral-600 rounded mb-4"></div>
-        <div className="h-20 bg-neutral-600 rounded mb-4"></div>
-        <div className="space-y-2">
-          <div className="h-4 bg-neutral-600 rounded"></div>
-          <div className="h-4 bg-neutral-600 rounded w-3/4"></div>
-        </div>
-      </Card>
+      <div className="space-y-4">
+        <Card variant="elevated" padding="lg" className="animate-pulse">
+          <div className="h-6 bg-neutral-600 rounded mb-4"></div>
+          <div className="h-20 bg-neutral-600 rounded mb-4"></div>
+          <div className="space-y-2">
+            <div className="h-4 bg-neutral-600 rounded"></div>
+            <div className="h-4 bg-neutral-600 rounded w-3/4"></div>
+          </div>
+        </Card>
+      </div>
     );
   }
 
@@ -75,12 +77,14 @@ export const StrategyHealthPanel: React.FC<StrategyHealthPanelProps> = ({
   return (
     <div className="space-y-4">
       {/* Strategy Health Status */}
-      <Card className="border border-neutral-600">
+      <Card variant="elevated" padding="lg" className="border border-neutral-600">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Strategy Health</h3>
           {strategyHealth && (
             <div className="text-right">
-              <div className={`text-sm font-medium ${getHealthColor(strategyHealth.health_score)}`}>
+              <div
+                className={`text-sm font-semibold ${getHealthColor(strategyHealth.health_score)}`}
+              >
                 {getHealthStatus(strategyHealth.health_score)}
               </div>
               <div className="text-xs text-neutral-400">
@@ -93,12 +97,14 @@ export const StrategyHealthPanel: React.FC<StrategyHealthPanelProps> = ({
         {strategyHealth ? (
           <>
             {/* Health Score Visualization */}
-            <div className="mb-6">
-              <div className="flex items-center mb-2">
-                <span className="text-sm text-neutral-400 mr-2">Health Score</span>
-                <div className="flex-1 bg-neutral-600 rounded-full h-3">
+            <div className="mb-6 p-4 bg-neutral-800 border border-neutral-700 rounded-lg">
+              <div className="flex items-center mb-3">
+                <span className="text-sm text-neutral-400 mr-3 uppercase tracking-wide">
+                  Health Score
+                </span>
+                <div className="flex-1 bg-neutral-700 rounded-full h-3">
                   <div
-                    className={`h-3 rounded-full transition-all duration-300 ${
+                    className={`h-3 rounded-full transition-all duration-500 ${
                       strategyHealth.health_score >= 0.8
                         ? 'bg-green-500'
                         : strategyHealth.health_score >= 0.6
@@ -111,7 +117,7 @@ export const StrategyHealthPanel: React.FC<StrategyHealthPanelProps> = ({
                   ></div>
                 </div>
                 <span
-                  className={`text-sm font-medium ml-2 ${getHealthColor(
+                  className={`text-sm font-bold ml-3 ${getHealthColor(
                     strategyHealth.health_score
                   )}`}
                 >
@@ -123,15 +129,15 @@ export const StrategyHealthPanel: React.FC<StrategyHealthPanelProps> = ({
             {/* Warnings */}
             {strategyHealth.warnings.length > 0 && (
               <div className="mb-4">
-                <h4 className="text-sm font-medium text-neutral-300 mb-2">Active Warnings</h4>
+                <h4 className="text-sm font-medium text-neutral-300 mb-3">Active Warnings</h4>
                 <div className="space-y-2">
                   {strategyHealth.warnings.map((warning, index) => (
                     <div
                       key={index}
-                      className="flex items-center text-sm text-yellow-400 bg-yellow-900/20 border border-yellow-500/30 rounded px-3 py-2"
+                      className="flex items-start text-sm text-yellow-400 bg-yellow-900/10 border border-yellow-500/30 rounded-lg px-3 py-3"
                     >
-                      <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-2 flex-shrink-0"></div>
-                      {warning}
+                      <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-3 mt-1.5 flex-shrink-0"></div>
+                      <span>{warning}</span>
                     </div>
                   ))}
                 </div>
@@ -139,56 +145,71 @@ export const StrategyHealthPanel: React.FC<StrategyHealthPanelProps> = ({
             )}
 
             {/* Last Update */}
-            <div className="text-xs text-neutral-500">
-              Last updated: {new Date(strategyHealth.last_update).toLocaleString()}
+            <div className="text-xs text-neutral-500 bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2">
+              <span className="text-neutral-400">Last updated:</span>{' '}
+              <span className="font-mono">
+                {new Date(strategyHealth.last_update).toLocaleString()}
+              </span>
             </div>
           </>
         ) : (
-          <div className="text-center py-4">
-            <div className="text-red-400 mb-2">Health monitoring unavailable</div>
-            <div className="text-neutral-400 text-sm">Check API connection</div>
+          <div className="text-center py-8 bg-neutral-800 border border-neutral-700 rounded-lg">
+            <div className="text-red-400 mb-2 font-medium">Health monitoring unavailable</div>
+            <div className="text-neutral-400 text-sm">
+              Please check your API connection and try refreshing the page.
+            </div>
           </div>
         )}
       </Card>
 
       {/* Recent Alerts */}
-      <Card className="border border-neutral-600">
+      <Card variant="elevated" padding="lg" className="border border-neutral-600">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Recent Alerts</h3>
           {unacknowledgedAlerts.length > 0 && (
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-red-400">{unacknowledgedAlerts.length} unread</span>
+              <span className="text-xs text-red-400 font-medium">
+                {unacknowledgedAlerts.length} unread
+              </span>
             </div>
           )}
         </div>
 
         {alerts.length === 0 ? (
-          <div className="text-center py-6 text-neutral-400">No recent alerts</div>
+          <div className="text-center py-8 bg-neutral-800 border border-neutral-700 rounded-lg">
+            <div className="text-neutral-400 font-medium">No recent alerts</div>
+            <div className="text-xs text-neutral-500 mt-1">All systems operating normally</div>
+          </div>
         ) : (
-          <div className="space-y-3 max-h-64 overflow-y-auto">
+          <div
+            className="space-y-3 max-h-64 overflow-y-auto pr-2"
+            style={{ scrollbarWidth: 'thin', scrollbarColor: '#374151 #1f2937' }}
+          >
             {alerts.slice(0, 5).map(alert => (
               <div
                 key={alert.id}
-                className={`border rounded-lg p-3 ${getSeverityColor(alert.severity)} ${
-                  alert.acknowledged ? 'opacity-60' : ''
-                }`}
+                className={`border rounded-lg p-3 transition-all duration-200 ${getSeverityColor(
+                  alert.severity
+                )} ${alert.acknowledged ? 'opacity-60' : 'hover:shadow-sm'}`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 mb-1">
+                    <div className="flex items-center space-x-2 mb-2">
                       <span className="text-sm font-medium">{alert.title}</span>
-                      <span className="text-xs px-2 py-0.5 bg-black/20 rounded">
+                      <span className="text-xs px-2 py-0.5 bg-black/30 rounded-full border border-current/20">
                         {alert.alert_type}
                       </span>
                     </div>
-                    <p className="text-sm opacity-90 mb-2">{alert.message}</p>
-                    <div className="text-xs opacity-75">{formatTimestamp(alert.timestamp)}</div>
+                    <p className="text-sm opacity-90 mb-2 leading-relaxed">{alert.message}</p>
+                    <div className="text-xs opacity-75 font-mono">
+                      {formatTimestamp(alert.timestamp)}
+                    </div>
                   </div>
                   {!alert.acknowledged && (
                     <button
                       onClick={() => onAcknowledgeAlert(alert.id)}
-                      className="ml-2 text-xs px-2 py-1 bg-white/10 hover:bg-white/20 rounded transition-colors"
+                      className="ml-3 text-xs px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/30 rounded-md transition-all duration-200 font-medium"
                     >
                       Acknowledge
                     </button>

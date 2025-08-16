@@ -7,6 +7,7 @@
 import { PerformanceByRegime } from '../../components/PerformanceByRegime';
 import { RegimeMonitor } from '../../components/RegimeMonitor';
 import { StrategyHealthPanel } from '../../components/StrategyHealthPanel';
+import { Button } from '../../components/ui/Button';
 import { useRegimeData } from '../../hooks/useRegimeData';
 
 export default function RegimeDataProvider() {
@@ -23,9 +24,9 @@ export default function RegimeDataProvider() {
   } = useRegimeData();
 
   return (
-    <div className="min-h-screen bg-neutral-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <div className="border-b border-neutral-700 bg-neutral-800">
+      <div className="border-b border-neutral-700 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div>
@@ -35,17 +36,19 @@ export default function RegimeDataProvider() {
             <div className="flex items-center space-x-4">
               {error && (
                 <div className="flex items-center text-red-400 text-sm">
-                  <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                  <div className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></div>
                   API Error
                 </div>
               )}
-              <button
+              <Button
                 onClick={refetch}
                 disabled={loading}
-                className="px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-neutral-600 rounded transition-colors"
+                variant="primary"
+                size="sm"
+                loading={loading}
               >
-                {loading ? 'Refreshing...' : 'Refresh'}
-              </button>
+                Refresh
+              </Button>
             </div>
           </div>
         </div>

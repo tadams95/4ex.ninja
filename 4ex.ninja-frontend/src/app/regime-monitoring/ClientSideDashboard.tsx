@@ -9,6 +9,8 @@ import { MonitoringHealthStatus } from '../../components/MonitoringHealthStatus'
 import { PerformanceByRegime } from '../../components/PerformanceByRegime';
 import { RegimeMonitor } from '../../components/RegimeMonitor';
 import { StrategyHealthPanel } from '../../components/StrategyHealthPanel';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
 import { useRegimeData } from '../../hooks/useRegimeData';
 
 export default function ClientSideDashboard() {
@@ -25,9 +27,9 @@ export default function ClientSideDashboard() {
   } = useRegimeData();
 
   return (
-    <div className="min-h-screen bg-neutral-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <div className="border-b border-neutral-700 bg-neutral-800">
+      <div className="border-b border-neutral-700 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div>
@@ -37,17 +39,19 @@ export default function ClientSideDashboard() {
             <div className="flex items-center space-x-4">
               {error && (
                 <div className="flex items-center text-red-400 text-sm">
-                  <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                  <div className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></div>
                   API Error
                 </div>
               )}
-              <button
+              <Button
                 onClick={refetch}
                 disabled={loading}
-                className="px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-neutral-600 rounded transition-colors"
+                variant="primary"
+                size="sm"
+                loading={loading}
               >
-                {loading ? 'Refreshing...' : 'Refresh'}
-              </button>
+                Refresh
+              </Button>
             </div>
           </div>
         </div>
@@ -59,56 +63,78 @@ export default function ClientSideDashboard() {
         <div className="mb-6">
           <MonitoringHealthStatus
             showDetails={true}
-            className="bg-neutral-800 border-neutral-700"
+            className="bg-neutral-800 border-neutral-600"
           />
         </div>
 
         {/* Debug Info for Development */}
         {process.env.NODE_ENV === 'development' && (
-          <div className="mb-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
-            <h3 className="text-sm font-medium text-blue-400 mb-2">Debug Information</h3>
-            <div className="text-xs text-blue-300 space-y-1">
-              <div>
-                API URL:{' '}
-                {process.env.NEXT_PUBLIC_MONITORING_API_URL || '/api/monitoring (auto-detected)'}
+          <Card variant="outlined" padding="md" className="mb-6 border-blue-500/30 bg-blue-900/10">
+            <h3 className="text-sm font-medium text-blue-400 mb-3">Debug Information</h3>
+            <div className="text-xs text-blue-300 space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div>
+                  <span className="text-blue-400">API URL:</span>{' '}
+                  <span className="font-mono">
+                    {process.env.NEXT_PUBLIC_MONITORING_API_URL ||
+                      '/api/monitoring (auto-detected)'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-blue-400">Environment:</span>{' '}
+                  {typeof window !== 'undefined' ? window.location.protocol : 'server'}
+                </div>
+                <div>
+                  <span className="text-blue-400">HTTPS:</span>{' '}
+                  {typeof window !== 'undefined' && window.location.protocol === 'https:'
+                    ? 'Yes (using proxy)'
+                    : 'No (direct connection)'}
+                </div>
+                <div>
+                  <span className="text-blue-400">Loading:</span> {loading ? 'Yes' : 'No'}
+                </div>
+                <div>
+                  <span className="text-blue-400">Error:</span>{' '}
+                  <span className={error ? 'text-red-400' : ''}>{error || 'None'}</span>
+                </div>
+                <div>
+                  <span className="text-blue-400">Regime Status:</span>{' '}
+                  {regimeStatus ? 'Loaded' : 'Not loaded'}
+                </div>
+                <div>
+                  <span className="text-blue-400">Alerts:</span> {alerts.length}
+                </div>
+                <div>
+                  <span className="text-blue-400">Last Update:</span>{' '}
+                  <span className="font-mono">{lastUpdate.toISOString()}</span>
+                </div>
               </div>
-              <div>
-                Environment: {typeof window !== 'undefined' ? window.location.protocol : 'server'}
+              <div className="mt-3 pt-3 border-t border-blue-500/20">
+                <a
+                  href="/api/monitoring-health"
+                  target="_blank"
+                  className="text-xs text-blue-400 hover:text-blue-300 underline transition-colors"
+                >
+                  Test Proxy Health Check →
+                </a>
               </div>
-              <div>
-                Is HTTPS:{' '}
-                {typeof window !== 'undefined' && window.location.protocol === 'https:'
-                  ? 'Yes (using proxy)'
-                  : 'No (direct connection)'}
-              </div>
-              <div>Loading: {loading ? 'Yes' : 'No'}</div>
-              <div>Error: {error || 'None'}</div>
-              <div>Regime Status: {regimeStatus ? 'Loaded' : 'Not loaded'}</div>
-              <div>Alerts Count: {alerts.length}</div>
-              <div>Last Update: {lastUpdate.toISOString()}</div>
             </div>
-            <div className="mt-2 pt-2 border-t border-blue-500/20">
-              <a
-                href="/api/monitoring-health"
-                target="_blank"
-                className="text-xs text-blue-400 hover:text-blue-300 underline"
-              >
-                Test Proxy Health Check →
-              </a>
-            </div>
-          </div>
+          </Card>
         )}
 
         {error && (
-          <div className="mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+          <Card variant="outlined" padding="md" className="mb-6 border-red-500/30 bg-red-900/10">
             <div className="flex items-center">
-              <div className="w-4 h-4 bg-red-500 rounded-full mr-3"></div>
+              <div className="w-4 h-4 bg-red-500 rounded-full mr-3 animate-pulse"></div>
               <div>
                 <h3 className="text-sm font-medium text-red-400">Connection Error</h3>
                 <p className="text-sm text-red-300 mt-1">{error}</p>
+                <p className="text-xs text-red-400 mt-2">
+                  Please check your network connection and try refreshing the page.
+                </p>
               </div>
             </div>
-          </div>
+          </Card>
         )}
 
         {/* Dashboard Grid */}
@@ -135,12 +161,14 @@ export default function ClientSideDashboard() {
         </div>
 
         {/* Status Bar */}
-        <div className="mt-8 p-4 bg-neutral-800 rounded-lg border border-neutral-700">
+        <Card variant="elevated" padding="md" className="mt-8">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center space-x-6">
               <div className="flex items-center">
                 <div
-                  className={`w-2 h-2 rounded-full mr-2 ${!error ? 'bg-green-500' : 'bg-red-500'}`}
+                  className={`w-2 h-2 rounded-full mr-2 ${
+                    !error ? 'bg-green-500' : 'bg-red-500 animate-pulse'
+                  }`}
                 ></div>
                 <span className="text-neutral-400">
                   API Status: {!error ? 'Connected' : 'Disconnected'}
@@ -161,9 +189,9 @@ export default function ClientSideDashboard() {
                 </div>
               )}
             </div>
-            <div className="text-neutral-500">4ex.ninja Phase 2 Monitoring v2.0</div>
+            <div className="text-neutral-500 font-medium">4ex.ninja Phase 2 Monitoring v2.0</div>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

@@ -9,14 +9,16 @@ import dynamic from 'next/dynamic';
 import { PerformanceByRegime } from '../../components/PerformanceByRegime';
 import { RegimeMonitor } from '../../components/RegimeMonitor';
 import { StrategyHealthPanel } from '../../components/StrategyHealthPanel';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
 import { useRegimeData } from '../../hooks/useRegimeData';
 
 // Create a dynamic component to ensure client-only rendering
 const DynamicDashboard = dynamic(() => Promise.resolve(ClientSideDashboard), {
   ssr: false,
   loading: () => (
-    <div className="min-h-screen bg-neutral-900 text-white">
-      <div className="border-b border-neutral-700 bg-neutral-800">
+    <div className="min-h-screen bg-black text-white">
+      <div className="border-b border-neutral-700 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div>
@@ -24,16 +26,18 @@ const DynamicDashboard = dynamic(() => Promise.resolve(ClientSideDashboard), {
               <p className="text-sm text-neutral-400">Phase 2 Real-Time Market Analysis</p>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="px-3 py-1.5 text-sm bg-neutral-600 rounded">Loading...</div>
+              <div className="px-3 py-2 text-sm bg-neutral-600 rounded-md animate-pulse">
+                Loading...
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="animate-pulse bg-neutral-800 rounded-lg h-64"></div>
-          <div className="animate-pulse bg-neutral-800 rounded-lg h-64"></div>
-          <div className="animate-pulse bg-neutral-800 rounded-lg h-64"></div>
+          <div className="animate-pulse bg-neutral-800 border border-neutral-700 rounded-lg h-64"></div>
+          <div className="animate-pulse bg-neutral-800 border border-neutral-700 rounded-lg h-64"></div>
+          <div className="animate-pulse bg-neutral-800 border border-neutral-700 rounded-lg h-64"></div>
         </div>
       </div>
     </div>
@@ -54,29 +58,31 @@ function ClientSideDashboard() {
   } = useRegimeData();
 
   return (
-    <div className="min-h-screen bg-neutral-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <div className="border-b border-neutral-700 bg-neutral-800">
+      <div className="border-b border-neutral-700 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div>
               <h1 className="text-2xl font-bold text-white">Regime Monitoring</h1>
-              <p className="text-sm text-neutral-400">Phase 2 Real-Time Market Analysis</p>
+              {/* <p className="text-sm text-neutral-400">Phase 2 Real-Time Market Analysis</p> */}
             </div>
             <div className="flex items-center space-x-4">
               {error && (
                 <div className="flex items-center text-red-400 text-sm">
-                  <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                  <div className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></div>
                   API Error
                 </div>
               )}
-              <button
+              <Button
                 onClick={refetch}
                 disabled={loading}
-                className="px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-neutral-600 rounded transition-colors"
+                variant="primary"
+                size="sm"
+                loading={loading}
               >
-                {loading ? 'Refreshing...' : 'Refresh'}
-              </button>
+                Refresh
+              </Button>
             </div>
           </div>
         </div>
@@ -101,19 +107,20 @@ function ClientSideDashboard() {
             </div>
           </div>
         )}
-
         {error && (
-          <div className="mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+          <Card variant="outlined" padding="md" className="mb-6 border-red-500/30 bg-red-900/10">
             <div className="flex items-center">
-              <div className="w-4 h-4 bg-red-500 rounded-full mr-3"></div>
+              <div className="w-4 h-4 bg-red-500 rounded-full mr-3 animate-pulse"></div>
               <div>
                 <h3 className="text-sm font-medium text-red-400">Connection Error</h3>
                 <p className="text-sm text-red-300 mt-1">{error}</p>
+                <p className="text-xs text-red-400 mt-2">
+                  Please check your network connection and try refreshing the page.
+                </p>
               </div>
             </div>
-          </div>
-        )}
-
+          </Card>
+        )}{' '}
         {/* Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Regime Monitor */}
@@ -136,7 +143,6 @@ function ClientSideDashboard() {
             />
           </div>
         </div>
-
         {/* Status Bar */}
         <div className="mt-8 p-4 bg-neutral-800 rounded-lg border border-neutral-700">
           <div className="flex items-center justify-between text-sm">

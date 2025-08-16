@@ -40,10 +40,10 @@ const MetricCard: React.FC<{
   };
 
   return (
-    <div className="bg-neutral-700 rounded-lg p-4">
-      <div className="text-xs text-neutral-400 mb-1">{title}</div>
-      <div className={`text-xl font-bold ${colorClasses[color]}`}>{value}</div>
-      {subtitle && <div className="text-xs text-neutral-500 mt-1">{subtitle}</div>}
+    <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 transition-colors hover:bg-neutral-750">
+      <div className="text-xs text-neutral-400 uppercase tracking-wide mb-2">{title}</div>
+      <div className={`text-xl font-bold ${colorClasses[color]} mb-1`}>{value}</div>
+      {subtitle && <div className="text-xs text-neutral-500">{subtitle}</div>}
     </div>
   );
 };
@@ -54,8 +54,8 @@ export const PerformanceByRegime: React.FC<PerformanceByRegimeProps> = ({
 }) => {
   if (loading) {
     return (
-      <Card className="animate-pulse">
-        <div className="h-6 bg-neutral-600 rounded mb-4"></div>
+      <Card variant="elevated" padding="lg" className="animate-pulse">
+        <div className="h-6 bg-neutral-600 rounded mb-6"></div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="h-20 bg-neutral-600 rounded"></div>
@@ -67,10 +67,10 @@ export const PerformanceByRegime: React.FC<PerformanceByRegimeProps> = ({
 
   if (!performanceSummary) {
     return (
-      <Card>
+      <Card variant="outlined" padding="lg" className="border-red-500/30">
         <h3 className="text-lg font-semibold text-red-400 mb-2">Performance Data Unavailable</h3>
         <p className="text-neutral-400">
-          Unable to fetch performance metrics. Check API connection.
+          Unable to fetch performance metrics. Please check your API connection and try refreshing.
         </p>
       </Card>
     );
@@ -96,22 +96,25 @@ export const PerformanceByRegime: React.FC<PerformanceByRegimeProps> = ({
   };
 
   return (
-    <Card className="border border-neutral-600">
+    <Card variant="elevated" padding="lg" className="border border-neutral-600">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-white">Strategy Performance</h3>
         <div className="flex items-center space-x-2">
           <div
             className={`w-2 h-2 rounded-full ${
-              performanceSummary.current_positions > 0 ? 'bg-green-500' : 'bg-gray-500'
+              performanceSummary.current_positions > 0
+                ? 'bg-green-500 animate-pulse'
+                : 'bg-gray-500'
             }`}
           ></div>
           <span className="text-xs text-neutral-400">
-            {performanceSummary.current_positions} Active Positions
+            {performanceSummary.current_positions} Active Position
+            {performanceSummary.current_positions !== 1 ? 's' : ''}
           </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         <MetricCard
           title="Total Return"
           value={formatPercentage(performanceSummary.total_return)}
@@ -153,28 +156,33 @@ export const PerformanceByRegime: React.FC<PerformanceByRegimeProps> = ({
       </div>
 
       {/* Summary Status */}
-      <div className="mt-6 p-4 bg-neutral-700 rounded-lg">
+      <div className="p-4 bg-neutral-800 border border-neutral-700 rounded-lg">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-neutral-400">Strategy Status</span>
+          <span className="text-sm text-neutral-400 font-medium">Strategy Status</span>
           <div className="flex items-center space-x-2">
             {performanceSummary.total_trades === 0 ? (
               <>
-                <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                <span className="text-sm text-yellow-400">Waiting for trades</span>
+                <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+                <span className="text-sm text-yellow-400 font-medium">Waiting for trades</span>
               </>
             ) : performanceSummary.total_return > 0 ? (
               <>
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-sm text-green-400">Profitable</span>
+                <span className="text-sm text-green-400 font-medium">Profitable</span>
               </>
             ) : (
               <>
                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                <span className="text-sm text-red-400">Loss-making</span>
+                <span className="text-sm text-red-400 font-medium">Loss-making</span>
               </>
             )}
           </div>
         </div>
+        {performanceSummary.total_trades > 0 && (
+          <div className="mt-2 text-xs text-neutral-500">
+            Performance based on {performanceSummary.total_trades} completed trades
+          </div>
+        )}
       </div>
     </Card>
   );
