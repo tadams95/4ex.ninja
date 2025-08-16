@@ -156,12 +156,24 @@ async def health_check():
         performance_health = await performance_tracker.health_check()
         alert_health = await alert_system.health_check()
 
+        # Check live data provider health
+        live_data_status = False
+        if (
+            hasattr(regime_monitor, "live_data_provider")
+            and regime_monitor.live_data_provider
+        ):
+            live_data_status = regime_monitor.live_data_provider.is_available
+
         return {
             "status": "healthy",
             "components": {
                 "regime_monitor": regime_health,
                 "performance_tracker": performance_health,
                 "alert_system": alert_health,
+                "live_data_provider": {
+                    "status": "healthy" if live_data_status else "unavailable",
+                    "available": live_data_status,
+                },
             },
             "active_websockets": len(manager.active_connections),
             "timestamp": datetime.now(),
@@ -181,6 +193,38 @@ async def get_current_regime():
         return RegimeStatus(**regime_data)
     except Exception as e:
         logger.error(f"Error getting current regime: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/data-source/status")
+async def get_data_source_status():
+    """Get live data source status and health"""
+    try:
+        live_provider_status = False
+        data_source = "simulation"
+
+        if (
+            hasattr(regime_monitor, "live_data_provider")
+            and regime_monitor.live_data_provider
+        ):
+            live_provider_status = regime_monitor.live_data_provider.is_available
+            if live_provider_status:
+                data_source = "live"
+
+        # Get the latest regime data to check timestamp
+        current_regime = await regime_monitor.get_current_regime()
+        last_update = current_regime.get("last_change", datetime.now())
+
+        return {
+            "data_source": data_source,
+            "live_provider_available": live_provider_status,
+            "last_update": last_update,
+            "update_interval_seconds": regime_monitor.update_interval,
+            "monitoring_pairs": regime_monitor.monitoring_pairs,
+            "timestamp": datetime.now(),
+        }
+    except Exception as e:
+        logger.error(f"Error getting data source status: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -294,8 +338,60 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 # Background task for monitoring
+async def live_monitoring_task():
+    """Enhanced background task with live data updates"""
+    logger.info("Starting live monitoring task...")
+
+    while True:
+        try:
+            # Update regime data with live market information
+            await regime_monitor.update_live_regime_data()
+
+            # Get current regime status for broadcasting
+            current_regime = await regime_monitor.get_current_regime()
+
+            # Broadcast current regime data via WebSocket
+            regime_update = {
+                "type": "regime_update",
+                "timestamp": datetime.now().isoformat(),
+                "data": current_regime,
+            }
+            await manager.broadcast(json.dumps(regime_update))
+
+            # Check for regime changes
+            regime_change = await regime_monitor.check_for_regime_change()
+            if regime_change:
+                alert = {
+                    "type": "regime_change",
+                    "timestamp": datetime.now().isoformat(),
+                    "data": regime_change,
+                }
+                await manager.broadcast(json.dumps(alert))
+                await alert_system.send_alert("regime_change", regime_change)
+
+            # Check strategy health
+            health_issues = await performance_tracker.check_strategy_health()
+            if health_issues:
+                alert = {
+                    "type": "strategy_health",
+                    "timestamp": datetime.now().isoformat(),
+                    "data": health_issues,
+                }
+                await manager.broadcast(json.dumps(alert))
+                await alert_system.send_alert("strategy_health", health_issues)
+
+            await asyncio.sleep(30)  # Check every 30 seconds for live data
+
+        except Exception as e:
+            logger.error(f"Live monitoring task error: {e}")
+            await asyncio.sleep(60)  # Wait longer on error
+
+
+# Keep the old monitoring_task for backward compatibility
 async def monitoring_task():
-    """Background task for continuous monitoring and alerts"""
+    """Background monitoring task (legacy)"""
+    logger.info("Starting background monitoring task...")
+
     while True:
         try:
             # Check for regime changes
@@ -337,10 +433,12 @@ async def startup_event():
     await performance_tracker.initialize()
     await alert_system.initialize()
 
-    # Start background monitoring task
-    asyncio.create_task(monitoring_task())
+    # Start live monitoring task (new enhanced version)
+    asyncio.create_task(live_monitoring_task())
 
-    logger.info("Monitoring Dashboard API started successfully")
+    logger.info(
+        "Monitoring Dashboard API started successfully with live data integration"
+    )
 
 
 @app.on_event("shutdown")

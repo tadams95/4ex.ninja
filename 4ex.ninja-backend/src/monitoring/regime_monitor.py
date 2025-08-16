@@ -53,7 +53,7 @@ class RegimeMonitor:
 
         # Configuration
         self.monitoring_pairs = ["EUR/USD", "GBP/USD", "USD/JPY", "AUD/USD"]
-        self.update_interval = 300  # 5 minutes
+        self.update_interval = 30  # 30-second updates for live monitoring
         self.regime_history_key = "regime_history"
         self.current_regime_key = "current_regime"
 
@@ -69,10 +69,56 @@ class RegimeMonitor:
             "last_update": None,
         }
 
+        # Initialize live data provider
+        self.live_data_provider = None
+
     async def initialize(self):
         """Initialize the regime monitor"""
         try:
             logger.info("Initializing Regime Monitor...")
+
+            # Initialize live data provider
+            try:
+                # Import the live data provider with absolute path handling
+                import sys
+                import os
+
+                # Get the backend directory
+                current_dir = os.path.dirname(__file__)
+                backend_dir = os.path.dirname(os.path.dirname(current_dir))
+                provider_path = os.path.join(
+                    backend_dir, "src", "backtesting", "data_providers"
+                )
+
+                if provider_path not in sys.path:
+                    sys.path.insert(0, provider_path)
+
+                # Import with error handling
+                try:
+                    from oanda_provider import OandaLiveProvider  # type: ignore
+
+                    self.live_data_provider = OandaLiveProvider()
+                    await self.live_data_provider.connect()
+                    logger.info("Live data provider initialized successfully")
+                except ImportError:
+                    # Try alternative import approach
+                    backend_src = os.path.join(backend_dir, "src")
+                    if backend_src not in sys.path:
+                        sys.path.insert(0, backend_src)
+                    from backtesting.data_providers.oanda_provider import OandaLiveProvider  # type: ignore
+
+                    self.live_data_provider = OandaLiveProvider()
+                    await self.live_data_provider.connect()
+                    logger.info(
+                        "Live data provider initialized successfully (alternative import)"
+                    )
+
+            except ImportError as e:
+                logger.warning(f"Could not import live data provider: {e}")
+                self.live_data_provider = None
+            except Exception as e:
+                logger.warning(f"Failed to initialize live data provider: {e}")
+                self.live_data_provider = None
 
             # Load initial regime state
             await self._load_current_regime()
@@ -83,6 +129,106 @@ class RegimeMonitor:
         except Exception as e:
             logger.error(f"Failed to initialize Regime Monitor: {e}")
             raise
+
+    async def update_live_regime_data(self):
+        """Update regime analysis with live market data"""
+        try:
+            if not self.live_data_provider or not self.live_data_provider.is_available:
+                logger.warning("Live data provider not available, using simulation")
+                return await self._simulate_regime_analysis()
+
+            # Get live quotes for monitoring pairs
+            live_quotes = await self.live_data_provider.get_live_quotes(
+                self.monitoring_pairs
+            )
+
+            if not live_quotes:
+                logger.warning("No live quotes received, falling back to simulation")
+                return await self._simulate_regime_analysis()
+
+            # Perform regime analysis with live data
+            regime_analysis = await self._analyze_live_regime(live_quotes)
+
+            # Cache the result with live data timestamp
+            regime_analysis["last_update"] = datetime.now()
+            regime_analysis["data_source"] = "live"
+            await self._cache_regime_data(regime_analysis)
+
+            logger.info("Regime data updated with live market data")
+            return regime_analysis
+
+        except Exception as e:
+            logger.error(f"Error updating live regime data: {e}")
+            return await self._simulate_regime_analysis()
+
+    async def _analyze_live_regime(self, live_quotes: dict) -> dict:
+        """Analyze market regime using live quotes"""
+        try:
+            # Calculate basic volatility and trend indicators from live quotes
+            volatility_scores = []
+            trend_scores = []
+
+            for pair, quote in live_quotes.items():
+                # Simple volatility estimation (spread-based)
+                spread = quote["ask"] - quote["bid"]
+                volatility_score = min(
+                    spread * 10000, 10.0
+                )  # Convert to pips, cap at 10
+                volatility_scores.append(volatility_score)
+
+                # Simple trend estimation (could be enhanced with more data)
+                trend_score = 0.5  # Neutral for now, would need historical comparison
+                trend_scores.append(trend_score)
+
+            # Calculate aggregate metrics
+            avg_volatility = (
+                sum(volatility_scores) / len(volatility_scores)
+                if volatility_scores
+                else 2.0
+            )
+            avg_trend = sum(trend_scores) / len(trend_scores) if trend_scores else 0.5
+
+            # Determine regime based on volatility
+            if avg_volatility > 3.0:
+                volatility_level = "high"
+                if avg_trend > 0.6:
+                    current_regime = "trending_high_vol"
+                else:
+                    current_regime = "ranging_high_vol"
+            else:
+                volatility_level = "low"
+                if avg_trend > 0.6:
+                    current_regime = "trending_low_vol"
+                else:
+                    current_regime = "ranging_low_vol"
+
+            # Determine trend direction
+            if avg_trend > 0.6:
+                trend_direction = "bullish"
+            elif avg_trend < 0.4:
+                trend_direction = "bearish"
+            else:
+                trend_direction = "sideways"
+
+            regime_data = {
+                "current_regime": current_regime,
+                "confidence": 0.80
+                + (avg_volatility / 20.0),  # Higher confidence with live data
+                "regime_strength": avg_trend,
+                "time_in_regime": int(
+                    (datetime.now() - self.regime_start_time).total_seconds() / 60
+                ),
+                "last_change": self.regime_start_time,
+                "volatility_level": volatility_level,
+                "trend_direction": trend_direction,
+                "live_quotes_count": len(live_quotes),
+            }
+
+            return regime_data
+
+        except Exception as e:
+            logger.error(f"Error analyzing live regime: {e}")
+            return await self._get_default_regime_data()
 
     async def health_check(self) -> Dict[str, Any]:
         """Check the health of the regime monitor"""
@@ -248,8 +394,12 @@ class RegimeMonitor:
     async def check_for_regime_change(self) -> Optional[Dict[str, Any]]:
         """Check if there has been a regime change"""
         try:
-            # Simulate regime detection (replace with actual analysis later)
-            current_analysis = await self._simulate_regime_analysis()
+            # Use live data if available, otherwise fall back to simulation
+            if self.live_data_provider and self.live_data_provider.is_available:
+                current_analysis = await self.update_live_regime_data()
+            else:
+                current_analysis = await self._simulate_regime_analysis()
+
             current_regime = current_analysis["current_regime"]
 
             # Check if regime has changed
@@ -261,6 +411,7 @@ class RegimeMonitor:
                     "timestamp": datetime.now().isoformat(),
                     "strength": current_analysis["regime_strength"],
                     "volatility_level": current_analysis["volatility_level"],
+                    "data_source": current_analysis.get("data_source", "simulation"),
                 }
 
                 # Store regime change
@@ -271,7 +422,7 @@ class RegimeMonitor:
                 self.regime_start_time = datetime.now()
 
                 logger.info(
-                    f"Regime change detected: {regime_change['old_regime']} -> {current_regime}"
+                    f"Regime change detected: {regime_change['old_regime']} -> {current_regime} (source: {regime_change['data_source']})"
                 )
                 return regime_change
 
