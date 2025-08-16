@@ -12,11 +12,21 @@ from datetime import datetime
 # Add the project directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-from monitoring.dashboard_api import (
-    _convert_to_csv,
-    _convert_performance_to_csv,
-    _regime_to_numeric,
-)
+# Import the functions directly from the module
+try:
+    from src.monitoring.dashboard_api import (
+        _convert_to_csv,
+        _convert_performance_to_csv,
+        _regime_to_numeric,
+    )
+except ImportError:
+    # Alternative import method
+    sys.path.insert(0, os.path.dirname(__file__))
+    from src.monitoring.dashboard_api import (
+        _convert_to_csv,
+        _convert_performance_to_csv,
+        _regime_to_numeric,
+    )
 
 
 async def test_csv_conversion():

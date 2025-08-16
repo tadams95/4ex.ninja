@@ -6,7 +6,9 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { ExportControls } from '../../components/ExportControls';
 import { PerformanceByRegime } from '../../components/PerformanceByRegime';
+import { RegimeChart } from '../../components/RegimeChart';
 import { RegimeMonitor } from '../../components/RegimeMonitor';
 import { StrategyHealthPanel } from '../../components/StrategyHealthPanel';
 import { Button } from '../../components/ui/Button';
@@ -109,7 +111,7 @@ function ClientSideDashboard() {
         )}
         {error && (
           <Card variant="outlined" padding="md" className="mb-6 border-red-500/30 bg-red-900/10">
-            <div className="flex items-center">
+            <div className="flex items-center p-2">
               <div className="w-4 h-4 bg-red-500 rounded-full mr-3 animate-pulse"></div>
               <div>
                 <h3 className="text-sm font-medium text-red-400">Connection Error</h3>
@@ -120,57 +122,113 @@ function ClientSideDashboard() {
               </div>
             </div>
           </Card>
-        )}{' '}
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Regime Monitor */}
-          <div className="lg:col-span-1">
-            <RegimeMonitor regimeStatus={regimeStatus} loading={loading} lastUpdate={lastUpdate} />
-          </div>
+        )}
 
-          {/* Middle Column - Performance */}
-          <div className="lg:col-span-1">
-            <PerformanceByRegime performanceSummary={performanceSummary} loading={loading} />
-          </div>
+        {/* Live Data Indicator & Export Controls */}
+        <div className="mb-8 p-5 bg-neutral-800 rounded-lg border border-neutral-700 shadow-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                <span className="text-green-400 font-medium text-sm">Live Market Data</span>
+              </div>
+              <div className="text-neutral-400 text-sm">OANDA Demo API • Updates every 30s</div>
+            </div>
 
-          {/* Right Column - Health & Alerts */}
-          <div className="lg:col-span-1">
-            <StrategyHealthPanel
-              strategyHealth={strategyHealth}
-              alerts={alerts}
-              loading={loading}
-              onAcknowledgeAlert={acknowledgeAlert}
-            />
+            {/* Export Controls */}
+            <ExportControls className="ml-4" />
           </div>
         </div>
-        {/* Status Bar */}
-        <div className="mt-8 p-4 bg-neutral-800 rounded-lg border border-neutral-700">
+
+        {/* Dashboard Grid - Main Monitoring Panels */}
+        <div className="mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column - Regime Monitor */}
+            <div className="lg:col-span-1">
+              <RegimeMonitor
+                regimeStatus={regimeStatus}
+                loading={loading}
+                lastUpdate={lastUpdate}
+              />
+            </div>
+
+            {/* Middle Column - Performance */}
+            <div className="lg:col-span-1">
+              <PerformanceByRegime performanceSummary={performanceSummary} loading={loading} />
+            </div>
+
+            {/* Right Column - Health & Alerts */}
+            <div className="lg:col-span-1">
+              <StrategyHealthPanel
+                strategyHealth={strategyHealth}
+                alerts={alerts}
+                loading={loading}
+                onAcknowledgeAlert={acknowledgeAlert}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Chart Section - Visual Analytics */}
+        <div className="mb-8">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-white mb-2">Market Regime Analytics</h2>
+            <p className="text-sm text-neutral-400">
+              Historical regime patterns and timeline visualization
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div className="bg-neutral-800 rounded-lg border border-neutral-700 p-6 shadow-lg">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-white mb-2">24-Hour Regime Timeline</h3>
+                <p className="text-sm text-neutral-400">
+                  Recent regime transitions and market dynamics
+                </p>
+              </div>
+              <RegimeChart timeframe="24h" />
+            </div>
+
+            <div className="bg-neutral-800 rounded-lg border border-neutral-700 p-6 shadow-lg">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-white mb-2">Weekly Regime Overview</h3>
+                <p className="text-sm text-neutral-400">
+                  Broader market regime patterns and trends
+                </p>
+              </div>
+              <RegimeChart timeframe="7d" />
+            </div>
+          </div>
+        </div>
+
+        {/* Status Bar - System Information */}
+        <div className="mt-6 p-5 bg-neutral-800 rounded-lg border border-neutral-700 shadow-lg">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center space-x-6">
               <div className="flex items-center">
                 <div
-                  className={`w-2 h-2 rounded-full mr-2 ${!error ? 'bg-green-500' : 'bg-red-500'}`}
+                  className={`w-2 h-2 rounded-full mr-3 ${!error ? 'bg-green-500' : 'bg-red-500'}`}
                 ></div>
-                <span className="text-neutral-400">
+                <span className="text-neutral-400 font-medium">
                   API Status: {!error ? 'Connected' : 'Disconnected'}
                 </span>
               </div>
               <div className="flex items-center">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
                 <span className="text-neutral-400">
                   Last Update: {lastUpdate.toLocaleTimeString()}
                 </span>
               </div>
               {alerts.filter((alert: any) => !alert.acknowledged).length > 0 && (
                 <div className="flex items-center">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2 animate-pulse"></div>
-                  <span className="text-yellow-400">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full mr-3 animate-pulse"></div>
+                  <span className="text-yellow-400 font-medium">
                     {alerts.filter((alert: any) => !alert.acknowledged).length} unread alerts
                   </span>
                 </div>
               )}
             </div>
-            <div className="text-neutral-500">4ex.ninja Phase 2 Monitoring v2.0</div>
+            <div className="text-neutral-500 font-medium">4ex.ninja Phase 2 Monitoring v2.0</div>
           </div>
         </div>
       </div>

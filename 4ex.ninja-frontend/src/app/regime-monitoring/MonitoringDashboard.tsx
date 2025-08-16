@@ -4,7 +4,9 @@
 
 'use client';
 
+import { ExportControls } from '../../components/ExportControls';
 import { PerformanceByRegime } from '../../components/PerformanceByRegime';
+import { RegimeChart } from '../../components/RegimeChart';
 import { RegimeMonitor } from '../../components/RegimeMonitor';
 import { StrategyHealthPanel } from '../../components/StrategyHealthPanel';
 import { Button } from '../../components/ui/Button';
@@ -90,8 +92,24 @@ export default function MonitoringDashboard() {
           </Card>
         )}
 
+        {/* Live Data Indicator & Export Controls */}
+        <div className="mb-6 p-4 bg-neutral-800 rounded-lg border border-neutral-700">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                <span className="text-green-400 font-medium">Live Market Data</span>
+              </div>
+              <div className="text-neutral-400 text-sm">OANDA Demo API • Updates every 30s</div>
+            </div>
+
+            {/* Export Controls */}
+            <ExportControls className="ml-4" />
+          </div>
+        </div>
+
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {/* Left Column - Regime Monitor */}
           <div className="lg:col-span-1">
             <RegimeMonitor regimeStatus={regimeStatus} loading={loading} lastUpdate={lastUpdate} />
@@ -110,6 +128,19 @@ export default function MonitoringDashboard() {
               loading={loading}
               onAcknowledgeAlert={acknowledgeAlert}
             />
+          </div>
+        </div>
+
+        {/* Chart Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="bg-neutral-800 rounded-lg border border-neutral-700 p-6">
+            <h3 className="text-lg font-semibold text-white mb-4">24-Hour Regime Timeline</h3>
+            <RegimeChart timeframe="24h" />
+          </div>
+
+          <div className="bg-neutral-800 rounded-lg border border-neutral-700 p-6">
+            <h3 className="text-lg font-semibold text-white mb-4">Weekly Regime Overview</h3>
+            <RegimeChart timeframe="7d" />
           </div>
         </div>
 
