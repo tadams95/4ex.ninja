@@ -199,12 +199,36 @@ class PositionManager:
                 stop_loss=signal.stop_loss,
             )
 
-            if not trade_response or "orderFillTransaction" not in trade_response:
+            if not trade_response:
                 print(f"Failed to execute trade for {signal.pair}")
                 return None
 
+            # Handle different response types from OANDA API
+            response_dict = None
+            try:
+                if isinstance(trade_response, dict):
+                    response_dict = trade_response
+                elif hasattr(trade_response, "__iter__"):
+                    # Try to convert generator/iterator to dict
+                    response_dict = dict(trade_response)
+                else:
+                    print(
+                        f"Unexpected response type for {signal.pair}: {type(trade_response)}"
+                    )
+                    return None
+            except Exception as e:
+                print(f"Failed to process trade response for {signal.pair}: {e}")
+                return None
+
+            if not response_dict or "orderFillTransaction" not in response_dict:
+                print(f"No orderFillTransaction in response for {signal.pair}")
+                print(
+                    f"Response keys: {list(response_dict.keys()) if response_dict else 'None'}"
+                )
+                return None
+
             # Extract trade info from response
-            fill_transaction = trade_response["orderFillTransaction"]
+            fill_transaction = response_dict["orderFillTransaction"]
             trade_id = fill_transaction["id"]
 
             # Create position object
@@ -258,10 +282,31 @@ class PositionManager:
             # Close trade with OANDA
             close_response = self.api.close_trade(position_id)
 
-            if close_response and "orderFillTransaction" in close_response:
+            if not close_response:
+                print(f"Failed to close position {position_id}")
+                return False
+
+            # Handle different response types from OANDA API
+            response_dict = None
+            try:
+                if isinstance(close_response, dict):
+                    response_dict = close_response
+                elif hasattr(close_response, "__iter__"):
+                    # Try to convert generator/iterator to dict
+                    response_dict = dict(close_response)
+                else:
+                    print(
+                        f"Unexpected close response type for {position_id}: {type(close_response)}"
+                    )
+                    return False
+            except Exception as e:
+                print(f"Failed to process close response for {position_id}: {e}")
+                return False
+
+            if response_dict and "orderFillTransaction" in response_dict:
                 # Update position status
                 position.status = PositionStatus.CLOSED
-                fill_transaction = close_response["orderFillTransaction"]
+                fill_transaction = response_dict["orderFillTransaction"]
                 position.current_price = float(fill_transaction["price"])
 
                 print(
@@ -269,7 +314,11 @@ class PositionManager:
                 )
                 return True
             else:
-                print(f"Failed to close position {position_id}")
+                print(
+                    f"Failed to close position {position_id} - no orderFillTransaction"
+                )
+                if response_dict:
+                    print(f"Response keys: {list(response_dict.keys())}")
                 return False
 
         except Exception as e:
@@ -280,7 +329,33 @@ class PositionManager:
         """Update all open positions with current market prices."""
         try:
             # Get all open trades from OANDA
-            open_trades = self.api.get_open_trades()
+            open_trades_response = self.api.get_open_trades()
+
+            if not open_trades_response:
+                return
+
+            # Handle response type
+            open_trades = None
+            try:
+                if isinstance(open_trades_response, list):
+                    open_trades = open_trades_response
+                elif (
+                    isinstance(open_trades_response, dict)
+                    and "trades" in open_trades_response
+                ):
+                    open_trades = open_trades_response["trades"]
+                elif hasattr(open_trades_response, "__iter__"):
+                    # Try to convert generator/iterator
+                    response_dict = dict(open_trades_response)
+                    open_trades = response_dict.get("trades", [])
+                else:
+                    print(
+                        f"Unexpected open trades response type: {type(open_trades_response)}"
+                    )
+                    return
+            except Exception as e:
+                print(f"Failed to process open trades response: {e}")
+                return
 
             if not open_trades:
                 return
