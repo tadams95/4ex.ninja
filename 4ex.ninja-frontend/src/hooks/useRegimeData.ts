@@ -3,24 +3,34 @@
  * Connects to the Phase 2 monitoring API
  */
 import { useCallback, useEffect, useState } from 'react';
+import { getRecommendedApiBaseUrl } from '../utils/monitoringHealthCheck';
 
 // Dynamic API URL configuration for different environments
-const getApiBaseUrl = () => {
+const getApiBaseUrl = async () => {
   // Use environment variable if set
   if (process.env.NEXT_PUBLIC_MONITORING_API_URL) {
     return process.env.NEXT_PUBLIC_MONITORING_API_URL;
   }
   
-  // For production deployments, try HTTPS first, fallback to HTTP
+  // Try to get the best endpoint from health check
+  const recommendedUrl = await getRecommendedApiBaseUrl();
+  if (recommendedUrl) {
+    console.log(`[RegimeData] Using recommended endpoint: ${recommendedUrl}`);
+    return recommendedUrl;
+  }
+  
+  // Fallback logic based on current environment
   if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
-    return 'https://157.230.58.248:8081';
+    // In production HTTPS, try HTTP first since HTTPS has SSL issues
+    return 'http://157.230.58.248:8081';
   }
   
   // Default to HTTP for development
   return 'http://157.230.58.248:8081';
 };
 
-const API_BASE_URL = getApiBaseUrl();
+// Initialize with a default, will be updated async
+let API_BASE_URL = 'http://157.230.58.248:8081';
 
 export interface RegimeStatus {
   current_regime: string;
@@ -80,6 +90,9 @@ export const useRegimeData = () => {
   const fetchData = useCallback(async () => {
     try {
       setError(null);
+      
+      // Update API base URL with the best available endpoint
+      API_BASE_URL = await getApiBaseUrl();
       console.log(`[RegimeData] Fetching data from: ${API_BASE_URL}`);
 
       // Helper function to safely parse JSON responses

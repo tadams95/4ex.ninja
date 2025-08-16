@@ -8,6 +8,7 @@
 import { PerformanceByRegime } from '../../components/PerformanceByRegime';
 import { RegimeMonitor } from '../../components/RegimeMonitor';
 import { StrategyHealthPanel } from '../../components/StrategyHealthPanel';
+import { MonitoringHealthStatus } from '../../components/MonitoringHealthStatus';
 import { useRegimeData } from '../../hooks/useRegimeData';
 
 export default function ClientSideDashboard() {
@@ -54,6 +55,11 @@ export default function ClientSideDashboard() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Monitoring Service Health Status */}
+        <div className="mb-6">
+          <MonitoringHealthStatus showDetails={true} className="bg-neutral-800 border-neutral-700" />
+        </div>
+
         {/* Debug Info for Development */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mb-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
