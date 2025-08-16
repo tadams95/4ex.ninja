@@ -32,10 +32,22 @@ interface ProvidersProps extends BaseComponentProps {}
 function ProvidersComponent({ children }: ProvidersProps) {
   // Initialize service worker for asset optimization
   useEffect(() => {
-    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
-      initializeServiceWorker().catch(error => {
-        console.error('Failed to initialize service worker:', error);
-      });
+    if (typeof window !== 'undefined') {
+      if (process.env.NODE_ENV === 'production') {
+        initializeServiceWorker().catch(error => {
+          console.error('Failed to initialize service worker:', error);
+        });
+      } else {
+        // In development, unregister any existing service workers to prevent interference
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(registrations => {
+            registrations.forEach(registration => {
+              registration.unregister();
+              console.log('[Dev] Unregistered service worker:', registration.scope);
+            });
+          });
+        }
+      }
     }
   }, []);
 

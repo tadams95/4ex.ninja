@@ -3,7 +3,7 @@
  * Handles image optimization, WebP/AVIF support, and asset caching strategies
  */
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2'; // Updated to force refresh and apply external domain fix
 const STATIC_CACHE = `static-assets-${CACHE_VERSION}`;
 const IMAGE_CACHE = `images-${CACHE_VERSION}`;
 const API_CACHE = `api-${CACHE_VERSION}`;
@@ -77,6 +77,14 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') {
     return;
   }
+
+  // Skip external domains - only handle same-origin requests
+  if (url.origin !== self.location.origin) {
+    console.log('[SW] Skipping external request:', url.href);
+    return;
+  }
+
+  console.log('[SW] Handling same-origin request:', url.pathname);
 
   // Handle different types of requests
   if (IMAGE_EXTENSIONS.test(url.pathname)) {
