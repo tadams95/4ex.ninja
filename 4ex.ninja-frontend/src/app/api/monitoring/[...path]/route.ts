@@ -7,15 +7,16 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const MONITORING_API_BASE = 'http://157.230.58.248:8081';
 
-export async function GET(request: NextRequest, { params }: { params: { path: string[] } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   try {
+    // Await the params since they're now a Promise in newer Next.js versions
+    const params = await context.params;
+
     // Reconstruct the path from the dynamic route
     const path = params.path ? params.path.join('/') : '';
     const targetUrl = `${MONITORING_API_BASE}/${path}`;
 
-    console.log(`[Monitoring Proxy] Proxying request to: ${targetUrl}`);
-
-    // Forward the request to the monitoring API
+    console.log(`[Monitoring Proxy] Proxying request to: ${targetUrl}`); // Forward the request to the monitoring API
     const response = await fetch(targetUrl, {
       method: 'GET',
       headers: {
