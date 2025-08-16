@@ -17,6 +17,10 @@ from .strategy_interface import BaseStrategy, TradeSignal, AccountInfo
 from .regime_detector import RegimeDetector, MarketRegime, RegimeDetectionResult
 from .data_infrastructure import DataInfrastructure
 from .data_quality_monitor import DataQualityMonitor, DataValidationReport, QualityIssue
+from .execution_simulator import ExecutionSimulator, ExecutionConfig
+from .position_manager import PositionManager
+from .trade_tracker import TradeTracker
+from .models import Trade, BacktestResult
 
 logger = logging.getLogger(__name__)
 
@@ -29,44 +33,6 @@ class BacktestDataset:
     quality_report: DataValidationReport
     provider_info: Dict[str, Any]
     regime_periods: Optional[Dict[MarketRegime, List[Tuple[datetime, datetime]]]] = None
-
-
-@dataclass
-class Trade:
-    """Executed trade record."""
-
-    entry_time: datetime
-    exit_time: Optional[datetime]
-    pair: str
-    direction: str
-    entry_price: float
-    exit_price: Optional[float]
-    position_size: float
-    stop_loss: float
-    take_profit: float
-    pnl: Optional[float] = None
-    pnl_pips: Optional[float] = None
-    exit_reason: Optional[str] = None  # "TP", "SL", "TIME", "MANUAL"
-    strategy_name: str = ""
-    regime: Optional[MarketRegime] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
-
-
-@dataclass
-class BacktestResult:
-    """Results from backtesting a strategy."""
-
-    trades: List[Trade]
-    strategy_name: str
-    pair: str
-    timeframe: str
-    start_date: datetime
-    end_date: datetime
-    initial_balance: float
-    final_balance: float
-    performance_metrics: Dict[str, Any] = field(default_factory=dict)
-    regime_analysis: Optional[Dict[str, Any]] = None
-    data_quality: Optional[DataValidationReport] = None
 
 
 @dataclass
@@ -230,14 +196,30 @@ class UniversalBacktestingEngine:
     """
     Strategy-agnostic backtesting engine that works with ANY strategy.
 
-    This engine integrates with existing Phase 2 infrastructure for regime
-    detection, data management, and performance analysis.
+    This engine provides universal backtesting capabilities that can work with
+    any strategy implementing the BaseStrategy interface.
     """
 
     def __init__(self):
-        """Initialize with existing infrastructure components."""
-        self.data_manager = BacktestDataManager()
+        """Initialize the universal backtesting engine."""
+        self.execution_simulator = ExecutionSimulator()
+        self.position_manager = PositionManager()
+        self.trade_tracker = TradeTracker()
         self.regime_detector = RegimeDetector()
+        self.data_infrastructure = DataInfrastructure()
+        self.data_manager = BacktestDataManager()
+
+        logger.info("UniversalBacktestingEngine initialized")
+
+    async def prepare_backtest_data(
+        self, pair: str, timeframe: str, start_date: datetime, end_date: datetime
+    ) -> BacktestDataset:
+        """
+        Prepare data for backtesting using existing infrastructure.
+        """
+        return await self.data_manager.prepare_backtest_data(
+            pair, timeframe, start_date, end_date
+        )
 
     async def run_backtest(
         self,
@@ -267,8 +249,8 @@ class UniversalBacktestingEngine:
                 f"Starting backtest for {strategy.strategy_name} on {pair} {timeframe}"
             )
 
-            # Prepare data using existing infrastructure
-            dataset = await self.data_manager.prepare_backtest_data(
+            # Prepare data using data infrastructure
+            dataset = await self.prepare_backtest_data(
                 pair, timeframe, start_date, end_date
             )
 
@@ -429,8 +411,10 @@ class UniversalBacktestingEngine:
                     metadata=signal.metadata or {},
                 )
 
-                # Simulate trade execution (simplified for swing trading)
-                executed_trade = self._simulate_trade_execution(trade, market_data)
+                # Use enhanced execution simulator
+                executed_trade = self.execution_simulator.simulate_trade_execution(
+                    trade, market_data
+                )
                 executed_trades.append(executed_trade)
 
             except Exception as e:

@@ -14,7 +14,7 @@ import json
 from pathlib import Path
 
 from .strategy_interface import BaseStrategy, TradeSignal
-from .universal_backtesting_engine import Trade
+from .models import Trade
 from .regime_detector import MarketRegime
 
 logger = logging.getLogger(__name__)
