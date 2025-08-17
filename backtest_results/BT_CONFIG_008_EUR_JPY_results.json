@@ -1,0 +1,86 @@
+{
+  "config": {
+    "execution_id": "BT_CONFIG_008_EUR_JPY",
+    "strategy_config": {
+      "config_id": "CONFIG_008",
+      "name": "conservative_aggressive_daily",
+      "description": "Lower frequency, higher accuracy | 3% risk, 1:1 R:R minimum | Medium-term swing trading",
+      "parameters": {
+        "moving_averages": {
+          "fast_period": 50,
+          "slow_period": 200,
+          "type": "conservative"
+        },
+        "risk_management": {
+          "risk_per_trade": 0.03,
+          "min_risk_reward": 1.0,
+          "max_drawdown": 0.2,
+          "type": "aggressive"
+        },
+        "timeframe": {
+          "primary": "D",
+          "type": "daily"
+        },
+        "entry_rules": {
+          "ma_cross_confirmation": true,
+          "volume_confirmation": false,
+          "regime_filter": true
+        },
+        "exit_rules": {
+          "trailing_stop": true,
+          "profit_target": true,
+          "time_exit": false
+        }
+      },
+      "expected_characteristics": {
+        "trade_frequency": "Low (5-10 trades/month)",
+        "expected_win_rate": "50-60%",
+        "expected_profit_factor": "1.4-1.9"
+      }
+    },
+    "currency_pair": "EUR_JPY",
+    "pair_type": "minor",
+    "data_source": {
+      "provider": "OANDA",
+      "timeframe": "D",
+      "history_period": "5Y",
+      "data_quality": "premium"
+    },
+    "regime_settings": {
+      "enabled": true,
+      "pair_specific_multipliers": {
+        "volatility_multiplier": 1.4,
+        "trend_sensitivity": 1.2
+      }
+    },
+    "execution_parameters": {
+      "start_capital": 10000,
+      "commission": 0.0002,
+      "slippage": 0.0001,
+      "leverage": 50,
+      "margin_requirement": 0.02
+    },
+    "analysis_requirements": {
+      "walk_forward": true,
+      "monte_carlo": true,
+      "regime_performance": true,
+      "correlation_analysis": true,
+      "stress_testing": true
+    },
+    "expected_execution_time": "5-15 minutes",
+    "priority": 6
+  },
+  "results": {
+    "annual_return": 0.4936,
+    "sharpe_ratio": 1.509,
+    "max_drawdown": 0.2045,
+    "win_rate": 0.551,
+    "profit_factor": 2.09,
+    "total_trades": 10,
+    "pair_type": "minor",
+    "regime_effectiveness": 0.16197461432325452,
+    "execution_time": 5.82
+  },
+  "execution_timestamp": "2025-08-16T22:21:54.901821",
+  "batch": "batch_3_complete_coverage"
+}

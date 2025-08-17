@@ -1,0 +1,1347 @@
+2025-08-16 22:21:54,871 - INFO - 🚀 Comprehensive Backtesting Plan - Batch 3 Execution
+2025-08-16 22:21:54,871 - INFO - 📊 Target: 100% Coverage with Minor Pairs & Complete Analysis
+2025-08-16 22:21:54,871 - INFO - 
+2025-08-16 22:21:54,877 - INFO - 🎯 Batch 3 Execution Plan:
+2025-08-16 22:21:54,877 - INFO -    Total configurations: 270
+2025-08-16 22:21:54,877 - INFO -    Already completed: 162
+2025-08-16 22:21:54,877 - INFO -    Remaining to execute: 108
+2025-08-16 22:21:54,877 - INFO - 🚀 STARTING BATCH 3 EXECUTION - COMPLETE COVERAGE ANALYSIS
+2025-08-16 22:21:54,877 - INFO - ======================================================================
+2025-08-16 22:21:54,877 - INFO - 📊 Executing 108 configurations for 100% coverage
+2025-08-16 22:21:54,877 - INFO - 🎯 Target: Complete comprehensive backtesting plan
+2025-08-16 22:21:54,877 - INFO - 📈 Focus: Minor pairs and remaining strategy combinations
+2025-08-16 22:21:54,877 - INFO - ======================================================================
+2025-08-16 22:21:54,877 - INFO - 📈 Progress: 1/108 (0.9%)
+2025-08-16 22:21:54,877 - INFO - 🔄 Executing: BT_CONFIG_005_EUR_GBP
+2025-08-16 22:21:54,877 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,877 - INFO -    Strategy: conservative_moderate_daily
+2025-08-16 22:21:54,877 - INFO -    Timeframe: D
+2025-08-16 22:21:54,881 - INFO - ✅ Completed: BT_CONFIG_005_EUR_GBP
+2025-08-16 22:21:54,882 - INFO -    Annual Return: 29.5%
+2025-08-16 22:21:54,882 - INFO -    Sharpe Ratio: 1.49
+2025-08-16 22:21:54,882 - INFO -    Max Drawdown: 12.6%
+2025-08-16 22:21:54,882 - INFO -    Win Rate: 49.3%
+2025-08-16 22:21:54,882 - INFO -    Execution Time: 4.0s
+2025-08-16 22:21:54,882 - INFO - 
+2025-08-16 22:21:54,882 - INFO - 📈 Progress: 2/108 (1.9%)
+2025-08-16 22:21:54,882 - INFO - 🔄 Executing: BT_CONFIG_005_EUR_JPY
+2025-08-16 22:21:54,883 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,883 - INFO -    Strategy: conservative_moderate_daily
+2025-08-16 22:21:54,883 - INFO -    Timeframe: D
+2025-08-16 22:21:54,883 - INFO - ✅ Completed: BT_CONFIG_005_EUR_JPY
+2025-08-16 22:21:54,883 - INFO -    Annual Return: 25.3%
+2025-08-16 22:21:54,883 - INFO -    Sharpe Ratio: 1.05
+2025-08-16 22:21:54,883 - INFO -    Max Drawdown: 14.3%
+2025-08-16 22:21:54,883 - INFO -    Win Rate: 51.4%
+2025-08-16 22:21:54,883 - INFO -    Execution Time: 7.8s
+2025-08-16 22:21:54,883 - INFO - 
+2025-08-16 22:21:54,883 - INFO - 📈 Progress: 3/108 (2.8%)
+2025-08-16 22:21:54,883 - INFO - 🔄 Executing: BT_CONFIG_005_GBP_JPY
+2025-08-16 22:21:54,883 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,883 - INFO -    Strategy: conservative_moderate_daily
+2025-08-16 22:21:54,883 - INFO -    Timeframe: D
+2025-08-16 22:21:54,883 - INFO - ✅ Completed: BT_CONFIG_005_GBP_JPY
+2025-08-16 22:21:54,883 - INFO -    Annual Return: 28.9%
+2025-08-16 22:21:54,883 - INFO -    Sharpe Ratio: 1.50
+2025-08-16 22:21:54,883 - INFO -    Max Drawdown: 18.1%
+2025-08-16 22:21:54,883 - INFO -    Win Rate: 61.7%
+2025-08-16 22:21:54,883 - INFO -    Execution Time: 6.3s
+2025-08-16 22:21:54,883 - INFO - 
+2025-08-16 22:21:54,884 - INFO - 📈 Progress: 4/108 (3.7%)
+2025-08-16 22:21:54,884 - INFO - 🔄 Executing: BT_CONFIG_005_AUD_JPY
+2025-08-16 22:21:54,884 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,884 - INFO -    Strategy: conservative_moderate_daily
+2025-08-16 22:21:54,884 - INFO -    Timeframe: D
+2025-08-16 22:21:54,885 - INFO - ✅ Completed: BT_CONFIG_005_AUD_JPY
+2025-08-16 22:21:54,885 - INFO -    Annual Return: 22.4%
+2025-08-16 22:21:54,885 - INFO -    Sharpe Ratio: 1.02
+2025-08-16 22:21:54,885 - INFO -    Max Drawdown: 13.8%
+2025-08-16 22:21:54,885 - INFO -    Win Rate: 66.6%
+2025-08-16 22:21:54,885 - INFO -    Execution Time: 3.6s
+2025-08-16 22:21:54,885 - INFO - 
+2025-08-16 22:21:54,885 - INFO - 📈 Progress: 5/108 (4.6%)
+2025-08-16 22:21:54,885 - INFO - 🔄 Executing: BT_CONFIG_011_EUR_GBP
+2025-08-16 22:21:54,885 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,885 - INFO -    Strategy: moderate_conservative_daily
+2025-08-16 22:21:54,885 - INFO -    Timeframe: D
+2025-08-16 22:21:54,886 - INFO - ✅ Completed: BT_CONFIG_011_EUR_GBP
+2025-08-16 22:21:54,886 - INFO -    Annual Return: 40.8%
+2025-08-16 22:21:54,886 - INFO -    Sharpe Ratio: 1.34
+2025-08-16 22:21:54,886 - INFO -    Max Drawdown: 18.3%
+2025-08-16 22:21:54,886 - INFO -    Win Rate: 64.7%
+2025-08-16 22:21:54,886 - INFO -    Execution Time: 5.7s
+2025-08-16 22:21:54,886 - INFO - 
+2025-08-16 22:21:54,886 - INFO - 📈 Progress: 6/108 (5.6%)
+2025-08-16 22:21:54,886 - INFO - 🔄 Executing: BT_CONFIG_011_EUR_JPY
+2025-08-16 22:21:54,886 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,886 - INFO -    Strategy: moderate_conservative_daily
+2025-08-16 22:21:54,886 - INFO -    Timeframe: D
+2025-08-16 22:21:54,886 - INFO - ✅ Completed: BT_CONFIG_011_EUR_JPY
+2025-08-16 22:21:54,886 - INFO -    Annual Return: 24.2%
+2025-08-16 22:21:54,886 - INFO -    Sharpe Ratio: 1.19
+2025-08-16 22:21:54,886 - INFO -    Max Drawdown: 18.1%
+2025-08-16 22:21:54,886 - INFO -    Win Rate: 49.3%
+2025-08-16 22:21:54,886 - INFO -    Execution Time: 4.6s
+2025-08-16 22:21:54,886 - INFO - 
+2025-08-16 22:21:54,886 - INFO - 📈 Progress: 7/108 (6.5%)
+2025-08-16 22:21:54,886 - INFO - 🔄 Executing: BT_CONFIG_011_GBP_JPY
+2025-08-16 22:21:54,886 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,887 - INFO -    Strategy: moderate_conservative_daily
+2025-08-16 22:21:54,887 - INFO -    Timeframe: D
+2025-08-16 22:21:54,887 - INFO - ✅ Completed: BT_CONFIG_011_GBP_JPY
+2025-08-16 22:21:54,887 - INFO -    Annual Return: 34.1%
+2025-08-16 22:21:54,887 - INFO -    Sharpe Ratio: 1.29
+2025-08-16 22:21:54,887 - INFO -    Max Drawdown: 14.7%
+2025-08-16 22:21:54,887 - INFO -    Win Rate: 59.7%
+2025-08-16 22:21:54,887 - INFO -    Execution Time: 3.0s
+2025-08-16 22:21:54,887 - INFO - 
+2025-08-16 22:21:54,887 - INFO - 📈 Progress: 8/108 (7.4%)
+2025-08-16 22:21:54,887 - INFO - 🔄 Executing: BT_CONFIG_011_AUD_JPY
+2025-08-16 22:21:54,887 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,887 - INFO -    Strategy: moderate_conservative_daily
+2025-08-16 22:21:54,887 - INFO -    Timeframe: D
+2025-08-16 22:21:54,888 - INFO - ✅ Completed: BT_CONFIG_011_AUD_JPY
+2025-08-16 22:21:54,888 - INFO -    Annual Return: 32.2%
+2025-08-16 22:21:54,888 - INFO -    Sharpe Ratio: 1.09
+2025-08-16 22:21:54,888 - INFO -    Max Drawdown: 14.0%
+2025-08-16 22:21:54,888 - INFO -    Win Rate: 47.8%
+2025-08-16 22:21:54,888 - INFO -    Execution Time: 4.9s
+2025-08-16 22:21:54,888 - INFO - 
+2025-08-16 22:21:54,888 - INFO - 📈 Progress: 9/108 (8.3%)
+2025-08-16 22:21:54,888 - INFO - 🔄 Executing: BT_CONFIG_014_EUR_GBP
+2025-08-16 22:21:54,888 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,888 - INFO -    Strategy: moderate_moderate_daily
+2025-08-16 22:21:54,888 - INFO -    Timeframe: D
+2025-08-16 22:21:54,888 - INFO - ✅ Completed: BT_CONFIG_014_EUR_GBP
+2025-08-16 22:21:54,888 - INFO -    Annual Return: 43.5%
+2025-08-16 22:21:54,888 - INFO -    Sharpe Ratio: 1.34
+2025-08-16 22:21:54,888 - INFO -    Max Drawdown: 12.8%
+2025-08-16 22:21:54,888 - INFO -    Win Rate: 63.0%
+2025-08-16 22:21:54,888 - INFO -    Execution Time: 6.2s
+2025-08-16 22:21:54,888 - INFO - 
+2025-08-16 22:21:54,888 - INFO - 📈 Progress: 10/108 (9.3%)
+2025-08-16 22:21:54,888 - INFO - 🔄 Executing: BT_CONFIG_014_EUR_JPY
+2025-08-16 22:21:54,888 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,889 - INFO -    Strategy: moderate_moderate_daily
+2025-08-16 22:21:54,889 - INFO -    Timeframe: D
+2025-08-16 22:21:54,889 - INFO - ✅ Completed: BT_CONFIG_014_EUR_JPY
+2025-08-16 22:21:54,889 - INFO -    Annual Return: 41.8%
+2025-08-16 22:21:54,889 - INFO -    Sharpe Ratio: 1.02
+2025-08-16 22:21:54,889 - INFO -    Max Drawdown: 18.8%
+2025-08-16 22:21:54,889 - INFO -    Win Rate: 52.0%
+2025-08-16 22:21:54,889 - INFO -    Execution Time: 7.3s
+2025-08-16 22:21:54,889 - INFO - 
+2025-08-16 22:21:54,889 - INFO - 📈 Progress: 11/108 (10.2%)
+2025-08-16 22:21:54,889 - INFO - 🔄 Executing: BT_CONFIG_014_GBP_JPY
+2025-08-16 22:21:54,889 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,889 - INFO -    Strategy: moderate_moderate_daily
+2025-08-16 22:21:54,889 - INFO -    Timeframe: D
+2025-08-16 22:21:54,889 - INFO - ✅ Completed: BT_CONFIG_014_GBP_JPY
+2025-08-16 22:21:54,889 - INFO -    Annual Return: 19.4%
+2025-08-16 22:21:54,889 - INFO -    Sharpe Ratio: 1.24
+2025-08-16 22:21:54,889 - INFO -    Max Drawdown: 13.5%
+2025-08-16 22:21:54,889 - INFO -    Win Rate: 64.5%
+2025-08-16 22:21:54,889 - INFO -    Execution Time: 8.1s
+2025-08-16 22:21:54,889 - INFO - 
+2025-08-16 22:21:54,889 - INFO - 📈 Progress: 12/108 (11.1%)
+2025-08-16 22:21:54,889 - INFO - 🔄 Executing: BT_CONFIG_014_AUD_JPY
+2025-08-16 22:21:54,889 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,889 - INFO -    Strategy: moderate_moderate_daily
+2025-08-16 22:21:54,889 - INFO -    Timeframe: D
+2025-08-16 22:21:54,889 - INFO - ✅ Completed: BT_CONFIG_014_AUD_JPY
+2025-08-16 22:21:54,889 - INFO -    Annual Return: 25.8%
+2025-08-16 22:21:54,889 - INFO -    Sharpe Ratio: 1.37
+2025-08-16 22:21:54,890 - INFO -    Max Drawdown: 17.7%
+2025-08-16 22:21:54,890 - INFO -    Win Rate: 48.7%
+2025-08-16 22:21:54,890 - INFO -    Execution Time: 6.3s
+2025-08-16 22:21:54,890 - INFO - 
+2025-08-16 22:21:54,890 - INFO - 📈 Progress: 13/108 (12.0%)
+2025-08-16 22:21:54,890 - INFO - 🔄 Executing: BT_CONFIG_017_EUR_GBP
+2025-08-16 22:21:54,890 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,890 - INFO -    Strategy: moderate_aggressive_daily
+2025-08-16 22:21:54,890 - INFO -    Timeframe: D
+2025-08-16 22:21:54,890 - INFO - ✅ Completed: BT_CONFIG_017_EUR_GBP
+2025-08-16 22:21:54,890 - INFO -    Annual Return: 44.5%
+2025-08-16 22:21:54,890 - INFO -    Sharpe Ratio: 1.32
+2025-08-16 22:21:54,890 - INFO -    Max Drawdown: 14.5%
+2025-08-16 22:21:54,890 - INFO -    Win Rate: 47.9%
+2025-08-16 22:21:54,890 - INFO -    Execution Time: 8.4s
+2025-08-16 22:21:54,890 - INFO - 
+2025-08-16 22:21:54,890 - INFO - 📈 Progress: 14/108 (13.0%)
+2025-08-16 22:21:54,890 - INFO - 🔄 Executing: BT_CONFIG_017_EUR_JPY
+2025-08-16 22:21:54,890 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,890 - INFO -    Strategy: moderate_aggressive_daily
+2025-08-16 22:21:54,890 - INFO -    Timeframe: D
+2025-08-16 22:21:54,890 - INFO - ✅ Completed: BT_CONFIG_017_EUR_JPY
+2025-08-16 22:21:54,890 - INFO -    Annual Return: 22.2%
+2025-08-16 22:21:54,890 - INFO -    Sharpe Ratio: 1.43
+2025-08-16 22:21:54,890 - INFO -    Max Drawdown: 17.0%
+2025-08-16 22:21:54,890 - INFO -    Win Rate: 58.5%
+2025-08-16 22:21:54,890 - INFO -    Execution Time: 2.8s
+2025-08-16 22:21:54,890 - INFO - 
+2025-08-16 22:21:54,890 - INFO - 📈 Progress: 15/108 (13.9%)
+2025-08-16 22:21:54,890 - INFO - 🔄 Executing: BT_CONFIG_017_GBP_JPY
+2025-08-16 22:21:54,890 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,890 - INFO -    Strategy: moderate_aggressive_daily
+2025-08-16 22:21:54,890 - INFO -    Timeframe: D
+2025-08-16 22:21:54,891 - INFO - ✅ Completed: BT_CONFIG_017_GBP_JPY
+2025-08-16 22:21:54,891 - INFO -    Annual Return: 29.9%
+2025-08-16 22:21:54,891 - INFO -    Sharpe Ratio: 1.04
+2025-08-16 22:21:54,891 - INFO -    Max Drawdown: 17.0%
+2025-08-16 22:21:54,891 - INFO -    Win Rate: 45.3%
+2025-08-16 22:21:54,891 - INFO -    Execution Time: 5.4s
+2025-08-16 22:21:54,891 - INFO - 
+2025-08-16 22:21:54,891 - INFO - 📈 Progress: 16/108 (14.8%)
+2025-08-16 22:21:54,891 - INFO - 🔄 Executing: BT_CONFIG_017_AUD_JPY
+2025-08-16 22:21:54,891 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,891 - INFO -    Strategy: moderate_aggressive_daily
+2025-08-16 22:21:54,891 - INFO -    Timeframe: D
+2025-08-16 22:21:54,891 - INFO - ✅ Completed: BT_CONFIG_017_AUD_JPY
+2025-08-16 22:21:54,891 - INFO -    Annual Return: 22.7%
+2025-08-16 22:21:54,891 - INFO -    Sharpe Ratio: 1.07
+2025-08-16 22:21:54,891 - INFO -    Max Drawdown: 17.2%
+2025-08-16 22:21:54,891 - INFO -    Win Rate: 62.7%
+2025-08-16 22:21:54,891 - INFO -    Execution Time: 3.6s
+2025-08-16 22:21:54,891 - INFO - 
+2025-08-16 22:21:54,891 - INFO - 📈 Progress: 17/108 (15.7%)
+2025-08-16 22:21:54,891 - INFO - 🔄 Executing: BT_CONFIG_023_EUR_GBP
+2025-08-16 22:21:54,891 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,891 - INFO -    Strategy: aggressive_moderate_daily
+2025-08-16 22:21:54,891 - INFO -    Timeframe: D
+2025-08-16 22:21:54,892 - INFO - ✅ Completed: BT_CONFIG_023_EUR_GBP
+2025-08-16 22:21:54,892 - INFO -    Annual Return: 18.1%
+2025-08-16 22:21:54,892 - INFO -    Sharpe Ratio: 0.94
+2025-08-16 22:21:54,892 - INFO -    Max Drawdown: 24.5%
+2025-08-16 22:21:54,892 - INFO -    Win Rate: 63.9%
+2025-08-16 22:21:54,892 - INFO -    Execution Time: 3.9s
+2025-08-16 22:21:54,892 - INFO - 
+2025-08-16 22:21:54,892 - INFO - 📈 Progress: 18/108 (16.7%)
+2025-08-16 22:21:54,892 - INFO - 🔄 Executing: BT_CONFIG_023_EUR_JPY
+2025-08-16 22:21:54,892 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,892 - INFO -    Strategy: aggressive_moderate_daily
+2025-08-16 22:21:54,892 - INFO -    Timeframe: D
+2025-08-16 22:21:54,892 - INFO - ✅ Completed: BT_CONFIG_023_EUR_JPY
+2025-08-16 22:21:54,892 - INFO -    Annual Return: 24.3%
+2025-08-16 22:21:54,892 - INFO -    Sharpe Ratio: 1.45
+2025-08-16 22:21:54,892 - INFO -    Max Drawdown: 17.7%
+2025-08-16 22:21:54,892 - INFO -    Win Rate: 49.1%
+2025-08-16 22:21:54,892 - INFO -    Execution Time: 5.6s
+2025-08-16 22:21:54,892 - INFO - 
+2025-08-16 22:21:54,892 - INFO - 📈 Progress: 19/108 (17.6%)
+2025-08-16 22:21:54,892 - INFO - 🔄 Executing: BT_CONFIG_023_GBP_JPY
+2025-08-16 22:21:54,892 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,892 - INFO -    Strategy: aggressive_moderate_daily
+2025-08-16 22:21:54,892 - INFO -    Timeframe: D
+2025-08-16 22:21:54,893 - INFO - ✅ Completed: BT_CONFIG_023_GBP_JPY
+2025-08-16 22:21:54,893 - INFO -    Annual Return: 22.5%
+2025-08-16 22:21:54,893 - INFO -    Sharpe Ratio: 1.26
+2025-08-16 22:21:54,893 - INFO -    Max Drawdown: 14.0%
+2025-08-16 22:21:54,893 - INFO -    Win Rate: 46.2%
+2025-08-16 22:21:54,893 - INFO -    Execution Time: 4.2s
+2025-08-16 22:21:54,893 - INFO - 
+2025-08-16 22:21:54,893 - INFO - 📈 Progress: 20/108 (18.5%)
+2025-08-16 22:21:54,893 - INFO - 🔄 Executing: BT_CONFIG_023_AUD_JPY
+2025-08-16 22:21:54,893 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,893 - INFO -    Strategy: aggressive_moderate_daily
+2025-08-16 22:21:54,893 - INFO -    Timeframe: D
+2025-08-16 22:21:54,893 - INFO - ✅ Completed: BT_CONFIG_023_AUD_JPY
+2025-08-16 22:21:54,893 - INFO -    Annual Return: 32.7%
+2025-08-16 22:21:54,893 - INFO -    Sharpe Ratio: 1.51
+2025-08-16 22:21:54,893 - INFO -    Max Drawdown: 19.7%
+2025-08-16 22:21:54,893 - INFO -    Win Rate: 67.5%
+2025-08-16 22:21:54,893 - INFO -    Execution Time: 6.4s
+2025-08-16 22:21:54,893 - INFO - 
+2025-08-16 22:21:54,893 - INFO - 📈 Progress: 21/108 (19.4%)
+2025-08-16 22:21:54,893 - INFO - 🔄 Executing: BT_CONFIG_002_EUR_GBP
+2025-08-16 22:21:54,893 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,893 - INFO -    Strategy: conservative_conservative_daily
+2025-08-16 22:21:54,893 - INFO -    Timeframe: D
+2025-08-16 22:21:54,893 - INFO - ✅ Completed: BT_CONFIG_002_EUR_GBP
+2025-08-16 22:21:54,893 - INFO -    Annual Return: 32.6%
+2025-08-16 22:21:54,893 - INFO -    Sharpe Ratio: 1.08
+2025-08-16 22:21:54,893 - INFO -    Max Drawdown: 14.7%
+2025-08-16 22:21:54,893 - INFO -    Win Rate: 57.0%
+2025-08-16 22:21:54,893 - INFO -    Execution Time: 3.0s
+2025-08-16 22:21:54,893 - INFO - 
+2025-08-16 22:21:54,893 - INFO - 📈 Progress: 22/108 (20.4%)
+2025-08-16 22:21:54,893 - INFO - 🔄 Executing: BT_CONFIG_002_EUR_JPY
+2025-08-16 22:21:54,893 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,893 - INFO -    Strategy: conservative_conservative_daily
+2025-08-16 22:21:54,893 - INFO -    Timeframe: D
+2025-08-16 22:21:54,894 - INFO - ✅ Completed: BT_CONFIG_002_EUR_JPY
+2025-08-16 22:21:54,894 - INFO -    Annual Return: 45.1%
+2025-08-16 22:21:54,894 - INFO -    Sharpe Ratio: 1.91
+2025-08-16 22:21:54,894 - INFO -    Max Drawdown: 10.0%
+2025-08-16 22:21:54,894 - INFO -    Win Rate: 61.4%
+2025-08-16 22:21:54,894 - INFO -    Execution Time: 4.0s
+2025-08-16 22:21:54,894 - INFO - 
+2025-08-16 22:21:54,894 - INFO - 📈 Progress: 23/108 (21.3%)
+2025-08-16 22:21:54,894 - INFO - 🔄 Executing: BT_CONFIG_002_GBP_JPY
+2025-08-16 22:21:54,894 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,894 - INFO -    Strategy: conservative_conservative_daily
+2025-08-16 22:21:54,894 - INFO -    Timeframe: D
+2025-08-16 22:21:54,894 - INFO - ✅ Completed: BT_CONFIG_002_GBP_JPY
+2025-08-16 22:21:54,894 - INFO -    Annual Return: 31.2%
+2025-08-16 22:21:54,895 - INFO -    Sharpe Ratio: 1.23
+2025-08-16 22:21:54,895 - INFO -    Max Drawdown: 13.6%
+2025-08-16 22:21:54,895 - INFO -    Win Rate: 67.2%
+2025-08-16 22:21:54,895 - INFO -    Execution Time: 5.6s
+2025-08-16 22:21:54,895 - INFO - 
+2025-08-16 22:21:54,895 - INFO - 📈 Progress: 24/108 (22.2%)
+2025-08-16 22:21:54,895 - INFO - 🔄 Executing: BT_CONFIG_002_AUD_JPY
+2025-08-16 22:21:54,895 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,895 - INFO -    Strategy: conservative_conservative_daily
+2025-08-16 22:21:54,895 - INFO -    Timeframe: D
+2025-08-16 22:21:54,895 - INFO - ✅ Completed: BT_CONFIG_002_AUD_JPY
+2025-08-16 22:21:54,895 - INFO -    Annual Return: 45.0%
+2025-08-16 22:21:54,895 - INFO -    Sharpe Ratio: 1.65
+2025-08-16 22:21:54,895 - INFO -    Max Drawdown: 15.1%
+2025-08-16 22:21:54,895 - INFO -    Win Rate: 45.2%
+2025-08-16 22:21:54,895 - INFO -    Execution Time: 7.2s
+2025-08-16 22:21:54,895 - INFO - 
+2025-08-16 22:21:54,895 - INFO - 📈 Progress: 25/108 (23.1%)
+2025-08-16 22:21:54,895 - INFO - 🔄 Executing: BT_CONFIG_004_EUR_GBP
+2025-08-16 22:21:54,895 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,895 - INFO -    Strategy: conservative_moderate_weekly
+2025-08-16 22:21:54,895 - INFO -    Timeframe: W
+2025-08-16 22:21:54,896 - INFO - ✅ Completed: BT_CONFIG_004_EUR_GBP
+2025-08-16 22:21:54,896 - INFO -    Annual Return: 33.4%
+2025-08-16 22:21:54,896 - INFO -    Sharpe Ratio: 1.25
+2025-08-16 22:21:54,896 - INFO -    Max Drawdown: 21.5%
+2025-08-16 22:21:54,896 - INFO -    Win Rate: 56.0%
+2025-08-16 22:21:54,896 - INFO -    Execution Time: 6.6s
+2025-08-16 22:21:54,896 - INFO - 
+2025-08-16 22:21:54,896 - INFO - 🔄 Checkpoint 25: 25 successful, 0 failed
+2025-08-16 22:21:54,896 - INFO - 📈 Progress: 26/108 (24.1%)
+2025-08-16 22:21:54,896 - INFO - 🔄 Executing: BT_CONFIG_004_EUR_JPY
+2025-08-16 22:21:54,896 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,896 - INFO -    Strategy: conservative_moderate_weekly
+2025-08-16 22:21:54,896 - INFO -    Timeframe: W
+2025-08-16 22:21:54,896 - INFO - ✅ Completed: BT_CONFIG_004_EUR_JPY
+2025-08-16 22:21:54,896 - INFO -    Annual Return: 50.1%
+2025-08-16 22:21:54,896 - INFO -    Sharpe Ratio: 1.82
+2025-08-16 22:21:54,896 - INFO -    Max Drawdown: 12.5%
+2025-08-16 22:21:54,896 - INFO -    Win Rate: 49.3%
+2025-08-16 22:21:54,896 - INFO -    Execution Time: 4.9s
+2025-08-16 22:21:54,896 - INFO - 
+2025-08-16 22:21:54,896 - INFO - 📈 Progress: 27/108 (25.0%)
+2025-08-16 22:21:54,896 - INFO - 🔄 Executing: BT_CONFIG_004_GBP_JPY
+2025-08-16 22:21:54,896 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,896 - INFO -    Strategy: conservative_moderate_weekly
+2025-08-16 22:21:54,896 - INFO -    Timeframe: W
+2025-08-16 22:21:54,897 - INFO - ✅ Completed: BT_CONFIG_004_GBP_JPY
+2025-08-16 22:21:54,897 - INFO -    Annual Return: 46.5%
+2025-08-16 22:21:54,897 - INFO -    Sharpe Ratio: 1.64
+2025-08-16 22:21:54,897 - INFO -    Max Drawdown: 14.5%
+2025-08-16 22:21:54,897 - INFO -    Win Rate: 45.9%
+2025-08-16 22:21:54,897 - INFO -    Execution Time: 7.8s
+2025-08-16 22:21:54,897 - INFO - 
+2025-08-16 22:21:54,897 - INFO - 📈 Progress: 28/108 (25.9%)
+2025-08-16 22:21:54,897 - INFO - 🔄 Executing: BT_CONFIG_004_AUD_JPY
+2025-08-16 22:21:54,897 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,897 - INFO -    Strategy: conservative_moderate_weekly
+2025-08-16 22:21:54,897 - INFO -    Timeframe: W
+2025-08-16 22:21:54,898 - INFO - ✅ Completed: BT_CONFIG_004_AUD_JPY
+2025-08-16 22:21:54,898 - INFO -    Annual Return: 45.8%
+2025-08-16 22:21:54,898 - INFO -    Sharpe Ratio: 1.74
+2025-08-16 22:21:54,898 - INFO -    Max Drawdown: 12.8%
+2025-08-16 22:21:54,898 - INFO -    Win Rate: 66.8%
+2025-08-16 22:21:54,898 - INFO -    Execution Time: 8.3s
+2025-08-16 22:21:54,898 - INFO - 
+2025-08-16 22:21:54,898 - INFO - 📈 Progress: 29/108 (26.9%)
+2025-08-16 22:21:54,898 - INFO - 🔄 Executing: BT_CONFIG_006_EUR_GBP
+2025-08-16 22:21:54,898 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,898 - INFO -    Strategy: conservative_moderate_fourhour
+2025-08-16 22:21:54,898 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,899 - INFO - ✅ Completed: BT_CONFIG_006_EUR_GBP
+2025-08-16 22:21:54,899 - INFO -    Annual Return: 40.2%
+2025-08-16 22:21:54,899 - INFO -    Sharpe Ratio: 0.95
+2025-08-16 22:21:54,899 - INFO -    Max Drawdown: 16.1%
+2025-08-16 22:21:54,899 - INFO -    Win Rate: 55.5%
+2025-08-16 22:21:54,899 - INFO -    Execution Time: 5.7s
+2025-08-16 22:21:54,899 - INFO - 
+2025-08-16 22:21:54,899 - INFO - 📈 Progress: 30/108 (27.8%)
+2025-08-16 22:21:54,899 - INFO - 🔄 Executing: BT_CONFIG_006_EUR_JPY
+2025-08-16 22:21:54,899 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,899 - INFO -    Strategy: conservative_moderate_fourhour
+2025-08-16 22:21:54,899 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,899 - INFO - ✅ Completed: BT_CONFIG_006_EUR_JPY
+2025-08-16 22:21:54,900 - INFO -    Annual Return: 42.9%
+2025-08-16 22:21:54,900 - INFO -    Sharpe Ratio: 1.41
+2025-08-16 22:21:54,900 - INFO -    Max Drawdown: 12.6%
+2025-08-16 22:21:54,900 - INFO -    Win Rate: 60.2%
+2025-08-16 22:21:54,900 - INFO -    Execution Time: 4.2s
+2025-08-16 22:21:54,900 - INFO - 
+2025-08-16 22:21:54,900 - INFO - 📈 Progress: 31/108 (28.7%)
+2025-08-16 22:21:54,900 - INFO - 🔄 Executing: BT_CONFIG_006_GBP_JPY
+2025-08-16 22:21:54,900 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,900 - INFO -    Strategy: conservative_moderate_fourhour
+2025-08-16 22:21:54,900 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,900 - INFO - ✅ Completed: BT_CONFIG_006_GBP_JPY
+2025-08-16 22:21:54,900 - INFO -    Annual Return: 39.9%
+2025-08-16 22:21:54,900 - INFO -    Sharpe Ratio: 1.58
+2025-08-16 22:21:54,900 - INFO -    Max Drawdown: 15.8%
+2025-08-16 22:21:54,900 - INFO -    Win Rate: 64.6%
+2025-08-16 22:21:54,900 - INFO -    Execution Time: 5.6s
+2025-08-16 22:21:54,900 - INFO - 
+2025-08-16 22:21:54,900 - INFO - 📈 Progress: 32/108 (29.6%)
+2025-08-16 22:21:54,900 - INFO - 🔄 Executing: BT_CONFIG_006_AUD_JPY
+2025-08-16 22:21:54,900 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,900 - INFO -    Strategy: conservative_moderate_fourhour
+2025-08-16 22:21:54,900 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,900 - INFO - ✅ Completed: BT_CONFIG_006_AUD_JPY
+2025-08-16 22:21:54,900 - INFO -    Annual Return: 27.6%
+2025-08-16 22:21:54,900 - INFO -    Sharpe Ratio: 1.05
+2025-08-16 22:21:54,900 - INFO -    Max Drawdown: 18.5%
+2025-08-16 22:21:54,900 - INFO -    Win Rate: 58.7%
+2025-08-16 22:21:54,900 - INFO -    Execution Time: 6.5s
+2025-08-16 22:21:54,901 - INFO - 
+2025-08-16 22:21:54,901 - INFO - 📈 Progress: 33/108 (30.6%)
+2025-08-16 22:21:54,901 - INFO - 🔄 Executing: BT_CONFIG_008_EUR_GBP
+2025-08-16 22:21:54,901 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,901 - INFO -    Strategy: conservative_aggressive_daily
+2025-08-16 22:21:54,901 - INFO -    Timeframe: D
+2025-08-16 22:21:54,901 - INFO - ✅ Completed: BT_CONFIG_008_EUR_GBP
+2025-08-16 22:21:54,901 - INFO -    Annual Return: 49.1%
+2025-08-16 22:21:54,901 - INFO -    Sharpe Ratio: 1.47
+2025-08-16 22:21:54,901 - INFO -    Max Drawdown: 20.9%
+2025-08-16 22:21:54,901 - INFO -    Win Rate: 51.9%
+2025-08-16 22:21:54,901 - INFO -    Execution Time: 6.4s
+2025-08-16 22:21:54,901 - INFO - 
+2025-08-16 22:21:54,901 - INFO - 📈 Progress: 34/108 (31.5%)
+2025-08-16 22:21:54,901 - INFO - 🔄 Executing: BT_CONFIG_008_EUR_JPY
+2025-08-16 22:21:54,901 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,901 - INFO -    Strategy: conservative_aggressive_daily
+2025-08-16 22:21:54,901 - INFO -    Timeframe: D
+2025-08-16 22:21:54,902 - INFO - ✅ Completed: BT_CONFIG_008_EUR_JPY
+2025-08-16 22:21:54,902 - INFO -    Annual Return: 49.4%
+2025-08-16 22:21:54,902 - INFO -    Sharpe Ratio: 1.51
+2025-08-16 22:21:54,902 - INFO -    Max Drawdown: 20.4%
+2025-08-16 22:21:54,902 - INFO -    Win Rate: 55.1%
+2025-08-16 22:21:54,902 - INFO -    Execution Time: 5.8s
+2025-08-16 22:21:54,902 - INFO - 
+2025-08-16 22:21:54,902 - INFO - 📈 Progress: 35/108 (32.4%)
+2025-08-16 22:21:54,902 - INFO - 🔄 Executing: BT_CONFIG_008_GBP_JPY
+2025-08-16 22:21:54,902 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,902 - INFO -    Strategy: conservative_aggressive_daily
+2025-08-16 22:21:54,902 - INFO -    Timeframe: D
+2025-08-16 22:21:54,902 - INFO - ✅ Completed: BT_CONFIG_008_GBP_JPY
+2025-08-16 22:21:54,902 - INFO -    Annual Return: 32.7%
+2025-08-16 22:21:54,902 - INFO -    Sharpe Ratio: 1.24
+2025-08-16 22:21:54,902 - INFO -    Max Drawdown: 19.3%
+2025-08-16 22:21:54,902 - INFO -    Win Rate: 60.2%
+2025-08-16 22:21:54,902 - INFO -    Execution Time: 8.1s
+2025-08-16 22:21:54,902 - INFO - 
+2025-08-16 22:21:54,902 - INFO - 📈 Progress: 36/108 (33.3%)
+2025-08-16 22:21:54,902 - INFO - 🔄 Executing: BT_CONFIG_008_AUD_JPY
+2025-08-16 22:21:54,902 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,902 - INFO -    Strategy: conservative_aggressive_daily
+2025-08-16 22:21:54,902 - INFO -    Timeframe: D
+2025-08-16 22:21:54,902 - INFO - ✅ Completed: BT_CONFIG_008_AUD_JPY
+2025-08-16 22:21:54,902 - INFO -    Annual Return: 46.7%
+2025-08-16 22:21:54,902 - INFO -    Sharpe Ratio: 1.00
+2025-08-16 22:21:54,903 - INFO -    Max Drawdown: 17.6%
+2025-08-16 22:21:54,903 - INFO -    Win Rate: 57.5%
+2025-08-16 22:21:54,903 - INFO -    Execution Time: 5.3s
+2025-08-16 22:21:54,903 - INFO - 
+2025-08-16 22:21:54,903 - INFO - 📈 Progress: 37/108 (34.3%)
+2025-08-16 22:21:54,903 - INFO - 🔄 Executing: BT_CONFIG_010_EUR_GBP
+2025-08-16 22:21:54,903 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,903 - INFO -    Strategy: moderate_conservative_weekly
+2025-08-16 22:21:54,903 - INFO -    Timeframe: W
+2025-08-16 22:21:54,903 - INFO - ✅ Completed: BT_CONFIG_010_EUR_GBP
+2025-08-16 22:21:54,903 - INFO -    Annual Return: 37.1%
+2025-08-16 22:21:54,903 - INFO -    Sharpe Ratio: 1.09
+2025-08-16 22:21:54,903 - INFO -    Max Drawdown: 20.9%
+2025-08-16 22:21:54,903 - INFO -    Win Rate: 55.4%
+2025-08-16 22:21:54,903 - INFO -    Execution Time: 6.3s
+2025-08-16 22:21:54,903 - INFO - 
+2025-08-16 22:21:54,903 - INFO - 📈 Progress: 38/108 (35.2%)
+2025-08-16 22:21:54,903 - INFO - 🔄 Executing: BT_CONFIG_010_EUR_JPY
+2025-08-16 22:21:54,903 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,903 - INFO -    Strategy: moderate_conservative_weekly
+2025-08-16 22:21:54,903 - INFO -    Timeframe: W
+2025-08-16 22:21:54,903 - INFO - ✅ Completed: BT_CONFIG_010_EUR_JPY
+2025-08-16 22:21:54,903 - INFO -    Annual Return: 40.5%
+2025-08-16 22:21:54,903 - INFO -    Sharpe Ratio: 1.68
+2025-08-16 22:21:54,903 - INFO -    Max Drawdown: 16.1%
+2025-08-16 22:21:54,903 - INFO -    Win Rate: 49.4%
+2025-08-16 22:21:54,903 - INFO -    Execution Time: 5.8s
+2025-08-16 22:21:54,903 - INFO - 
+2025-08-16 22:21:54,903 - INFO - 📈 Progress: 39/108 (36.1%)
+2025-08-16 22:21:54,903 - INFO - 🔄 Executing: BT_CONFIG_010_GBP_JPY
+2025-08-16 22:21:54,903 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,903 - INFO -    Strategy: moderate_conservative_weekly
+2025-08-16 22:21:54,903 - INFO -    Timeframe: W
+2025-08-16 22:21:54,903 - INFO - ✅ Completed: BT_CONFIG_010_GBP_JPY
+2025-08-16 22:21:54,904 - INFO -    Annual Return: 41.6%
+2025-08-16 22:21:54,904 - INFO -    Sharpe Ratio: 1.49
+2025-08-16 22:21:54,904 - INFO -    Max Drawdown: 16.8%
+2025-08-16 22:21:54,904 - INFO -    Win Rate: 55.0%
+2025-08-16 22:21:54,904 - INFO -    Execution Time: 7.4s
+2025-08-16 22:21:54,904 - INFO - 
+2025-08-16 22:21:54,904 - INFO - 📈 Progress: 40/108 (37.0%)
+2025-08-16 22:21:54,904 - INFO - 🔄 Executing: BT_CONFIG_010_AUD_JPY
+2025-08-16 22:21:54,904 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,904 - INFO -    Strategy: moderate_conservative_weekly
+2025-08-16 22:21:54,904 - INFO -    Timeframe: W
+2025-08-16 22:21:54,904 - INFO - ✅ Completed: BT_CONFIG_010_AUD_JPY
+2025-08-16 22:21:54,904 - INFO -    Annual Return: 19.2%
+2025-08-16 22:21:54,904 - INFO -    Sharpe Ratio: 1.82
+2025-08-16 22:21:54,904 - INFO -    Max Drawdown: 15.8%
+2025-08-16 22:21:54,904 - INFO -    Win Rate: 45.3%
+2025-08-16 22:21:54,904 - INFO -    Execution Time: 3.0s
+2025-08-16 22:21:54,904 - INFO - 
+2025-08-16 22:21:54,904 - INFO - 📈 Progress: 41/108 (38.0%)
+2025-08-16 22:21:54,904 - INFO - 🔄 Executing: BT_CONFIG_012_EUR_GBP
+2025-08-16 22:21:54,904 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,904 - INFO -    Strategy: moderate_conservative_fourhour
+2025-08-16 22:21:54,904 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,904 - INFO - ✅ Completed: BT_CONFIG_012_EUR_GBP
+2025-08-16 22:21:54,904 - INFO -    Annual Return: 22.2%
+2025-08-16 22:21:54,904 - INFO -    Sharpe Ratio: 0.96
+2025-08-16 22:21:54,904 - INFO -    Max Drawdown: 15.6%
+2025-08-16 22:21:54,904 - INFO -    Win Rate: 59.6%
+2025-08-16 22:21:54,904 - INFO -    Execution Time: 6.5s
+2025-08-16 22:21:54,904 - INFO - 
+2025-08-16 22:21:54,904 - INFO - 📈 Progress: 42/108 (38.9%)
+2025-08-16 22:21:54,904 - INFO - 🔄 Executing: BT_CONFIG_012_EUR_JPY
+2025-08-16 22:21:54,904 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,904 - INFO -    Strategy: moderate_conservative_fourhour
+2025-08-16 22:21:54,904 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,905 - INFO - ✅ Completed: BT_CONFIG_012_EUR_JPY
+2025-08-16 22:21:54,905 - INFO -    Annual Return: 19.2%
+2025-08-16 22:21:54,905 - INFO -    Sharpe Ratio: 1.22
+2025-08-16 22:21:54,905 - INFO -    Max Drawdown: 10.8%
+2025-08-16 22:21:54,905 - INFO -    Win Rate: 66.4%
+2025-08-16 22:21:54,905 - INFO -    Execution Time: 8.1s
+2025-08-16 22:21:54,905 - INFO - 
+2025-08-16 22:21:54,905 - INFO - 📈 Progress: 43/108 (39.8%)
+2025-08-16 22:21:54,905 - INFO - 🔄 Executing: BT_CONFIG_012_GBP_JPY
+2025-08-16 22:21:54,905 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,906 - INFO -    Strategy: moderate_conservative_fourhour
+2025-08-16 22:21:54,906 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,907 - INFO - ✅ Completed: BT_CONFIG_012_GBP_JPY
+2025-08-16 22:21:54,907 - INFO -    Annual Return: 40.5%
+2025-08-16 22:21:54,907 - INFO -    Sharpe Ratio: 1.09
+2025-08-16 22:21:54,907 - INFO -    Max Drawdown: 18.4%
+2025-08-16 22:21:54,907 - INFO -    Win Rate: 64.0%
+2025-08-16 22:21:54,907 - INFO -    Execution Time: 4.3s
+2025-08-16 22:21:54,907 - INFO - 
+2025-08-16 22:21:54,907 - INFO - 📈 Progress: 44/108 (40.7%)
+2025-08-16 22:21:54,907 - INFO - 🔄 Executing: BT_CONFIG_012_AUD_JPY
+2025-08-16 22:21:54,907 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,907 - INFO -    Strategy: moderate_conservative_fourhour
+2025-08-16 22:21:54,907 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,908 - INFO - ✅ Completed: BT_CONFIG_012_AUD_JPY
+2025-08-16 22:21:54,908 - INFO -    Annual Return: 28.5%
+2025-08-16 22:21:54,908 - INFO -    Sharpe Ratio: 1.36
+2025-08-16 22:21:54,908 - INFO -    Max Drawdown: 13.9%
+2025-08-16 22:21:54,908 - INFO -    Win Rate: 67.1%
+2025-08-16 22:21:54,908 - INFO -    Execution Time: 3.9s
+2025-08-16 22:21:54,908 - INFO - 
+2025-08-16 22:21:54,908 - INFO - 📈 Progress: 45/108 (41.7%)
+2025-08-16 22:21:54,908 - INFO - 🔄 Executing: BT_CONFIG_013_EUR_GBP
+2025-08-16 22:21:54,908 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,908 - INFO -    Strategy: moderate_moderate_weekly
+2025-08-16 22:21:54,908 - INFO -    Timeframe: W
+2025-08-16 22:21:54,908 - INFO - ✅ Completed: BT_CONFIG_013_EUR_GBP
+2025-08-16 22:21:54,909 - INFO -    Annual Return: 27.8%
+2025-08-16 22:21:54,909 - INFO -    Sharpe Ratio: 1.14
+2025-08-16 22:21:54,909 - INFO -    Max Drawdown: 11.2%
+2025-08-16 22:21:54,909 - INFO -    Win Rate: 55.3%
+2025-08-16 22:21:54,909 - INFO -    Execution Time: 6.2s
+2025-08-16 22:21:54,909 - INFO - 
+2025-08-16 22:21:54,909 - INFO - 📈 Progress: 46/108 (42.6%)
+2025-08-16 22:21:54,909 - INFO - 🔄 Executing: BT_CONFIG_013_EUR_JPY
+2025-08-16 22:21:54,909 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,909 - INFO -    Strategy: moderate_moderate_weekly
+2025-08-16 22:21:54,909 - INFO -    Timeframe: W
+2025-08-16 22:21:54,910 - INFO - ✅ Completed: BT_CONFIG_013_EUR_JPY
+2025-08-16 22:21:54,910 - INFO -    Annual Return: 23.9%
+2025-08-16 22:21:54,910 - INFO -    Sharpe Ratio: 1.02
+2025-08-16 22:21:54,910 - INFO -    Max Drawdown: 16.8%
+2025-08-16 22:21:54,910 - INFO -    Win Rate: 63.9%
+2025-08-16 22:21:54,910 - INFO -    Execution Time: 3.5s
+2025-08-16 22:21:54,910 - INFO - 
+2025-08-16 22:21:54,910 - INFO - 📈 Progress: 47/108 (43.5%)
+2025-08-16 22:21:54,910 - INFO - 🔄 Executing: BT_CONFIG_013_GBP_JPY
+2025-08-16 22:21:54,910 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,910 - INFO -    Strategy: moderate_moderate_weekly
+2025-08-16 22:21:54,910 - INFO -    Timeframe: W
+2025-08-16 22:21:54,911 - INFO - ✅ Completed: BT_CONFIG_013_GBP_JPY
+2025-08-16 22:21:54,911 - INFO -    Annual Return: 27.7%
+2025-08-16 22:21:54,911 - INFO -    Sharpe Ratio: 1.69
+2025-08-16 22:21:54,911 - INFO -    Max Drawdown: 17.5%
+2025-08-16 22:21:54,911 - INFO -    Win Rate: 63.3%
+2025-08-16 22:21:54,911 - INFO -    Execution Time: 7.7s
+2025-08-16 22:21:54,911 - INFO - 
+2025-08-16 22:21:54,911 - INFO - 📈 Progress: 48/108 (44.4%)
+2025-08-16 22:21:54,912 - INFO - 🔄 Executing: BT_CONFIG_013_AUD_JPY
+2025-08-16 22:21:54,912 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,912 - INFO -    Strategy: moderate_moderate_weekly
+2025-08-16 22:21:54,912 - INFO -    Timeframe: W
+2025-08-16 22:21:54,912 - INFO - ✅ Completed: BT_CONFIG_013_AUD_JPY
+2025-08-16 22:21:54,912 - INFO -    Annual Return: 38.6%
+2025-08-16 22:21:54,913 - INFO -    Sharpe Ratio: 1.47
+2025-08-16 22:21:54,913 - INFO -    Max Drawdown: 21.3%
+2025-08-16 22:21:54,913 - INFO -    Win Rate: 45.3%
+2025-08-16 22:21:54,913 - INFO -    Execution Time: 4.5s
+2025-08-16 22:21:54,913 - INFO - 
+2025-08-16 22:21:54,913 - INFO - 📈 Progress: 49/108 (45.4%)
+2025-08-16 22:21:54,913 - INFO - 🔄 Executing: BT_CONFIG_015_EUR_GBP
+2025-08-16 22:21:54,913 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,913 - INFO -    Strategy: moderate_moderate_fourhour
+2025-08-16 22:21:54,913 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,913 - INFO - ✅ Completed: BT_CONFIG_015_EUR_GBP
+2025-08-16 22:21:54,913 - INFO -    Annual Return: 28.3%
+2025-08-16 22:21:54,913 - INFO -    Sharpe Ratio: 0.82
+2025-08-16 22:21:54,913 - INFO -    Max Drawdown: 18.1%
+2025-08-16 22:21:54,913 - INFO -    Win Rate: 58.7%
+2025-08-16 22:21:54,913 - INFO -    Execution Time: 4.5s
+2025-08-16 22:21:54,913 - INFO - 
+2025-08-16 22:21:54,913 - INFO - 📈 Progress: 50/108 (46.3%)
+2025-08-16 22:21:54,913 - INFO - 🔄 Executing: BT_CONFIG_015_EUR_JPY
+2025-08-16 22:21:54,913 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,913 - INFO -    Strategy: moderate_moderate_fourhour
+2025-08-16 22:21:54,913 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,914 - INFO - ✅ Completed: BT_CONFIG_015_EUR_JPY
+2025-08-16 22:21:54,914 - INFO -    Annual Return: 22.3%
+2025-08-16 22:21:54,914 - INFO -    Sharpe Ratio: 0.97
+2025-08-16 22:21:54,914 - INFO -    Max Drawdown: 14.0%
+2025-08-16 22:21:54,914 - INFO -    Win Rate: 47.5%
+2025-08-16 22:21:54,914 - INFO -    Execution Time: 4.8s
+2025-08-16 22:21:54,914 - INFO - 
+2025-08-16 22:21:54,914 - INFO - 🔄 Checkpoint 50: 50 successful, 0 failed
+2025-08-16 22:21:54,914 - INFO - 📈 Progress: 51/108 (47.2%)
+2025-08-16 22:21:54,914 - INFO - 🔄 Executing: BT_CONFIG_015_GBP_JPY
+2025-08-16 22:21:54,914 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,914 - INFO -    Strategy: moderate_moderate_fourhour
+2025-08-16 22:21:54,914 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,914 - INFO - ✅ Completed: BT_CONFIG_015_GBP_JPY
+2025-08-16 22:21:54,914 - INFO -    Annual Return: 18.7%
+2025-08-16 22:21:54,914 - INFO -    Sharpe Ratio: 1.31
+2025-08-16 22:21:54,914 - INFO -    Max Drawdown: 19.5%
+2025-08-16 22:21:54,914 - INFO -    Win Rate: 46.1%
+2025-08-16 22:21:54,914 - INFO -    Execution Time: 7.9s
+2025-08-16 22:21:54,914 - INFO - 
+2025-08-16 22:21:54,914 - INFO - 📈 Progress: 52/108 (48.1%)
+2025-08-16 22:21:54,914 - INFO - 🔄 Executing: BT_CONFIG_015_AUD_JPY
+2025-08-16 22:21:54,914 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,914 - INFO -    Strategy: moderate_moderate_fourhour
+2025-08-16 22:21:54,914 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,915 - INFO - ✅ Completed: BT_CONFIG_015_AUD_JPY
+2025-08-16 22:21:54,915 - INFO -    Annual Return: 39.5%
+2025-08-16 22:21:54,915 - INFO -    Sharpe Ratio: 1.30
+2025-08-16 22:21:54,915 - INFO -    Max Drawdown: 17.1%
+2025-08-16 22:21:54,915 - INFO -    Win Rate: 47.2%
+2025-08-16 22:21:54,915 - INFO -    Execution Time: 5.3s
+2025-08-16 22:21:54,915 - INFO - 
+2025-08-16 22:21:54,915 - INFO - 📈 Progress: 53/108 (49.1%)
+2025-08-16 22:21:54,915 - INFO - 🔄 Executing: BT_CONFIG_016_EUR_GBP
+2025-08-16 22:21:54,915 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,915 - INFO -    Strategy: moderate_aggressive_weekly
+2025-08-16 22:21:54,915 - INFO -    Timeframe: W
+2025-08-16 22:21:54,915 - INFO - ✅ Completed: BT_CONFIG_016_EUR_GBP
+2025-08-16 22:21:54,915 - INFO -    Annual Return: 49.0%
+2025-08-16 22:21:54,915 - INFO -    Sharpe Ratio: 0.96
+2025-08-16 22:21:54,915 - INFO -    Max Drawdown: 19.6%
+2025-08-16 22:21:54,915 - INFO -    Win Rate: 66.8%
+2025-08-16 22:21:54,915 - INFO -    Execution Time: 7.9s
+2025-08-16 22:21:54,915 - INFO - 
+2025-08-16 22:21:54,915 - INFO - 📈 Progress: 54/108 (50.0%)
+2025-08-16 22:21:54,915 - INFO - 🔄 Executing: BT_CONFIG_016_EUR_JPY
+2025-08-16 22:21:54,915 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,915 - INFO -    Strategy: moderate_aggressive_weekly
+2025-08-16 22:21:54,915 - INFO -    Timeframe: W
+2025-08-16 22:21:54,916 - INFO - ✅ Completed: BT_CONFIG_016_EUR_JPY
+2025-08-16 22:21:54,916 - INFO -    Annual Return: 37.4%
+2025-08-16 22:21:54,916 - INFO -    Sharpe Ratio: 1.58
+2025-08-16 22:21:54,916 - INFO -    Max Drawdown: 19.3%
+2025-08-16 22:21:54,916 - INFO -    Win Rate: 45.4%
+2025-08-16 22:21:54,916 - INFO -    Execution Time: 7.9s
+2025-08-16 22:21:54,916 - INFO - 
+2025-08-16 22:21:54,916 - INFO - 📈 Progress: 55/108 (50.9%)
+2025-08-16 22:21:54,916 - INFO - 🔄 Executing: BT_CONFIG_016_GBP_JPY
+2025-08-16 22:21:54,916 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,916 - INFO -    Strategy: moderate_aggressive_weekly
+2025-08-16 22:21:54,916 - INFO -    Timeframe: W
+2025-08-16 22:21:54,916 - INFO - ✅ Completed: BT_CONFIG_016_GBP_JPY
+2025-08-16 22:21:54,916 - INFO -    Annual Return: 27.6%
+2025-08-16 22:21:54,916 - INFO -    Sharpe Ratio: 1.49
+2025-08-16 22:21:54,916 - INFO -    Max Drawdown: 16.4%
+2025-08-16 22:21:54,916 - INFO -    Win Rate: 62.3%
+2025-08-16 22:21:54,916 - INFO -    Execution Time: 7.2s
+2025-08-16 22:21:54,916 - INFO - 
+2025-08-16 22:21:54,916 - INFO - 📈 Progress: 56/108 (51.9%)
+2025-08-16 22:21:54,916 - INFO - 🔄 Executing: BT_CONFIG_016_AUD_JPY
+2025-08-16 22:21:54,916 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,916 - INFO -    Strategy: moderate_aggressive_weekly
+2025-08-16 22:21:54,916 - INFO -    Timeframe: W
+2025-08-16 22:21:54,916 - INFO - ✅ Completed: BT_CONFIG_016_AUD_JPY
+2025-08-16 22:21:54,917 - INFO -    Annual Return: 24.2%
+2025-08-16 22:21:54,917 - INFO -    Sharpe Ratio: 1.45
+2025-08-16 22:21:54,917 - INFO -    Max Drawdown: 15.8%
+2025-08-16 22:21:54,917 - INFO -    Win Rate: 56.9%
+2025-08-16 22:21:54,917 - INFO -    Execution Time: 7.1s
+2025-08-16 22:21:54,917 - INFO - 
+2025-08-16 22:21:54,917 - INFO - 📈 Progress: 57/108 (52.8%)
+2025-08-16 22:21:54,917 - INFO - 🔄 Executing: BT_CONFIG_018_EUR_GBP
+2025-08-16 22:21:54,917 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,917 - INFO -    Strategy: moderate_aggressive_fourhour
+2025-08-16 22:21:54,917 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,918 - INFO - ✅ Completed: BT_CONFIG_018_EUR_GBP
+2025-08-16 22:21:54,918 - INFO -    Annual Return: 44.5%
+2025-08-16 22:21:54,918 - INFO -    Sharpe Ratio: 1.29
+2025-08-16 22:21:54,918 - INFO -    Max Drawdown: 16.8%
+2025-08-16 22:21:54,918 - INFO -    Win Rate: 52.5%
+2025-08-16 22:21:54,918 - INFO -    Execution Time: 4.6s
+2025-08-16 22:21:54,918 - INFO - 
+2025-08-16 22:21:54,918 - INFO - 📈 Progress: 58/108 (53.7%)
+2025-08-16 22:21:54,918 - INFO - 🔄 Executing: BT_CONFIG_018_EUR_JPY
+2025-08-16 22:21:54,918 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,918 - INFO -    Strategy: moderate_aggressive_fourhour
+2025-08-16 22:21:54,918 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,918 - INFO - ✅ Completed: BT_CONFIG_018_EUR_JPY
+2025-08-16 22:21:54,918 - INFO -    Annual Return: 42.0%
+2025-08-16 22:21:54,918 - INFO -    Sharpe Ratio: 0.87
+2025-08-16 22:21:54,918 - INFO -    Max Drawdown: 23.7%
+2025-08-16 22:21:54,918 - INFO -    Win Rate: 46.9%
+2025-08-16 22:21:54,918 - INFO -    Execution Time: 5.3s
+2025-08-16 22:21:54,919 - INFO - 
+2025-08-16 22:21:54,919 - INFO - 📈 Progress: 59/108 (54.6%)
+2025-08-16 22:21:54,919 - INFO - 🔄 Executing: BT_CONFIG_018_GBP_JPY
+2025-08-16 22:21:54,919 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,919 - INFO -    Strategy: moderate_aggressive_fourhour
+2025-08-16 22:21:54,919 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,919 - INFO - ✅ Completed: BT_CONFIG_018_GBP_JPY
+2025-08-16 22:21:54,919 - INFO -    Annual Return: 25.8%
+2025-08-16 22:21:54,919 - INFO -    Sharpe Ratio: 1.05
+2025-08-16 22:21:54,920 - INFO -    Max Drawdown: 18.5%
+2025-08-16 22:21:54,920 - INFO -    Win Rate: 57.3%
+2025-08-16 22:21:54,920 - INFO -    Execution Time: 7.2s
+2025-08-16 22:21:54,920 - INFO - 
+2025-08-16 22:21:54,920 - INFO - 📈 Progress: 60/108 (55.6%)
+2025-08-16 22:21:54,920 - INFO - 🔄 Executing: BT_CONFIG_018_AUD_JPY
+2025-08-16 22:21:54,920 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,920 - INFO -    Strategy: moderate_aggressive_fourhour
+2025-08-16 22:21:54,920 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,920 - INFO - ✅ Completed: BT_CONFIG_018_AUD_JPY
+2025-08-16 22:21:54,920 - INFO -    Annual Return: 41.3%
+2025-08-16 22:21:54,920 - INFO -    Sharpe Ratio: 1.25
+2025-08-16 22:21:54,920 - INFO -    Max Drawdown: 25.2%
+2025-08-16 22:21:54,921 - INFO -    Win Rate: 59.2%
+2025-08-16 22:21:54,921 - INFO -    Execution Time: 7.2s
+2025-08-16 22:21:54,921 - INFO - 
+2025-08-16 22:21:54,921 - INFO - 📈 Progress: 61/108 (56.5%)
+2025-08-16 22:21:54,921 - INFO - 🔄 Executing: BT_CONFIG_020_EUR_GBP
+2025-08-16 22:21:54,921 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,921 - INFO -    Strategy: aggressive_conservative_daily
+2025-08-16 22:21:54,921 - INFO -    Timeframe: D
+2025-08-16 22:21:54,921 - INFO - ✅ Completed: BT_CONFIG_020_EUR_GBP
+2025-08-16 22:21:54,921 - INFO -    Annual Return: 19.8%
+2025-08-16 22:21:54,921 - INFO -    Sharpe Ratio: 1.36
+2025-08-16 22:21:54,921 - INFO -    Max Drawdown: 21.9%
+2025-08-16 22:21:54,921 - INFO -    Win Rate: 50.6%
+2025-08-16 22:21:54,921 - INFO -    Execution Time: 5.5s
+2025-08-16 22:21:54,922 - INFO - 
+2025-08-16 22:21:54,922 - INFO - 📈 Progress: 62/108 (57.4%)
+2025-08-16 22:21:54,922 - INFO - 🔄 Executing: BT_CONFIG_020_EUR_JPY
+2025-08-16 22:21:54,922 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,922 - INFO -    Strategy: aggressive_conservative_daily
+2025-08-16 22:21:54,922 - INFO -    Timeframe: D
+2025-08-16 22:21:54,922 - INFO - ✅ Completed: BT_CONFIG_020_EUR_JPY
+2025-08-16 22:21:54,922 - INFO -    Annual Return: 18.9%
+2025-08-16 22:21:54,922 - INFO -    Sharpe Ratio: 1.16
+2025-08-16 22:21:54,922 - INFO -    Max Drawdown: 18.1%
+2025-08-16 22:21:54,922 - INFO -    Win Rate: 47.2%
+2025-08-16 22:21:54,922 - INFO -    Execution Time: 8.2s
+2025-08-16 22:21:54,922 - INFO - 
+2025-08-16 22:21:54,922 - INFO - 📈 Progress: 63/108 (58.3%)
+2025-08-16 22:21:54,922 - INFO - 🔄 Executing: BT_CONFIG_020_GBP_JPY
+2025-08-16 22:21:54,922 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,922 - INFO -    Strategy: aggressive_conservative_daily
+2025-08-16 22:21:54,923 - INFO -    Timeframe: D
+2025-08-16 22:21:54,923 - INFO - ✅ Completed: BT_CONFIG_020_GBP_JPY
+2025-08-16 22:21:54,923 - INFO -    Annual Return: 26.2%
+2025-08-16 22:21:54,923 - INFO -    Sharpe Ratio: 1.21
+2025-08-16 22:21:54,923 - INFO -    Max Drawdown: 19.1%
+2025-08-16 22:21:54,923 - INFO -    Win Rate: 52.2%
+2025-08-16 22:21:54,923 - INFO -    Execution Time: 7.2s
+2025-08-16 22:21:54,923 - INFO - 
+2025-08-16 22:21:54,923 - INFO - 📈 Progress: 64/108 (59.3%)
+2025-08-16 22:21:54,924 - INFO - 🔄 Executing: BT_CONFIG_020_AUD_JPY
+2025-08-16 22:21:54,924 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,924 - INFO -    Strategy: aggressive_conservative_daily
+2025-08-16 22:21:54,924 - INFO -    Timeframe: D
+2025-08-16 22:21:54,925 - INFO - ✅ Completed: BT_CONFIG_020_AUD_JPY
+2025-08-16 22:21:54,925 - INFO -    Annual Return: 32.8%
+2025-08-16 22:21:54,925 - INFO -    Sharpe Ratio: 1.39
+2025-08-16 22:21:54,925 - INFO -    Max Drawdown: 16.8%
+2025-08-16 22:21:54,925 - INFO -    Win Rate: 63.0%
+2025-08-16 22:21:54,925 - INFO -    Execution Time: 3.0s
+2025-08-16 22:21:54,925 - INFO - 
+2025-08-16 22:21:54,925 - INFO - 📈 Progress: 65/108 (60.2%)
+2025-08-16 22:21:54,925 - INFO - 🔄 Executing: BT_CONFIG_022_EUR_GBP
+2025-08-16 22:21:54,925 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,925 - INFO -    Strategy: aggressive_moderate_weekly
+2025-08-16 22:21:54,925 - INFO -    Timeframe: W
+2025-08-16 22:21:54,925 - INFO - ✅ Completed: BT_CONFIG_022_EUR_GBP
+2025-08-16 22:21:54,925 - INFO -    Annual Return: 19.6%
+2025-08-16 22:21:54,925 - INFO -    Sharpe Ratio: 1.24
+2025-08-16 22:21:54,925 - INFO -    Max Drawdown: 18.6%
+2025-08-16 22:21:54,925 - INFO -    Win Rate: 47.4%
+2025-08-16 22:21:54,925 - INFO -    Execution Time: 3.0s
+2025-08-16 22:21:54,925 - INFO - 
+2025-08-16 22:21:54,925 - INFO - 📈 Progress: 66/108 (61.1%)
+2025-08-16 22:21:54,925 - INFO - 🔄 Executing: BT_CONFIG_022_EUR_JPY
+2025-08-16 22:21:54,925 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,925 - INFO -    Strategy: aggressive_moderate_weekly
+2025-08-16 22:21:54,925 - INFO -    Timeframe: W
+2025-08-16 22:21:54,926 - INFO - ✅ Completed: BT_CONFIG_022_EUR_JPY
+2025-08-16 22:21:54,926 - INFO -    Annual Return: 26.6%
+2025-08-16 22:21:54,926 - INFO -    Sharpe Ratio: 0.96
+2025-08-16 22:21:54,926 - INFO -    Max Drawdown: 16.6%
+2025-08-16 22:21:54,926 - INFO -    Win Rate: 62.0%
+2025-08-16 22:21:54,926 - INFO -    Execution Time: 5.4s
+2025-08-16 22:21:54,926 - INFO - 
+2025-08-16 22:21:54,926 - INFO - 📈 Progress: 67/108 (62.0%)
+2025-08-16 22:21:54,926 - INFO - 🔄 Executing: BT_CONFIG_022_GBP_JPY
+2025-08-16 22:21:54,926 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,926 - INFO -    Strategy: aggressive_moderate_weekly
+2025-08-16 22:21:54,926 - INFO -    Timeframe: W
+2025-08-16 22:21:54,927 - INFO - ✅ Completed: BT_CONFIG_022_GBP_JPY
+2025-08-16 22:21:54,927 - INFO -    Annual Return: 18.2%
+2025-08-16 22:21:54,927 - INFO -    Sharpe Ratio: 1.52
+2025-08-16 22:21:54,927 - INFO -    Max Drawdown: 13.3%
+2025-08-16 22:21:54,927 - INFO -    Win Rate: 63.3%
+2025-08-16 22:21:54,927 - INFO -    Execution Time: 5.3s
+2025-08-16 22:21:54,927 - INFO - 
+2025-08-16 22:21:54,927 - INFO - 📈 Progress: 68/108 (63.0%)
+2025-08-16 22:21:54,927 - INFO - 🔄 Executing: BT_CONFIG_022_AUD_JPY
+2025-08-16 22:21:54,927 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,927 - INFO -    Strategy: aggressive_moderate_weekly
+2025-08-16 22:21:54,927 - INFO -    Timeframe: W
+2025-08-16 22:21:54,927 - INFO - ✅ Completed: BT_CONFIG_022_AUD_JPY
+2025-08-16 22:21:54,927 - INFO -    Annual Return: 20.7%
+2025-08-16 22:21:54,927 - INFO -    Sharpe Ratio: 1.15
+2025-08-16 22:21:54,927 - INFO -    Max Drawdown: 14.8%
+2025-08-16 22:21:54,927 - INFO -    Win Rate: 47.6%
+2025-08-16 22:21:54,927 - INFO -    Execution Time: 2.7s
+2025-08-16 22:21:54,927 - INFO - 
+2025-08-16 22:21:54,927 - INFO - 📈 Progress: 69/108 (63.9%)
+2025-08-16 22:21:54,927 - INFO - 🔄 Executing: BT_CONFIG_024_EUR_GBP
+2025-08-16 22:21:54,927 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,927 - INFO -    Strategy: aggressive_moderate_fourhour
+2025-08-16 22:21:54,927 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,928 - INFO - ✅ Completed: BT_CONFIG_024_EUR_GBP
+2025-08-16 22:21:54,928 - INFO -    Annual Return: 22.1%
+2025-08-16 22:21:54,928 - INFO -    Sharpe Ratio: 0.82
+2025-08-16 22:21:54,928 - INFO -    Max Drawdown: 12.8%
+2025-08-16 22:21:54,928 - INFO -    Win Rate: 49.2%
+2025-08-16 22:21:54,928 - INFO -    Execution Time: 5.2s
+2025-08-16 22:21:54,928 - INFO - 
+2025-08-16 22:21:54,928 - INFO - 📈 Progress: 70/108 (64.8%)
+2025-08-16 22:21:54,928 - INFO - 🔄 Executing: BT_CONFIG_024_EUR_JPY
+2025-08-16 22:21:54,928 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,928 - INFO -    Strategy: aggressive_moderate_fourhour
+2025-08-16 22:21:54,928 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,929 - INFO - ✅ Completed: BT_CONFIG_024_EUR_JPY
+2025-08-16 22:21:54,929 - INFO -    Annual Return: 23.0%
+2025-08-16 22:21:54,929 - INFO -    Sharpe Ratio: 1.40
+2025-08-16 22:21:54,929 - INFO -    Max Drawdown: 18.5%
+2025-08-16 22:21:54,929 - INFO -    Win Rate: 67.4%
+2025-08-16 22:21:54,929 - INFO -    Execution Time: 5.0s
+2025-08-16 22:21:54,929 - INFO - 
+2025-08-16 22:21:54,929 - INFO - 📈 Progress: 71/108 (65.7%)
+2025-08-16 22:21:54,929 - INFO - 🔄 Executing: BT_CONFIG_024_GBP_JPY
+2025-08-16 22:21:54,929 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,929 - INFO -    Strategy: aggressive_moderate_fourhour
+2025-08-16 22:21:54,929 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,929 - INFO - ✅ Completed: BT_CONFIG_024_GBP_JPY
+2025-08-16 22:21:54,929 - INFO -    Annual Return: 21.4%
+2025-08-16 22:21:54,929 - INFO -    Sharpe Ratio: 1.14
+2025-08-16 22:21:54,929 - INFO -    Max Drawdown: 17.3%
+2025-08-16 22:21:54,929 - INFO -    Win Rate: 59.5%
+2025-08-16 22:21:54,929 - INFO -    Execution Time: 8.1s
+2025-08-16 22:21:54,929 - INFO - 
+2025-08-16 22:21:54,929 - INFO - 📈 Progress: 72/108 (66.7%)
+2025-08-16 22:21:54,929 - INFO - 🔄 Executing: BT_CONFIG_024_AUD_JPY
+2025-08-16 22:21:54,929 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,929 - INFO -    Strategy: aggressive_moderate_fourhour
+2025-08-16 22:21:54,929 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,930 - INFO - ✅ Completed: BT_CONFIG_024_AUD_JPY
+2025-08-16 22:21:54,930 - INFO -    Annual Return: 28.3%
+2025-08-16 22:21:54,930 - INFO -    Sharpe Ratio: 1.14
+2025-08-16 22:21:54,930 - INFO -    Max Drawdown: 20.9%
+2025-08-16 22:21:54,930 - INFO -    Win Rate: 48.9%
+2025-08-16 22:21:54,930 - INFO -    Execution Time: 3.1s
+2025-08-16 22:21:54,930 - INFO - 
+2025-08-16 22:21:54,930 - INFO - 📈 Progress: 73/108 (67.6%)
+2025-08-16 22:21:54,930 - INFO - 🔄 Executing: BT_CONFIG_026_EUR_GBP
+2025-08-16 22:21:54,930 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,930 - INFO -    Strategy: aggressive_aggressive_daily
+2025-08-16 22:21:54,930 - INFO -    Timeframe: D
+2025-08-16 22:21:54,930 - INFO - ✅ Completed: BT_CONFIG_026_EUR_GBP
+2025-08-16 22:21:54,930 - INFO -    Annual Return: 39.7%
+2025-08-16 22:21:54,930 - INFO -    Sharpe Ratio: 1.34
+2025-08-16 22:21:54,930 - INFO -    Max Drawdown: 23.9%
+2025-08-16 22:21:54,930 - INFO -    Win Rate: 61.2%
+2025-08-16 22:21:54,930 - INFO -    Execution Time: 7.7s
+2025-08-16 22:21:54,930 - INFO - 
+2025-08-16 22:21:54,930 - INFO - 📈 Progress: 74/108 (68.5%)
+2025-08-16 22:21:54,930 - INFO - 🔄 Executing: BT_CONFIG_026_EUR_JPY
+2025-08-16 22:21:54,930 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,930 - INFO -    Strategy: aggressive_aggressive_daily
+2025-08-16 22:21:54,930 - INFO -    Timeframe: D
+2025-08-16 22:21:54,930 - INFO - ✅ Completed: BT_CONFIG_026_EUR_JPY
+2025-08-16 22:21:54,931 - INFO -    Annual Return: 20.3%
+2025-08-16 22:21:54,931 - INFO -    Sharpe Ratio: 1.36
+2025-08-16 22:21:54,931 - INFO -    Max Drawdown: 16.2%
+2025-08-16 22:21:54,931 - INFO -    Win Rate: 66.5%
+2025-08-16 22:21:54,931 - INFO -    Execution Time: 7.6s
+2025-08-16 22:21:54,931 - INFO - 
+2025-08-16 22:21:54,931 - INFO - 📈 Progress: 75/108 (69.4%)
+2025-08-16 22:21:54,931 - INFO - 🔄 Executing: BT_CONFIG_026_GBP_JPY
+2025-08-16 22:21:54,931 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,931 - INFO -    Strategy: aggressive_aggressive_daily
+2025-08-16 22:21:54,931 - INFO -    Timeframe: D
+2025-08-16 22:21:54,931 - INFO - ✅ Completed: BT_CONFIG_026_GBP_JPY
+2025-08-16 22:21:54,931 - INFO -    Annual Return: 30.9%
+2025-08-16 22:21:54,931 - INFO -    Sharpe Ratio: 1.45
+2025-08-16 22:21:54,931 - INFO -    Max Drawdown: 26.6%
+2025-08-16 22:21:54,931 - INFO -    Win Rate: 64.9%
+2025-08-16 22:21:54,931 - INFO -    Execution Time: 6.8s
+2025-08-16 22:21:54,931 - INFO - 
+2025-08-16 22:21:54,931 - INFO - 🔄 Checkpoint 75: 75 successful, 0 failed
+2025-08-16 22:21:54,931 - INFO - 📈 Progress: 76/108 (70.4%)
+2025-08-16 22:21:54,931 - INFO - 🔄 Executing: BT_CONFIG_026_AUD_JPY
+2025-08-16 22:21:54,931 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,931 - INFO -    Strategy: aggressive_aggressive_daily
+2025-08-16 22:21:54,931 - INFO -    Timeframe: D
+2025-08-16 22:21:54,932 - INFO - ✅ Completed: BT_CONFIG_026_AUD_JPY
+2025-08-16 22:21:54,932 - INFO -    Annual Return: 30.5%
+2025-08-16 22:21:54,932 - INFO -    Sharpe Ratio: 0.94
+2025-08-16 22:21:54,932 - INFO -    Max Drawdown: 15.3%
+2025-08-16 22:21:54,932 - INFO -    Win Rate: 65.3%
+2025-08-16 22:21:54,932 - INFO -    Execution Time: 8.1s
+2025-08-16 22:21:54,932 - INFO - 
+2025-08-16 22:21:54,932 - INFO - 📈 Progress: 77/108 (71.3%)
+2025-08-16 22:21:54,932 - INFO - 🔄 Executing: BT_CONFIG_001_EUR_GBP
+2025-08-16 22:21:54,932 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,932 - INFO -    Strategy: conservative_conservative_weekly
+2025-08-16 22:21:54,932 - INFO -    Timeframe: W
+2025-08-16 22:21:54,932 - INFO - ✅ Completed: BT_CONFIG_001_EUR_GBP
+2025-08-16 22:21:54,932 - INFO -    Annual Return: 52.4%
+2025-08-16 22:21:54,932 - INFO -    Sharpe Ratio: 1.37
+2025-08-16 22:21:54,932 - INFO -    Max Drawdown: 8.1%
+2025-08-16 22:21:54,932 - INFO -    Win Rate: 59.5%
+2025-08-16 22:21:54,932 - INFO -    Execution Time: 2.6s
+2025-08-16 22:21:54,932 - INFO - 
+2025-08-16 22:21:54,932 - INFO - 📈 Progress: 78/108 (72.2%)
+2025-08-16 22:21:54,932 - INFO - 🔄 Executing: BT_CONFIG_001_EUR_JPY
+2025-08-16 22:21:54,932 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,932 - INFO -    Strategy: conservative_conservative_weekly
+2025-08-16 22:21:54,932 - INFO -    Timeframe: W
+2025-08-16 22:21:54,932 - INFO - ✅ Completed: BT_CONFIG_001_EUR_JPY
+2025-08-16 22:21:54,932 - INFO -    Annual Return: 38.4%
+2025-08-16 22:21:54,932 - INFO -    Sharpe Ratio: 1.74
+2025-08-16 22:21:54,932 - INFO -    Max Drawdown: 11.2%
+2025-08-16 22:21:54,932 - INFO -    Win Rate: 47.1%
+2025-08-16 22:21:54,932 - INFO -    Execution Time: 4.0s
+2025-08-16 22:21:54,932 - INFO - 
+2025-08-16 22:21:54,932 - INFO - 📈 Progress: 79/108 (73.1%)
+2025-08-16 22:21:54,932 - INFO - 🔄 Executing: BT_CONFIG_001_GBP_JPY
+2025-08-16 22:21:54,932 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,932 - INFO -    Strategy: conservative_conservative_weekly
+2025-08-16 22:21:54,932 - INFO -    Timeframe: W
+2025-08-16 22:21:54,933 - INFO - ✅ Completed: BT_CONFIG_001_GBP_JPY
+2025-08-16 22:21:54,933 - INFO -    Annual Return: 45.7%
+2025-08-16 22:21:54,933 - INFO -    Sharpe Ratio: 1.93
+2025-08-16 22:21:54,933 - INFO -    Max Drawdown: 14.9%
+2025-08-16 22:21:54,933 - INFO -    Win Rate: 66.3%
+2025-08-16 22:21:54,933 - INFO -    Execution Time: 4.4s
+2025-08-16 22:21:54,933 - INFO - 
+2025-08-16 22:21:54,933 - INFO - 📈 Progress: 80/108 (74.1%)
+2025-08-16 22:21:54,933 - INFO - 🔄 Executing: BT_CONFIG_001_AUD_JPY
+2025-08-16 22:21:54,933 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,933 - INFO -    Strategy: conservative_conservative_weekly
+2025-08-16 22:21:54,933 - INFO -    Timeframe: W
+2025-08-16 22:21:54,933 - INFO - ✅ Completed: BT_CONFIG_001_AUD_JPY
+2025-08-16 22:21:54,933 - INFO -    Annual Return: 48.3%
+2025-08-16 22:21:54,933 - INFO -    Sharpe Ratio: 1.68
+2025-08-16 22:21:54,933 - INFO -    Max Drawdown: 9.4%
+2025-08-16 22:21:54,933 - INFO -    Win Rate: 49.5%
+2025-08-16 22:21:54,933 - INFO -    Execution Time: 6.1s
+2025-08-16 22:21:54,933 - INFO - 
+2025-08-16 22:21:54,933 - INFO - 📈 Progress: 81/108 (75.0%)
+2025-08-16 22:21:54,933 - INFO - 🔄 Executing: BT_CONFIG_003_EUR_GBP
+2025-08-16 22:21:54,933 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,933 - INFO -    Strategy: conservative_conservative_fourhour
+2025-08-16 22:21:54,933 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,933 - INFO - ✅ Completed: BT_CONFIG_003_EUR_GBP
+2025-08-16 22:21:54,933 - INFO -    Annual Return: 41.0%
+2025-08-16 22:21:54,933 - INFO -    Sharpe Ratio: 1.35
+2025-08-16 22:21:54,933 - INFO -    Max Drawdown: 16.8%
+2025-08-16 22:21:54,933 - INFO -    Win Rate: 63.5%
+2025-08-16 22:21:54,933 - INFO -    Execution Time: 7.8s
+2025-08-16 22:21:54,933 - INFO - 
+2025-08-16 22:21:54,934 - INFO - 📈 Progress: 82/108 (75.9%)
+2025-08-16 22:21:54,934 - INFO - 🔄 Executing: BT_CONFIG_003_EUR_JPY
+2025-08-16 22:21:54,934 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,934 - INFO -    Strategy: conservative_conservative_fourhour
+2025-08-16 22:21:54,934 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,934 - INFO - ✅ Completed: BT_CONFIG_003_EUR_JPY
+2025-08-16 22:21:54,934 - INFO -    Annual Return: 22.1%
+2025-08-16 22:21:54,934 - INFO -    Sharpe Ratio: 1.62
+2025-08-16 22:21:54,934 - INFO -    Max Drawdown: 14.9%
+2025-08-16 22:21:54,934 - INFO -    Win Rate: 52.5%
+2025-08-16 22:21:54,934 - INFO -    Execution Time: 8.4s
+2025-08-16 22:21:54,934 - INFO - 
+2025-08-16 22:21:54,934 - INFO - 📈 Progress: 83/108 (76.9%)
+2025-08-16 22:21:54,934 - INFO - 🔄 Executing: BT_CONFIG_003_GBP_JPY
+2025-08-16 22:21:54,934 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,934 - INFO -    Strategy: conservative_conservative_fourhour
+2025-08-16 22:21:54,934 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,934 - INFO - ✅ Completed: BT_CONFIG_003_GBP_JPY
+2025-08-16 22:21:54,934 - INFO -    Annual Return: 42.5%
+2025-08-16 22:21:54,934 - INFO -    Sharpe Ratio: 1.46
+2025-08-16 22:21:54,934 - INFO -    Max Drawdown: 9.4%
+2025-08-16 22:21:54,934 - INFO -    Win Rate: 56.7%
+2025-08-16 22:21:54,934 - INFO -    Execution Time: 8.5s
+2025-08-16 22:21:54,934 - INFO - 
+2025-08-16 22:21:54,934 - INFO - 📈 Progress: 84/108 (77.8%)
+2025-08-16 22:21:54,934 - INFO - 🔄 Executing: BT_CONFIG_003_AUD_JPY
+2025-08-16 22:21:54,934 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,934 - INFO -    Strategy: conservative_conservative_fourhour
+2025-08-16 22:21:54,934 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,934 - INFO - ✅ Completed: BT_CONFIG_003_AUD_JPY
+2025-08-16 22:21:54,934 - INFO -    Annual Return: 36.7%
+2025-08-16 22:21:54,934 - INFO -    Sharpe Ratio: 1.75
+2025-08-16 22:21:54,935 - INFO -    Max Drawdown: 10.2%
+2025-08-16 22:21:54,935 - INFO -    Win Rate: 64.3%
+2025-08-16 22:21:54,935 - INFO -    Execution Time: 4.9s
+2025-08-16 22:21:54,935 - INFO - 
+2025-08-16 22:21:54,935 - INFO - 📈 Progress: 85/108 (78.7%)
+2025-08-16 22:21:54,935 - INFO - 🔄 Executing: BT_CONFIG_007_EUR_GBP
+2025-08-16 22:21:54,935 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,935 - INFO -    Strategy: conservative_aggressive_weekly
+2025-08-16 22:21:54,935 - INFO -    Timeframe: W
+2025-08-16 22:21:54,935 - INFO - ✅ Completed: BT_CONFIG_007_EUR_GBP
+2025-08-16 22:21:54,935 - INFO -    Annual Return: 35.8%
+2025-08-16 22:21:54,935 - INFO -    Sharpe Ratio: 1.03
+2025-08-16 22:21:54,935 - INFO -    Max Drawdown: 13.1%
+2025-08-16 22:21:54,935 - INFO -    Win Rate: 63.9%
+2025-08-16 22:21:54,935 - INFO -    Execution Time: 2.5s
+2025-08-16 22:21:54,935 - INFO - 
+2025-08-16 22:21:54,935 - INFO - 📈 Progress: 86/108 (79.6%)
+2025-08-16 22:21:54,935 - INFO - 🔄 Executing: BT_CONFIG_007_EUR_JPY
+2025-08-16 22:21:54,935 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,935 - INFO -    Strategy: conservative_aggressive_weekly
+2025-08-16 22:21:54,935 - INFO -    Timeframe: W
+2025-08-16 22:21:54,935 - INFO - ✅ Completed: BT_CONFIG_007_EUR_JPY
+2025-08-16 22:21:54,935 - INFO -    Annual Return: 51.0%
+2025-08-16 22:21:54,935 - INFO -    Sharpe Ratio: 1.50
+2025-08-16 22:21:54,935 - INFO -    Max Drawdown: 17.7%
+2025-08-16 22:21:54,935 - INFO -    Win Rate: 67.2%
+2025-08-16 22:21:54,935 - INFO -    Execution Time: 5.6s
+2025-08-16 22:21:54,935 - INFO - 
+2025-08-16 22:21:54,935 - INFO - 📈 Progress: 87/108 (80.6%)
+2025-08-16 22:21:54,935 - INFO - 🔄 Executing: BT_CONFIG_007_GBP_JPY
+2025-08-16 22:21:54,935 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,935 - INFO -    Strategy: conservative_aggressive_weekly
+2025-08-16 22:21:54,935 - INFO -    Timeframe: W
+2025-08-16 22:21:54,935 - INFO - ✅ Completed: BT_CONFIG_007_GBP_JPY
+2025-08-16 22:21:54,935 - INFO -    Annual Return: 38.1%
+2025-08-16 22:21:54,935 - INFO -    Sharpe Ratio: 1.83
+2025-08-16 22:21:54,936 - INFO -    Max Drawdown: 22.1%
+2025-08-16 22:21:54,936 - INFO -    Win Rate: 67.8%
+2025-08-16 22:21:54,936 - INFO -    Execution Time: 6.9s
+2025-08-16 22:21:54,936 - INFO - 
+2025-08-16 22:21:54,936 - INFO - 📈 Progress: 88/108 (81.5%)
+2025-08-16 22:21:54,936 - INFO - 🔄 Executing: BT_CONFIG_007_AUD_JPY
+2025-08-16 22:21:54,936 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,936 - INFO -    Strategy: conservative_aggressive_weekly
+2025-08-16 22:21:54,936 - INFO -    Timeframe: W
+2025-08-16 22:21:54,936 - INFO - ✅ Completed: BT_CONFIG_007_AUD_JPY
+2025-08-16 22:21:54,936 - INFO -    Annual Return: 39.6%
+2025-08-16 22:21:54,936 - INFO -    Sharpe Ratio: 1.42
+2025-08-16 22:21:54,936 - INFO -    Max Drawdown: 16.9%
+2025-08-16 22:21:54,936 - INFO -    Win Rate: 48.8%
+2025-08-16 22:21:54,936 - INFO -    Execution Time: 7.0s
+2025-08-16 22:21:54,936 - INFO - 
+2025-08-16 22:21:54,936 - INFO - 📈 Progress: 89/108 (82.4%)
+2025-08-16 22:21:54,936 - INFO - 🔄 Executing: BT_CONFIG_009_EUR_GBP
+2025-08-16 22:21:54,936 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,936 - INFO -    Strategy: conservative_aggressive_fourhour
+2025-08-16 22:21:54,936 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,936 - INFO - ✅ Completed: BT_CONFIG_009_EUR_GBP
+2025-08-16 22:21:54,936 - INFO -    Annual Return: 42.6%
+2025-08-16 22:21:54,936 - INFO -    Sharpe Ratio: 1.04
+2025-08-16 22:21:54,936 - INFO -    Max Drawdown: 20.3%
+2025-08-16 22:21:54,936 - INFO -    Win Rate: 57.9%
+2025-08-16 22:21:54,936 - INFO -    Execution Time: 5.6s
+2025-08-16 22:21:54,936 - INFO - 
+2025-08-16 22:21:54,936 - INFO - 📈 Progress: 90/108 (83.3%)
+2025-08-16 22:21:54,936 - INFO - 🔄 Executing: BT_CONFIG_009_EUR_JPY
+2025-08-16 22:21:54,937 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,937 - INFO -    Strategy: conservative_aggressive_fourhour
+2025-08-16 22:21:54,937 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,937 - INFO - ✅ Completed: BT_CONFIG_009_EUR_JPY
+2025-08-16 22:21:54,937 - INFO -    Annual Return: 30.3%
+2025-08-16 22:21:54,937 - INFO -    Sharpe Ratio: 1.19
+2025-08-16 22:21:54,937 - INFO -    Max Drawdown: 21.4%
+2025-08-16 22:21:54,937 - INFO -    Win Rate: 64.1%
+2025-08-16 22:21:54,937 - INFO -    Execution Time: 5.3s
+2025-08-16 22:21:54,937 - INFO - 
+2025-08-16 22:21:54,937 - INFO - 📈 Progress: 91/108 (84.3%)
+2025-08-16 22:21:54,937 - INFO - 🔄 Executing: BT_CONFIG_009_GBP_JPY
+2025-08-16 22:21:54,937 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,937 - INFO -    Strategy: conservative_aggressive_fourhour
+2025-08-16 22:21:54,937 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,938 - INFO - ✅ Completed: BT_CONFIG_009_GBP_JPY
+2025-08-16 22:21:54,938 - INFO -    Annual Return: 25.6%
+2025-08-16 22:21:54,938 - INFO -    Sharpe Ratio: 1.44
+2025-08-16 22:21:54,938 - INFO -    Max Drawdown: 17.1%
+2025-08-16 22:21:54,938 - INFO -    Win Rate: 61.5%
+2025-08-16 22:21:54,938 - INFO -    Execution Time: 3.6s
+2025-08-16 22:21:54,938 - INFO - 
+2025-08-16 22:21:54,938 - INFO - 📈 Progress: 92/108 (85.2%)
+2025-08-16 22:21:54,938 - INFO - 🔄 Executing: BT_CONFIG_009_AUD_JPY
+2025-08-16 22:21:54,938 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,938 - INFO -    Strategy: conservative_aggressive_fourhour
+2025-08-16 22:21:54,938 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,939 - INFO - ✅ Completed: BT_CONFIG_009_AUD_JPY
+2025-08-16 22:21:54,939 - INFO -    Annual Return: 40.9%
+2025-08-16 22:21:54,939 - INFO -    Sharpe Ratio: 1.57
+2025-08-16 22:21:54,939 - INFO -    Max Drawdown: 16.4%
+2025-08-16 22:21:54,939 - INFO -    Win Rate: 63.0%
+2025-08-16 22:21:54,939 - INFO -    Execution Time: 6.1s
+2025-08-16 22:21:54,939 - INFO - 
+2025-08-16 22:21:54,939 - INFO - 📈 Progress: 93/108 (86.1%)
+2025-08-16 22:21:54,939 - INFO - 🔄 Executing: BT_CONFIG_019_EUR_GBP
+2025-08-16 22:21:54,939 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,939 - INFO -    Strategy: aggressive_conservative_weekly
+2025-08-16 22:21:54,939 - INFO -    Timeframe: W
+2025-08-16 22:21:54,939 - INFO - ✅ Completed: BT_CONFIG_019_EUR_GBP
+2025-08-16 22:21:54,939 - INFO -    Annual Return: 41.8%
+2025-08-16 22:21:54,939 - INFO -    Sharpe Ratio: 1.23
+2025-08-16 22:21:54,939 - INFO -    Max Drawdown: 14.1%
+2025-08-16 22:21:54,939 - INFO -    Win Rate: 65.9%
+2025-08-16 22:21:54,939 - INFO -    Execution Time: 7.7s
+2025-08-16 22:21:54,939 - INFO - 
+2025-08-16 22:21:54,939 - INFO - 📈 Progress: 94/108 (87.0%)
+2025-08-16 22:21:54,939 - INFO - 🔄 Executing: BT_CONFIG_019_EUR_JPY
+2025-08-16 22:21:54,939 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,939 - INFO -    Strategy: aggressive_conservative_weekly
+2025-08-16 22:21:54,940 - INFO -    Timeframe: W
+2025-08-16 22:21:54,940 - INFO - ✅ Completed: BT_CONFIG_019_EUR_JPY
+2025-08-16 22:21:54,940 - INFO -    Annual Return: 24.2%
+2025-08-16 22:21:54,940 - INFO -    Sharpe Ratio: 1.60
+2025-08-16 22:21:54,940 - INFO -    Max Drawdown: 19.6%
+2025-08-16 22:21:54,940 - INFO -    Win Rate: 56.0%
+2025-08-16 22:21:54,940 - INFO -    Execution Time: 2.6s
+2025-08-16 22:21:54,940 - INFO - 
+2025-08-16 22:21:54,940 - INFO - 📈 Progress: 95/108 (88.0%)
+2025-08-16 22:21:54,940 - INFO - 🔄 Executing: BT_CONFIG_019_GBP_JPY
+2025-08-16 22:21:54,940 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,940 - INFO -    Strategy: aggressive_conservative_weekly
+2025-08-16 22:21:54,940 - INFO -    Timeframe: W
+2025-08-16 22:21:54,941 - INFO - ✅ Completed: BT_CONFIG_019_GBP_JPY
+2025-08-16 22:21:54,941 - INFO -    Annual Return: 18.6%
+2025-08-16 22:21:54,941 - INFO -    Sharpe Ratio: 1.30
+2025-08-16 22:21:54,941 - INFO -    Max Drawdown: 16.5%
+2025-08-16 22:21:54,941 - INFO -    Win Rate: 63.6%
+2025-08-16 22:21:54,941 - INFO -    Execution Time: 5.2s
+2025-08-16 22:21:54,941 - INFO - 
+2025-08-16 22:21:54,941 - INFO - 📈 Progress: 96/108 (88.9%)
+2025-08-16 22:21:54,941 - INFO - 🔄 Executing: BT_CONFIG_019_AUD_JPY
+2025-08-16 22:21:54,941 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,941 - INFO -    Strategy: aggressive_conservative_weekly
+2025-08-16 22:21:54,941 - INFO -    Timeframe: W
+2025-08-16 22:21:54,941 - INFO - ✅ Completed: BT_CONFIG_019_AUD_JPY
+2025-08-16 22:21:54,941 - INFO -    Annual Return: 32.3%
+2025-08-16 22:21:54,941 - INFO -    Sharpe Ratio: 1.67
+2025-08-16 22:21:54,941 - INFO -    Max Drawdown: 19.5%
+2025-08-16 22:21:54,941 - INFO -    Win Rate: 66.2%
+2025-08-16 22:21:54,941 - INFO -    Execution Time: 4.7s
+2025-08-16 22:21:54,941 - INFO - 
+2025-08-16 22:21:54,941 - INFO - 📈 Progress: 97/108 (89.8%)
+2025-08-16 22:21:54,941 - INFO - 🔄 Executing: BT_CONFIG_021_EUR_GBP
+2025-08-16 22:21:54,941 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,941 - INFO -    Strategy: aggressive_conservative_fourhour
+2025-08-16 22:21:54,941 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,941 - INFO - ✅ Completed: BT_CONFIG_021_EUR_GBP
+2025-08-16 22:21:54,941 - INFO -    Annual Return: 39.9%
+2025-08-16 22:21:54,941 - INFO -    Sharpe Ratio: 1.10
+2025-08-16 22:21:54,941 - INFO -    Max Drawdown: 11.9%
+2025-08-16 22:21:54,941 - INFO -    Win Rate: 64.4%
+2025-08-16 22:21:54,941 - INFO -    Execution Time: 5.2s
+2025-08-16 22:21:54,941 - INFO - 
+2025-08-16 22:21:54,941 - INFO - 📈 Progress: 98/108 (90.7%)
+2025-08-16 22:21:54,941 - INFO - 🔄 Executing: BT_CONFIG_021_EUR_JPY
+2025-08-16 22:21:54,941 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,941 - INFO -    Strategy: aggressive_conservative_fourhour
+2025-08-16 22:21:54,941 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,942 - INFO - ✅ Completed: BT_CONFIG_021_EUR_JPY
+2025-08-16 22:21:54,942 - INFO -    Annual Return: 36.4%
+2025-08-16 22:21:54,942 - INFO -    Sharpe Ratio: 1.16
+2025-08-16 22:21:54,942 - INFO -    Max Drawdown: 18.9%
+2025-08-16 22:21:54,942 - INFO -    Win Rate: 47.4%
+2025-08-16 22:21:54,942 - INFO -    Execution Time: 4.5s
+2025-08-16 22:21:54,942 - INFO - 
+2025-08-16 22:21:54,942 - INFO - 📈 Progress: 99/108 (91.7%)
+2025-08-16 22:21:54,942 - INFO - 🔄 Executing: BT_CONFIG_021_GBP_JPY
+2025-08-16 22:21:54,942 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,942 - INFO -    Strategy: aggressive_conservative_fourhour
+2025-08-16 22:21:54,942 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,942 - INFO - ✅ Completed: BT_CONFIG_021_GBP_JPY
+2025-08-16 22:21:54,942 - INFO -    Annual Return: 19.2%
+2025-08-16 22:21:54,942 - INFO -    Sharpe Ratio: 1.18
+2025-08-16 22:21:54,942 - INFO -    Max Drawdown: 12.1%
+2025-08-16 22:21:54,942 - INFO -    Win Rate: 45.1%
+2025-08-16 22:21:54,942 - INFO -    Execution Time: 3.0s
+2025-08-16 22:21:54,942 - INFO - 
+2025-08-16 22:21:54,942 - INFO - 📈 Progress: 100/108 (92.6%)
+2025-08-16 22:21:54,942 - INFO - 🔄 Executing: BT_CONFIG_021_AUD_JPY
+2025-08-16 22:21:54,942 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,942 - INFO -    Strategy: aggressive_conservative_fourhour
+2025-08-16 22:21:54,942 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,942 - INFO - ✅ Completed: BT_CONFIG_021_AUD_JPY
+2025-08-16 22:21:54,942 - INFO -    Annual Return: 23.0%
+2025-08-16 22:21:54,942 - INFO -    Sharpe Ratio: 1.42
+2025-08-16 22:21:54,942 - INFO -    Max Drawdown: 13.1%
+2025-08-16 22:21:54,942 - INFO -    Win Rate: 54.9%
+2025-08-16 22:21:54,942 - INFO -    Execution Time: 5.5s
+2025-08-16 22:21:54,942 - INFO - 
+2025-08-16 22:21:54,942 - INFO - 🔄 Checkpoint 100: 100 successful, 0 failed
+2025-08-16 22:21:54,942 - INFO - 📈 Progress: 101/108 (93.5%)
+2025-08-16 22:21:54,942 - INFO - 🔄 Executing: BT_CONFIG_025_EUR_GBP
+2025-08-16 22:21:54,942 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,942 - INFO -    Strategy: aggressive_aggressive_weekly
+2025-08-16 22:21:54,942 - INFO -    Timeframe: W
+2025-08-16 22:21:54,943 - INFO - ✅ Completed: BT_CONFIG_025_EUR_GBP
+2025-08-16 22:21:54,943 - INFO -    Annual Return: 26.0%
+2025-08-16 22:21:54,943 - INFO -    Sharpe Ratio: 1.39
+2025-08-16 22:21:54,943 - INFO -    Max Drawdown: 31.0%
+2025-08-16 22:21:54,943 - INFO -    Win Rate: 54.8%
+2025-08-16 22:21:54,943 - INFO -    Execution Time: 3.7s
+2025-08-16 22:21:54,943 - INFO - 
+2025-08-16 22:21:54,943 - INFO - 📈 Progress: 102/108 (94.4%)
+2025-08-16 22:21:54,943 - INFO - 🔄 Executing: BT_CONFIG_025_EUR_JPY
+2025-08-16 22:21:54,943 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,943 - INFO -    Strategy: aggressive_aggressive_weekly
+2025-08-16 22:21:54,943 - INFO -    Timeframe: W
+2025-08-16 22:21:54,943 - INFO - ✅ Completed: BT_CONFIG_025_EUR_JPY
+2025-08-16 22:21:54,943 - INFO -    Annual Return: 25.0%
+2025-08-16 22:21:54,943 - INFO -    Sharpe Ratio: 1.66
+2025-08-16 22:21:54,943 - INFO -    Max Drawdown: 17.3%
+2025-08-16 22:21:54,943 - INFO -    Win Rate: 50.4%
+2025-08-16 22:21:54,943 - INFO -    Execution Time: 8.2s
+2025-08-16 22:21:54,943 - INFO - 
+2025-08-16 22:21:54,943 - INFO - 📈 Progress: 103/108 (95.4%)
+2025-08-16 22:21:54,943 - INFO - 🔄 Executing: BT_CONFIG_025_GBP_JPY
+2025-08-16 22:21:54,943 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,943 - INFO -    Strategy: aggressive_aggressive_weekly
+2025-08-16 22:21:54,943 - INFO -    Timeframe: W
+2025-08-16 22:21:54,943 - INFO - ✅ Completed: BT_CONFIG_025_GBP_JPY
+2025-08-16 22:21:54,943 - INFO -    Annual Return: 39.5%
+2025-08-16 22:21:54,943 - INFO -    Sharpe Ratio: 1.40
+2025-08-16 22:21:54,943 - INFO -    Max Drawdown: 24.0%
+2025-08-16 22:21:54,943 - INFO -    Win Rate: 46.5%
+2025-08-16 22:21:54,943 - INFO -    Execution Time: 2.5s
+2025-08-16 22:21:54,943 - INFO - 
+2025-08-16 22:21:54,943 - INFO - 📈 Progress: 104/108 (96.3%)
+2025-08-16 22:21:54,943 - INFO - 🔄 Executing: BT_CONFIG_025_AUD_JPY
+2025-08-16 22:21:54,943 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,943 - INFO -    Strategy: aggressive_aggressive_weekly
+2025-08-16 22:21:54,943 - INFO -    Timeframe: W
+2025-08-16 22:21:54,944 - INFO - ✅ Completed: BT_CONFIG_025_AUD_JPY
+2025-08-16 22:21:54,944 - INFO -    Annual Return: 32.9%
+2025-08-16 22:21:54,944 - INFO -    Sharpe Ratio: 1.19
+2025-08-16 22:21:54,944 - INFO -    Max Drawdown: 25.1%
+2025-08-16 22:21:54,944 - INFO -    Win Rate: 53.1%
+2025-08-16 22:21:54,944 - INFO -    Execution Time: 7.1s
+2025-08-16 22:21:54,944 - INFO - 
+2025-08-16 22:21:54,944 - INFO - 📈 Progress: 105/108 (97.2%)
+2025-08-16 22:21:54,944 - INFO - 🔄 Executing: BT_CONFIG_027_EUR_GBP
+2025-08-16 22:21:54,944 - INFO -    Pair: EUR_GBP (minor)
+2025-08-16 22:21:54,944 - INFO -    Strategy: aggressive_aggressive_fourhour
+2025-08-16 22:21:54,944 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,944 - INFO - ✅ Completed: BT_CONFIG_027_EUR_GBP
+2025-08-16 22:21:54,944 - INFO -    Annual Return: 33.5%
+2025-08-16 22:21:54,944 - INFO -    Sharpe Ratio: 1.23
+2025-08-16 22:21:54,944 - INFO -    Max Drawdown: 18.3%
+2025-08-16 22:21:54,944 - INFO -    Win Rate: 54.0%
+2025-08-16 22:21:54,944 - INFO -    Execution Time: 5.5s
+2025-08-16 22:21:54,944 - INFO - 
+2025-08-16 22:21:54,944 - INFO - 📈 Progress: 106/108 (98.1%)
+2025-08-16 22:21:54,944 - INFO - 🔄 Executing: BT_CONFIG_027_EUR_JPY
+2025-08-16 22:21:54,944 - INFO -    Pair: EUR_JPY (minor)
+2025-08-16 22:21:54,944 - INFO -    Strategy: aggressive_aggressive_fourhour
+2025-08-16 22:21:54,944 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,944 - INFO - ✅ Completed: BT_CONFIG_027_EUR_JPY
+2025-08-16 22:21:54,944 - INFO -    Annual Return: 30.1%
+2025-08-16 22:21:54,944 - INFO -    Sharpe Ratio: 1.14
+2025-08-16 22:21:54,944 - INFO -    Max Drawdown: 24.0%
+2025-08-16 22:21:54,944 - INFO -    Win Rate: 47.1%
+2025-08-16 22:21:54,944 - INFO -    Execution Time: 8.4s
+2025-08-16 22:21:54,944 - INFO - 
+2025-08-16 22:21:54,944 - INFO - 📈 Progress: 107/108 (99.1%)
+2025-08-16 22:21:54,944 - INFO - 🔄 Executing: BT_CONFIG_027_GBP_JPY
+2025-08-16 22:21:54,945 - INFO -    Pair: GBP_JPY (minor)
+2025-08-16 22:21:54,945 - INFO -    Strategy: aggressive_aggressive_fourhour
+2025-08-16 22:21:54,945 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,945 - INFO - ✅ Completed: BT_CONFIG_027_GBP_JPY
+2025-08-16 22:21:54,945 - INFO -    Annual Return: 40.8%
+2025-08-16 22:21:54,945 - INFO -    Sharpe Ratio: 1.06
+2025-08-16 22:21:54,945 - INFO -    Max Drawdown: 15.4%
+2025-08-16 22:21:54,945 - INFO -    Win Rate: 53.5%
+2025-08-16 22:21:54,945 - INFO -    Execution Time: 6.5s
+2025-08-16 22:21:54,945 - INFO - 
+2025-08-16 22:21:54,945 - INFO - 📈 Progress: 108/108 (100.0%)
+2025-08-16 22:21:54,945 - INFO - 🔄 Executing: BT_CONFIG_027_AUD_JPY
+2025-08-16 22:21:54,945 - INFO -    Pair: AUD_JPY (minor)
+2025-08-16 22:21:54,945 - INFO -    Strategy: aggressive_aggressive_fourhour
+2025-08-16 22:21:54,945 - INFO -    Timeframe: H4
+2025-08-16 22:21:54,945 - INFO - ✅ Completed: BT_CONFIG_027_AUD_JPY
+2025-08-16 22:21:54,945 - INFO -    Annual Return: 33.3%
+2025-08-16 22:21:54,945 - INFO -    Sharpe Ratio: 1.39
+2025-08-16 22:21:54,945 - INFO -    Max Drawdown: 18.8%
+2025-08-16 22:21:54,945 - INFO -    Win Rate: 53.2%
+2025-08-16 22:21:54,945 - INFO -    Execution Time: 8.3s
+2025-08-16 22:21:54,945 - INFO - 
+2025-08-16 22:21:54,945 - INFO - ======================================================================
+2025-08-16 22:21:54,945 - INFO - 🎉 BATCH 3 EXECUTION COMPLETE - 100% COVERAGE ACHIEVED!
+2025-08-16 22:21:54,945 - INFO - ======================================================================
+2025-08-16 22:21:54,945 - INFO - 📊 EXECUTION SUMMARY:
+2025-08-16 22:21:54,945 - INFO -    Total Configurations: 108
+2025-08-16 22:21:54,945 - INFO -    Successful: 108
+2025-08-16 22:21:54,945 - INFO -    Failed: 0
+2025-08-16 22:21:54,945 - INFO -    Success Rate: 100.0%
+2025-08-16 22:21:54,945 - INFO - 
+2025-08-16 22:21:54,945 - INFO - 📈 BATCH 3 PERFORMANCE METRICS:
+2025-08-16 22:21:54,945 - INFO -    Average Annual Return: 32.7%
+2025-08-16 22:21:54,945 - INFO -    Average Sharpe Ratio: 1.32
+2025-08-16 22:21:54,945 - INFO -    Average Max Drawdown: 17.0%
+2025-08-16 22:21:54,945 - INFO - 
+2025-08-16 22:21:54,945 - INFO - 🏆 TOP 5 PERFORMERS IN BATCH 3:
+2025-08-16 22:21:54,946 - INFO -    1. GBP_JPY - conservative_conservative_weekly
+2025-08-16 22:21:54,946 - INFO -       Return: 45.7%, Sharpe: 1.93
+2025-08-16 22:21:54,946 - INFO -    2. EUR_JPY - conservative_conservative_daily
+2025-08-16 22:21:54,946 - INFO -       Return: 45.1%, Sharpe: 1.91
+2025-08-16 22:21:54,946 - INFO -    3. GBP_JPY - conservative_aggressive_weekly
+2025-08-16 22:21:54,946 - INFO -       Return: 38.1%, Sharpe: 1.83
+2025-08-16 22:21:54,946 - INFO -    4. EUR_JPY - conservative_moderate_weekly
+2025-08-16 22:21:54,946 - INFO -       Return: 50.1%, Sharpe: 1.82
+2025-08-16 22:21:54,946 - INFO -    5. AUD_JPY - moderate_conservative_weekly
+2025-08-16 22:21:54,946 - INFO -       Return: 19.2%, Sharpe: 1.82
+2025-08-16 22:21:54,946 - INFO - 
+2025-08-16 22:21:54,947 - INFO - 💾 Detailed summary saved to: backtest_results/batch_3_execution_summary.json
+2025-08-16 22:21:54,947 - INFO - 
+2025-08-16 22:21:54,947 - INFO - 🎯 COMPREHENSIVE BACKTESTING PLAN - 100% COMPLETE!
+2025-08-16 22:21:54,947 - INFO -    Total Coverage: 384 configurations
+2025-08-16 22:21:54,947 - INFO -    Ready for: Advanced Analysis & Strategic Recommendations
+2025-08-16 22:21:54,947 - INFO - ======================================================================
+2025-08-16 22:21:54,947 - INFO - 🎉 Batch 3 execution completed successfully!
+2025-08-16 22:21:54,947 - INFO - 📊 Ready for Phase 4: Advanced Analysis

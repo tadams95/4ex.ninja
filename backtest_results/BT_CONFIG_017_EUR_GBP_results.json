@@ -1,0 +1,86 @@
+{
+  "config": {
+    "execution_id": "BT_CONFIG_017_EUR_GBP",
+    "strategy_config": {
+      "config_id": "CONFIG_017",
+      "name": "moderate_aggressive_daily",
+      "description": "Balanced approach | 3% risk, 1:1 R:R minimum | Medium-term swing trading",
+      "parameters": {
+        "moving_averages": {
+          "fast_period": 20,
+          "slow_period": 50,
+          "type": "moderate"
+        },
+        "risk_management": {
+          "risk_per_trade": 0.03,
+          "min_risk_reward": 1.0,
+          "max_drawdown": 0.2,
+          "type": "aggressive"
+        },
+        "timeframe": {
+          "primary": "D",
+          "type": "daily"
+        },
+        "entry_rules": {
+          "ma_cross_confirmation": true,
+          "volume_confirmation": false,
+          "regime_filter": true
+        },
+        "exit_rules": {
+          "trailing_stop": true,
+          "profit_target": true,
+          "time_exit": false
+        }
+      },
+      "expected_characteristics": {
+        "trade_frequency": "Medium (10-20 trades/month)",
+        "expected_win_rate": "45-55%",
+        "expected_profit_factor": "1.2-1.6"
+      }
+    },
+    "currency_pair": "EUR_GBP",
+    "pair_type": "minor",
+    "data_source": {
+      "provider": "OANDA",
+      "timeframe": "D",
+      "history_period": "5Y",
+      "data_quality": "premium"
+    },
+    "regime_settings": {
+      "enabled": true,
+      "pair_specific_multipliers": {
+        "volatility_multiplier": 0.8,
+        "trend_sensitivity": 0.85
+      }
+    },
+    "execution_parameters": {
+      "start_capital": 10000,
+      "commission": 0.0002,
+      "slippage": 0.0001,
+      "leverage": 50,
+      "margin_requirement": 0.02
+    },
+    "analysis_requirements": {
+      "walk_forward": true,
+      "monte_carlo": true,
+      "regime_performance": true,
+      "correlation_analysis": true,
+      "stress_testing": true
+    },
+    "expected_execution_time": "5-15 minutes",
+    "priority": 7
+  },
+  "results": {
+    "annual_return": 0.4455,
+    "sharpe_ratio": 1.325,
+    "max_drawdown": 0.1455,
+    "win_rate": 0.479,
+    "profit_factor": 1.22,
+    "total_trades": 10,
+    "pair_type": "minor",
+    "regime_effectiveness": 0.15581021861930555,
+    "execution_time": 8.45
+  },
+  "execution_timestamp": "2025-08-16T22:21:54.890244",
+  "batch": "batch_3_complete_coverage"
+}
