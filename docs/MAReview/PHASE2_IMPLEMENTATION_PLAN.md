@@ -180,10 +180,10 @@ Day 5-7: Correlation calculation framework
 ```
 
 **Deliverables:**
-- VaRMonitor class with historical method
-- CorrelationManager basic implementation
-- Database schema for risk metrics storage
-- Initial unit tests for core calculations
+- [x] VaRMonitor class with historical method
+- [x] CorrelationManager basic implementation
+- [x] Database schema for risk metrics storage
+- [x] Initial unit tests for core calculations
 
 ### **Week 2: Advanced Risk Methods**
 ```
@@ -324,11 +324,11 @@ Once Phase 2 achieves success criteria:
 ## 📝 **Implementation Checklist**
 
 ### **Week 1 Deliverables**
-- [ ] VaRMonitor class implementation
-- [ ] Historical VaR calculation method
-- [ ] CorrelationManager class foundation
-- [ ] Database schema for risk metrics
-- [ ] Initial unit test suite
+- [x] VaRMonitor class implementation
+- [x] Historical VaR calculation method
+- [x] CorrelationManager class foundation
+- [x] Database schema for risk metrics
+- [x] Initial unit test suite
 
 ### **Week 2 Deliverables**
 - [ ] Multi-method VaR calculation
