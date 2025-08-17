@@ -57,7 +57,7 @@ export const LoadingSequence: React.FC<LoadingSequenceProps> = ({
 
   useEffect(() => {
     if (!isClient) return;
-    
+
     const stepDuration = duration / sequenceSteps.length;
 
     const interval = setInterval(() => {

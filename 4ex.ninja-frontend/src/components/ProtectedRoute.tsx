@@ -29,7 +29,7 @@ export default function ProtectedRoute({
   useEffect(() => {
     // Only run client-side logic after hydration
     if (!isClient) return;
-    
+
     // Don't redirect while still loading wallet connection state
     if (loading) return;
 
