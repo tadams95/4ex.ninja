@@ -34,7 +34,7 @@ print_error() {
 }
 
 # Configuration
-DROPLET_IP="your_droplet_ip"  # Replace with actual IP
+DROPLET_IP="157.230.58.248"  # Your Digital Ocean droplet IP
 PROJECT_PATH="/4ex.ninja-backend"
 BACKUP_TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 LOG_FILE="/tmp/deployment_log_${BACKUP_TIMESTAMP}.log"
