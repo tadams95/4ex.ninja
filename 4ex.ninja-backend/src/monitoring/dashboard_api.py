@@ -386,7 +386,12 @@ async def get_regime_timeline_data(timeframe: str = "24h"):
                 {
                     "label": "Market Regime",
                     "data": [
-                        _regime_to_numeric(entry["regime"]) for entry in regime_history
+                        _regime_to_numeric(
+                            entry.get(
+                                "new_regime", entry.get("regime", "ranging_low_vol")
+                            )
+                        )
+                        for entry in regime_history
                     ],
                     "borderColor": "rgb(59, 130, 246)",
                     "backgroundColor": "rgba(59, 130, 246, 0.1)",

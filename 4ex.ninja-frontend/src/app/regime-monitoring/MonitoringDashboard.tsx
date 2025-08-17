@@ -11,6 +11,7 @@ import { RegimeMonitor } from '../../components/RegimeMonitor';
 import { StrategyHealthPanel } from '../../components/StrategyHealthPanel';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
+import { Tooltip } from '../../components/ui/Tooltip';
 import { useRegimeData } from '../../hooks/useRegimeData';
 
 export default function MonitoringDashboard() {
@@ -33,25 +34,31 @@ export default function MonitoringDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div>
-              <h1 className="text-2xl font-bold text-white">Regime Monitoring</h1>
+              <Tooltip content="Real-time market regime detection and analysis system">
+                <h1 className="text-2xl font-bold text-white cursor-help">Regime Monitoring</h1>
+              </Tooltip>
               <p className="text-sm text-neutral-400">Phase 2 Real-Time Market Analysis</p>
             </div>
             <div className="flex items-center space-x-4">
               {error && (
-                <div className="flex items-center text-red-400 text-sm">
-                  <div className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></div>
-                  API Error
-                </div>
+                <Tooltip content="Connection to monitoring API failed. Data may be stale.">
+                  <div className="flex items-center text-red-400 text-sm cursor-help">
+                    <div className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></div>
+                    API Error
+                  </div>
+                </Tooltip>
               )}
-              <Button
-                onClick={refetch}
-                disabled={loading}
-                variant="primary"
-                size="sm"
-                loading={loading}
-              >
-                Refresh
-              </Button>
+              <Tooltip content="Refresh all dashboard data from the monitoring API">
+                <Button
+                  onClick={refetch}
+                  disabled={loading}
+                  variant="primary"
+                  size="sm"
+                  loading={loading}
+                >
+                  Refresh
+                </Button>
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -96,50 +103,78 @@ export default function MonitoringDashboard() {
         <div className="mb-6 p-4 bg-neutral-800 rounded-lg border border-neutral-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-green-400 font-medium">Live Market Data</span>
-              </div>
-              <div className="text-neutral-400 text-sm">OANDA Demo API • Updates every 30s</div>
+              <Tooltip content="Green indicator shows live market data is flowing from OANDA API">
+                <div className="flex items-center cursor-help">
+                  <div className="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                  <span className="text-green-400 font-medium">Live Market Data</span>
+                </div>
+              </Tooltip>
+              <Tooltip content="Market data updates automatically every 30 seconds during trading hours">
+                <div className="text-neutral-400 text-sm cursor-help">
+                  OANDA Demo API • Updates every 30s
+                </div>
+              </Tooltip>
             </div>
 
             {/* Export Controls */}
-            <ExportControls className="ml-4" />
+            <Tooltip content="Download regime and performance data as CSV or JSON files">
+              <div>
+                <ExportControls className="ml-4" />
+              </div>
+            </Tooltip>
           </div>
         </div>
 
         {/* Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {/* Left Column - Regime Monitor */}
-          <div className="lg:col-span-1">
-            <RegimeMonitor regimeStatus={regimeStatus} loading={loading} lastUpdate={lastUpdate} />
-          </div>
+          <Tooltip content="Current market regime classification with confidence levels and timing">
+            <div className="lg:col-span-1 cursor-help">
+              <RegimeMonitor
+                regimeStatus={regimeStatus}
+                loading={loading}
+                lastUpdate={lastUpdate}
+              />
+            </div>
+          </Tooltip>
 
           {/* Middle Column - Performance */}
-          <div className="lg:col-span-1">
-            <PerformanceByRegime performanceSummary={performanceSummary} loading={loading} />
-          </div>
+          <Tooltip content="Performance analytics broken down by different market regime types">
+            <div className="lg:col-span-1 cursor-help">
+              <PerformanceByRegime performanceSummary={performanceSummary} loading={loading} />
+            </div>
+          </Tooltip>
 
           {/* Right Column - Health & Alerts */}
-          <div className="lg:col-span-1">
-            <StrategyHealthPanel
-              strategyHealth={strategyHealth}
-              alerts={alerts}
-              loading={loading}
-              onAcknowledgeAlert={acknowledgeAlert}
-            />
-          </div>
+          <Tooltip content="System health monitoring and real-time alerts for regime changes">
+            <div className="lg:col-span-1 cursor-help">
+              <StrategyHealthPanel
+                strategyHealth={strategyHealth}
+                alerts={alerts}
+                loading={loading}
+                onAcknowledgeAlert={acknowledgeAlert}
+              />
+            </div>
+          </Tooltip>
         </div>
 
         {/* Chart Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <div className="bg-neutral-800 rounded-lg border border-neutral-700 p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">24-Hour Regime Timeline</h3>
+            <Tooltip content="Visual timeline showing market regime changes over the last 24 hours">
+              <h3 className="text-lg font-semibold text-white mb-4 cursor-help">
+                24-Hour Regime Timeline
+              </h3>
+            </Tooltip>
             <RegimeChart timeframe="24h" />
           </div>
 
           <div className="bg-neutral-800 rounded-lg border border-neutral-700 p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Weekly Regime Overview</h3>
+            <Tooltip content="Weekly overview of market regime patterns and transitions">
+              <h3 className="text-lg font-semibold text-white mb-4 cursor-help">
+                Weekly Regime Overview
+              </h3>
+            </Tooltip>
             <RegimeChart timeframe="7d" />
           </div>
         </div>
@@ -148,30 +183,46 @@ export default function MonitoringDashboard() {
         <div className="mt-8 p-4 bg-neutral-800 rounded-lg border border-neutral-700">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center space-x-6">
-              <div className="flex items-center">
-                <div
-                  className={`w-2 h-2 rounded-full mr-2 ${!error ? 'bg-green-500' : 'bg-red-500'}`}
-                ></div>
-                <span className="text-neutral-400">
-                  API Status: {!error ? 'Connected' : 'Disconnected'}
-                </span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-                <span className="text-neutral-400">
-                  Last Update: {lastUpdate.toLocaleTimeString()}
-                </span>
-              </div>
-              {alerts.filter(alert => !alert.acknowledged).length > 0 && (
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2 animate-pulse"></div>
-                  <span className="text-yellow-400">
-                    {alerts.filter(alert => !alert.acknowledged).length} unread alerts
+              <Tooltip
+                content={`API connection status: ${
+                  !error
+                    ? 'Successfully connected to monitoring services'
+                    : 'Connection failed - check network or API status'
+                }`}
+              >
+                <div className="flex items-center cursor-help">
+                  <div
+                    className={`w-2 h-2 rounded-full mr-2 ${
+                      !error ? 'bg-green-500' : 'bg-red-500'
+                    }`}
+                  ></div>
+                  <span className="text-neutral-400">
+                    API Status: {!error ? 'Connected' : 'Disconnected'}
                   </span>
                 </div>
+              </Tooltip>
+              <Tooltip content="Timestamp of the most recent data update from the monitoring API">
+                <div className="flex items-center cursor-help">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                  <span className="text-neutral-400">
+                    Last Update: {lastUpdate.toLocaleTimeString()}
+                  </span>
+                </div>
+              </Tooltip>
+              {alerts.filter(alert => !alert.acknowledged).length > 0 && (
+                <Tooltip content="Click on alerts in the Strategy Health panel to acknowledge them">
+                  <div className="flex items-center cursor-help">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2 animate-pulse"></div>
+                    <span className="text-yellow-400">
+                      {alerts.filter(alert => !alert.acknowledged).length} unread alerts
+                    </span>
+                  </div>
+                </Tooltip>
               )}
             </div>
-            <div className="text-neutral-500">4ex.ninja Phase 2 Monitoring v2.0</div>
+            <Tooltip content="4ex.ninja Phase 2 Market Regime Monitoring System">
+              <div className="text-neutral-500 cursor-help">4ex.ninja Phase 2 Monitoring v2.0</div>
+            </Tooltip>
           </div>
         </div>
       </div>
