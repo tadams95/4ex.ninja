@@ -9,6 +9,14 @@ from decimal import Decimal
 from typing import Dict, Optional
 from config.strat_settings import STRATEGIES
 
+# ═══ EMERGENCY RISK MANAGEMENT FRAMEWORK ═══
+from risk.emergency_risk_manager import (
+    EmergencyRiskManager,
+    EmergencyLevel,
+    create_emergency_risk_manager,
+)
+import pytz
+
 # Import our comprehensive error handling and monitoring infrastructure
 from infrastructure.monitoring.alerts import (
     alert_signal_processing_failure,
@@ -46,6 +54,7 @@ from infrastructure.services.async_notification_startup import on_strategy_start
 
 # Import Redis-powered incremental signal processor for 80-90% performance improvement
 import sys
+import aiohttp
 
 sys.path.append("/root")
 from infrastructure.services.incremental_signal_processor import (
@@ -94,6 +103,8 @@ class MovingAverageCrossStrategy:
         min_rr_ratio: float,
         sleep_seconds: int,
         min_candles: int,
+        portfolio_initial_value: float = 100000.0,  # NEW: Portfolio value for emergency protocols
+        enable_emergency_management: bool = True,  # NEW: Enable/disable emergency management
     ):
         self.pair = pair
         self.timeframe = timeframe
@@ -109,6 +120,28 @@ class MovingAverageCrossStrategy:
         self.sleep_seconds = sleep_seconds
         self.min_candles = min_candles  # Kept but unused with 200-candle fetch
         self.is_jpy_pair = pair.endswith("JPY")
+
+        # ═══ EMERGENCY RISK MANAGEMENT INITIALIZATION ═══
+        self.portfolio_initial_value = portfolio_initial_value
+        self.portfolio_current_value = portfolio_initial_value
+        self.enable_emergency_management = enable_emergency_management
+        self.emergency_manager = None
+
+        logging.info(
+            f"Emergency Risk Management {'ENABLED' if enable_emergency_management else 'DISABLED'} for {self.pair}"
+        )
+
+        # Initialize emergency manager if enabled
+        if self.enable_emergency_management:
+            try:
+                # This will be called asynchronously in the main execution loop
+                self.emergency_manager_initialized = False
+                logging.info(
+                    f"Emergency Risk Manager will be initialized for {self.pair}"
+                )
+            except Exception as e:
+                logging.error(f"Error preparing emergency manager for {self.pair}: {e}")
+                self.enable_emergency_management = False
 
         # Discord configuration
         self.discord_enabled = True  # Set to False to disable Discord notifications
@@ -129,23 +162,219 @@ class MovingAverageCrossStrategy:
         self.incremental_processor = None
         self.optimization_enabled = True  # Set to False to disable Redis optimization
 
+    async def initialize_emergency_manager(self):
+        """Initialize the Emergency Risk Manager (call this once at startup)"""
+        try:
+            if self.enable_emergency_management and not self.emergency_manager:
+                self.emergency_manager = await create_emergency_risk_manager(
+                    portfolio_value=self.portfolio_initial_value
+                )
+                self.emergency_manager_initialized = True
+                logging.info(
+                    f"🚨 Emergency Risk Manager ACTIVATED for {self.pair} - 4-level protocols enabled"
+                )
+            else:
+                logging.info(f"Emergency Risk Manager disabled for {self.pair}")
+        except Exception as e:
+            logging.error(
+                f"Failed to initialize Emergency Risk Manager for {self.pair}: {e}"
+            )
+            self.enable_emergency_management = False
+
     def validate_signal(
         self, signal: int, atr: float, risk_reward_ratio: float
     ) -> bool:
-        """Validate if a signal meets the minimum criteria."""
+        """Enhanced signal validation with Emergency Risk Management protocols."""
         try:
-            is_valid = (
+            # ═══ ORIGINAL VALIDATION ═══
+            original_valid = (
                 signal != 0
                 and atr >= self.min_atr_value
                 and risk_reward_ratio >= self.min_rr_ratio
             )
+
+            if not original_valid:
+                logging.debug(f"Signal rejected by original validation for {self.pair}")
+                return False
+
+            # ═══ EMERGENCY RISK MANAGEMENT VALIDATION ═══
+            if self.enable_emergency_management and self.emergency_manager:
+                try:
+                    emergency_status = self.emergency_manager.get_emergency_status()
+
+                    # 🛑 EMERGENCY STOP CHECK (Level 4 - 25% drawdown)
+                    if emergency_status.get("trading_halted", False):
+                        logging.critical(
+                            f"🛑 SIGNAL REJECTED for {self.pair}: EMERGENCY STOP ACTIVATED "
+                            f"(Level {emergency_status.get('emergency_level')})"
+                        )
+                        return False
+
+                    # 🚨 CRISIS MODE VALIDATION (Level 3 - 20% drawdown)
+                    emergency_level = emergency_status.get("emergency_level")
+                    if emergency_level == "LEVEL_3":
+                        # In crisis mode, require higher standards
+                        if risk_reward_ratio < 3.0:
+                            logging.warning(
+                                f"🚨 SIGNAL REJECTED for {self.pair}: Insufficient RR ({risk_reward_ratio:.2f}) "
+                                f"during CRISIS MODE (requires 3.0+)"
+                            )
+                            return False
+
+                        if atr < self.min_atr_value * 1.5:
+                            logging.warning(
+                                f"🚨 SIGNAL REJECTED for {self.pair}: Insufficient ATR ({atr:.4f}) "
+                                f"during CRISIS MODE"
+                            )
+                            return False
+
+                    # ⚠️ ELEVATED RISK VALIDATION (Level 1-2)
+                    elif emergency_level in ["LEVEL_1", "LEVEL_2"]:
+                        active_stress_events = emergency_status.get(
+                            "active_stress_events", 0
+                        )
+                        if active_stress_events > 0:
+                            logging.warning(
+                                f"⚠️ Signal evaluation during stress: {active_stress_events} active events"
+                            )
+
+                            # Require higher RR during stress
+                            if risk_reward_ratio < 2.0:
+                                logging.warning(
+                                    f"⚠️ SIGNAL REJECTED for {self.pair}: Insufficient RR during stress event"
+                                )
+                                return False
+
+                    # Log successful validation with emergency context
+                    if emergency_level != "NORMAL":
+                        logging.info(
+                            f"✅ SIGNAL ACCEPTED for {self.pair} under Emergency Level {emergency_level} "
+                            f"(RR: {risk_reward_ratio:.2f}, ATR: {atr:.4f})"
+                        )
+
+                    return True
+
+                except Exception as e:
+                    logging.error(f"Error in emergency validation for {self.pair}: {e}")
+                    # Conservative approach: reject signal during emergency system errors
+                    return False
+
+            # If emergency management is disabled, use original validation
             logging.debug(
-                f"Validating signal for {self.pair}: signal={signal}, atr={atr}, rr={risk_reward_ratio}, valid={is_valid}"
+                f"Signal validated for {self.pair} (Emergency Management disabled)"
             )
-            return is_valid
+            return original_valid
+
         except Exception as e:
             logging.error(f"Error validating signal for {self.pair}: {e}")
             return False
+
+    def calculate_emergency_position_size(
+        self, base_size: float, current_volatility: Optional[float] = None
+    ) -> float:
+        """Calculate position size with Emergency Risk Management adjustments."""
+        try:
+            if not self.enable_emergency_management or not self.emergency_manager:
+                return base_size
+
+            # Use Emergency Risk Manager for dynamic position sizing
+            adjusted_size = self.emergency_manager.calculate_position_size(
+                base_size=base_size,
+                pair=self.pair,
+                current_volatility=current_volatility,
+                portfolio_correlation=0.0,  # TODO: Implement portfolio correlation tracking
+            )
+
+            # Log position sizing adjustment
+            emergency_status = self.emergency_manager.get_emergency_status()
+            multiplier = emergency_status.get("position_size_multiplier", 1.0)
+
+            if abs(adjusted_size - base_size) > 0.01:  # Log if significant change
+                logging.info(
+                    f"💰 Position sizing for {self.pair}: ${base_size:.2f} → ${adjusted_size:.2f} "
+                    f"(Emergency Level: {emergency_status.get('emergency_level')}, "
+                    f"Multiplier: {multiplier:.1%})"
+                )
+
+            return adjusted_size
+
+        except Exception as e:
+            logging.error(
+                f"Error calculating emergency position size for {self.pair}: {e}"
+            )
+            return base_size * 0.5  # Conservative fallback
+
+    async def update_portfolio_value(self, new_value: float):
+        """Update portfolio value for Emergency Risk Management monitoring."""
+        try:
+            if self.enable_emergency_management and self.emergency_manager:
+                previous_value = self.portfolio_current_value
+                self.portfolio_current_value = new_value
+
+                # Update emergency manager
+                await self.emergency_manager.update_portfolio_value(new_value)
+
+                # Calculate and log drawdown
+                drawdown = (
+                    self.portfolio_initial_value - new_value
+                ) / self.portfolio_initial_value
+
+                if abs(new_value - previous_value) > (
+                    previous_value * 0.01
+                ):  # Log significant changes
+                    logging.info(
+                        f"📊 Portfolio update for {self.pair}: ${new_value:,.2f} "
+                        f"(Drawdown: {drawdown:.2%})"
+                    )
+
+                    # Log emergency level changes
+                    emergency_status = self.emergency_manager.get_emergency_status()
+                    emergency_level = emergency_status.get("emergency_level")
+                    if emergency_level != "NORMAL":
+                        logging.warning(
+                            f"⚠️ Emergency Level {emergency_level} active for {self.pair}"
+                        )
+
+        except Exception as e:
+            logging.error(f"Error updating portfolio value for {self.pair}: {e}")
+
+    async def monitor_market_stress(self, current_df: pd.DataFrame):
+        """Monitor for stress events using 2x volatility threshold."""
+        try:
+            if self.enable_emergency_management and self.emergency_manager:
+                # Prepare market data for stress detection
+                market_data = {self.pair: current_df}
+
+                # Monitor stress events
+                stress_events = await self.emergency_manager.monitor_stress_events(
+                    market_data
+                )
+
+                if stress_events:
+                    logging.warning(
+                        f"🚨 STRESS EVENTS DETECTED for {self.pair}: {len(stress_events)} events"
+                    )
+
+                    # Log critical stress events
+                    for event in stress_events[:2]:  # Log first 2 events
+                        logging.warning(
+                            f"  - {event.event_type.value}: Severity {event.severity:.2f}x "
+                            f"| Action: {event.recommended_action}"
+                        )
+
+                    # Send stress alerts if severe
+                    for event in stress_events:
+                        if event.severity > 3.0:  # Critical severity
+                            logging.critical(
+                                f"🔥 CRITICAL STRESS EVENT for {self.pair}: "
+                                f"{event.event_type.value} (Severity: {event.severity:.2f}x)"
+                            )
+
+                return stress_events
+
+        except Exception as e:
+            logging.error(f"Error monitoring market stress for {self.pair}: {e}")
+            return []
 
     def calculate_atr(self, df: pd.DataFrame) -> pd.Series:
         """Calculate Average True Range."""
@@ -592,6 +821,27 @@ class MovingAverageCrossStrategy:
                 {"pair": self.pair, "timeframe": self.timeframe},
             )
 
+            # ═══ EMERGENCY RISK MANAGEMENT: STRESS MONITORING (FALLBACK) ═══
+            if (
+                self.enable_emergency_management
+                and self.emergency_manager
+                and not df.empty
+            ):
+                try:
+                    # Set time as index for stress monitoring
+                    df_for_stress = df.copy()
+                    if "time" in df_for_stress.columns:
+                        df_for_stress.set_index("time", inplace=True)
+                    stress_events = await self.monitor_market_stress(df_for_stress)
+                    if stress_events:
+                        logging.info(
+                            f"🚨 Stress monitoring (fallback) completed for {self.pair}: {len(stress_events)} events detected"
+                        )
+                except Exception as stress_e:
+                    logging.error(
+                        f"Error in fallback stress monitoring for {self.pair}: {stress_e}"
+                    )
+
             # Process the dataframe with comprehensive error handling
             await self.process_dataframe(df)
 
@@ -817,6 +1067,25 @@ class MovingAverageCrossStrategy:
         """Main monitoring loop that fetches data and processes it periodically."""
         logging.info(f"Starting monitoring for {self.pair} {self.timeframe}")
 
+        # ═══ EMERGENCY RISK MANAGEMENT INITIALIZATION ═══
+        # Initialize Emergency Risk Manager first
+        if self.enable_emergency_management:
+            try:
+                await self.initialize_emergency_manager()
+                if self.emergency_manager:
+                    logging.info(
+                        f"🚨 Emergency Risk Management ACTIVATED for {self.pair}"
+                    )
+                else:
+                    logging.warning(
+                        f"⚠️ Emergency Risk Management failed to initialize for {self.pair}"
+                    )
+            except Exception as e:
+                logging.error(
+                    f"Failed to initialize Emergency Risk Manager for {self.pair}: {e}"
+                )
+                self.enable_emergency_management = False
+
         # Initialize Redis cache service for performance optimization
         try:
             cache_service = await initialize_cache_service()
@@ -879,6 +1148,22 @@ class MovingAverageCrossStrategy:
 
                             # Calculate remaining signals using optimized data
                             df = await self.process_optimized_signals(df)
+
+                            # ═══ EMERGENCY RISK MANAGEMENT: STRESS MONITORING ═══
+                            if (
+                                self.enable_emergency_management
+                                and self.emergency_manager
+                            ):
+                                try:
+                                    stress_events = await self.monitor_market_stress(df)
+                                    if stress_events:
+                                        logging.info(
+                                            f"🚨 Stress monitoring completed for {self.pair}: {len(stress_events)} events detected"
+                                        )
+                                except Exception as stress_e:
+                                    logging.error(
+                                        f"Error in stress monitoring for {self.pair}: {stress_e}"
+                                    )
 
                             # Process the optimized dataframe
                             await self.process_dataframe(df)
