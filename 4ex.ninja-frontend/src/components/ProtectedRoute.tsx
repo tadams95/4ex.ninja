@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ConnectWallet } from '@coinbase/onchainkit/wallet';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -19,8 +19,17 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  // Hydration-safe client check
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
+    // Only run client-side logic after hydration
+    if (!isClient) return;
+    
     // Don't redirect while still loading wallet connection state
     if (loading) return;
 
@@ -30,15 +39,15 @@ export default function ProtectedRoute({
       // This is handled by the component render below
       return;
     }
-  }, [isAuthenticated, loading, requireWallet, redirectTo, router]);
+  }, [isAuthenticated, loading, requireWallet, redirectTo, router, isClient]);
 
-  // Show loading state while determining wallet connection
-  if (loading) {
+  // Show consistent loading state during SSR and initial client render
+  if (!isClient || loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-          <p className="text-white">Checking wallet connection...</p>
+          <p className="text-white">Loading market insights...</p>
         </div>
       </div>
     );

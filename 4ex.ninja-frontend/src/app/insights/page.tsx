@@ -15,13 +15,13 @@ import { Crossover } from '@/types';
 import Link from 'next/link';
 import React, { useCallback, useEffect, useMemo } from 'react';
 
-function SignalsPage() {
+function InsightsPage() {
   // Get auth context for user info
   const { user, isAuthenticated } = useAuth();
 
   // Performance monitoring hooks
-  useRenderPerformance('SignalsPage');
-  usePageNavigationTracking('feed');
+  useRenderPerformance('InsightsPage');
+  usePageNavigationTracking('insights');
   const trackSignalLoad = useSignalLoadTracking();
 
   const { data: crossoverData, isLoading: loading, error, refetch } = useLatestCrossovers(20); // Get latest 20 crossovers with polling
@@ -78,7 +78,7 @@ function SignalsPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 max-w-2xl bg-black min-h-screen">
-        <h1 className="text-3xl font-bold mb-6">Latest Forex Signals</h1>
+        <h1 className="text-3xl font-bold mb-6">Market Intelligence Feed</h1>
         <div className="bg-red-500/20 text-red-400 p-6 rounded-md flex flex-col items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +94,7 @@ function SignalsPage() {
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
             />
           </svg>
-          <p className="font-medium mb-2">Error loading signals</p>
+          <p className="font-medium mb-2">Error loading market insights</p>
           <p className="text-sm">{error?.message || 'An error occurred'}</p>
           <button
             onClick={handleRetry}
@@ -112,7 +112,7 @@ function SignalsPage() {
       {/* Welcome Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-white">Latest MA Crossover Signals</h1>
+          <h1 className="text-3xl font-bold text-white">Market Movement Insights</h1>
           <p className="text-gray-400 text-sm mt-1">
             Connected:{' '}
             {user?.walletAddress
@@ -134,24 +134,24 @@ function SignalsPage() {
         </div>
       </div>
 
-      {/* Signal statistics - only show when we have data */}
+      {/* Intelligence statistics - only show when we have data */}
       {!loading && !error && processedData.stats.totalSignals > 0 && (
         <div className="bg-gray-800 rounded-lg p-6 mb-8 grid grid-cols-3 gap-6 text-center">
           <div>
             <div className="text-2xl font-bold text-success">
               {processedData.stats.bullishCount}
             </div>
-            <div className="text-sm text-gray-400">Bullish</div>
+            <div className="text-sm text-gray-400">Bullish Opportunities</div>
           </div>
           <div>
             <div className="text-2xl font-bold text-error">{processedData.stats.bearishCount}</div>
-            <div className="text-sm text-gray-400">Bearish</div>
+            <div className="text-sm text-gray-400">Bearish Opportunities</div>
           </div>
           <div>
             <div className="text-2xl font-bold text-info">
               {processedData.stats.bullishPercentage}%
             </div>
-            <div className="text-sm text-gray-400">Bullish Rate</div>
+            <div className="text-sm text-gray-400">Opportunity Rate</div>
           </div>
         </div>
       )}
@@ -172,14 +172,14 @@ function SignalsPage() {
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p className="text-xl font-medium mb-2">No signals available</p>
+          <p className="text-xl font-medium mb-2">No insights available</p>
           <p className="text-gray-400">
-            Our system is currently analyzing market movements.
+            Our intelligence system is currently analyzing market movements.
             <br />
-            New MA crossover signals will appear here when they occur.
+            New market insights will appear here when opportunities arise.
           </p>
           <p className="text-gray-500 mt-4 text-sm">
-            Crossovers are monitored across multiple timeframes and pairs.
+            Insights are generated from multiple timeframes and currency pairs.
           </p>
         </div>
       ) : (
@@ -196,11 +196,11 @@ function SignalsPage() {
 }
 
 // Wrap the component with ProtectedRoute and FeedErrorBoundary
-export default function ProtectedSignalsPage(): React.ReactElement {
+export default function ProtectedInsightsPage(): React.ReactElement {
   return (
     <ProtectedRoute requireWallet={true}>
       <FeedErrorBoundary>
-        <SignalsPage />
+        <InsightsPage />
       </FeedErrorBoundary>
     </ProtectedRoute>
   );

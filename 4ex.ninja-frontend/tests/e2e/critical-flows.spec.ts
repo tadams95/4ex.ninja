@@ -24,7 +24,7 @@ test.describe('Complete Critical User Journey - E2E Flow', () => {
     await page.click('[data-testid="register-button"]');
 
     // Verify successful registration
-    await expect(page).toHaveURL('/feed');
+    await expect(page).toHaveURL('/insights');
     console.log('✅ User registration completed');
 
     // STEP 2: Premium Subscription Purchase (Subscription Flow)
@@ -48,7 +48,7 @@ test.describe('Complete Critical User Journey - E2E Flow', () => {
 
     // Verify subscription success
     await expect(page.locator('[data-testid="purchase-success"]')).toBeVisible();
-    await expect(page).toHaveURL('/feed');
+    await expect(page).toHaveURL('/insights');
     console.log('✅ Premium subscription activated');
 
     // STEP 3: Execute Trading Operations (Trading Flow)
@@ -88,7 +88,7 @@ test.describe('Complete Critical User Journey - E2E Flow', () => {
     // 2. Premium subscriber with access to advanced features
     // 3. Active trader with open positions
 
-    await page.goto('/feed');
+    await page.goto('/insights');
     await expect(page.locator('[data-testid="subscription-status"]')).toContainText('Premium');
     await expect(page.locator('[data-testid="active-positions-count"]')).toContainText('1');
     await expect(page.locator('[data-testid="account-tier"]')).toContainText('Premium');

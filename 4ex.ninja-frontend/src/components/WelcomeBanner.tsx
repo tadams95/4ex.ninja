@@ -101,7 +101,7 @@ export default function WelcomeBanner() {
 
         <div className="flex space-x-4">
           <Link
-            href="/feed"
+            href="/insights"
             className="bg-green-700 hover:bg-green-800 active:bg-green-900
               text-white border border-green-600 hover:border-green-500 
               hover:text-green-100 font-semibold rounded-xl 

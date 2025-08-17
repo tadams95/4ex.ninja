@@ -23,6 +23,7 @@ export const LoadingSequence: React.FC<LoadingSequenceProps> = ({
 }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [showContent, setShowContent] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   // Default steps for different flow types
   const defaultSteps = {
@@ -40,7 +41,7 @@ export const LoadingSequence: React.FC<LoadingSequenceProps> = ({
     ],
     trading: [
       'Connecting to market data...',
-      'Loading latest signals...',
+      'Loading latest insights...',
       'Calculating performance...',
       'Ready to trade!',
     ],
@@ -49,7 +50,14 @@ export const LoadingSequence: React.FC<LoadingSequenceProps> = ({
 
   const sequenceSteps = steps || defaultSteps[type];
 
+  // Hydration-safe client check
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+    
     const stepDuration = duration / sequenceSteps.length;
 
     const interval = setInterval(() => {
@@ -63,13 +71,13 @@ export const LoadingSequence: React.FC<LoadingSequenceProps> = ({
     }, stepDuration);
 
     return () => clearInterval(interval);
-  }, [sequenceSteps.length, duration]);
+  }, [sequenceSteps.length, duration, isClient]);
 
   useEffect(() => {
-    if (currentStep !== undefined) {
+    if (currentStep !== undefined && isClient) {
       setActiveStep(currentStep);
     }
-  }, [currentStep]);
+  }, [currentStep, isClient]);
 
   const renderContent = () => {
     switch (type) {
@@ -83,6 +91,18 @@ export const LoadingSequence: React.FC<LoadingSequenceProps> = ({
         return <GeneralLoadingContent />;
     }
   };
+
+  // Render simplified loading for SSR, full loading for client
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
+          <p className="text-white">Loading market insights...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl bg-black min-h-screen">

@@ -79,7 +79,7 @@ class HeaderErrorBoundary extends Component<Props, State> {
                   <a href="/" className="text-gray-300 hover:text-white text-sm">
                     Home
                   </a>
-                  <a href="/feed" className="text-gray-300 hover:text-white text-sm">
+                  <a href="/insights" className="text-gray-300 hover:text-white text-sm">
                     Feed
                   </a>
                   <a href="/pricing" className="text-gray-300 hover:text-white text-sm">

@@ -197,7 +197,7 @@ function AccountPage() {
         {/* Navigation */}
         <div className="text-center">
           <Link
-            href="/feed"
+            href="/insights"
             className="inline-flex items-center px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

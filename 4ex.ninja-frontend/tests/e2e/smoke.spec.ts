@@ -39,7 +39,7 @@ test.describe('Smoke Tests - Basic App Functionality', () => {
   });
 
   test('protected route redirects unauthenticated users', async ({ page }) => {
-    await page.goto('/feed');
+    await page.goto('/insights');
 
     // Should redirect to login
     await expect(page).toHaveURL(/\/login/);

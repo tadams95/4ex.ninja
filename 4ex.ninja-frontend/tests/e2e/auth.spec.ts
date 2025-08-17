@@ -35,14 +35,14 @@ test.describe('Authentication Flow - Critical Path', () => {
     await auth.register(newUser);
 
     // After registration, user should be redirected to either:
-    // 1. /feed (if auto-subscribed)
+    // 1. /insights (if auto-subscribed)
     // 2. /pricing (needs subscription)
     // 3. Stripe checkout (direct subscription flow)
     const currentUrl = page.url();
     console.log('Registration completed, final URL:', currentUrl);
 
     expect(
-      currentUrl.includes('/feed') ||
+      currentUrl.includes('/insights') ||
         currentUrl.includes('/pricing') ||
         currentUrl.includes('checkout.stripe.com')
     ).toBe(true);
@@ -53,7 +53,7 @@ test.describe('Authentication Flow - Critical Path', () => {
     await authHelpers.login();
 
     // Verify successful login state
-    await expect(page).toHaveURL('/feed');
+    await expect(page).toHaveURL('/insights');
 
     // Check for authenticated user elements in header
     await expect(page.locator('text=Account')).toBeVisible();
@@ -73,7 +73,7 @@ test.describe('Authentication Flow - Critical Path', () => {
     // Wait a bit for any response
     await page.waitForTimeout(3000);
 
-    // Should remain on login page (not redirected to /feed)
+    // Should remain on login page (not redirected to /insights)
     expect(page.url()).toContain('/login');
 
     // Test passes if we stay on login page (indicating invalid credentials were rejected)
@@ -94,7 +94,7 @@ test.describe('Authentication Flow - Critical Path', () => {
 
   test('should redirect unauthenticated users from protected routes', async ({ page }) => {
     // Try to access protected route without authentication
-    await page.goto('/feed');
+    await page.goto('/insights');
 
     // Should redirect to login (with possible query parameters)
     await expect(page).toHaveURL(/\/login/);
@@ -104,13 +104,13 @@ test.describe('Authentication Flow - Critical Path', () => {
   test('should persist authentication state across browser refresh', async ({ page }) => {
     // Login and verify state
     await authHelpers.login();
-    await expect(page).toHaveURL('/feed');
+    await expect(page).toHaveURL('/insights');
 
     // Refresh page
     await page.reload();
 
     // Should still be authenticated
-    await expect(page).toHaveURL('/feed');
+    await expect(page).toHaveURL('/insights');
     await expect(page.locator('text=Account')).toBeVisible();
     await expect(page.locator('text=Sign Out')).toBeVisible();
   });

@@ -111,16 +111,16 @@ const HeaderComponent = memo(function HeaderComponent() {
             </li>
             <li className="py-3 md:py-0">
               <Link
-                href="/feed"
+                href="/insights"
                 prefetch={true}
                 onClick={handleNavClick}
                 className="hover:text-green-500 transition-colors duration-200
                   focus:outline-none focus:text-green-400 focus:ring-2 
                   focus:ring-green-500/50 rounded-md px-2 py-1 min-h-[44px] 
                   flex items-center"
-                aria-label="Dashboard"
+                aria-label="Market Insights"
               >
-                Dashboard
+                Insights
               </Link>
             </li>
 

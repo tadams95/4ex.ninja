@@ -73,8 +73,8 @@ export const useQueryPrefetching = () => {
             ]);
             break;
 
-          case '/feed':
-            // From feed, user might check account or look at more data
+          case '/insights':
+            // From insights, user might check account or look at more data
             if (userId) {
               await Promise.allSettled([
                 prefetchAccountData(userId),
@@ -109,7 +109,7 @@ export const useQueryPrefetching = () => {
     async (targetRoute: string, userId?: string) => {
       try {
         switch (targetRoute) {
-          case '/feed':
+          case '/insights':
             await prefetchFeedData();
             break;
           case '/account':
