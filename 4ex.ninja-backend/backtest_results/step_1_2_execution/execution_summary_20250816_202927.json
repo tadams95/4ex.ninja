@@ -1,0 +1,359 @@
+{
+  "step": "Step 1.2: Data Acquisition & Preparation",
+  "start_time": "2025-08-16T20:27:11.635078",
+  "status": "COMPLETED",
+  "phase": "REPORTING",
+  "deliverables": {
+    "validation": {
+      "infrastructure_ready": true,
+      "backup_sources_ready": true,
+      "validation_timestamp": "2025-08-16T20:27:12.072349"
+    },
+    "setup": {
+      "backup_config_file": "config/backup_data_sources.json",
+      "setup_timestamp": "2025-08-16T20:27:12.072730"
+    },
+    "acquisition": {
+      "total_combinations": 30,
+      "successful_downloads": 0,
+      "failed_downloads": 30,
+      "success_rate": 0.0,
+      "data_completeness": 0.0,
+      "total_candles": 0,
+      "acquisition_timestamp": "2025-08-16T20:29:27.362710",
+      "detailed_results": {
+        "execution_info": {
+          "start_time": "2025-08-16T20:27:12.072952",
+          "end_time": "2025-08-16T20:29:27.361220",
+          "total_duration": "0:02:15.288261",
+          "config_used": {
+            "max_missing_data_pct": 0.1,
+            "data_output_dir": "backtest_results/historical_data",
+            "reports_output_dir": "backtest_results/data_quality_reports",
+            "batch_size": 1000,
+            "retry_attempts": 3,
+            "retry_delay": 2.0
+          }
+        },
+        "download_summary": {
+          "total_combinations": 30,
+          "successful_downloads": 0,
+          "failed_downloads": 30,
+          "success_rate": 0.0,
+          "total_candles_downloaded": 0,
+          "total_candles_expected": 52140,
+          "data_completeness": 0.0,
+          "average_success_rate": 0.0,
+          "total_duration": "0:02:15.286492",
+          "download_speed": 0.0
+        },
+        "quality_summary": {},
+        "detailed_progress": {
+          "EUR_USD_4H": {
+            "pair": "EUR_USD",
+            "timeframe": "4H",
+            "total_expected": 4380,
+            "downloaded": 0,
+            "failed": 4380,
+            "start_time": "2025-08-16 20:27:12.076019",
+            "end_time": "2025-08-16 20:27:29.609994"
+          },
+          "EUR_USD_D": {
+            "pair": "EUR_USD",
+            "timeframe": "D",
+            "total_expected": 730,
+            "downloaded": 0,
+            "failed": 730,
+            "start_time": "2025-08-16 20:27:12.076024",
+            "end_time": "2025-08-16 20:27:34.117613"
+          },
+          "EUR_USD_W": {
+            "pair": "EUR_USD",
+            "timeframe": "W",
+            "total_expected": 104,
+            "downloaded": 0,
+            "failed": 104,
+            "start_time": "2025-08-16 20:27:12.076030",
+            "end_time": "2025-08-16 20:27:38.625165"
+          },
+          "GBP_USD_4H": {
+            "pair": "GBP_USD",
+            "timeframe": "4H",
+            "total_expected": 4380,
+            "downloaded": 0,
+            "failed": 4380,
+            "start_time": "2025-08-16 20:27:12.076033",
+            "end_time": "2025-08-16 20:27:43.134952"
+          },
+          "GBP_USD_D": {
+            "pair": "GBP_USD",
+            "timeframe": "D",
+            "total_expected": 730,
+            "downloaded": 0,
+            "failed": 730,
+            "start_time": "2025-08-16 20:27:12.076035",
+            "end_time": "2025-08-16 20:27:47.642824"
+          },
+          "GBP_USD_W": {
+            "pair": "GBP_USD",
+            "timeframe": "W",
+            "total_expected": 104,
+            "downloaded": 0,
+            "failed": 104,
+            "start_time": "2025-08-16 20:27:12.076036",
+            "end_time": "2025-08-16 20:27:52.160149"
+          },
+          "USD_JPY_4H": {
+            "pair": "USD_JPY",
+            "timeframe": "4H",
+            "total_expected": 4380,
+            "downloaded": 0,
+            "failed": 4380,
+            "start_time": "2025-08-16 20:27:12.076038",
+            "end_time": "2025-08-16 20:28:23.729251"
+          },
+          "USD_JPY_D": {
+            "pair": "USD_JPY",
+            "timeframe": "D",
+            "total_expected": 730,
+            "downloaded": 0,
+            "failed": 730,
+            "start_time": "2025-08-16 20:27:12.076039",
+            "end_time": "2025-08-16 20:28:28.238093"
+          },
+          "USD_JPY_W": {
+            "pair": "USD_JPY",
+            "timeframe": "W",
+            "total_expected": 104,
+            "downloaded": 0,
+            "failed": 104,
+            "start_time": "2025-08-16 20:27:12.076041",
+            "end_time": "2025-08-16 20:28:32.744753"
+          },
+          "USD_CHF_4H": {
+            "pair": "USD_CHF",
+            "timeframe": "4H",
+            "total_expected": 4380,
+            "downloaded": 0,
+            "failed": 4380,
+            "start_time": "2025-08-16 20:27:12.076042",
+            "end_time": "2025-08-16 20:28:10.201511"
+          },
+          "USD_CHF_D": {
+            "pair": "USD_CHF",
+            "timeframe": "D",
+            "total_expected": 730,
+            "downloaded": 0,
+            "failed": 730,
+            "start_time": "2025-08-16 20:27:12.076043",
+            "end_time": "2025-08-16 20:28:14.711364"
+          },
+          "USD_CHF_W": {
+            "pair": "USD_CHF",
+            "timeframe": "W",
+            "total_expected": 104,
+            "downloaded": 0,
+            "failed": 104,
+            "start_time": "2025-08-16 20:27:12.076044",
+            "end_time": "2025-08-16 20:28:19.224414"
+          },
+          "AUD_USD_4H": {
+            "pair": "AUD_USD",
+            "timeframe": "4H",
+            "total_expected": 4380,
+            "downloaded": 0,
+            "failed": 4380,
+            "start_time": "2025-08-16 20:27:12.076046",
+            "end_time": "2025-08-16 20:27:16.084275"
+          },
+          "AUD_USD_D": {
+            "pair": "AUD_USD",
+            "timeframe": "D",
+            "total_expected": 730,
+            "downloaded": 0,
+            "failed": 730,
+            "start_time": "2025-08-16 20:27:12.076047",
+            "end_time": "2025-08-16 20:27:20.592879"
+          },
+          "AUD_USD_W": {
+            "pair": "AUD_USD",
+            "timeframe": "W",
+            "total_expected": 104,
+            "downloaded": 0,
+            "failed": 104,
+            "start_time": "2025-08-16 20:27:12.076048",
+            "end_time": "2025-08-16 20:27:25.101334"
+          },
+          "USD_CAD_4H": {
+            "pair": "USD_CAD",
+            "timeframe": "4H",
+            "total_expected": 4380,
+            "downloaded": 0,
+            "failed": 4380,
+            "start_time": "2025-08-16 20:27:12.076049",
+            "end_time": "2025-08-16 20:27:56.670928"
+          },
+          "USD_CAD_D": {
+            "pair": "USD_CAD",
+            "timeframe": "D",
+            "total_expected": 730,
+            "downloaded": 0,
+            "failed": 730,
+            "start_time": "2025-08-16 20:27:12.076050",
+            "end_time": "2025-08-16 20:28:01.184860"
+          },
+          "USD_CAD_W": {
+            "pair": "USD_CAD",
+            "timeframe": "W",
+            "total_expected": 104,
+            "downloaded": 0,
+            "failed": 104,
+            "start_time": "2025-08-16 20:27:12.076051",
+            "end_time": "2025-08-16 20:28:05.691952"
+          },
+          "EUR_GBP_4H": {
+            "pair": "EUR_GBP",
+            "timeframe": "4H",
+            "total_expected": 4380,
+            "downloaded": 0,
+            "failed": 4380,
+            "start_time": "2025-08-16 20:27:12.076053",
+            "end_time": "2025-08-16 20:28:50.785933"
+          },
+          "EUR_GBP_D": {
+            "pair": "EUR_GBP",
+            "timeframe": "D",
+            "total_expected": 730,
+            "downloaded": 0,
+            "failed": 730,
+            "start_time": "2025-08-16 20:27:12.076054",
+            "end_time": "2025-08-16 20:28:55.293167"
+          },
+          "EUR_GBP_W": {
+            "pair": "EUR_GBP",
+            "timeframe": "W",
+            "total_expected": 104,
+            "downloaded": 0,
+            "failed": 104,
+            "start_time": "2025-08-16 20:27:12.076055",
+            "end_time": "2025-08-16 20:28:59.801320"
+          },
+          "EUR_JPY_4H": {
+            "pair": "EUR_JPY",
+            "timeframe": "4H",
+            "total_expected": 4380,
+            "downloaded": 0,
+            "failed": 4380,
+            "start_time": "2025-08-16 20:27:12.076056",
+            "end_time": "2025-08-16 20:29:04.308795"
+          },
+          "EUR_JPY_D": {
+            "pair": "EUR_JPY",
+            "timeframe": "D",
+            "total_expected": 730,
+            "downloaded": 0,
+            "failed": 730,
+            "start_time": "2025-08-16 20:27:12.076057",
+            "end_time": "2025-08-16 20:29:08.819459"
+          },
+          "EUR_JPY_W": {
+            "pair": "EUR_JPY",
+            "timeframe": "W",
+            "total_expected": 104,
+            "downloaded": 0,
+            "failed": 104,
+            "start_time": "2025-08-16 20:27:12.076058",
+            "end_time": "2025-08-16 20:29:13.326630"
+          },
+          "GBP_JPY_4H": {
+            "pair": "GBP_JPY",
+            "timeframe": "4H",
+            "total_expected": 4380,
+            "downloaded": 0,
+            "failed": 4380,
+            "start_time": "2025-08-16 20:27:12.076060",
+            "end_time": "2025-08-16 20:29:17.836694"
+          },
+          "GBP_JPY_D": {
+            "pair": "GBP_JPY",
+            "timeframe": "D",
+            "total_expected": 730,
+            "downloaded": 0,
+            "failed": 730,
+            "start_time": "2025-08-16 20:27:12.076061",
+            "end_time": "2025-08-16 20:29:22.346335"
+          },
+          "GBP_JPY_W": {
+            "pair": "GBP_JPY",
+            "timeframe": "W",
+            "total_expected": 104,
+            "downloaded": 0,
+            "failed": 104,
+            "start_time": "2025-08-16 20:27:12.076062",
+            "end_time": "2025-08-16 20:29:26.855048"
+          },
+          "AUD_JPY_4H": {
+            "pair": "AUD_JPY",
+            "timeframe": "4H",
+            "total_expected": 4380,
+            "downloaded": 0,
+            "failed": 4380,
+            "start_time": "2025-08-16 20:27:12.076063",
+            "end_time": "2025-08-16 20:28:37.255141"
+          },
+          "AUD_JPY_D": {
+            "pair": "AUD_JPY",
+            "timeframe": "D",
+            "total_expected": 730,
+            "downloaded": 0,
+            "failed": 730,
+            "start_time": "2025-08-16 20:27:12.076064",
+            "end_time": "2025-08-16 20:28:41.768637"
+          },
+          "AUD_JPY_W": {
+            "pair": "AUD_JPY",
+            "timeframe": "W",
+            "total_expected": 104,
+            "downloaded": 0,
+            "failed": 104,
+            "start_time": "2025-08-16 20:27:12.076066",
+            "end_time": "2025-08-16 20:28:46.277973"
+          }
+        },
+        "deliverables_status": {
+          "historical_data_for_all_target_pairs": false,
+          "data_quality_validation_reports": false,
+          "data_pipeline_automation_scripts": true,
+          "backup_data_source_configuration": false,
+          "quality_standards_met": false,
+          "comprehensive_coverage": false
+        },
+        "recommendations": [
+          "Download success rate (0.0%) is below 90%. Consider implementing additional retry logic or backup data sources.",
+          "Average data quality score (0.0%) is below 85%. Review data sources and validation criteria.",
+          "30 download(s) failed. Review error logs and retry failed downloads.",
+          "Data completeness (0.0%) is below 95%. Consider implementing gap-filling strategies."
+        ]
+      }
+    },
+    "quality_validation": {
+      "files_validated": 0,
+      "average_quality_score": 0,
+      "average_missing_data_pct": 0,
+      "high_quality_files": 0,
+      "low_quality_files": 0,
+      "validation_timestamp": "2025-08-16T20:29:27.362809",
+      "quality_standards_met": false
+    },
+    "reporting": {
+      "completion_report": "backtest_results/step_1_2_execution/step_1_2_completion_report_20250816_202927.json",
+      "markdown_summary": "backtest_results/step_1_2_execution/step_1_2_summary_20250816_202927.md",
+      "reporting_timestamp": "2025-08-16T20:29:27.364093"
+    }
+  },
+  "errors": [],
+  "recommendations": [
+    "Data quality below standards - consider re-downloading problematic pairs"
+  ],
+  "end_time": "2025-08-16T20:29:27.364244"
+}

@@ -1,0 +1,87 @@
+{
+  "backup_sources": {
+    "alpha_vantage": {
+      "name": "Alpha Vantage",
+      "priority": 2,
+      "available": false,
+      "api_key_required": true,
+      "rate_limit": "5 calls per minute",
+      "supported_pairs": [
+        "EUR_USD",
+        "GBP_USD",
+        "USD_JPY",
+        "USD_CHF"
+      ],
+      "supported_timeframes": [
+        "D"
+      ],
+      "config": {
+        "base_url": "https://www.alphavantage.co/query",
+        "function": "FX_DAILY"
+      }
+    },
+    "yahoo_finance": {
+      "name": "Yahoo Finance",
+      "priority": 3,
+      "available": true,
+      "api_key_required": false,
+      "rate_limit": "Reasonable usage",
+      "supported_pairs": [
+        "EURUSD=X",
+        "GBPUSD=X",
+        "USDJPY=X"
+      ],
+      "supported_timeframes": [
+        "D"
+      ],
+      "config": {
+        "base_url": "https://finance.yahoo.com",
+        "library": "yfinance"
+      }
+    },
+    "local_csv": {
+      "name": "Local CSV Files",
+      "priority": 4,
+      "available": true,
+      "api_key_required": false,
+      "rate_limit": "None",
+      "supported_pairs": [
+        "ALL"
+      ],
+      "supported_timeframes": [
+        "4H",
+        "D",
+        "W"
+      ],
+      "config": {
+        "data_directory": "data/historical_backup",
+        "format": "csv"
+      }
+    },
+    "synthetic_data": {
+      "name": "Synthetic Data Generator",
+      "priority": 5,
+      "available": true,
+      "api_key_required": false,
+      "rate_limit": "None",
+      "supported_pairs": [
+        "ALL"
+      ],
+      "supported_timeframes": [
+        "ALL"
+      ],
+      "config": {
+        "method": "geometric_brownian_motion",
+        "volatility": 0.15,
+        "drift": 0.02
+      }
+    }
+  },
+  "generated_at": "2025-08-16T20:27:12.072478",
+  "configuration_notes": {
+    "alpha_vantage": "Requires API key in environment variable ALPHA_VANTAGE_API_KEY",
+    "yahoo_finance": "Requires yfinance library: pip install yfinance",
+    "local_csv": "Place CSV files in data/historical_backup directory",
+    "synthetic_data": "Always available for testing purposes"
+  }
+}

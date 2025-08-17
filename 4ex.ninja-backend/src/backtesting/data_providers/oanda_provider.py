@@ -278,17 +278,16 @@ class OandaProvider(BaseDataProvider):
             start_str = start_time.strftime("%Y-%m-%dT%H:%M:%S.000Z")
             end_str = end_time.strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
-            # Get candles from OANDA API
-            # Note: OANDA API doesn't allow 'count' when 'from' and 'to' are specified
+            # Get candles from OANDA API using keyword arguments
             loop = asyncio.get_event_loop()
             raw_candles = await loop.run_in_executor(
                 None,
-                self.oanda_api.get_candles,
-                pair,
-                oanda_granularity,
-                None,  # Don't use count when we have time range
-                start_str,
-                end_str,
+                lambda: self.oanda_api.get_candles(
+                    instrument=pair,
+                    granularity=oanda_granularity,
+                    start=start_str,
+                    end=end_str,
+                ),
             )
 
             if not raw_candles:
