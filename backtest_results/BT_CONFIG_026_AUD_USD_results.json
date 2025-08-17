@@ -3,56 +3,78 @@
   "currency_pair": "AUD_USD",
   "strategy": "aggressive_aggressive_daily",
   "timeframe": "D",
-  "execution_date": "2025-08-16T21:02:22.502179",
+  "execution_date": "2025-08-16T21:38:19.628449",
   "status": "Completed",
   "performance_metrics": {
-    "total_return": 1.68,
-    "annual_return": 0.336,
-    "sharpe_ratio": 1.05,
-    "sortino_ratio": 1.26,
-    "max_drawdown": 0.171,
-    "calmar_ratio": 1.87,
-    "profit_factor": 1.81,
-    "volatility": 0.139
+    "total_return": 1.383,
+    "annual_return": 0.277,
+    "sharpe_ratio": 0.8,
+    "sortino_ratio": 0.92,
+    "max_drawdown": 0.221,
+    "calmar_ratio": 1.25,
+    "profit_factor": 1.46,
+    "volatility": 0.134,
+    "var_95": 0.132,
+    "skewness": -0.06,
+    "kurtosis": 3.56
   },
   "trade_statistics": {
-    "total_trades": 120,
-    "winning_trades": 56,
-    "losing_trades": 64,
+    "total_trades": 107,
+    "winning_trades": 50,
+    "losing_trades": 57,
     "win_rate": 0.47,
-    "avg_win": 1.5,
+    "avg_win": 1.6,
     "avg_loss": -1.0,
-    "largest_win": 3.2,
-    "largest_loss": -3.0,
-    "avg_trade_duration": "1 day"
+    "largest_win": 3.36,
+    "largest_loss": -2.3,
+    "consecutive_wins": 7,
+    "consecutive_losses": 10,
+    "avg_trade_duration": "3.2 days",
+    "expectancy": 0.222
   },
   "regime_analysis": {
     "regime_performance": {
       "trending_markets": {
-        "return": 0.28,
-        "trades": 45,
-        "win_rate": 0.62,
-        "description": "Strong performance in trending conditions"
+        "return": 0.24,
+        "trades": 35,
+        "win_rate": 0.52,
+        "description": "Excellent performance in trending conditions"
       },
       "ranging_markets": {
-        "return": 0.08,
-        "trades": 32,
+        "return": 0.18,
+        "trades": 28,
         "win_rate": 0.48,
         "description": "Moderate performance in ranging conditions"
       },
       "high_volatility": {
-        "return": -0.05,
-        "trades": 18,
-        "win_rate": 0.39,
-        "description": "Reduced performance during high volatility"
+        "return": 0.05,
+        "trades": 20,
+        "win_rate": 0.47,
+        "description": "Challenging conditions, aggressive strategies adapt better"
       },
       "low_volatility": {
-        "return": 0.15,
-        "trades": 25,
-        "win_rate": 0.56,
+        "return": 0.1,
+        "trades": 20,
+        "win_rate": 0.48,
         "description": "Steady performance in calm markets"
       }
     }
   },
-  "execution_time": "12.3 seconds"
+  "timeframe_analysis": {
+    "signal_quality": "Good",
+    "noise_level": "Medium",
+    "trend_capture": "Good",
+    "trade_frequency": "Medium",
+    "best_for": "Swing trading balance"
+  },
+  "risk_analysis": {
+    "risk_metrics": {
+      "position_size_avg": "3%",
+      "max_position_size": "5%",
+      "risk_reward_achieved": "1.2:1",
+      "drawdown_recovery_time": "5 months"
+    },
+    "risk_assessment": "High"
+  },
+  "execution_time": "8.7 seconds"
 }

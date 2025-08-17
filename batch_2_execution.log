@@ -1,0 +1,326 @@
+2025-08-16 21:38:19,558 - INFO - 🎯 Starting Batch 2: Complete Major Pairs Analysis
+2025-08-16 21:38:19,558 - INFO - 📊 Executing 162 comprehensive major pairs backtests...
+2025-08-16 21:38:19,558 - INFO - [1/162] Processing BT_CONFIG_005_EUR_USD
+2025-08-16 21:38:19,558 - INFO - 🚀 Executing: EUR_USD | conservative_moderate_daily | D
+2025-08-16 21:38:19,559 - INFO - [2/162] Processing BT_CONFIG_005_GBP_USD
+2025-08-16 21:38:19,560 - INFO - 🚀 Executing: GBP_USD | conservative_moderate_daily | D
+2025-08-16 21:38:19,560 - INFO - [3/162] Processing BT_CONFIG_005_USD_JPY
+2025-08-16 21:38:19,560 - INFO - 🚀 Executing: USD_JPY | conservative_moderate_daily | D
+2025-08-16 21:38:19,562 - INFO - [4/162] Processing BT_CONFIG_005_USD_CHF
+2025-08-16 21:38:19,562 - INFO - 🚀 Executing: USD_CHF | conservative_moderate_daily | D
+2025-08-16 21:38:19,562 - INFO - [5/162] Processing BT_CONFIG_005_AUD_USD
+2025-08-16 21:38:19,563 - INFO - 🚀 Executing: AUD_USD | conservative_moderate_daily | D
+2025-08-16 21:38:19,563 - INFO - [6/162] Processing BT_CONFIG_005_USD_CAD
+2025-08-16 21:38:19,564 - INFO - 🚀 Executing: USD_CAD | conservative_moderate_daily | D
+2025-08-16 21:38:19,564 - INFO - [7/162] Processing BT_CONFIG_011_EUR_USD
+2025-08-16 21:38:19,564 - INFO - 🚀 Executing: EUR_USD | moderate_conservative_daily | D
+2025-08-16 21:38:19,565 - INFO - [8/162] Processing BT_CONFIG_011_GBP_USD
+2025-08-16 21:38:19,565 - INFO - 🚀 Executing: GBP_USD | moderate_conservative_daily | D
+2025-08-16 21:38:19,565 - INFO - [9/162] Processing BT_CONFIG_011_USD_JPY
+2025-08-16 21:38:19,565 - INFO - 🚀 Executing: USD_JPY | moderate_conservative_daily | D
+2025-08-16 21:38:19,566 - INFO - [10/162] Processing BT_CONFIG_011_USD_CHF
+2025-08-16 21:38:19,566 - INFO - 🚀 Executing: USD_CHF | moderate_conservative_daily | D
+2025-08-16 21:38:19,566 - INFO - [11/162] Processing BT_CONFIG_011_AUD_USD
+2025-08-16 21:38:19,567 - INFO - 🚀 Executing: AUD_USD | moderate_conservative_daily | D
+2025-08-16 21:38:19,567 - INFO - [12/162] Processing BT_CONFIG_011_USD_CAD
+2025-08-16 21:38:19,567 - INFO - 🚀 Executing: USD_CAD | moderate_conservative_daily | D
+2025-08-16 21:38:19,568 - INFO - [13/162] Processing BT_CONFIG_014_EUR_USD
+2025-08-16 21:38:19,568 - INFO - 🚀 Executing: EUR_USD | moderate_moderate_daily | D
+2025-08-16 21:38:19,569 - INFO - [14/162] Processing BT_CONFIG_014_GBP_USD
+2025-08-16 21:38:19,569 - INFO - 🚀 Executing: GBP_USD | moderate_moderate_daily | D
+2025-08-16 21:38:19,569 - INFO - [15/162] Processing BT_CONFIG_014_USD_JPY
+2025-08-16 21:38:19,569 - INFO - 🚀 Executing: USD_JPY | moderate_moderate_daily | D
+2025-08-16 21:38:19,570 - INFO - [16/162] Processing BT_CONFIG_014_USD_CHF
+2025-08-16 21:38:19,570 - INFO - 🚀 Executing: USD_CHF | moderate_moderate_daily | D
+2025-08-16 21:38:19,571 - INFO - [17/162] Processing BT_CONFIG_014_AUD_USD
+2025-08-16 21:38:19,571 - INFO - 🚀 Executing: AUD_USD | moderate_moderate_daily | D
+2025-08-16 21:38:19,572 - INFO - [18/162] Processing BT_CONFIG_014_USD_CAD
+2025-08-16 21:38:19,572 - INFO - 🚀 Executing: USD_CAD | moderate_moderate_daily | D
+2025-08-16 21:38:19,572 - INFO - [19/162] Processing BT_CONFIG_017_EUR_USD
+2025-08-16 21:38:19,572 - INFO - 🚀 Executing: EUR_USD | moderate_aggressive_daily | D
+2025-08-16 21:38:19,573 - INFO - [20/162] Processing BT_CONFIG_017_GBP_USD
+2025-08-16 21:38:19,573 - INFO - 🚀 Executing: GBP_USD | moderate_aggressive_daily | D
+2025-08-16 21:38:19,573 - INFO - [21/162] Processing BT_CONFIG_017_USD_JPY
+2025-08-16 21:38:19,573 - INFO - 🚀 Executing: USD_JPY | moderate_aggressive_daily | D
+2025-08-16 21:38:19,573 - INFO - [22/162] Processing BT_CONFIG_017_USD_CHF
+2025-08-16 21:38:19,573 - INFO - 🚀 Executing: USD_CHF | moderate_aggressive_daily | D
+2025-08-16 21:38:19,574 - INFO - [23/162] Processing BT_CONFIG_017_AUD_USD
+2025-08-16 21:38:19,574 - INFO - 🚀 Executing: AUD_USD | moderate_aggressive_daily | D
+2025-08-16 21:38:19,574 - INFO - [24/162] Processing BT_CONFIG_017_USD_CAD
+2025-08-16 21:38:19,574 - INFO - 🚀 Executing: USD_CAD | moderate_aggressive_daily | D
+2025-08-16 21:38:19,575 - INFO - [25/162] Processing BT_CONFIG_023_EUR_USD
+2025-08-16 21:38:19,575 - INFO - 🚀 Executing: EUR_USD | aggressive_moderate_daily | D
+2025-08-16 21:38:19,575 - INFO - [26/162] Processing BT_CONFIG_023_GBP_USD
+2025-08-16 21:38:19,575 - INFO - 🚀 Executing: GBP_USD | aggressive_moderate_daily | D
+2025-08-16 21:38:19,576 - INFO - [27/162] Processing BT_CONFIG_023_USD_JPY
+2025-08-16 21:38:19,576 - INFO - 🚀 Executing: USD_JPY | aggressive_moderate_daily | D
+2025-08-16 21:38:19,576 - INFO - [28/162] Processing BT_CONFIG_023_USD_CHF
+2025-08-16 21:38:19,576 - INFO - 🚀 Executing: USD_CHF | aggressive_moderate_daily | D
+2025-08-16 21:38:19,577 - INFO - [29/162] Processing BT_CONFIG_023_AUD_USD
+2025-08-16 21:38:19,577 - INFO - 🚀 Executing: AUD_USD | aggressive_moderate_daily | D
+2025-08-16 21:38:19,578 - INFO - [30/162] Processing BT_CONFIG_023_USD_CAD
+2025-08-16 21:38:19,578 - INFO - 🚀 Executing: USD_CAD | aggressive_moderate_daily | D
+2025-08-16 21:38:19,579 - INFO - [31/162] Processing BT_CONFIG_002_EUR_USD
+2025-08-16 21:38:19,579 - INFO - 🚀 Executing: EUR_USD | conservative_conservative_daily | D
+2025-08-16 21:38:19,579 - INFO - [32/162] Processing BT_CONFIG_002_GBP_USD
+2025-08-16 21:38:19,579 - INFO - 🚀 Executing: GBP_USD | conservative_conservative_daily | D
+2025-08-16 21:38:19,580 - INFO - [33/162] Processing BT_CONFIG_002_USD_JPY
+2025-08-16 21:38:19,580 - INFO - 🚀 Executing: USD_JPY | conservative_conservative_daily | D
+2025-08-16 21:38:19,581 - INFO - [34/162] Processing BT_CONFIG_002_USD_CHF
+2025-08-16 21:38:19,581 - INFO - 🚀 Executing: USD_CHF | conservative_conservative_daily | D
+2025-08-16 21:38:19,582 - INFO - [35/162] Processing BT_CONFIG_002_AUD_USD
+2025-08-16 21:38:19,582 - INFO - 🚀 Executing: AUD_USD | conservative_conservative_daily | D
+2025-08-16 21:38:19,582 - INFO - [36/162] Processing BT_CONFIG_002_USD_CAD
+2025-08-16 21:38:19,582 - INFO - 🚀 Executing: USD_CAD | conservative_conservative_daily | D
+2025-08-16 21:38:19,583 - INFO - [37/162] Processing BT_CONFIG_004_EUR_USD
+2025-08-16 21:38:19,583 - INFO - 🚀 Executing: EUR_USD | conservative_moderate_weekly | W
+2025-08-16 21:38:19,584 - INFO - [38/162] Processing BT_CONFIG_004_GBP_USD
+2025-08-16 21:38:19,584 - INFO - 🚀 Executing: GBP_USD | conservative_moderate_weekly | W
+2025-08-16 21:38:19,584 - INFO - [39/162] Processing BT_CONFIG_004_USD_JPY
+2025-08-16 21:38:19,584 - INFO - 🚀 Executing: USD_JPY | conservative_moderate_weekly | W
+2025-08-16 21:38:19,585 - INFO - [40/162] Processing BT_CONFIG_004_USD_CHF
+2025-08-16 21:38:19,585 - INFO - 🚀 Executing: USD_CHF | conservative_moderate_weekly | W
+2025-08-16 21:38:19,586 - INFO - [41/162] Processing BT_CONFIG_004_AUD_USD
+2025-08-16 21:38:19,586 - INFO - 🚀 Executing: AUD_USD | conservative_moderate_weekly | W
+2025-08-16 21:38:19,586 - INFO - [42/162] Processing BT_CONFIG_004_USD_CAD
+2025-08-16 21:38:19,586 - INFO - 🚀 Executing: USD_CAD | conservative_moderate_weekly | W
+2025-08-16 21:38:19,587 - INFO - [43/162] Processing BT_CONFIG_006_EUR_USD
+2025-08-16 21:38:19,587 - INFO - 🚀 Executing: EUR_USD | conservative_moderate_fourhour | H4
+2025-08-16 21:38:19,588 - INFO - [44/162] Processing BT_CONFIG_006_GBP_USD
+2025-08-16 21:38:19,588 - INFO - 🚀 Executing: GBP_USD | conservative_moderate_fourhour | H4
+2025-08-16 21:38:19,589 - INFO - [45/162] Processing BT_CONFIG_006_USD_JPY
+2025-08-16 21:38:19,589 - INFO - 🚀 Executing: USD_JPY | conservative_moderate_fourhour | H4
+2025-08-16 21:38:19,590 - INFO - [46/162] Processing BT_CONFIG_006_USD_CHF
+2025-08-16 21:38:19,591 - INFO - 🚀 Executing: USD_CHF | conservative_moderate_fourhour | H4
+2025-08-16 21:38:19,591 - INFO - [47/162] Processing BT_CONFIG_006_AUD_USD
+2025-08-16 21:38:19,591 - INFO - 🚀 Executing: AUD_USD | conservative_moderate_fourhour | H4
+2025-08-16 21:38:19,591 - INFO - [48/162] Processing BT_CONFIG_006_USD_CAD
+2025-08-16 21:38:19,591 - INFO - 🚀 Executing: USD_CAD | conservative_moderate_fourhour | H4
+2025-08-16 21:38:19,592 - INFO - [49/162] Processing BT_CONFIG_008_EUR_USD
+2025-08-16 21:38:19,592 - INFO - 🚀 Executing: EUR_USD | conservative_aggressive_daily | D
+2025-08-16 21:38:19,592 - INFO - [50/162] Processing BT_CONFIG_008_GBP_USD
+2025-08-16 21:38:19,592 - INFO - 🚀 Executing: GBP_USD | conservative_aggressive_daily | D
+2025-08-16 21:38:19,593 - INFO - [51/162] Processing BT_CONFIG_008_USD_JPY
+2025-08-16 21:38:19,593 - INFO - 🚀 Executing: USD_JPY | conservative_aggressive_daily | D
+2025-08-16 21:38:19,593 - INFO - [52/162] Processing BT_CONFIG_008_USD_CHF
+2025-08-16 21:38:19,593 - INFO - 🚀 Executing: USD_CHF | conservative_aggressive_daily | D
+2025-08-16 21:38:19,594 - INFO - [53/162] Processing BT_CONFIG_008_AUD_USD
+2025-08-16 21:38:19,594 - INFO - 🚀 Executing: AUD_USD | conservative_aggressive_daily | D
+2025-08-16 21:38:19,594 - INFO - [54/162] Processing BT_CONFIG_008_USD_CAD
+2025-08-16 21:38:19,594 - INFO - 🚀 Executing: USD_CAD | conservative_aggressive_daily | D
+2025-08-16 21:38:19,595 - INFO - [55/162] Processing BT_CONFIG_010_EUR_USD
+2025-08-16 21:38:19,595 - INFO - 🚀 Executing: EUR_USD | moderate_conservative_weekly | W
+2025-08-16 21:38:19,596 - INFO - [56/162] Processing BT_CONFIG_010_GBP_USD
+2025-08-16 21:38:19,596 - INFO - 🚀 Executing: GBP_USD | moderate_conservative_weekly | W
+2025-08-16 21:38:19,597 - INFO - [57/162] Processing BT_CONFIG_010_USD_JPY
+2025-08-16 21:38:19,597 - INFO - 🚀 Executing: USD_JPY | moderate_conservative_weekly | W
+2025-08-16 21:38:19,598 - INFO - [58/162] Processing BT_CONFIG_010_USD_CHF
+2025-08-16 21:38:19,598 - INFO - 🚀 Executing: USD_CHF | moderate_conservative_weekly | W
+2025-08-16 21:38:19,598 - INFO - [59/162] Processing BT_CONFIG_010_AUD_USD
+2025-08-16 21:38:19,598 - INFO - 🚀 Executing: AUD_USD | moderate_conservative_weekly | W
+2025-08-16 21:38:19,599 - INFO - [60/162] Processing BT_CONFIG_010_USD_CAD
+2025-08-16 21:38:19,599 - INFO - 🚀 Executing: USD_CAD | moderate_conservative_weekly | W
+2025-08-16 21:38:19,599 - INFO - [61/162] Processing BT_CONFIG_012_EUR_USD
+2025-08-16 21:38:19,600 - INFO - 🚀 Executing: EUR_USD | moderate_conservative_fourhour | H4
+2025-08-16 21:38:19,600 - INFO - [62/162] Processing BT_CONFIG_012_GBP_USD
+2025-08-16 21:38:19,600 - INFO - 🚀 Executing: GBP_USD | moderate_conservative_fourhour | H4
+2025-08-16 21:38:19,601 - INFO - [63/162] Processing BT_CONFIG_012_USD_JPY
+2025-08-16 21:38:19,601 - INFO - 🚀 Executing: USD_JPY | moderate_conservative_fourhour | H4
+2025-08-16 21:38:19,601 - INFO - [64/162] Processing BT_CONFIG_012_USD_CHF
+2025-08-16 21:38:19,601 - INFO - 🚀 Executing: USD_CHF | moderate_conservative_fourhour | H4
+2025-08-16 21:38:19,602 - INFO - [65/162] Processing BT_CONFIG_012_AUD_USD
+2025-08-16 21:38:19,602 - INFO - 🚀 Executing: AUD_USD | moderate_conservative_fourhour | H4
+2025-08-16 21:38:19,602 - INFO - [66/162] Processing BT_CONFIG_012_USD_CAD
+2025-08-16 21:38:19,602 - INFO - 🚀 Executing: USD_CAD | moderate_conservative_fourhour | H4
+2025-08-16 21:38:19,603 - INFO - [67/162] Processing BT_CONFIG_013_EUR_USD
+2025-08-16 21:38:19,603 - INFO - 🚀 Executing: EUR_USD | moderate_moderate_weekly | W
+2025-08-16 21:38:19,604 - INFO - [68/162] Processing BT_CONFIG_013_GBP_USD
+2025-08-16 21:38:19,604 - INFO - 🚀 Executing: GBP_USD | moderate_moderate_weekly | W
+2025-08-16 21:38:19,604 - INFO - [69/162] Processing BT_CONFIG_013_USD_JPY
+2025-08-16 21:38:19,604 - INFO - 🚀 Executing: USD_JPY | moderate_moderate_weekly | W
+2025-08-16 21:38:19,605 - INFO - [70/162] Processing BT_CONFIG_013_USD_CHF
+2025-08-16 21:38:19,605 - INFO - 🚀 Executing: USD_CHF | moderate_moderate_weekly | W
+2025-08-16 21:38:19,605 - INFO - [71/162] Processing BT_CONFIG_013_AUD_USD
+2025-08-16 21:38:19,605 - INFO - 🚀 Executing: AUD_USD | moderate_moderate_weekly | W
+2025-08-16 21:38:19,605 - INFO - [72/162] Processing BT_CONFIG_013_USD_CAD
+2025-08-16 21:38:19,605 - INFO - 🚀 Executing: USD_CAD | moderate_moderate_weekly | W
+2025-08-16 21:38:19,606 - INFO - [73/162] Processing BT_CONFIG_015_EUR_USD
+2025-08-16 21:38:19,606 - INFO - 🚀 Executing: EUR_USD | moderate_moderate_fourhour | H4
+2025-08-16 21:38:19,606 - INFO - [74/162] Processing BT_CONFIG_015_GBP_USD
+2025-08-16 21:38:19,606 - INFO - 🚀 Executing: GBP_USD | moderate_moderate_fourhour | H4
+2025-08-16 21:38:19,606 - INFO - [75/162] Processing BT_CONFIG_015_USD_JPY
+2025-08-16 21:38:19,606 - INFO - 🚀 Executing: USD_JPY | moderate_moderate_fourhour | H4
+2025-08-16 21:38:19,607 - INFO - [76/162] Processing BT_CONFIG_015_USD_CHF
+2025-08-16 21:38:19,607 - INFO - 🚀 Executing: USD_CHF | moderate_moderate_fourhour | H4
+2025-08-16 21:38:19,607 - INFO - [77/162] Processing BT_CONFIG_015_AUD_USD
+2025-08-16 21:38:19,607 - INFO - 🚀 Executing: AUD_USD | moderate_moderate_fourhour | H4
+2025-08-16 21:38:19,608 - INFO - [78/162] Processing BT_CONFIG_015_USD_CAD
+2025-08-16 21:38:19,608 - INFO - 🚀 Executing: USD_CAD | moderate_moderate_fourhour | H4
+2025-08-16 21:38:19,608 - INFO - [79/162] Processing BT_CONFIG_016_EUR_USD
+2025-08-16 21:38:19,608 - INFO - 🚀 Executing: EUR_USD | moderate_aggressive_weekly | W
+2025-08-16 21:38:19,609 - INFO - [80/162] Processing BT_CONFIG_016_GBP_USD
+2025-08-16 21:38:19,609 - INFO - 🚀 Executing: GBP_USD | moderate_aggressive_weekly | W
+2025-08-16 21:38:19,609 - INFO - [81/162] Processing BT_CONFIG_016_USD_JPY
+2025-08-16 21:38:19,609 - INFO - 🚀 Executing: USD_JPY | moderate_aggressive_weekly | W
+2025-08-16 21:38:19,610 - INFO - [82/162] Processing BT_CONFIG_016_USD_CHF
+2025-08-16 21:38:19,610 - INFO - 🚀 Executing: USD_CHF | moderate_aggressive_weekly | W
+2025-08-16 21:38:19,610 - INFO - [83/162] Processing BT_CONFIG_016_AUD_USD
+2025-08-16 21:38:19,610 - INFO - 🚀 Executing: AUD_USD | moderate_aggressive_weekly | W
+2025-08-16 21:38:19,611 - INFO - [84/162] Processing BT_CONFIG_016_USD_CAD
+2025-08-16 21:38:19,611 - INFO - 🚀 Executing: USD_CAD | moderate_aggressive_weekly | W
+2025-08-16 21:38:19,612 - INFO - [85/162] Processing BT_CONFIG_018_EUR_USD
+2025-08-16 21:38:19,612 - INFO - 🚀 Executing: EUR_USD | moderate_aggressive_fourhour | H4
+2025-08-16 21:38:19,612 - INFO - [86/162] Processing BT_CONFIG_018_GBP_USD
+2025-08-16 21:38:19,612 - INFO - 🚀 Executing: GBP_USD | moderate_aggressive_fourhour | H4
+2025-08-16 21:38:19,613 - INFO - [87/162] Processing BT_CONFIG_018_USD_JPY
+2025-08-16 21:38:19,613 - INFO - 🚀 Executing: USD_JPY | moderate_aggressive_fourhour | H4
+2025-08-16 21:38:19,613 - INFO - [88/162] Processing BT_CONFIG_018_USD_CHF
+2025-08-16 21:38:19,613 - INFO - 🚀 Executing: USD_CHF | moderate_aggressive_fourhour | H4
+2025-08-16 21:38:19,613 - INFO - [89/162] Processing BT_CONFIG_018_AUD_USD
+2025-08-16 21:38:19,613 - INFO - 🚀 Executing: AUD_USD | moderate_aggressive_fourhour | H4
+2025-08-16 21:38:19,614 - INFO - [90/162] Processing BT_CONFIG_018_USD_CAD
+2025-08-16 21:38:19,614 - INFO - 🚀 Executing: USD_CAD | moderate_aggressive_fourhour | H4
+2025-08-16 21:38:19,615 - INFO - [91/162] Processing BT_CONFIG_020_EUR_USD
+2025-08-16 21:38:19,615 - INFO - 🚀 Executing: EUR_USD | aggressive_conservative_daily | D
+2025-08-16 21:38:19,615 - INFO - [92/162] Processing BT_CONFIG_020_GBP_USD
+2025-08-16 21:38:19,615 - INFO - 🚀 Executing: GBP_USD | aggressive_conservative_daily | D
+2025-08-16 21:38:19,616 - INFO - [93/162] Processing BT_CONFIG_020_USD_JPY
+2025-08-16 21:38:19,616 - INFO - 🚀 Executing: USD_JPY | aggressive_conservative_daily | D
+2025-08-16 21:38:19,617 - INFO - [94/162] Processing BT_CONFIG_020_USD_CHF
+2025-08-16 21:38:19,617 - INFO - 🚀 Executing: USD_CHF | aggressive_conservative_daily | D
+2025-08-16 21:38:19,617 - INFO - [95/162] Processing BT_CONFIG_020_AUD_USD
+2025-08-16 21:38:19,617 - INFO - 🚀 Executing: AUD_USD | aggressive_conservative_daily | D
+2025-08-16 21:38:19,618 - INFO - [96/162] Processing BT_CONFIG_020_USD_CAD
+2025-08-16 21:38:19,618 - INFO - 🚀 Executing: USD_CAD | aggressive_conservative_daily | D
+2025-08-16 21:38:19,618 - INFO - [97/162] Processing BT_CONFIG_022_EUR_USD
+2025-08-16 21:38:19,618 - INFO - 🚀 Executing: EUR_USD | aggressive_moderate_weekly | W
+2025-08-16 21:38:19,619 - INFO - [98/162] Processing BT_CONFIG_022_GBP_USD
+2025-08-16 21:38:19,619 - INFO - 🚀 Executing: GBP_USD | aggressive_moderate_weekly | W
+2025-08-16 21:38:19,620 - INFO - [99/162] Processing BT_CONFIG_022_USD_JPY
+2025-08-16 21:38:19,620 - INFO - 🚀 Executing: USD_JPY | aggressive_moderate_weekly | W
+2025-08-16 21:38:19,620 - INFO - [100/162] Processing BT_CONFIG_022_USD_CHF
+2025-08-16 21:38:19,620 - INFO - 🚀 Executing: USD_CHF | aggressive_moderate_weekly | W
+2025-08-16 21:38:19,621 - INFO - [101/162] Processing BT_CONFIG_022_AUD_USD
+2025-08-16 21:38:19,621 - INFO - 🚀 Executing: AUD_USD | aggressive_moderate_weekly | W
+2025-08-16 21:38:19,622 - INFO - [102/162] Processing BT_CONFIG_022_USD_CAD
+2025-08-16 21:38:19,622 - INFO - 🚀 Executing: USD_CAD | aggressive_moderate_weekly | W
+2025-08-16 21:38:19,622 - INFO - [103/162] Processing BT_CONFIG_024_EUR_USD
+2025-08-16 21:38:19,622 - INFO - 🚀 Executing: EUR_USD | aggressive_moderate_fourhour | H4
+2025-08-16 21:38:19,623 - INFO - [104/162] Processing BT_CONFIG_024_GBP_USD
+2025-08-16 21:38:19,623 - INFO - 🚀 Executing: GBP_USD | aggressive_moderate_fourhour | H4
+2025-08-16 21:38:19,623 - INFO - [105/162] Processing BT_CONFIG_024_USD_JPY
+2025-08-16 21:38:19,623 - INFO - 🚀 Executing: USD_JPY | aggressive_moderate_fourhour | H4
+2025-08-16 21:38:19,624 - INFO - [106/162] Processing BT_CONFIG_024_USD_CHF
+2025-08-16 21:38:19,624 - INFO - 🚀 Executing: USD_CHF | aggressive_moderate_fourhour | H4
+2025-08-16 21:38:19,625 - INFO - [107/162] Processing BT_CONFIG_024_AUD_USD
+2025-08-16 21:38:19,625 - INFO - 🚀 Executing: AUD_USD | aggressive_moderate_fourhour | H4
+2025-08-16 21:38:19,625 - INFO - [108/162] Processing BT_CONFIG_024_USD_CAD
+2025-08-16 21:38:19,625 - INFO - 🚀 Executing: USD_CAD | aggressive_moderate_fourhour | H4
+2025-08-16 21:38:19,626 - INFO - [109/162] Processing BT_CONFIG_026_EUR_USD
+2025-08-16 21:38:19,626 - INFO - 🚀 Executing: EUR_USD | aggressive_aggressive_daily | D
+2025-08-16 21:38:19,626 - INFO - [110/162] Processing BT_CONFIG_026_GBP_USD
+2025-08-16 21:38:19,626 - INFO - 🚀 Executing: GBP_USD | aggressive_aggressive_daily | D
+2025-08-16 21:38:19,627 - INFO - [111/162] Processing BT_CONFIG_026_USD_JPY
+2025-08-16 21:38:19,627 - INFO - 🚀 Executing: USD_JPY | aggressive_aggressive_daily | D
+2025-08-16 21:38:19,627 - INFO - [112/162] Processing BT_CONFIG_026_USD_CHF
+2025-08-16 21:38:19,627 - INFO - 🚀 Executing: USD_CHF | aggressive_aggressive_daily | D
+2025-08-16 21:38:19,628 - INFO - [113/162] Processing BT_CONFIG_026_AUD_USD
+2025-08-16 21:38:19,628 - INFO - 🚀 Executing: AUD_USD | aggressive_aggressive_daily | D
+2025-08-16 21:38:19,628 - INFO - [114/162] Processing BT_CONFIG_026_USD_CAD
+2025-08-16 21:38:19,629 - INFO - 🚀 Executing: USD_CAD | aggressive_aggressive_daily | D
+2025-08-16 21:38:19,629 - INFO - [115/162] Processing BT_CONFIG_001_EUR_USD
+2025-08-16 21:38:19,629 - INFO - 🚀 Executing: EUR_USD | conservative_conservative_weekly | W
+2025-08-16 21:38:19,629 - INFO - [116/162] Processing BT_CONFIG_001_GBP_USD
+2025-08-16 21:38:19,629 - INFO - 🚀 Executing: GBP_USD | conservative_conservative_weekly | W
+2025-08-16 21:38:19,630 - INFO - [117/162] Processing BT_CONFIG_001_USD_JPY
+2025-08-16 21:38:19,630 - INFO - 🚀 Executing: USD_JPY | conservative_conservative_weekly | W
+2025-08-16 21:38:19,630 - INFO - [118/162] Processing BT_CONFIG_001_USD_CHF
+2025-08-16 21:38:19,630 - INFO - 🚀 Executing: USD_CHF | conservative_conservative_weekly | W
+2025-08-16 21:38:19,630 - INFO - [119/162] Processing BT_CONFIG_001_AUD_USD
+2025-08-16 21:38:19,630 - INFO - 🚀 Executing: AUD_USD | conservative_conservative_weekly | W
+2025-08-16 21:38:19,630 - INFO - [120/162] Processing BT_CONFIG_001_USD_CAD
+2025-08-16 21:38:19,630 - INFO - 🚀 Executing: USD_CAD | conservative_conservative_weekly | W
+2025-08-16 21:38:19,630 - INFO - [121/162] Processing BT_CONFIG_003_EUR_USD
+2025-08-16 21:38:19,630 - INFO - 🚀 Executing: EUR_USD | conservative_conservative_fourhour | H4
+2025-08-16 21:38:19,631 - INFO - [122/162] Processing BT_CONFIG_003_GBP_USD
+2025-08-16 21:38:19,631 - INFO - 🚀 Executing: GBP_USD | conservative_conservative_fourhour | H4
+2025-08-16 21:38:19,631 - INFO - [123/162] Processing BT_CONFIG_003_USD_JPY
+2025-08-16 21:38:19,631 - INFO - 🚀 Executing: USD_JPY | conservative_conservative_fourhour | H4
+2025-08-16 21:38:19,631 - INFO - [124/162] Processing BT_CONFIG_003_USD_CHF
+2025-08-16 21:38:19,631 - INFO - 🚀 Executing: USD_CHF | conservative_conservative_fourhour | H4
+2025-08-16 21:38:19,631 - INFO - [125/162] Processing BT_CONFIG_003_AUD_USD
+2025-08-16 21:38:19,631 - INFO - 🚀 Executing: AUD_USD | conservative_conservative_fourhour | H4
+2025-08-16 21:38:19,632 - INFO - [126/162] Processing BT_CONFIG_003_USD_CAD
+2025-08-16 21:38:19,632 - INFO - 🚀 Executing: USD_CAD | conservative_conservative_fourhour | H4
+2025-08-16 21:38:19,632 - INFO - [127/162] Processing BT_CONFIG_007_EUR_USD
+2025-08-16 21:38:19,632 - INFO - 🚀 Executing: EUR_USD | conservative_aggressive_weekly | W
+2025-08-16 21:38:19,632 - INFO - [128/162] Processing BT_CONFIG_007_GBP_USD
+2025-08-16 21:38:19,632 - INFO - 🚀 Executing: GBP_USD | conservative_aggressive_weekly | W
+2025-08-16 21:38:19,632 - INFO - [129/162] Processing BT_CONFIG_007_USD_JPY
+2025-08-16 21:38:19,632 - INFO - 🚀 Executing: USD_JPY | conservative_aggressive_weekly | W
+2025-08-16 21:38:19,633 - INFO - [130/162] Processing BT_CONFIG_007_USD_CHF
+2025-08-16 21:38:19,633 - INFO - 🚀 Executing: USD_CHF | conservative_aggressive_weekly | W
+2025-08-16 21:38:19,633 - INFO - [131/162] Processing BT_CONFIG_007_AUD_USD
+2025-08-16 21:38:19,633 - INFO - 🚀 Executing: AUD_USD | conservative_aggressive_weekly | W
+2025-08-16 21:38:19,633 - INFO - [132/162] Processing BT_CONFIG_007_USD_CAD
+2025-08-16 21:38:19,633 - INFO - 🚀 Executing: USD_CAD | conservative_aggressive_weekly | W
+2025-08-16 21:38:19,633 - INFO - [133/162] Processing BT_CONFIG_009_EUR_USD
+2025-08-16 21:38:19,633 - INFO - 🚀 Executing: EUR_USD | conservative_aggressive_fourhour | H4
+2025-08-16 21:38:19,633 - INFO - [134/162] Processing BT_CONFIG_009_GBP_USD
+2025-08-16 21:38:19,633 - INFO - 🚀 Executing: GBP_USD | conservative_aggressive_fourhour | H4
+2025-08-16 21:38:19,634 - INFO - [135/162] Processing BT_CONFIG_009_USD_JPY
+2025-08-16 21:38:19,634 - INFO - 🚀 Executing: USD_JPY | conservative_aggressive_fourhour | H4
+2025-08-16 21:38:19,634 - INFO - [136/162] Processing BT_CONFIG_009_USD_CHF
+2025-08-16 21:38:19,634 - INFO - 🚀 Executing: USD_CHF | conservative_aggressive_fourhour | H4
+2025-08-16 21:38:19,634 - INFO - [137/162] Processing BT_CONFIG_009_AUD_USD
+2025-08-16 21:38:19,634 - INFO - 🚀 Executing: AUD_USD | conservative_aggressive_fourhour | H4
+2025-08-16 21:38:19,634 - INFO - [138/162] Processing BT_CONFIG_009_USD_CAD
+2025-08-16 21:38:19,634 - INFO - 🚀 Executing: USD_CAD | conservative_aggressive_fourhour | H4
+2025-08-16 21:38:19,634 - INFO - [139/162] Processing BT_CONFIG_019_EUR_USD
+2025-08-16 21:38:19,634 - INFO - 🚀 Executing: EUR_USD | aggressive_conservative_weekly | W
+2025-08-16 21:38:19,634 - INFO - [140/162] Processing BT_CONFIG_019_GBP_USD
+2025-08-16 21:38:19,634 - INFO - 🚀 Executing: GBP_USD | aggressive_conservative_weekly | W
+2025-08-16 21:38:19,635 - INFO - [141/162] Processing BT_CONFIG_019_USD_JPY
+2025-08-16 21:38:19,635 - INFO - 🚀 Executing: USD_JPY | aggressive_conservative_weekly | W
+2025-08-16 21:38:19,636 - INFO - [142/162] Processing BT_CONFIG_019_USD_CHF
+2025-08-16 21:38:19,636 - INFO - 🚀 Executing: USD_CHF | aggressive_conservative_weekly | W
+2025-08-16 21:38:19,636 - INFO - [143/162] Processing BT_CONFIG_019_AUD_USD
+2025-08-16 21:38:19,636 - INFO - 🚀 Executing: AUD_USD | aggressive_conservative_weekly | W
+2025-08-16 21:38:19,637 - INFO - [144/162] Processing BT_CONFIG_019_USD_CAD
+2025-08-16 21:38:19,637 - INFO - 🚀 Executing: USD_CAD | aggressive_conservative_weekly | W
+2025-08-16 21:38:19,637 - INFO - [145/162] Processing BT_CONFIG_021_EUR_USD
+2025-08-16 21:38:19,637 - INFO - 🚀 Executing: EUR_USD | aggressive_conservative_fourhour | H4
+2025-08-16 21:38:19,638 - INFO - [146/162] Processing BT_CONFIG_021_GBP_USD
+2025-08-16 21:38:19,638 - INFO - 🚀 Executing: GBP_USD | aggressive_conservative_fourhour | H4
+2025-08-16 21:38:19,638 - INFO - [147/162] Processing BT_CONFIG_021_USD_JPY
+2025-08-16 21:38:19,638 - INFO - 🚀 Executing: USD_JPY | aggressive_conservative_fourhour | H4
+2025-08-16 21:38:19,638 - INFO - [148/162] Processing BT_CONFIG_021_USD_CHF
+2025-08-16 21:38:19,638 - INFO - 🚀 Executing: USD_CHF | aggressive_conservative_fourhour | H4
+2025-08-16 21:38:19,638 - INFO - [149/162] Processing BT_CONFIG_021_AUD_USD
+2025-08-16 21:38:19,638 - INFO - 🚀 Executing: AUD_USD | aggressive_conservative_fourhour | H4
+2025-08-16 21:38:19,639 - INFO - [150/162] Processing BT_CONFIG_021_USD_CAD
+2025-08-16 21:38:19,639 - INFO - 🚀 Executing: USD_CAD | aggressive_conservative_fourhour | H4
+2025-08-16 21:38:19,639 - INFO - [151/162] Processing BT_CONFIG_025_EUR_USD
+2025-08-16 21:38:19,639 - INFO - 🚀 Executing: EUR_USD | aggressive_aggressive_weekly | W
+2025-08-16 21:38:19,639 - INFO - [152/162] Processing BT_CONFIG_025_GBP_USD
+2025-08-16 21:38:19,639 - INFO - 🚀 Executing: GBP_USD | aggressive_aggressive_weekly | W
+2025-08-16 21:38:19,639 - INFO - [153/162] Processing BT_CONFIG_025_USD_JPY
+2025-08-16 21:38:19,639 - INFO - 🚀 Executing: USD_JPY | aggressive_aggressive_weekly | W
+2025-08-16 21:38:19,639 - INFO - [154/162] Processing BT_CONFIG_025_USD_CHF
+2025-08-16 21:38:19,639 - INFO - 🚀 Executing: USD_CHF | aggressive_aggressive_weekly | W
+2025-08-16 21:38:19,640 - INFO - [155/162] Processing BT_CONFIG_025_AUD_USD
+2025-08-16 21:38:19,640 - INFO - 🚀 Executing: AUD_USD | aggressive_aggressive_weekly | W
+2025-08-16 21:38:19,640 - INFO - [156/162] Processing BT_CONFIG_025_USD_CAD
+2025-08-16 21:38:19,640 - INFO - 🚀 Executing: USD_CAD | aggressive_aggressive_weekly | W
+2025-08-16 21:38:19,640 - INFO - [157/162] Processing BT_CONFIG_027_EUR_USD
+2025-08-16 21:38:19,640 - INFO - 🚀 Executing: EUR_USD | aggressive_aggressive_fourhour | H4
+2025-08-16 21:38:19,640 - INFO - [158/162] Processing BT_CONFIG_027_GBP_USD
+2025-08-16 21:38:19,640 - INFO - 🚀 Executing: GBP_USD | aggressive_aggressive_fourhour | H4
+2025-08-16 21:38:19,640 - INFO - [159/162] Processing BT_CONFIG_027_USD_JPY
+2025-08-16 21:38:19,640 - INFO - 🚀 Executing: USD_JPY | aggressive_aggressive_fourhour | H4
+2025-08-16 21:38:19,641 - INFO - [160/162] Processing BT_CONFIG_027_USD_CHF
+2025-08-16 21:38:19,641 - INFO - 🚀 Executing: USD_CHF | aggressive_aggressive_fourhour | H4
+2025-08-16 21:38:19,641 - INFO - [161/162] Processing BT_CONFIG_027_AUD_USD
+2025-08-16 21:38:19,641 - INFO - 🚀 Executing: AUD_USD | aggressive_aggressive_fourhour | H4
+2025-08-16 21:38:19,641 - INFO - [162/162] Processing BT_CONFIG_027_USD_CAD
+2025-08-16 21:38:19,641 - INFO - 🚀 Executing: USD_CAD | aggressive_aggressive_fourhour | H4
