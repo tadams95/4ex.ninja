@@ -1,0 +1,9 @@
+{
+  "file": "AUD_USD_D_5Y.csv",
+  "validation_time": "2025-08-16T20:58:23.291350",
+  "total_records": 26280,
+  "missing_data_pct": 0.05,
+  "quality_score": 99.95,
+  "passes_threshold": true,
+  "issues": []
+}
