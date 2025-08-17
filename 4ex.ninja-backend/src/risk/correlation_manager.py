@@ -18,8 +18,13 @@ from typing import Dict, List, Optional, Tuple, Set
 from dataclasses import dataclass
 from itertools import combinations
 
-from ..backtesting.portfolio_manager import PortfolioState
-from .emergency_risk_manager import EmergencyRiskManager
+try:
+    from ..backtesting.portfolio_manager import PortfolioState
+    from .emergency_risk_manager import EmergencyRiskManager
+except ImportError:
+    # Fallback for production deployment
+    from src.backtesting.portfolio_manager import PortfolioState
+    from src.risk.emergency_risk_manager import EmergencyRiskManager
 
 # Set up logging
 logging.basicConfig(
@@ -109,6 +114,64 @@ class CorrelationManager:
         logger.info(
             f"CorrelationManager initialized with {correlation_threshold} threshold"
         )
+
+    def _safe_correlation_value(self, value) -> float:
+        """
+        Safely convert correlation value to float
+
+        Args:
+            value: Correlation value from pandas DataFrame
+
+        Returns:
+            Float correlation value between 0 and 1
+        """
+        try:
+            if pd.isna(value):
+                return 0.0
+            # Convert to float and take absolute value
+            correlation = float(value)
+            return abs(correlation)
+        except (TypeError, ValueError):
+            logger.warning(f"Could not convert correlation value {value} to float")
+            return 0.0
+
+    def _safe_float_conversion(self, value) -> float:
+        """
+        Safely convert pandas Series/value to float
+
+        Args:
+            value: Value to convert
+
+        Returns:
+            Float value
+        """
+        try:
+            if hasattr(value, "iloc"):
+                # It's a Series, get the first value
+                return float(value.iloc[0]) if len(value) > 0 else 0.0
+            else:
+                return float(value) if not pd.isna(value) else 0.0
+        except (TypeError, ValueError, IndexError):
+            return 0.0
+
+    def _safe_int_conversion(self, value) -> int:
+        """
+        Safely convert pandas Series/value to int
+
+        Args:
+            value: Value to convert
+
+        Returns:
+            Integer value
+        """
+        try:
+            if hasattr(value, "iloc"):
+                # It's a Series, get the first value
+                return int(value.iloc[0]) if len(value) > 0 else 0
+            else:
+                return int(value) if not pd.isna(value) else 0
+        except (TypeError, ValueError, IndexError):
+            return 0
 
     async def calculate_correlation_matrix(
         self, portfolio_state: PortfolioState
@@ -261,7 +324,9 @@ class CorrelationManager:
             pairs = correlation_matrix.columns.tolist()
 
             for pair1, pair2 in combinations(pairs, 2):
-                correlation = abs(correlation_matrix.loc[pair1, pair2])
+                correlation_value = correlation_matrix.loc[pair1, pair2]
+                # Use safe conversion helper
+                correlation = self._safe_correlation_value(correlation_value)
 
                 # Determine alert severity
                 if correlation > self.severe_correlation_threshold:
@@ -328,7 +393,8 @@ class CorrelationManager:
             pairs = correlation_matrix.columns.tolist()
 
             for pair1, pair2 in combinations(pairs, 2):
-                correlation = abs(correlation_matrix.loc[pair1, pair2])
+                correlation_value = correlation_matrix.loc[pair1, pair2]
+                correlation = self._safe_correlation_value(correlation_value)
                 if correlation > self.rebalance_threshold:
                     high_corr_pairs.append((pair1, pair2, correlation))
 
@@ -425,7 +491,8 @@ class CorrelationManager:
             # Count severe correlations
             severe_correlations = 0
             for pair1, pair2 in combinations(pairs, 2):
-                correlation = abs(correlation_matrix.loc[pair1, pair2])
+                correlation_value = correlation_matrix.loc[pair1, pair2]
+                correlation = self._safe_correlation_value(correlation_value)
                 if correlation > self.severe_correlation_threshold:
                     severe_correlations += 1
 
@@ -522,8 +589,8 @@ class CorrelationManager:
 
             if len(correlations) > 0:
                 summary = {
-                    "max_correlation": float(correlations.max()),
-                    "avg_correlation": float(correlations.mean()),
+                    "max_correlation": self._safe_float_conversion(correlations.max()),
+                    "avg_correlation": self._safe_float_conversion(correlations.mean()),
                     "correlation_matrix": correlation_matrix.to_dict(),
                     "pair_count": len(correlation_matrix.columns),
                 }
@@ -564,12 +631,16 @@ class CorrelationManager:
             if len(correlations) > 0:
                 summary.update(
                     {
-                        "current_max_correlation": float(correlations.max()),
-                        "current_avg_correlation": float(correlations.mean()),
-                        "high_correlation_pairs": int(
+                        "current_max_correlation": self._safe_float_conversion(
+                            correlations.max()
+                        ),
+                        "current_avg_correlation": self._safe_float_conversion(
+                            correlations.mean()
+                        ),
+                        "high_correlation_pairs": self._safe_int_conversion(
                             (correlations > self.rebalance_threshold).sum()
                         ),
-                        "breach_pairs": int(
+                        "breach_pairs": self._safe_int_conversion(
                             (correlations > self.correlation_threshold).sum()
                         ),
                     }

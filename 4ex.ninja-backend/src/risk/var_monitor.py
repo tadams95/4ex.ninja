@@ -18,8 +18,13 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
 # Use existing imports from the project
-from .emergency_risk_manager import EmergencyRiskManager
-from ..backtesting.portfolio_manager import PortfolioState
+try:
+    from .emergency_risk_manager import EmergencyRiskManager
+    from ..backtesting.portfolio_manager import PortfolioState
+except ImportError:
+    # Fallback for production deployment
+    from src.risk.emergency_risk_manager import EmergencyRiskManager
+    from src.backtesting.portfolio_manager import PortfolioState
 
 # Set up logging
 logging.basicConfig(
@@ -97,7 +102,7 @@ class HistoricalVaR(VaRCalculationMethod):
         var_return = np.percentile(recent_returns, percentile)
 
         # Convert to monetary VaR (positive for loss)
-        var_value = abs(var_return * position_value)
+        var_value = float(abs(var_return * position_value))
 
         logger.debug(
             f"Historical VaR calculated: {var_value:.6f} "
