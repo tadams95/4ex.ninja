@@ -31,9 +31,18 @@ const MOCK_VAR_DATA = {
 
 export async function GET(request: NextRequest) {
   try {
+    const backendUrl = `${BACKEND_URL}/api/risk/var-summary`;
+
+    console.log('🔍 API Route Debug Info:');
+    console.log('- NODE_ENV:', process.env.NODE_ENV);
+    console.log('- BACKEND_URL env var:', process.env.BACKEND_URL);
+    console.log('- Final BACKEND_URL:', BACKEND_URL);
+    console.log('- IS_PRODUCTION:', IS_PRODUCTION);
+    console.log('- Attempting to fetch:', backendUrl);
+
     // In production without backend URL, return mock data
     if (IS_PRODUCTION) {
-      console.log('Using mock VaR data for production demo');
+      console.log('✅ Using mock VaR data for production demo');
       return NextResponse.json(MOCK_VAR_DATA, {
         headers: {
           'Cache-Control': 'no-cache',
@@ -44,27 +53,37 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const url = new URL(request.url);
-    const backendUrl = `${BACKEND_URL}/api/risk/var-summary`;
-
-    console.log('Proxying request to:', backendUrl);
+    console.log('🌐 Attempting to proxy request to backend:', backendUrl);
 
     const response = await fetch(backendUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
+      // Add timeout to prevent hanging
+      signal: AbortSignal.timeout(10000), // 10 second timeout
     });
 
+    console.log('📡 Backend response status:', response.status, response.statusText);
+
     if (!response.ok) {
-      console.error('Backend response error:', response.status, response.statusText);
-      return NextResponse.json(
-        { error: `Backend error: ${response.status} ${response.statusText}` },
-        { status: response.status }
-      );
+      console.error('❌ Backend response error:', response.status, response.statusText);
+
+      // Return mock data as fallback if backend is unreachable
+      console.log('🔄 Falling back to mock data due to backend error');
+      return NextResponse.json(MOCK_VAR_DATA, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      });
     }
 
     const data = await response.json();
+    console.log('✅ Successfully fetched data from backend');
+
     return NextResponse.json(data, {
       headers: {
         'Cache-Control': 'no-cache',
@@ -74,7 +93,17 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('API proxy error:', error);
-    return NextResponse.json({ error: 'Failed to fetch data from backend' }, { status: 500 });
+    console.error('🚨 API proxy error:', error);
+
+    // Return mock data as fallback
+    console.log('🔄 Falling back to mock data due to connection error');
+    return NextResponse.json(MOCK_VAR_DATA, {
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
   }
 }

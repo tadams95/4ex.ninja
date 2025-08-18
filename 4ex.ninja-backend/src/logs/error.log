@@ -58,3 +58,23 @@ Message: ALERT [HIGH] ESCALATED: System Resource Alert: CPU: Alert escalated (le
 Context:
   taskName: Task-10
 ==================================================
+=== ERROR at 2025-08-17T23:26:47.218010 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8324735168)
+Process: MainProcess (29367)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: System Resource Alert: CPU: Alert escalated (level 2): Alert escalated (level 1): CPU usage is 95.4%, exceeding threshold of 90.0% | Context: {"process_count": 399, "timestamp": 1755496607.2175791}
+Context:
+  taskName: Task-41
+==================================================
+=== ERROR at 2025-08-17T23:41:47.229065 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8324735168)
+Process: MainProcess (29367)
+Message: ALERT [HIGH] ESCALATED: ESCALATED: ESCALATED: System Resource Alert: CPU: Alert escalated (level 3): Alert escalated (level 2): Alert escalated (level 1): CPU usage is 95.4%, exceeding threshold of 90.0% | Context: {"process_count": 399, "timestamp": 1755496607.2175791}
+Context:
+  taskName: Task-54
+==================================================

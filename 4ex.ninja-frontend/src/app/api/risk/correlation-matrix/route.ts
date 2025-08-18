@@ -46,9 +46,16 @@ const MOCK_CORRELATION_DATA = {
 
 export async function GET(request: NextRequest) {
   try {
+    const backendUrl = `${BACKEND_URL}/api/risk/correlation-matrix`;
+
+    console.log('🔍 Correlation API Debug Info:');
+    console.log('- BACKEND_URL:', BACKEND_URL);
+    console.log('- IS_PRODUCTION:', IS_PRODUCTION);
+    console.log('- Attempting to fetch:', backendUrl);
+
     // In production without backend URL, return mock data
     if (IS_PRODUCTION) {
-      console.log('Using mock correlation data for production demo');
+      console.log('✅ Using mock correlation data for production demo');
       return NextResponse.json(MOCK_CORRELATION_DATA, {
         headers: {
           'Cache-Control': 'no-cache',
@@ -59,10 +66,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const url = new URL(request.url);
-    const backendUrl = `${BACKEND_URL}/api/risk/correlation-matrix`;
-
-    console.log('Proxying correlation request to:', backendUrl);
+    console.log('🌐 Attempting to proxy correlation request to backend:', backendUrl);
 
     const response = await fetch(backendUrl, {
       method: 'GET',
