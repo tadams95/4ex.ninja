@@ -3766,3 +3766,4 @@ ValueError: This is a test error
 2025-08-16T02:24:13.561486 [32m[INFO][0m src.backtesting.sentiment_analyzer:56 __init__() - SentimentAnalyzer initialized | taskName=None
 2025-08-16T02:24:13.561505 [32m[INFO][0m src.backtesting.economic_event_analyzer:56 __init__() - EconomicEventAnalyzer initialized | taskName=None
 2025-08-16T02:24:13.561527 [32m[INFO][0m src.backtesting.regime_detector:87 __init__() - RegimeDetector initialized successfully | taskName=None
+2025-08-17T22:22:21.517606 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None

@@ -26,12 +26,21 @@ from .risk_calculator import RiskCalculator
 from .volatility_impact_analyzer import VolatilityImpactAnalyzer
 
 # Import monitoring and alert infrastructure
-from infrastructure.monitoring.alerts import (
-    alert_signal_processing_failure,
-    alert_database_connectivity,
-    alert_external_api_downtime,
-)
-from infrastructure.monitoring.discord_alerts import send_signal_to_discord
+try:
+    from infrastructure.monitoring.alerts import (
+        alert_signal_processing_failure,
+        alert_database_connectivity,
+        alert_external_api_downtime,
+    )
+    from infrastructure.monitoring.discord_alerts import send_signal_to_discord
+except ImportError:
+    # Local development fallback - use relative imports
+    from ..infrastructure.monitoring.alerts import (
+        alert_signal_processing_failure,
+        alert_database_connectivity,
+        alert_external_api_downtime,
+    )
+    from ..infrastructure.monitoring.discord_alerts import send_signal_to_discord
 
 # Set up logging
 logging.basicConfig(

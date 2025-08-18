@@ -22,9 +22,14 @@ try:
     from .emergency_risk_manager import EmergencyRiskManager
     from ..backtesting.portfolio_manager import PortfolioState
 except ImportError:
-    # Fallback for production deployment
-    from src.risk.emergency_risk_manager import EmergencyRiskManager
-    from src.backtesting.portfolio_manager import PortfolioState
+    # Fallback for local development
+    try:
+        from risk.emergency_risk_manager import EmergencyRiskManager
+        from backtesting.portfolio_manager import PortfolioState
+    except ImportError:
+        # Final fallback for production deployment
+        from src.risk.emergency_risk_manager import EmergencyRiskManager
+        from src.backtesting.portfolio_manager import PortfolioState
 
 # Set up logging
 logging.basicConfig(

@@ -23,6 +23,7 @@ from api.routes.signals import router as signals_router
 from api.routes.market_data import router as market_data_router
 from api.routes.performance import router as performance_router
 from api.routes.alerts import router as alerts_router
+from api.routes.risk import router as risk_router
 from api.health import router as health_router
 from backtesting.backtest_api import backtest_router
 from api.middleware.error_handler import ErrorHandlerMiddleware
@@ -193,6 +194,7 @@ def create_app() -> FastAPI:
     app.include_router(market_data_router, prefix="/api/v1")
     app.include_router(performance_router, prefix="/api/v1")
     app.include_router(alerts_router)
+    app.include_router(risk_router)  # Phase 2 VaR & Correlation Dashboard
     app.include_router(
         backtest_router, prefix="/api/v1"
     )  # Phase 2.1 Universal Backtesting

@@ -21,6 +21,8 @@
 2. **Alert Management System** - Automated notification system  
 3. **Correlation Trend Analysis** - Historical pattern analysis
 
+**📋 DETAILED IMPLEMENTATION GUIDE:** [VAR_Correlation_Dash.md](./VAR_Correlation_Dash.md) - Bite-sized task breakdown for dashboard development
+
 ### **📈 Progress Status:**
 - **Week 1:** ✅ **100% COMPLETE** (Foundation)
 - **Week 2:** ✅ **90% COMPLETE** (Advanced Methods) 
@@ -356,12 +358,12 @@ Once Phase 2 achieves success criteria:
 - [x] Multi-method VaR calculation ✅ **DEPLOYED TO PRODUCTION**
 - [x] Real-time correlation monitoring ✅ **DEPLOYED TO PRODUCTION**
 - [x] Breach detection and alerting ✅ **DEPLOYED TO PRODUCTION**
-- [ ] Risk dashboard framework ⬅️ **NEXT PRIORITY**
+- [ ] Risk dashboard framework ⬅️ **NEXT PRIORITY** - See [VAR_Correlation_Dash.md](./VAR_Correlation_Dash.md)
 - [x] Phase 1 integration testing ✅ **COMPLETED**
 
 ### **Week 3 Deliverables** ⬅️ **CURRENT FOCUS**
-- [ ] Complete risk dashboard ⬅️ **HIGH PRIORITY**
-- [ ] Automated alert system ⬅️ **HIGH PRIORITY**
+- [ ] Complete risk dashboard ⬅️ **HIGH PRIORITY** - [Implementation Guide](./VAR_Correlation_Dash.md)
+- [ ] Automated alert system ⬅️ **HIGH PRIORITY** - [Task Breakdown](./VAR_Correlation_Dash.md#sprint-3-alert-management-system-days-7-9)
 - [x] Production deployment scripts ✅ **COMPLETED**
 - [ ] Comprehensive validation testing
 - [ ] Documentation and user guides
