@@ -8,3 +8,43 @@ Message: Failed to connect to Redis: Error Multiple exceptions: [Errno 61] Conne
 Context:
   taskName: Task-2
 ==================================================
+=== ERROR at 2025-08-17T22:49:33.059064 ===
+Logger: infrastructure.caching.redis_cache
+Module: redis_cache
+Function: _get_redis() at line 90
+Thread: MainThread (8324735168)
+Process: SpawnProcess-1 (24553)
+Message: Failed to connect to Redis: Error Multiple exceptions: [Errno 61] Connect call failed ('::1', 6379, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 6379) connecting to localhost:6379.
+Context:
+  taskName: Task-2
+==================================================
+=== ERROR at 2025-08-17T22:51:43.109272 ===
+Logger: infrastructure.caching.redis_cache
+Module: redis_cache
+Function: _get_redis() at line 90
+Thread: MainThread (8324735168)
+Process: SpawnProcess-1 (29104)
+Message: Failed to connect to Redis: Error Multiple exceptions: [Errno 61] Connect call failed ('::1', 6379, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 6379) connecting to localhost:6379.
+Context:
+  taskName: Task-2
+==================================================
+=== ERROR at 2025-08-17T22:52:07.131081 ===
+Logger: infrastructure.caching.redis_cache
+Module: redis_cache
+Function: _get_redis() at line 90
+Thread: MainThread (8324735168)
+Process: MainProcess (29367)
+Message: Failed to connect to Redis: Error Multiple exceptions: [Errno 61] Connect call failed ('::1', 6379, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 6379) connecting to localhost:6379.
+Context:
+  taskName: Task-2
+==================================================
+=== ERROR at 2025-08-17T22:56:47.219604 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8324735168)
+Process: MainProcess (29367)
+Message: ALERT [HIGH] System Resource Alert: CPU: CPU usage is 95.4%, exceeding threshold of 90.0% | Context: {"process_count": 399, "timestamp": 1755496607.2175791}
+Context:
+  taskName: Task-4
+==================================================

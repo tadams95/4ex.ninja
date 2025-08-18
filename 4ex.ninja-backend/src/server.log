@@ -1,68 +1,27 @@
-2025-08-11T00:23:15.853795 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
-2025-08-11T00:23:15.866755 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
-2025-08-17T22:29:29.671498 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
-2025-08-17T22:30:52.652514 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
-2025-08-17T22:30:52.713358 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=Task-1
-2025-08-17T22:30:52.725777 [32m[INFO][0m app:52 lifespan() - 🚀 Starting 4ex.ninja Trading Platform API | taskName=Task-2
-2025-08-17T22:30:52.725888 [32m[INFO][0m app:53 lifespan() - Environment: development | taskName=Task-2
-2025-08-17T22:30:52.725921 [32m[INFO][0m app:54 lifespan() - Log Level: 20 | taskName=Task-2
-2025-08-17T22:30:52.725947 [32m[INFO][0m app:67 lifespan() - ℹ️ Sentry DSN not configured - error tracking disabled | taskName=Task-2
-2025-08-17T22:30:52.725977 [32m[INFO][0m app:71 lifespan() - ✅ Dependency container initialized | taskName=Task-2
-2025-08-17T22:30:52.729238 [31m[ERROR][0m infrastructure.caching.redis_cache:90 _get_redis() - Failed to connect to Redis: Error Multiple exceptions: [Errno 61] Connect call failed ('::1', 6379, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 6379) connecting to localhost:6379. | taskName=Task-2
-2025-08-17T22:30:52.729392 [33m[WARNING][0m services.cache_service:308 create_cache_manager() - Failed to initialize Redis backend: Error Multiple exceptions: [Errno 61] Connect call failed ('::1', 6379, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 6379) connecting to localhost:6379. | taskName=Task-2
-2025-08-17T22:30:52.729435 [32m[INFO][0m services.cache_service:315 create_cache_manager() - Using memory cache backend | taskName=Task-2
-2025-08-17T22:30:52.729486 [32m[INFO][0m services.cache_service:238 warm_cache() - Starting cache warming for 5 filter combinations | taskName=Task-2
-2025-08-17T22:30:52.729546 [32m[INFO][0m services.cache_service:257 warm_cache() - Cache warming completed. Warmed 0 entries | taskName=Task-2
-2025-08-17T22:30:52.729573 [32m[INFO][0m app:77 lifespan() - ✅ Cache warming completed. Warmed 0 entries | taskName=Task-2
-2025-08-17T22:30:52.729608 [32m[INFO][0m infrastructure.monitoring.system_metrics:53 start_monitoring() - Started system monitoring with 30s interval | taskName=Task-2
-2025-08-17T22:30:52.729632 [32m[INFO][0m app:86 lifespan() - ✅ System metrics monitoring started | taskName=Task-2
-2025-08-17T22:30:52.729654 [32m[INFO][0m app:91 lifespan() - 🎯 4ex.ninja Trading Platform API startup completed successfully | taskName=Task-2
-2025-08-17T22:33:20.670068 [32m[INFO][0m app:96 lifespan() - 🛑 Shutting down 4ex.ninja Trading Platform API | taskName=Task-2
-2025-08-17T22:33:20.671258 [32m[INFO][0m infrastructure.monitoring.system_metrics:64 stop_monitoring() - Stopped system monitoring | taskName=Task-2
-2025-08-17T22:33:20.671552 [32m[INFO][0m app:103 lifespan() - ✅ System metrics monitoring stopped | taskName=Task-2
-2025-08-17T22:33:20.671661 [32m[INFO][0m app:107 lifespan() - ✅ Shutdown completed successfully | taskName=Task-2
-2025-08-17T22:33:21.837869 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
-2025-08-17T22:49:33.033540 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=Task-1
-2025-08-17T22:49:33.049704 [32m[INFO][0m app:53 lifespan() - 🚀 Starting 4ex.ninja Trading Platform API | taskName=Task-2
-2025-08-17T22:49:33.049794 [32m[INFO][0m app:54 lifespan() - Environment: development | taskName=Task-2
-2025-08-17T22:49:33.049822 [32m[INFO][0m app:55 lifespan() - Log Level: 20 | taskName=Task-2
-2025-08-17T22:49:33.049847 [32m[INFO][0m app:68 lifespan() - ℹ️ Sentry DSN not configured - error tracking disabled | taskName=Task-2
-2025-08-17T22:49:33.049872 [32m[INFO][0m app:72 lifespan() - ✅ Dependency container initialized | taskName=Task-2
-2025-08-17T22:49:33.059064 [31m[ERROR][0m infrastructure.caching.redis_cache:90 _get_redis() - Failed to connect to Redis: Error Multiple exceptions: [Errno 61] Connect call failed ('::1', 6379, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 6379) connecting to localhost:6379. | taskName=Task-2
-2025-08-17T22:49:33.059376 [33m[WARNING][0m services.cache_service:308 create_cache_manager() - Failed to initialize Redis backend: Error Multiple exceptions: [Errno 61] Connect call failed ('::1', 6379, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 6379) connecting to localhost:6379. | taskName=Task-2
-2025-08-17T22:49:33.059519 [32m[INFO][0m services.cache_service:315 create_cache_manager() - Using memory cache backend | taskName=Task-2
-2025-08-17T22:49:33.059687 [32m[INFO][0m services.cache_service:238 warm_cache() - Starting cache warming for 5 filter combinations | taskName=Task-2
-2025-08-17T22:49:33.059802 [32m[INFO][0m services.cache_service:257 warm_cache() - Cache warming completed. Warmed 0 entries | taskName=Task-2
-2025-08-17T22:49:33.059844 [32m[INFO][0m app:78 lifespan() - ✅ Cache warming completed. Warmed 0 entries | taskName=Task-2
-2025-08-17T22:49:33.059888 [32m[INFO][0m infrastructure.monitoring.system_metrics:53 start_monitoring() - Started system monitoring with 30s interval | taskName=Task-2
-2025-08-17T22:49:33.059917 [32m[INFO][0m app:87 lifespan() - ✅ System metrics monitoring started | taskName=Task-2
-2025-08-17T22:49:33.059941 [32m[INFO][0m app:92 lifespan() - 🎯 4ex.ninja Trading Platform API startup completed successfully | taskName=Task-2
-2025-08-17T22:49:46.445683 [32m[INFO][0m app:97 lifespan() - 🛑 Shutting down 4ex.ninja Trading Platform API | taskName=Task-2
-2025-08-17T22:49:46.446151 [32m[INFO][0m infrastructure.monitoring.system_metrics:64 stop_monitoring() - Stopped system monitoring | taskName=Task-2
-2025-08-17T22:49:46.446222 [32m[INFO][0m app:104 lifespan() - ✅ System metrics monitoring stopped | taskName=Task-2
-2025-08-17T22:49:46.446261 [32m[INFO][0m app:108 lifespan() - ✅ Shutdown completed successfully | taskName=Task-2
-2025-08-17T22:51:03.442729 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
-2025-08-17T22:51:08.150226 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=None
-2025-08-17T22:51:43.088170 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=Task-1
-2025-08-17T22:51:43.105165 [32m[INFO][0m app:53 lifespan() - 🚀 Starting 4ex.ninja Trading Platform API | taskName=Task-2
-2025-08-17T22:51:43.105273 [32m[INFO][0m app:54 lifespan() - Environment: development | taskName=Task-2
-2025-08-17T22:51:43.105309 [32m[INFO][0m app:55 lifespan() - Log Level: 20 | taskName=Task-2
-2025-08-17T22:51:43.105339 [32m[INFO][0m app:68 lifespan() - ℹ️ Sentry DSN not configured - error tracking disabled | taskName=Task-2
-2025-08-17T22:51:43.105371 [32m[INFO][0m app:72 lifespan() - ✅ Dependency container initialized | taskName=Task-2
-2025-08-17T22:51:43.109272 [31m[ERROR][0m infrastructure.caching.redis_cache:90 _get_redis() - Failed to connect to Redis: Error Multiple exceptions: [Errno 61] Connect call failed ('::1', 6379, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 6379) connecting to localhost:6379. | taskName=Task-2
-2025-08-17T22:51:43.109556 [33m[WARNING][0m services.cache_service:308 create_cache_manager() - Failed to initialize Redis backend: Error Multiple exceptions: [Errno 61] Connect call failed ('::1', 6379, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 6379) connecting to localhost:6379. | taskName=Task-2
-2025-08-17T22:51:43.109635 [32m[INFO][0m services.cache_service:315 create_cache_manager() - Using memory cache backend | taskName=Task-2
-2025-08-17T22:51:43.109694 [32m[INFO][0m services.cache_service:238 warm_cache() - Starting cache warming for 5 filter combinations | taskName=Task-2
-2025-08-17T22:51:43.109761 [32m[INFO][0m services.cache_service:257 warm_cache() - Cache warming completed. Warmed 0 entries | taskName=Task-2
-2025-08-17T22:51:43.109792 [32m[INFO][0m app:78 lifespan() - ✅ Cache warming completed. Warmed 0 entries | taskName=Task-2
-2025-08-17T22:51:43.109828 [32m[INFO][0m infrastructure.monitoring.system_metrics:53 start_monitoring() - Started system monitoring with 30s interval | taskName=Task-2
-2025-08-17T22:51:43.109855 [32m[INFO][0m app:87 lifespan() - ✅ System metrics monitoring started | taskName=Task-2
-2025-08-17T22:51:43.109877 [32m[INFO][0m app:92 lifespan() - 🎯 4ex.ninja Trading Platform API startup completed successfully | taskName=Task-2
-2025-08-17T22:51:58.713516 [32m[INFO][0m app:97 lifespan() - 🛑 Shutting down 4ex.ninja Trading Platform API | taskName=Task-2
-2025-08-17T22:51:58.713967 [32m[INFO][0m infrastructure.monitoring.system_metrics:64 stop_monitoring() - Stopped system monitoring | taskName=Task-2
-2025-08-17T22:51:58.714062 [32m[INFO][0m app:104 lifespan() - ✅ System metrics monitoring stopped | taskName=Task-2
-2025-08-17T22:51:58.714097 [32m[INFO][0m app:108 lifespan() - ✅ Shutdown completed successfully | taskName=Task-2
+2025-08-17 22:52:07,083 - backtesting.data_providers.oanda_provider - WARNING - OANDA API not available, using fallback
+2025-08-17 22:52:07,103 - backtesting.execution_simulator - INFO - ExecutionSimulator initialized
+2025-08-17 22:52:07,103 - backtesting.position_manager - INFO - PositionManager initialized
+2025-08-17 22:52:07,103 - backtesting.trade_tracker - INFO - TradeTracker initialized with output dir: backtest_results
+2025-08-17 22:52:07,103 - backtesting.data_infrastructure - INFO - Initialized 2 data providers
+2025-08-17 22:52:07,103 - backtesting.market_classifier - INFO - MarketClassifier initialized
+2025-08-17 22:52:07,103 - backtesting.volatility_analyzer - INFO - VolatilityAnalyzer initialized
+2025-08-17 22:52:07,103 - backtesting.trend_analyzer - INFO - TrendAnalyzer initialized
+2025-08-17 22:52:07,103 - backtesting.sentiment_analyzer - INFO - SentimentAnalyzer initialized
+2025-08-17 22:52:07,103 - backtesting.economic_event_analyzer - INFO - EconomicEventAnalyzer initialized
+2025-08-17 22:52:07,103 - backtesting.regime_detector - INFO - RegimeDetector initialized successfully
+2025-08-17 22:52:07,103 - backtesting.data_infrastructure - INFO - Initialized 2 data providers
+2025-08-17 22:52:07,103 - backtesting.data_infrastructure - INFO - Initialized 2 data providers
+2025-08-17 22:52:07,103 - backtesting.data_infrastructure - INFO - Initialized 2 data providers
+2025-08-17 22:52:07,103 - backtesting.market_classifier - INFO - MarketClassifier initialized
+2025-08-17 22:52:07,103 - backtesting.volatility_analyzer - INFO - VolatilityAnalyzer initialized
+2025-08-17 22:52:07,104 - backtesting.trend_analyzer - INFO - TrendAnalyzer initialized
+2025-08-17 22:52:07,104 - backtesting.sentiment_analyzer - INFO - SentimentAnalyzer initialized
+2025-08-17 22:52:07,104 - backtesting.economic_event_analyzer - INFO - EconomicEventAnalyzer initialized
+2025-08-17 22:52:07,104 - backtesting.regime_detector - INFO - RegimeDetector initialized successfully
+2025-08-17 22:52:07,104 - backtesting.universal_backtesting_engine - INFO - UniversalBacktestingEngine initialized
 2025-08-17T22:52:07.108136 [32m[INFO][0m api.middleware.security_headers:312 create_security_middleware_stack() - Security middleware stack configured successfully | taskName=Task-1
+INFO:     Started server process [29367]
+INFO:     Waiting for application startup.
 2025-08-17T22:52:07.126353 [32m[INFO][0m app:53 lifespan() - 🚀 Starting 4ex.ninja Trading Platform API | taskName=Task-2
 2025-08-17T22:52:07.126424 [32m[INFO][0m app:54 lifespan() - Environment: development | taskName=Task-2
 2025-08-17T22:52:07.126453 [32m[INFO][0m app:55 lifespan() - Log Level: 20 | taskName=Task-2
@@ -77,6 +36,8 @@
 2025-08-17T22:52:07.131500 [32m[INFO][0m infrastructure.monitoring.system_metrics:53 start_monitoring() - Started system monitoring with 30s interval | taskName=Task-2
 2025-08-17T22:52:07.131528 [32m[INFO][0m app:87 lifespan() - ✅ System metrics monitoring started | taskName=Task-2
 2025-08-17T22:52:07.131553 [32m[INFO][0m app:92 lifespan() - 🎯 4ex.ninja Trading Platform API startup completed successfully | taskName=Task-2
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 2025-08-17T22:52:14.744975 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/risk/var-summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T22:52:14.747239 [32m[INFO][0m api.routes.risk:143 get_var_summary() - Fetching VaR summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T22:52:14.747351 [32m[INFO][0m risk.var_monitor:267 __init__() - VaRMonitor initialized with 95.0% confidence level | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
@@ -89,6 +50,7 @@
 2025-08-17T22:52:14.759909 [32m[INFO][0m api.routes.risk:196 get_var_summary() - VaR summary calculated successfully | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T22:52:14.760768 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/risk/var-summary -> 200 in 0.016s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T22:52:14.760917 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/risk/var-summary completed in 0.016s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:55159 - "GET /api/risk/var-summary HTTP/1.1" 200 OK
 2025-08-17T22:52:19.660338 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/risk/correlation-matrix | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T22:52:19.660797 [32m[INFO][0m api.routes.risk:208 get_correlation_matrix() - Fetching correlation matrix | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T22:52:19.661463 [32m[INFO][0m risk.correlation_manager:119 __init__() - CorrelationManager initialized with 0.4 threshold | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
@@ -97,6 +59,7 @@
 2025-08-17T22:52:19.677171 [32m[INFO][0m api.routes.risk:276 get_correlation_matrix() - Correlation matrix calculated successfully | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T22:52:19.677630 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/risk/correlation-matrix -> 200 in 0.017s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T22:52:19.677830 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/risk/correlation-matrix completed in 0.018s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:55178 - "GET /api/risk/correlation-matrix HTTP/1.1" 200 OK
 2025-08-17T22:56:47.218122 [32m[INFO][0m infrastructure.monitoring.alerts:432 trigger_alert() - Triggering alert: System Resource Alert: CPU | taskName=Task-4
 2025-08-17T22:56:47.219388 [33m[WARNING][0m infrastructure.monitoring.alerts:511 _route_alert() - Channel not available: email | taskName=Task-4
 2025-08-17T22:56:47.219604 [31m[ERROR][0m alerts:116 send_alert() - ALERT [HIGH] System Resource Alert: CPU: CPU usage is 95.4%, exceeding threshold of 90.0% | Context: {"process_count": 399, "timestamp": 1755496607.2175791} | taskName=Task-4
@@ -110,6 +73,7 @@
 2025-08-17T23:02:53.245021 [32m[INFO][0m api.routes.risk:196 get_var_summary() - VaR summary calculated successfully | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:02:53.245914 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/risk/var-summary -> 200 in 0.011s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:02:53.246160 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/risk/var-summary completed in 0.011s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:56889 - "GET /api/risk/var-summary HTTP/1.1" 200 OK
 2025-08-17T23:03:08.795937 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/risk/var-summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:03:08.796869 [32m[INFO][0m api.routes.risk:143 get_var_summary() - Fetching VaR summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:03:08.796961 [33m[WARNING][0m risk.var_monitor:482 _get_price_history() - Using mock data for EUR_USD VaR calculation | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
@@ -120,6 +84,7 @@
 2025-08-17T23:03:08.801461 [32m[INFO][0m api.routes.risk:196 get_var_summary() - VaR summary calculated successfully | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:03:08.801893 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/risk/var-summary -> 200 in 0.006s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:03:08.802132 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/risk/var-summary completed in 0.006s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:56958 - "GET /api/risk/var-summary HTTP/1.1" 200 OK
 2025-08-17T23:05:02.120225 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/risk/var-summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:02.122164 [32m[INFO][0m api.routes.risk:143 get_var_summary() - Fetching VaR summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:02.122302 [33m[WARNING][0m risk.var_monitor:482 _get_price_history() - Using mock data for EUR_USD VaR calculation | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
@@ -130,6 +95,7 @@
 2025-08-17T23:05:02.131816 [32m[INFO][0m api.routes.risk:196 get_var_summary() - VaR summary calculated successfully | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:02.132487 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/risk/var-summary -> 200 in 0.012s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:02.132653 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/risk/var-summary completed in 0.013s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:57487 - "GET /api/risk/var-summary HTTP/1.1" 200 OK
 2025-08-17T23:05:24.586535 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/risk/var-summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:24.590402 [32m[INFO][0m api.routes.risk:143 get_var_summary() - Fetching VaR summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:24.590573 [33m[WARNING][0m risk.var_monitor:482 _get_price_history() - Using mock data for EUR_USD VaR calculation | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
@@ -140,6 +106,7 @@
 2025-08-17T23:05:24.598475 [32m[INFO][0m api.routes.risk:196 get_var_summary() - VaR summary calculated successfully | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:24.599285 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/risk/var-summary -> 200 in 0.013s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:24.599779 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/risk/var-summary completed in 0.013s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:57600 - "GET /api/risk/var-summary HTTP/1.1" 200 OK
 2025-08-17T23:05:53.959134 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/risk/var-summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:53.959935 [32m[INFO][0m api.routes.risk:143 get_var_summary() - Fetching VaR summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:53.960035 [33m[WARNING][0m risk.var_monitor:482 _get_price_history() - Using mock data for EUR_USD VaR calculation | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
@@ -150,6 +117,7 @@
 2025-08-17T23:05:53.966497 [32m[INFO][0m api.routes.risk:196 get_var_summary() - VaR summary calculated successfully | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:53.966927 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/risk/var-summary -> 200 in 0.008s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:05:53.967158 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/risk/var-summary completed in 0.008s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:57722 - "GET /api/risk/var-summary HTTP/1.1" 200 OK
 2025-08-17T23:06:23.949131 [32m[INFO][0m api.middleware.logging_middleware:77 dispatch() - Incoming request: GET /api/risk/var-summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:06:23.950399 [32m[INFO][0m api.routes.risk:143 get_var_summary() - Fetching VaR summary | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:06:23.950473 [33m[WARNING][0m risk.var_monitor:482 _get_price_history() - Using mock data for EUR_USD VaR calculation | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
@@ -160,3 +128,4 @@
 2025-08-17T23:06:23.954994 [32m[INFO][0m api.routes.risk:196 get_var_summary() - VaR summary calculated successfully | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:06:23.955423 [32m[INFO][0m api.middleware.logging_middleware:96 dispatch() - Response: GET /api/risk/var-summary -> 200 in 0.006s | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
 2025-08-17T23:06:23.955631 [32m[INFO][0m api.middleware.error_handler:53 dispatch() - GET /api/risk/var-summary completed in 0.007s with status 200 | taskName=starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro
+INFO:     127.0.0.1:57849 - "GET /api/risk/var-summary HTTP/1.1" 200 OK
