@@ -48,3 +48,13 @@ Message: ALERT [HIGH] System Resource Alert: CPU: CPU usage is 95.4%, exceeding 
 Context:
   taskName: Task-4
 ==================================================
+=== ERROR at 2025-08-17T23:11:47.219199 ===
+Logger: alerts
+Module: alerts
+Function: send_alert() at line 116
+Thread: MainThread (8324735168)
+Process: MainProcess (29367)
+Message: ALERT [HIGH] ESCALATED: System Resource Alert: CPU: Alert escalated (level 1): CPU usage is 95.4%, exceeding threshold of 90.0% | Context: {"process_count": 399, "timestamp": 1755496607.2175791}
+Context:
+  taskName: Task-10
+==================================================
