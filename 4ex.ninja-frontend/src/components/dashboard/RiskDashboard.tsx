@@ -1,8 +1,18 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from '../ui/Button';
+
+// Create a ref to communicate with child components
+let globalRefetchCallbacks: (() => void)[] = [];
+
+export const registerRefetchCallback = (callback: () => void) => {
+  globalRefetchCallbacks.push(callback);
+  return () => {
+    globalRefetchCallbacks = globalRefetchCallbacks.filter(cb => cb !== callback);
+  };
+};
 
 // Dynamic imports to ensure client-side only rendering (like regime monitoring)
 const VaRDisplay = dynamic(() => import('./VaRDisplay').then(mod => ({ default: mod.default })), {
@@ -44,11 +54,17 @@ export default function RiskDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleRefresh = () => {
+  const handleRefresh = useCallback(() => {
     setLastUpdated(new Date().toLocaleTimeString());
-    // Force re-render of child components by updating state
-    window.location.reload();
-  };
+    // Trigger refetch in all child components that use useRiskData
+    globalRefetchCallbacks.forEach(callback => {
+      try {
+        callback();
+      } catch (error) {
+        console.error('Error calling refetch callback:', error);
+      }
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white">

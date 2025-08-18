@@ -1,4 +1,6 @@
 import { useRiskData } from '@/hooks/useRiskData';
+import { useEffect } from 'react';
+import { registerRefetchCallback } from './RiskDashboard';
 
 interface CorrelationHeatMapProps {
   refreshInterval?: number;
@@ -6,6 +8,11 @@ interface CorrelationHeatMapProps {
 
 export default function CorrelationHeatMap({ refreshInterval = 30000 }: CorrelationHeatMapProps) {
   const { correlationData, loading, error, lastUpdate, refetch } = useRiskData(refreshInterval);
+
+  // Register refetch callback with parent dashboard
+  useEffect(() => {
+    return registerRefetchCallback(refetch);
+  }, [refetch]);
 
   const formatTime = (date: Date): string => {
     return date.toLocaleTimeString('en-US', {

@@ -1,4 +1,6 @@
 import { useRiskData } from '@/hooks/useRiskData';
+import { useEffect } from 'react';
+import { registerRefetchCallback } from './RiskDashboard';
 
 interface VaRDisplayProps {
   refreshInterval?: number; // in milliseconds, default 30000 (30 seconds)
@@ -6,6 +8,11 @@ interface VaRDisplayProps {
 
 export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps) {
   const { varData, loading, error, lastUpdate, refetch } = useRiskData(refreshInterval);
+
+  // Register refetch callback with parent dashboard
+  useEffect(() => {
+    return registerRefetchCallback(refetch);
+  }, [refetch]);
 
   const TARGET_VAR_PERCENT = 0.31; // 0.31% target
 

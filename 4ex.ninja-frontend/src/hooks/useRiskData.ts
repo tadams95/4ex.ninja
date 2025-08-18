@@ -87,7 +87,7 @@ export function useRiskData(refreshInterval: number = 30000) {
     initializeApi();
   }, []);
 
-  const fetchVaRData = useCallback(async () => {
+  const fetchVaRData = useCallback(async (retryCount = 0) => {
     try {
       // Determine the correct endpoint based on environment
       const isProduction = window.location.protocol === 'https:';
@@ -95,7 +95,7 @@ export function useRiskData(refreshInterval: number = 30000) {
         ? `${API_BASE_URL}/api/risk/var-summary` // Next.js proxy route
         : `${API_BASE_URL}/api/risk/var-summary`; // Direct to backend
 
-      console.log(`[RiskData] Fetching VaR data from: ${endpoint}`);
+      console.log(`[RiskData] Fetching VaR data from: ${endpoint} (attempt ${retryCount + 1})`);
 
       const response = await fetch(endpoint, {
         method: 'GET',
@@ -118,11 +118,22 @@ export function useRiskData(refreshInterval: number = 30000) {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch VaR data';
       console.error('[RiskData] VaR fetch error:', errorMessage);
+
+      // Retry logic for transient errors
+      if (
+        retryCount < 2 &&
+        (errorMessage.includes('timeout') || errorMessage.includes('network'))
+      ) {
+        console.log(`[RiskData] Retrying VaR fetch in ${(retryCount + 1) * 1000}ms...`);
+        setTimeout(() => fetchVaRData(retryCount + 1), (retryCount + 1) * 1000);
+        return;
+      }
+
       setError(errorMessage);
     }
   }, []);
 
-  const fetchCorrelationData = useCallback(async () => {
+  const fetchCorrelationData = useCallback(async (retryCount = 0) => {
     try {
       // Determine the correct endpoint based on environment
       const isProduction = window.location.protocol === 'https:';
@@ -130,7 +141,9 @@ export function useRiskData(refreshInterval: number = 30000) {
         ? `${API_BASE_URL}/api/risk/correlation-matrix` // Next.js proxy route
         : `${API_BASE_URL}/api/risk/correlation-matrix`; // Direct to backend
 
-      console.log(`[RiskData] Fetching correlation data from: ${endpoint}`);
+      console.log(
+        `[RiskData] Fetching correlation data from: ${endpoint} (attempt ${retryCount + 1})`
+      );
 
       const response = await fetch(endpoint, {
         method: 'GET',
@@ -152,6 +165,17 @@ export function useRiskData(refreshInterval: number = 30000) {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch correlation data';
       console.error('[RiskData] Correlation fetch error:', errorMessage);
+
+      // Retry logic for transient errors
+      if (
+        retryCount < 2 &&
+        (errorMessage.includes('timeout') || errorMessage.includes('network'))
+      ) {
+        console.log(`[RiskData] Retrying correlation fetch in ${(retryCount + 1) * 1000}ms...`);
+        setTimeout(() => fetchCorrelationData(retryCount + 1), (retryCount + 1) * 1000);
+        return;
+      }
+
       setError(errorMessage);
     }
   }, []);

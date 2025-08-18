@@ -44,12 +44,30 @@ const MOCK_CORRELATION_DATA = {
   status: 'success',
 };
 
+// CORS headers for all responses
+const corsHeaders = {
+  'Cache-Control': 'no-cache',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle CORS preflight requests
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: corsHeaders,
+  });
+}
+
 export async function GET(request: NextRequest) {
   try {
     const backendUrl = `${BACKEND_URL}/api/risk/correlation-matrix`;
 
     console.log('🔍 Correlation API Debug Info:');
-    console.log('- BACKEND_URL:', BACKEND_URL);
+    console.log('- NODE_ENV:', process.env.NODE_ENV);
+    console.log('- BACKEND_URL env var:', process.env.BACKEND_URL);
+    console.log('- Final BACKEND_URL:', BACKEND_URL);
     console.log('- IS_PRODUCTION:', IS_PRODUCTION);
     console.log('- Attempting to fetch:', backendUrl);
 
@@ -57,12 +75,7 @@ export async function GET(request: NextRequest) {
     if (IS_PRODUCTION) {
       console.log('✅ Using mock correlation data for production demo');
       return NextResponse.json(MOCK_CORRELATION_DATA, {
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
+        headers: corsHeaders,
       });
     }
 
@@ -73,30 +86,35 @@ export async function GET(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
       },
+      // Add timeout to prevent hanging
+      signal: AbortSignal.timeout(10000), // 10 second timeout
     });
 
+    console.log('📡 Backend correlation response status:', response.status, response.statusText);
+
     if (!response.ok) {
-      console.error('Backend response error:', response.status, response.statusText);
-      return NextResponse.json(
-        { error: `Backend error: ${response.status} ${response.statusText}` },
-        { status: response.status }
-      );
+      console.error('❌ Backend correlation response error:', response.status, response.statusText);
+
+      // Return mock data as fallback if backend is unreachable
+      console.log('🔄 Falling back to mock correlation data due to backend error');
+      return NextResponse.json(MOCK_CORRELATION_DATA, {
+        headers: corsHeaders,
+      });
     }
 
     const data = await response.json();
+    console.log('✅ Successfully fetched correlation data from backend');
+
     return NextResponse.json(data, {
-      headers: {
-        'Cache-Control': 'no-cache',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
+      headers: corsHeaders,
     });
   } catch (error) {
-    console.error('Correlation API proxy error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch correlation data from backend' },
-      { status: 500 }
-    );
+    console.error('🚨 Correlation API proxy error:', error);
+
+    // Return mock data as fallback
+    console.log('🔄 Falling back to mock correlation data due to connection error');
+    return NextResponse.json(MOCK_CORRELATION_DATA, {
+      headers: corsHeaders,
+    });
   }
 }

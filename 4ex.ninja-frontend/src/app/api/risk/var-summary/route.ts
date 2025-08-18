@@ -5,6 +5,22 @@ const BACKEND_URL =
   (process.env.NODE_ENV === 'production' ? 'http://157.230.58.248:8000' : 'http://localhost:8000');
 const IS_PRODUCTION = false; // Disable mock data since we have real backend
 
+// CORS headers for all responses
+const corsHeaders = {
+  'Cache-Control': 'no-cache',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle CORS preflight requests
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: corsHeaders,
+  });
+}
+
 // Mock data for production demo when backend is not available
 const MOCK_VAR_DATA = {
   portfolio_var: {
@@ -44,12 +60,7 @@ export async function GET(request: NextRequest) {
     if (IS_PRODUCTION) {
       console.log('✅ Using mock VaR data for production demo');
       return NextResponse.json(MOCK_VAR_DATA, {
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
+        headers: corsHeaders,
       });
     }
 
@@ -72,12 +83,7 @@ export async function GET(request: NextRequest) {
       // Return mock data as fallback if backend is unreachable
       console.log('🔄 Falling back to mock data due to backend error');
       return NextResponse.json(MOCK_VAR_DATA, {
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
+        headers: corsHeaders,
       });
     }
 
@@ -85,12 +91,7 @@ export async function GET(request: NextRequest) {
     console.log('✅ Successfully fetched data from backend');
 
     return NextResponse.json(data, {
-      headers: {
-        'Cache-Control': 'no-cache',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
+      headers: corsHeaders,
     });
   } catch (error) {
     console.error('🚨 API proxy error:', error);
@@ -98,12 +99,7 @@ export async function GET(request: NextRequest) {
     // Return mock data as fallback
     console.log('🔄 Falling back to mock data due to connection error');
     return NextResponse.json(MOCK_VAR_DATA, {
-      headers: {
-        'Cache-Control': 'no-cache',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
+      headers: corsHeaders,
     });
   }
 }
