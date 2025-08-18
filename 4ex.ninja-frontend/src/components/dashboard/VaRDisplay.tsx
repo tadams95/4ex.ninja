@@ -58,20 +58,20 @@ export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps)
 
   if (loading) {
     return (
-      <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-200">
+      <div className="p-6 bg-neutral-800 rounded-lg border border-neutral-700 shadow-lg">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">VaR Monitor</h3>
-          <p className="text-sm text-gray-500">Loading risk data...</p>
+          <h3 className="text-lg font-semibold text-white mb-1">VaR Monitor</h3>
+          <p className="text-sm text-neutral-400">Loading risk data...</p>
         </div>
 
         <div className="space-y-4">
           <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
+            <div className="h-4 bg-neutral-600 rounded w-3/4 mb-2"></div>
+            <div className="h-6 bg-neutral-600 rounded w-1/2 mb-4"></div>
             <div className="grid grid-cols-3 gap-4">
-              <div className="h-16 bg-gray-200 rounded"></div>
-              <div className="h-16 bg-gray-200 rounded"></div>
-              <div className="h-16 bg-gray-200 rounded"></div>
+              <div className="h-16 bg-neutral-600 rounded"></div>
+              <div className="h-16 bg-neutral-600 rounded"></div>
+              <div className="h-16 bg-neutral-600 rounded"></div>
             </div>
           </div>
         </div>
@@ -81,10 +81,10 @@ export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps)
 
   if (error) {
     return (
-      <div className="p-6 bg-white rounded-lg shadow-lg border border-red-200">
+      <div className="p-6 bg-neutral-800 rounded-lg border border-red-500/30 shadow-lg">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-red-800 mb-1">VaR Monitor - Error</h3>
-          <p className="text-sm text-red-600">{error}</p>
+          <h3 className="text-lg font-semibold text-red-400 mb-1">VaR Monitor - Error</h3>
+          <p className="text-sm text-red-300">{error}</p>
         </div>
 
         <button
@@ -99,9 +99,9 @@ export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps)
 
   if (!varData) {
     return (
-      <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">VaR Monitor</h3>
-        <p className="text-sm text-gray-500">No VaR data available</p>
+      <div className="p-6 bg-neutral-800 rounded-lg border border-neutral-700 shadow-lg">
+        <h3 className="text-lg font-semibold text-white mb-1">VaR Monitor</h3>
+        <p className="text-sm text-neutral-400">No VaR data available</p>
       </div>
     );
   }
@@ -114,21 +114,21 @@ export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps)
   const progressColor = getProgressColor(riskLevel);
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-200">
+    <div className="p-6 bg-neutral-800 rounded-lg border border-neutral-700 shadow-lg">
       {/* Header */}
       <div className="mb-4">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">VaR Monitor</h3>
-            <p className="text-sm text-gray-500">
+            <h3 className="text-lg font-semibold text-white mb-1">VaR Monitor</h3>
+            <p className="text-sm text-neutral-400">
               Last updated: {formatTime(lastUpdate)} | Risk Level:{' '}
               <span
                 className={`font-semibold ${
                   riskLevel === 'HIGH'
-                    ? 'text-red-600'
+                    ? 'text-red-400'
                     : riskLevel === 'MEDIUM'
-                    ? 'text-yellow-600'
-                    : 'text-green-600'
+                    ? 'text-yellow-400'
+                    : 'text-green-400'
                 }`}
               >
                 {riskLevel}
@@ -137,7 +137,7 @@ export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps)
           </div>
           <button
             onClick={refetch}
-            className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+            className="px-3 py-1 text-sm bg-neutral-700 text-neutral-300 rounded hover:bg-neutral-600 transition-colors"
           >
             Refresh
           </button>
@@ -147,27 +147,27 @@ export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps)
       {/* Primary VaR Display */}
       <div className="mb-6">
         <div className="flex justify-between items-end mb-2">
-          <span className="text-sm font-medium text-gray-700">Historical VaR (95%)</span>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm font-medium text-neutral-300">Historical VaR (95%)</span>
+          <span className="text-sm text-neutral-400">
             Target: {(targetPercentage * 100).toFixed(2)}%
           </span>
         </div>
 
         <div className="flex items-baseline space-x-3 mb-3">
-          <span className="text-3xl font-bold text-gray-900">{formatCurrency(currentVaR)}</span>
-          <span className="text-lg text-gray-600">
+          <span className="text-3xl font-bold text-white">{formatCurrency(currentVaR)}</span>
+          <span className="text-lg text-neutral-300">
             ({((currentVaR / totalExposure) * 100).toFixed(2)}%)
           </span>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
+        <div className="w-full bg-neutral-600 rounded-full h-3 mb-2">
           <div
             className={`h-3 rounded-full transition-all duration-300 ${progressColor}`}
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
-        <div className="flex justify-between text-xs text-gray-500">
+        <div className="flex justify-between text-xs text-neutral-400">
           <span>0%</span>
           <span>{targetPercentage * 100}% Target</span>
         </div>
@@ -175,23 +175,23 @@ export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps)
 
       {/* VaR Methods Comparison */}
       <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="text-center p-3 bg-blue-50 rounded-lg">
-          <div className="text-sm font-medium text-blue-700 mb-1">Parametric</div>
-          <div className="text-lg font-semibold text-blue-900">
+        <div className="text-center p-3 bg-blue-900/30 rounded-lg border border-blue-500/30">
+          <div className="text-sm font-medium text-blue-400 mb-1">Parametric</div>
+          <div className="text-lg font-semibold text-blue-300">
             {formatCurrency(varData.portfolio_var.parametric)}
           </div>
         </div>
 
-        <div className="text-center p-3 bg-green-50 rounded-lg">
-          <div className="text-sm font-medium text-green-700 mb-1">Historical</div>
-          <div className="text-lg font-semibold text-green-900">
+        <div className="text-center p-3 bg-green-900/30 rounded-lg border border-green-500/30">
+          <div className="text-sm font-medium text-green-400 mb-1">Historical</div>
+          <div className="text-lg font-semibold text-green-300">
             {formatCurrency(varData.portfolio_var.historical)}
           </div>
         </div>
 
-        <div className="text-center p-3 bg-purple-50 rounded-lg">
-          <div className="text-sm font-medium text-purple-700 mb-1">Monte Carlo</div>
-          <div className="text-lg font-semibold text-purple-900">
+        <div className="text-center p-3 bg-purple-900/30 rounded-lg border border-purple-500/30">
+          <div className="text-sm font-medium text-purple-400 mb-1">Monte Carlo</div>
+          <div className="text-lg font-semibold text-purple-300">
             {formatCurrency(varData.portfolio_var.monte_carlo)}
           </div>
         </div>
@@ -201,12 +201,12 @@ export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps)
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div className="space-y-1">
           <div className="flex justify-between">
-            <span className="text-gray-600">Total Exposure:</span>
-            <span className="font-medium">{formatCurrency(totalExposure)}</span>
+            <span className="text-neutral-400">Total Exposure:</span>
+            <span className="font-medium text-white">{formatCurrency(totalExposure)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">VaR Utilization:</span>
-            <span className="font-medium">
+            <span className="text-neutral-400">VaR Utilization:</span>
+            <span className="font-medium text-white">
               {((varData.risk_metrics.risk_utilization || 0) * 100).toFixed(1)}%
             </span>
           </div>
@@ -214,16 +214,16 @@ export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps)
 
         <div className="space-y-1">
           <div className="flex justify-between">
-            <span className="text-gray-600">VaR Limit:</span>
-            <span className="font-medium">
+            <span className="text-neutral-400">VaR Limit:</span>
+            <span className="font-medium text-white">
               {formatCurrency(varData.risk_metrics.var_limit || 0)}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Breaches Today:</span>
+            <span className="text-neutral-400">Breaches Today:</span>
             <span
               className={`font-medium ${
-                (varData.risk_metrics.breaches_today || 0) > 0 ? 'text-red-600' : 'text-green-600'
+                (varData.risk_metrics.breaches_today || 0) > 0 ? 'text-red-400' : 'text-green-400'
               }`}
             >
               {varData.risk_metrics.breaches_today || 0}
@@ -233,14 +233,14 @@ export default function VaRDisplay({ refreshInterval = 30000 }: VaRDisplayProps)
       </div>
 
       {/* Status Footer */}
-      <div className="mt-4 pt-3 border-t border-gray-100">
-        <div className="flex justify-between items-center text-xs text-gray-500">
+      <div className="mt-4 pt-3 border-t border-neutral-600">
+        <div className="flex justify-between items-center text-xs text-neutral-400">
           <span>Confidence Level: {varData.portfolio_var.confidence_level}%</span>
           <span
             className={`px-2 py-1 rounded-full text-xs font-medium ${
               varData.status === 'active'
-                ? 'bg-green-100 text-green-800'
-                : 'bg-gray-100 text-gray-800'
+                ? 'bg-green-900/30 text-green-400 border border-green-500/30'
+                : 'bg-neutral-700 text-neutral-300 border border-neutral-600'
             }`}
           >
             {varData.status}
