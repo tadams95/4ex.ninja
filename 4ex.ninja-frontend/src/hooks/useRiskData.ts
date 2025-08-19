@@ -70,6 +70,28 @@ export interface CorrelationData {
   status: string;
 }
 
+// Historical VaR data interfaces for trend visualization
+export interface VaRHistoryPoint {
+  timestamp: string;
+  parametric: number;
+  historical: number;
+  monte_carlo: number;
+  target: number;
+}
+
+export interface VaRHistoryData {
+  period: string;
+  data: VaRHistoryPoint[];
+  summary: {
+    total_points: number;
+    breaches_count: number;
+    avg_var: number;
+    max_var: number;
+    min_var: number;
+  };
+  timestamp: string;
+}
+
 export function useRiskData(refreshInterval: number = 30000) {
   const [varData, setVarData] = useState<VaRData | null>(null);
   const [correlationData, setCorrelationData] = useState<CorrelationData | null>(null);
@@ -216,3 +238,64 @@ export function useRiskData(refreshInterval: number = 30000) {
     refetch,
   };
 }
+
+// Custom hook for fetching historical VaR data for trend visualization
+export const useVaRHistory = (period: string = '1D', refreshInterval: number = 300000) => {
+  const [historyData, setHistoryData] = useState<VaRHistoryData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+
+  const fetchHistoryData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      console.log(`[useVaRHistory] Fetching VaR history for period: ${period}`);
+
+      const response = await fetch(`/api/risk/var-history?period=${period}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch VaR history: ${response.status}`);
+      }
+
+      const data: VaRHistoryData = await response.json();
+      setHistoryData(data);
+      setLastUpdate(new Date());
+
+      console.log(
+        `[useVaRHistory] Successfully fetched ${data.data.length} data points for ${period}`
+      );
+    } catch (err) {
+      console.error('[useVaRHistory] Error:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }, [period]);
+
+  useEffect(() => {
+    fetchHistoryData();
+  }, [fetchHistoryData]);
+
+  // Set up auto-refresh interval (5 minutes for historical data)
+  useEffect(() => {
+    if (refreshInterval > 0) {
+      const interval = setInterval(fetchHistoryData, refreshInterval);
+      return () => clearInterval(interval);
+    }
+  }, [fetchHistoryData, refreshInterval]);
+
+  return {
+    historyData,
+    loading,
+    error,
+    lastUpdate,
+    refetch: fetchHistoryData,
+  };
+};
