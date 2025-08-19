@@ -21,6 +21,16 @@ from enum import Enum
 from decimal import Decimal
 import json
 
+# Database connection for emergency risk data persistence
+from config.settings import MONGO_CONNECTION_STRING
+from pymongo import MongoClient
+
+# Database connection for emergency risk data persistence
+client = MongoClient(
+    MONGO_CONNECTION_STRING, tls=True, tlsAllowInvalidCertificates=True
+)
+risk_db = client["risk_management"]
+
 # Import existing risk infrastructure
 from .risk_calculator import RiskCalculator
 from .volatility_impact_analyzer import VolatilityImpactAnalyzer
@@ -129,6 +139,11 @@ class EmergencyRiskManager:
         self.portfolio_current_value = portfolio_initial_value
         self.active_stress_events: List[StressEvent] = []
         self.emergency_history: List[Dict] = []
+
+        # Database collections for persistence
+        self.emergency_events_collection = risk_db["emergency_events"]
+        self.stress_events_collection = risk_db["stress_events"]
+        self.portfolio_metrics_collection = risk_db["portfolio_metrics"]
 
         # Volatility tracking
         self.volatility_history: Dict[str, List[float]] = {}
@@ -260,6 +275,10 @@ class EmergencyRiskManager:
                         )
 
                         detected_events.append(stress_event)
+
+                        # 💾 SAVE STRESS EVENT TO DATABASE
+                        await self._save_stress_event(stress_event)
+
                         self.logger.warning(
                             f"Stress event detected: {pair} volatility {current_volatility:.4f} "
                             f"exceeds threshold {volatility_threshold:.4f} (severity: {severity:.2f}x)"
@@ -390,6 +409,14 @@ class EmergencyRiskManager:
                 f"(Drawdown: {drawdown:.2%}, Emergency Level: {new_emergency_level.name})"
             )
 
+            # 💾 SAVE PORTFOLIO METRICS TO DATABASE (only for significant changes or emergency levels)
+            if (
+                abs(drawdown) > 0.01 or new_emergency_level != EmergencyLevel.NORMAL
+            ):  # >1% drawdown or emergency active
+                await self._save_portfolio_metrics(
+                    new_value, drawdown, new_emergency_level.name
+                )
+
         except Exception as e:
             self.logger.error(f"Error updating portfolio value: {e}", exc_info=True)
 
@@ -428,6 +455,9 @@ class EmergencyRiskManager:
             }
 
             self.emergency_history.append(escalation_data)
+
+            # 💾 SAVE EMERGENCY EVENT TO DATABASE
+            await self._save_emergency_event(escalation_data)
 
             # Send emergency alert
             await self._send_emergency_alert(protocol, drawdown)
@@ -642,6 +672,70 @@ class EmergencyRiskManager:
         except Exception as e:
             self.logger.error(f"Error getting emergency status: {e}")
             return {"error": "Failed to get emergency status"}
+
+    async def _save_emergency_event(self, event_data: Dict) -> None:
+        """Save emergency event to database for historical analysis"""
+        try:
+            event_doc = {
+                **event_data,
+                "saved_at": datetime.now(timezone.utc),
+                "event_id": f"{event_data.get('timestamp', '')[:19]}_emergency",  # YYYY-MM-DDTHH:MM:SS
+            }
+            result = self.emergency_events_collection.insert_one(event_doc)
+            if result.inserted_id:
+                self.logger.info(
+                    f"📊 Emergency event saved to database: {event_data.get('new_level')}"
+                )
+        except Exception as e:
+            self.logger.error(f"Failed to save emergency event: {e}")
+
+    async def _save_stress_event(self, stress_event: StressEvent) -> None:
+        """Save stress event to database for historical analysis"""
+        try:
+            stress_doc = {
+                "event_type": stress_event.event_type.value,
+                "severity": stress_event.severity,
+                "affected_pairs": stress_event.affected_pairs,
+                "detected_at": stress_event.detected_at.isoformat(),
+                "recommended_action": stress_event.recommended_action,
+                "current_volatility": stress_event.current_volatility,
+                "threshold_volatility": stress_event.threshold_volatility,
+                "saved_at": datetime.now(timezone.utc),
+                "event_id": f"{stress_event.detected_at.strftime('%Y%m%d_%H%M%S')}_stress_{stress_event.event_type.value}",
+            }
+            result = self.stress_events_collection.insert_one(stress_doc)
+            if result.inserted_id:
+                self.logger.info(
+                    f"📊 Stress event saved to database: {stress_event.event_type.value} (severity: {stress_event.severity:.2f})"
+                )
+        except Exception as e:
+            self.logger.error(f"Failed to save stress event: {e}")
+
+    async def _save_portfolio_metrics(
+        self, portfolio_value: float, drawdown: float, emergency_level: str
+    ) -> None:
+        """Save portfolio metrics to database for trend analysis"""
+        try:
+            metrics_doc = {
+                "timestamp": datetime.now(timezone.utc),
+                "portfolio_value": portfolio_value,
+                "drawdown_percentage": drawdown,
+                "emergency_level": emergency_level,
+                "position_size_multiplier": self.emergency_protocols[
+                    self.current_emergency_level
+                ].position_size_multiplier,
+                "trading_halted": self.emergency_protocols[
+                    self.current_emergency_level
+                ].stop_trading,
+                "active_stress_events_count": len(self.active_stress_events),
+            }
+            result = self.portfolio_metrics_collection.insert_one(metrics_doc)
+            if result.inserted_id:
+                self.logger.debug(
+                    f"📊 Portfolio metrics saved: {emergency_level} (${portfolio_value:,.2f}, {drawdown:.2%} drawdown)"
+                )
+        except Exception as e:
+            self.logger.error(f"Failed to save portfolio metrics: {e}")
 
     async def run_monitoring_loop(self, market_data_source) -> None:
         """

@@ -481,6 +481,32 @@ class MovingAverageCrossStrategy:
             pip_multiplier = Decimal("100") if self.is_jpy_pair else Decimal("10000")
             sl_pips = abs(close_price - stop_loss) * pip_multiplier
             tp_pips = abs(take_profit - close_price) * pip_multiplier
+
+            # Get emergency risk context if available
+            emergency_context = {}
+            if self.enable_emergency_management and self.emergency_manager:
+                try:
+                    emergency_status = self.emergency_manager.get_emergency_status()
+                    emergency_context = {
+                        "emergency_level": emergency_status.get(
+                            "emergency_level", "NORMAL"
+                        ),
+                        "portfolio_drawdown": emergency_status.get(
+                            "portfolio_drawdown", 0.0
+                        ),
+                        "position_size_multiplier": emergency_status.get(
+                            "position_size_multiplier", 1.0
+                        ),
+                        "active_stress_events": emergency_status.get(
+                            "active_stress_events", 0
+                        ),
+                        "trading_halted": emergency_status.get("trading_halted", False),
+                    }
+                except Exception as e:
+                    logging.warning(
+                        f"Could not get emergency context for {self.pair}: {e}"
+                    )
+
             signal_data = {
                 "time": row.name,
                 "instrument": self.pair,
@@ -496,6 +522,8 @@ class MovingAverageCrossStrategy:
                 "atr": float(row["atr"]),
                 "risk_reward_ratio": float(row["risk_reward_ratio"]),
                 "created_at": datetime.now(timezone.utc),
+                # 💾 EMERGENCY RISK CONTEXT
+                "emergency_context": emergency_context,
             }
             logging.info(
                 f"Generated signal for {self.pair} {self.timeframe}: {signal_data}"
