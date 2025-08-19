@@ -111,6 +111,67 @@ class RiskMetricsDatabase:
                 """
                 )
 
+                # Correlation trends table - NEW for Phase 2
+                cursor.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS correlation_trends (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        timestamp TEXT NOT NULL,
+                        pair1 TEXT NOT NULL,
+                        pair2 TEXT NOT NULL,
+                        current_correlation REAL NOT NULL,
+                        trend_slope REAL NOT NULL,
+                        trend_direction TEXT NOT NULL,
+                        volatility REAL NOT NULL,
+                        prediction_1d REAL NOT NULL,
+                        prediction_3d REAL NOT NULL,
+                        breach_probability REAL NOT NULL,
+                        confidence_lower REAL NOT NULL,
+                        confidence_upper REAL NOT NULL,
+                        r_squared REAL NOT NULL,
+                        lookback_days INTEGER NOT NULL,
+                        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                    )
+                """
+                )
+
+                # Market regime table - NEW for Phase 2
+                cursor.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS market_regimes (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        timestamp TEXT NOT NULL,
+                        regime_type TEXT NOT NULL,
+                        expected_corr_min REAL NOT NULL,
+                        expected_corr_max REAL NOT NULL,
+                        regime_confidence REAL NOT NULL,
+                        characteristics TEXT NOT NULL, -- JSON string
+                        regime_start TEXT NOT NULL,
+                        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                    )
+                """
+                )
+
+                # Trend alerts table - NEW for Phase 2
+                cursor.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS trend_alerts (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        timestamp TEXT NOT NULL,
+                        alert_type TEXT NOT NULL,
+                        severity TEXT NOT NULL,
+                        pair1 TEXT,
+                        pair2 TEXT,
+                        metric_value REAL,
+                        message TEXT NOT NULL,
+                        recommendation TEXT,
+                        acknowledged BOOLEAN DEFAULT FALSE,
+                        resolved BOOLEAN DEFAULT FALSE,
+                        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                    )
+                """
+                )
+
                 # Risk metrics summary table
                 cursor.execute(
                     """
