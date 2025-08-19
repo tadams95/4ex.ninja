@@ -1,0 +1,53 @@
+{
+  "title": "Strategy Performance Matrix",
+  "description": "Head-to-head comparison across key metrics",
+  "metrics": [
+    "Annual Return",
+    "Sharpe Ratio",
+    "Max Drawdown",
+    "Win Rate",
+    "Profit Factor",
+    "Consistency Score"
+  ],
+  "strategies": [
+    "EUR_USD Conservative Weekly",
+    "GBP_USD Conservative Weekly",
+    "EUR_USD Moderate Weekly",
+    "GBP_USD Moderate Weekly"
+  ],
+  "data": {
+    "EUR_USD Conservative Weekly": [
+      75,
+      100,
+      100,
+      85,
+      78,
+      95
+    ],
+    "GBP_USD Conservative Weekly": [
+      80,
+      95,
+      90,
+      85,
+      82,
+      90
+    ],
+    "EUR_USD Moderate Weekly": [
+      95,
+      85,
+      75,
+      75,
+      88,
+      80
+    ],
+    "GBP_USD Moderate Weekly": [
+      100,
+      80,
+      65,
+      75,
+      92,
+      75
+    ]
+  },
+  "scoring": "Normalized 0-100 scale (100 = best in category)"
+}
