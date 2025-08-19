@@ -5,7 +5,6 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { LoadingSequence } from '@/components/ui';
 import VirtualizedCrossoverList from '@/components/VirtualizedCrossoverList';
 import { useAuth } from '@/contexts/AuthContext';
-import { useLatestCrossovers } from '@/hooks/api';
 import {
   usePageNavigationTracking,
   useRenderPerformance,
@@ -13,7 +12,24 @@ import {
 } from '@/hooks/usePerformance';
 import { Crossover } from '@/types';
 import Link from 'next/link';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
+// Define signal type to match the structure from sigcheck
+interface Signal {
+  _id: string;
+  pair: string;
+  type: 'BUY' | 'SELL';
+  timeframe: string;
+  entry: string;
+  stopLoss: string;
+  takeProfit: string;
+  slPips: string;
+  tpPips: string;
+  riskRewardRatio: string;
+  timestamp: string | Date;
+  // Map signal properties to crossover-like properties for compatibility
+  crossoverType?: 'BULLISH' | 'BEARISH';
+}
 
 function InsightsPage() {
   // Get auth context for user info
@@ -24,7 +40,59 @@ function InsightsPage() {
   usePageNavigationTracking('insights');
   const trackSignalLoad = useSignalLoadTracking();
 
-  const { data: crossoverData, isLoading: loading, error, refetch } = useLatestCrossovers(20); // Get latest 20 crossovers with polling
+  // State management for signals (similar to sigcheck page)
+  const [signals, setSignals] = useState<Signal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isEmpty, setIsEmpty] = useState(false);
+
+  // Fetch signals function (similar to sigcheck page)
+  const fetchSignals = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      setIsEmpty(false);
+
+      const response = await fetch('/api/signals');
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch signals');
+      }
+
+      const data = await response.json();
+      setSignals(data.signals || []);
+
+      // Check if API returned isEmpty flag
+      if (data.isEmpty) {
+        setIsEmpty(true);
+      }
+    } catch (err: any) {
+      console.error('Error fetching signals:', err);
+      setError(err?.message || 'Failed to load signals. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Set up fetching and polling (similar to sigcheck page)
+  useEffect(() => {
+    fetchSignals();
+
+    // Optional: Set up polling to refresh signals periodically
+    const intervalId = setInterval(fetchSignals, 5 * 60 * 1000); // Every 5 minutes
+
+    return () => clearInterval(intervalId);
+  }, [fetchSignals]);
+
+  // Create crossoverData structure to maintain compatibility with existing UI
+  const crossoverData = useMemo(
+    () => ({
+      crossovers: signals,
+      isEmpty: isEmpty || signals.length === 0,
+    }),
+    [signals, isEmpty]
+  );
 
   // Track signal loading performance
   useEffect(() => {
@@ -39,14 +107,28 @@ function InsightsPage() {
     const crossovers = crossoverData?.crossovers || [];
     const isEmpty = crossoverData?.isEmpty || crossovers.length === 0;
 
-    // Expensive calculations: Sort crossovers and compute statistics
-    const sortedCrossovers = [...crossovers].sort(
+    // Map signals to crossover-like format for compatibility and sort by timestamp
+    const mappedCrossovers: Crossover[] = crossovers.map((signal: Signal) => ({
+      _id: signal._id,
+      pair: signal.pair,
+      crossoverType: signal.type === 'BUY' ? 'BULLISH' : ('BEARISH' as 'BULLISH' | 'BEARISH'),
+      timeframe: signal.timeframe,
+      fastMA: 20, // Default values for compatibility
+      slowMA: 50,
+      price: signal.entry,
+      timestamp:
+        typeof signal.timestamp === 'string' ? new Date(signal.timestamp) : signal.timestamp,
+      signal: signal.type === 'BUY' ? 'Buy' : ('Sell' as 'Buy' | 'Sell'),
+      close: parseFloat(signal.entry) || 0,
+    }));
+
+    const sortedCrossovers = [...mappedCrossovers].sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 
-    const bullishCount = crossovers.filter(c => c.crossoverType === 'BULLISH').length;
-    const bearishCount = crossovers.filter(c => c.crossoverType === 'BEARISH').length;
-    const totalSignals = crossovers.length;
+    const bullishCount = mappedCrossovers.filter(c => c.crossoverType === 'BULLISH').length;
+    const bearishCount = mappedCrossovers.filter(c => c.crossoverType === 'BEARISH').length;
+    const totalSignals = mappedCrossovers.length;
     const bullishPercentage =
       totalSignals > 0 ? ((bullishCount / totalSignals) * 100).toFixed(1) : '0';
 
@@ -63,8 +145,8 @@ function InsightsPage() {
   }, [crossoverData]);
 
   const handleRetry = useCallback((): void => {
-    refetch();
-  }, [refetch]);
+    fetchSignals();
+  }, [fetchSignals]);
 
   const handleCrossoverClick = useCallback((crossover: Crossover) => {
     // Handle crossover item clicks (e.g., show details, navigate to analysis)
@@ -95,7 +177,7 @@ function InsightsPage() {
             />
           </svg>
           <p className="font-medium mb-2">Error loading market insights</p>
-          <p className="text-sm">{error?.message || 'An error occurred'}</p>
+          <p className="text-sm">{error || 'An error occurred'}</p>
           <button
             onClick={handleRetry}
             className="mt-4 px-4 py-2 bg-red-500/30 text-red-300 rounded-md hover:bg-red-500/40 transition-colors"
