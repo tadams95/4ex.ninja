@@ -252,3 +252,218 @@ async def health_check():
         "available_strategies": len(strategy_registry.list_strategies()),
         "engine_status": "operational",
     }
+
+
+# === BACKTEST PAGE DATA ENDPOINTS ===
+# Lean, effective endpoints for serving backtest page data
+
+
+@backtest_router.get("/page/performance")
+async def get_top_performance():
+    """Get top performing strategy data for backtest page"""
+    try:
+        # Load the performance data we created in Phase 1
+        performance_file = (
+            Path(__file__).parent.parent.parent.parent
+            / "backtest_data"
+            / "top_strategies_performance.json"
+        )
+
+        if not performance_file.exists():
+            raise HTTPException(status_code=404, detail="Performance data not found")
+
+        with open(performance_file, "r") as f:
+            data = json.load(f)
+
+        return {
+            "status": "success",
+            "data": data,
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to load performance data: {str(e)}"
+        )
+
+
+@backtest_router.get("/page/visual-datasets")
+async def get_visual_datasets():
+    """Get all visual datasets for backtest page charts"""
+    try:
+        # Load the combined visual datasets
+        visual_file = (
+            Path(__file__).parent.parent.parent.parent
+            / "backtest_data"
+            / "visual_datasets"
+            / "all_visual_datasets.json"
+        )
+
+        if not visual_file.exists():
+            raise HTTPException(status_code=404, detail="Visual datasets not found")
+
+        with open(visual_file, "r") as f:
+            data = json.load(f)
+
+        return {
+            "status": "success",
+            "data": data,
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to load visual datasets: {str(e)}"
+        )
+
+
+@backtest_router.get("/page/visual-datasets/{dataset_name}")
+async def get_single_visual_dataset(dataset_name: str):
+    """Get specific visual dataset for targeted chart loading"""
+    try:
+        # Load specific dataset file
+        visual_file = (
+            Path(__file__).parent.parent.parent.parent
+            / "backtest_data"
+            / "visual_datasets"
+            / f"{dataset_name}.json"
+        )
+
+        if not visual_file.exists():
+            raise HTTPException(
+                status_code=404, detail=f"Dataset {dataset_name} not found"
+            )
+
+        with open(visual_file, "r") as f:
+            data = json.load(f)
+
+        return {
+            "status": "success",
+            "dataset": dataset_name,
+            "data": data,
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to load dataset {dataset_name}: {str(e)}"
+        )
+
+
+@backtest_router.get("/page/methodology")
+async def get_methodology_content():
+    """Get strategy methodology content for backtest page"""
+    try:
+        # Load methodology documentation
+        methodology_file = (
+            Path(__file__).parent.parent.parent.parent
+            / "docs"
+            / "Backtest_Reviews"
+            / "strategy_methodology.md"
+        )
+        performance_attribution_file = (
+            Path(__file__).parent.parent.parent.parent
+            / "docs"
+            / "Backtest_Reviews"
+            / "performance_attribution.md"
+        )
+
+        methodology_content = ""
+        performance_content = ""
+
+        if methodology_file.exists():
+            with open(methodology_file, "r") as f:
+                methodology_content = f.read()
+
+        if performance_attribution_file.exists():
+            with open(performance_attribution_file, "r") as f:
+                performance_content = f.read()
+
+        return {
+            "status": "success",
+            "data": {
+                "strategy_methodology": methodology_content,
+                "performance_attribution": performance_content,
+                "last_updated": datetime.utcnow().isoformat(),
+            },
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to load methodology content: {str(e)}"
+        )
+
+
+@backtest_router.get("/page/equity-curves")
+async def get_equity_curves():
+    """Get equity curve data for backtest page charts"""
+    try:
+        # Load equity curves data
+        equity_file = (
+            Path(__file__).parent.parent.parent.parent
+            / "backtest_data"
+            / "equity_curves.json"
+        )
+
+        if not equity_file.exists():
+            raise HTTPException(status_code=404, detail="Equity curves data not found")
+
+        with open(equity_file, "r") as f:
+            data = json.load(f)
+
+        return {
+            "status": "success",
+            "data": data,
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to load equity curves: {str(e)}"
+        )
+
+
+@backtest_router.get("/page/summary")
+async def get_backtest_page_summary():
+    """Get comprehensive summary for backtest page hero section"""
+    try:
+        # Load key metrics from performance data
+        performance_file = (
+            Path(__file__).parent.parent.parent.parent
+            / "backtest_data"
+            / "top_strategies_performance.json"
+        )
+
+        if not performance_file.exists():
+            raise HTTPException(status_code=404, detail="Performance data not found")
+
+        with open(performance_file, "r") as f:
+            performance_data = json.load(f)
+
+        # Extract key metrics for hero section
+        top_strategy = performance_data["top_performing_strategies"][0]
+
+        summary = {
+            "hero_metrics": {
+                "top_annual_return": f"{top_strategy['performance_metrics']['annual_return_pct']}",
+                "top_sharpe_ratio": top_strategy["performance_metrics"]["sharpe_ratio"],
+                "max_drawdown": f"{top_strategy['performance_metrics']['max_drawdown_pct']}",
+                "win_rate": f"{top_strategy['performance_metrics']['win_rate_pct']}",
+                "strategies_analyzed": performance_data["total_strategies_analyzed"],
+                "data_period": "5 Years (2020-2025)",
+            },
+            "top_3_strategies": performance_data["top_performing_strategies"][:3],
+            "last_updated": datetime.utcnow().isoformat(),
+        }
+
+        return {
+            "status": "success",
+            "data": summary,
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to generate summary: {str(e)}"
+        )
