@@ -35,7 +35,7 @@ const nextConfig = {
               `connect-src 'self' *.stripe.com *.coinbase.com *.walletconnect.com *.walletconnect.org wss: ws: ${apiUrl} ${apiUrl.replace(
                 'http',
                 'ws'
-              )} http://157.230.58.248:8081 https://157.230.58.248:8081 ws://157.230.58.248:8081 wss://157.230.58.248:8081 wss://relay.walletconnect.com wss://relay.walletconnect.org https://mainnet.base.org https://sepolia.base.org https://base.llamarpc.com https://1rpc.io https://base.blockpi.network https://base-mainnet.public.blastapi.io https://base.drpc.org https://gateway.tenderly.co https://eth.merkle.io https://api.ensideas.com https://cloudflare-eth.com https://api.web3modal.org https://*.web3modal.org`,
+              )} http://157.230.58.248:8000 https://157.230.58.248:8000 http://157.230.58.248:8081 https://157.230.58.248:8081 ws://157.230.58.248:8081 wss://157.230.58.248:8081 wss://relay.walletconnect.com wss://relay.walletconnect.org https://mainnet.base.org https://sepolia.base.org https://base.llamarpc.com https://1rpc.io https://base.blockpi.network https://base-mainnet.public.blastapi.io https://base.drpc.org https://gateway.tenderly.co https://eth.merkle.io https://api.ensideas.com https://cloudflare-eth.com https://api.web3modal.org https://*.web3modal.org`,
               "frame-src 'self' *.stripe.com *.coinbase.com" +
                 (isProduction ? '' : ' *.vercel.app'),
               "frame-ancestors 'none'",

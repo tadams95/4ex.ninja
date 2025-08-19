@@ -70,35 +70,13 @@ export interface RegimeApiResponse {
 
 // Get API base URL following the existing pattern
 const getApiBaseUrl = async () => {
-  if (process.env.NEXT_PUBLIC_RISK_API_URL) {
-    return process.env.NEXT_PUBLIC_RISK_API_URL;
-  }
+  // Force production backend - simplified to avoid any confusion
+  const productionUrl = 'http://157.230.58.248:8000';
 
-  // For development, try local server first, then fallback to droplet
-  if (typeof window !== 'undefined' && window.location.protocol === 'http:') {
-    // Try local development server first
-    try {
-      const localResponse = await fetch('http://127.0.0.1:8001/health', {
-        method: 'GET',
-        signal: AbortSignal.timeout(2000),
-      });
-      if (localResponse.ok) {
-        console.log('[CorrelationTrends] Using local development server');
-        return 'http://127.0.0.1:8001';
-      }
-    } catch (e) {
-      console.log('[CorrelationTrends] Local server not available, trying droplet');
-    }
+  console.log('[CorrelationTrends] FORCED PRODUCTION URL:', productionUrl);
 
-    // Fallback to droplet
-    return 'http://157.230.58.248:8000';
-  }
-
-  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
-    return window.location.origin;
-  }
-
-  return window.location.origin;
+  // Always return production URL since our backend is deployed there
+  return productionUrl;
 };
 
 // Frontend fallback mock data generator
@@ -177,6 +155,8 @@ export function useCorrelationTrends(
         console.log(
           `[CorrelationTrends] Fetching from: ${baseEndpoint} (attempt ${retryCount + 1})`
         );
+        console.log('[CorrelationTrends] API_BASE_URL:', API_BASE_URL);
+        console.log('[CorrelationTrends] baseEndpoint:', baseEndpoint);
 
         // Try to fetch trends data
         try {
@@ -248,9 +228,12 @@ export function useCorrelationTrends(
           setForecastData(mockForecasts);
         }
 
-        // Try to fetch regime data (optional)
+        // Try to fetch regime data via server-side API route
         try {
-          const regimeResponse = await fetch(`${baseEndpoint}/correlation-regime`, {
+          const regimeUrl = `/api/risk/correlation-regime`;
+          console.log('[CorrelationTrends] Fetching regime data via server API from:', regimeUrl);
+
+          const regimeResponse = await fetch(regimeUrl, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             signal: AbortSignal.timeout(5000),
@@ -259,6 +242,7 @@ export function useCorrelationTrends(
           if (regimeResponse.ok) {
             const regimeResult: RegimeApiResponse = await regimeResponse.json();
             setRegimeData(regimeResult.current_regime);
+            console.log('✅ Successfully fetched regime data via server API');
           }
         } catch (regimeError) {
           console.warn('[CorrelationTrends] Regime data unavailable:', regimeError);

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_URL =
-  process.env.BACKEND_URL ||
-  (process.env.NODE_ENV === 'production' ? 'http://157.230.58.248:8000' : 'http://localhost:8000');
+// Force production backend - our DO backend is deployed and working
+const PRODUCTION_BACKEND = 'http://157.230.58.248:8000';
+const BACKEND_URL = PRODUCTION_BACKEND; // Always use production since it's deployed and working
 const IS_PRODUCTION = false; // Disable mock data since we have real backend
 
 // Mock correlation data for production demo when backend is not available
