@@ -4,13 +4,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { mockMethodologyData, simulateApiDelay } from './mockData';
 
-interface MethodologyContent {
-  title: string;
-  content: string;
-  section: string;
+interface MethodologyData {
+  strategy_methodology: string;
+  performance_attribution: string;
+  last_updated: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE = 'http://157.230.58.248:8000';
 
 /**
  * Methodology Section Component
@@ -25,7 +25,7 @@ export default function MethodologySection() {
     data: methodology,
     isLoading,
     error,
-  } = useQuery<MethodologyContent[]>({
+  } = useQuery<MethodologyData>({
     queryKey: ['backtest-methodology'],
     queryFn: async () => {
       try {
@@ -33,7 +33,8 @@ export default function MethodologySection() {
         if (!response.ok) {
           throw new Error(`API not available: ${response.status}`);
         }
-        return response.json();
+        const result = await response.json();
+        return result.data; // Extract data from the response wrapper
       } catch (error) {
         // Fallback to mock data for development
         console.log('Using mock data for methodology (API not available)');
@@ -55,9 +56,7 @@ export default function MethodologySection() {
   };
 
   const expandAll = () => {
-    if (!methodology) return;
-    const allSections = new Set(methodology.map(item => item.section));
-    setExpandedSections(allSections);
+    setExpandedSections(new Set(['strategy_methodology', 'performance_attribution']));
   };
 
   const collapseAll = () => {
@@ -93,7 +92,7 @@ export default function MethodologySection() {
     );
   }
 
-  if (!methodology || methodology.length === 0) {
+  if (!methodology) {
     return (
       <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
         <h3 className="text-lg font-semibold text-neutral-300 mb-4">Strategy Methodology</h3>
@@ -102,28 +101,25 @@ export default function MethodologySection() {
     );
   }
 
-  // Group methodology items by section
-  const sectionGroups = methodology.reduce((acc, item) => {
-    if (!acc[item.section]) {
-      acc[item.section] = [];
-    }
-    acc[item.section].push(item);
-    return acc;
-  }, {} as Record<string, MethodologyContent[]>);
-
-  const sectionOrder = [
-    'overview',
-    'technical_indicators',
-    'risk_management',
-    'entry_exit_rules',
-    'backtesting_methodology',
-    'performance_metrics',
-    'implementation_details',
+  // Create sections from the API data
+  const sections = [
+    {
+      key: 'strategy_methodology',
+      title: 'Strategy Methodology',
+      content: methodology.strategy_methodology || 'No strategy methodology available',
+      hasContent: Boolean(
+        methodology.strategy_methodology && methodology.strategy_methodology.trim()
+      ),
+    },
+    {
+      key: 'performance_attribution',
+      title: 'Performance Attribution',
+      content: methodology.performance_attribution || 'No performance attribution available',
+      hasContent: Boolean(
+        methodology.performance_attribution && methodology.performance_attribution.trim()
+      ),
+    },
   ];
-
-  const orderedSections = sectionOrder
-    .filter(section => sectionGroups[section])
-    .concat(Object.keys(sectionGroups).filter(section => !sectionOrder.includes(section)));
 
   return (
     <div className="space-y-6">
@@ -148,23 +144,20 @@ export default function MethodologySection() {
 
       {/* Methodology Sections */}
       <div className="space-y-4">
-        {orderedSections.map(sectionKey => {
-          const sectionItems = sectionGroups[sectionKey];
-          const isExpanded = expandedSections.has(sectionKey);
+        {sections.map(section => {
+          const isExpanded = expandedSections.has(section.key);
 
           return (
-            <div key={sectionKey} className="bg-neutral-800 border border-neutral-700 rounded-lg">
+            <div key={section.key} className="bg-neutral-800 border border-neutral-700 rounded-lg">
               {/* Section Header */}
               <button
-                onClick={() => toggleSection(sectionKey)}
+                onClick={() => toggleSection(section.key)}
                 className="w-full px-6 py-4 flex justify-between items-center text-left hover:bg-neutral-750 transition-colors"
               >
-                <h3 className="text-lg font-semibold text-white capitalize">
-                  {sectionKey.replace(/_/g, ' ')}
-                </h3>
+                <h3 className="text-lg font-semibold text-white">{section.title}</h3>
                 <div className="flex items-center space-x-2">
                   <span className="text-xs text-neutral-400">
-                    {sectionItems.length} item{sectionItems.length !== 1 ? 's' : ''}
+                    {section.hasContent ? 'Available' : 'No data'}
                   </span>
                   <svg
                     className={`w-5 h-5 text-neutral-400 transition-transform ${
@@ -186,19 +179,20 @@ export default function MethodologySection() {
 
               {/* Section Content */}
               {isExpanded && (
-                <div className="px-6 pb-6 space-y-4">
-                  {sectionItems.map((item, index) => (
-                    <div key={index} className="border-l-2 border-blue-500 pl-4">
-                      <h4 className="text-md font-medium text-white mb-2">{item.title}</h4>
-                      <div className="text-sm text-neutral-300 leading-relaxed">
-                        {item.content.split('\n').map((paragraph, pIndex) => (
+                <div className="px-6 pb-6">
+                  <div className="border-l-2 border-blue-500 pl-4">
+                    <div className="text-sm text-neutral-300 leading-relaxed">
+                      {section.hasContent ? (
+                        section.content.split('\n').map((paragraph, pIndex) => (
                           <p key={pIndex} className="mb-2 last:mb-0">
                             {paragraph}
                           </p>
-                        ))}
-                      </div>
+                        ))
+                      ) : (
+                        <p className="text-neutral-400 italic">{section.content}</p>
+                      )}
                     </div>
-                  ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -212,16 +206,24 @@ export default function MethodologySection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
           <div>
             <span className="text-neutral-400">Total Sections:</span>
-            <span className="text-white ml-2">{orderedSections.length}</span>
+            <span className="text-white ml-2">{sections.length}</span>
           </div>
           <div>
-            <span className="text-neutral-400">Total Items:</span>
-            <span className="text-white ml-2">{methodology.length}</span>
+            <span className="text-neutral-400">Sections with Data:</span>
+            <span className="text-white ml-2">{sections.filter(s => s.hasContent).length}</span>
           </div>
           <div>
             <span className="text-neutral-400">Expanded:</span>
             <span className="text-white ml-2">{expandedSections.size}</span>
           </div>
+          {methodology.last_updated && (
+            <div className="md:col-span-3 mt-2 pt-2 border-t border-neutral-700">
+              <span className="text-neutral-400">Last Updated:</span>
+              <span className="text-white ml-2">
+                {new Date(methodology.last_updated).toLocaleDateString()}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>

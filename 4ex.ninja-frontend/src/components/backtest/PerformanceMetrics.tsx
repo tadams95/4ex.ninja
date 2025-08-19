@@ -4,20 +4,37 @@ import { useQuery } from '@tanstack/react-query';
 import { mockPerformanceData, simulateApiDelay } from './mockData';
 
 interface PerformanceData {
-  annual_return: number;
-  total_return: number;
-  max_drawdown: number;
-  sharpe_ratio: number;
-  calmar_ratio: number;
-  volatility: number;
-  total_trades: number;
-  win_rate: number;
-  avg_win: number;
-  avg_loss: number;
-  profit_factor: number;
+  total_strategies_analyzed: number;
+  top_performing_strategies: Array<{
+    rank: number;
+    execution_id: string;
+    currency_pair: string;
+    strategy: string;
+    timeframe: string;
+    performance_metrics: {
+      annual_return: number;
+      annual_return_pct: string;
+      sharpe_ratio: number;
+      max_drawdown: number;
+      max_drawdown_pct: string;
+      win_rate: number;
+      win_rate_pct: string;
+    };
+    category: string;
+    description: string;
+  }>;
+  performance_summary: {
+    annual_return_range: string;
+    sharpe_ratio_range: string;
+    max_drawdown_range: string;
+    win_rate_range: string;
+    best_timeframe: string;
+    best_pairs: string[];
+    preferred_risk_profile: string;
+  };
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://157.230.58.248:8000';
 
 /**
  * Performance Metrics Component
@@ -38,7 +55,8 @@ export default function PerformanceMetrics() {
         if (!response.ok) {
           throw new Error(`API not available: ${response.status}`);
         }
-        return response.json();
+        const result = await response.json();
+        return result.data; // Extract data from the response wrapper
       } catch (error) {
         // Fallback to mock data for development
         console.log('Using mock data for performance metrics (API not available)');
@@ -91,61 +109,61 @@ export default function PerformanceMetrics() {
 
   const formatCurrency = (value: number, decimals = 2) => `$${value.toFixed(decimals)}`;
 
+  // Use the top performing strategy for metrics display
+  const topStrategy = performance.top_performing_strategies?.[0];
+  if (!topStrategy) {
+    return (
+      <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-white mb-6">Performance Metrics</h3>
+        <p className="text-neutral-400 text-sm">No performance data available</p>
+      </div>
+    );
+  }
+
   const metrics = [
     {
-      label: 'Total Return',
-      value: formatPercent(performance.total_return),
-      color: performance.total_return > 0 ? 'text-green-400' : 'text-red-400',
-    },
-    {
       label: 'Annual Return',
-      value: formatPercent(performance.annual_return),
-      color: performance.annual_return > 0 ? 'text-green-400' : 'text-red-400',
+      value: topStrategy.performance_metrics.annual_return_pct,
+      color:
+        parseFloat(topStrategy.performance_metrics.annual_return_pct) > 0
+          ? 'text-green-400'
+          : 'text-red-400',
     },
     {
       label: 'Max Drawdown',
-      value: formatPercent(performance.max_drawdown),
+      value: topStrategy.performance_metrics.max_drawdown_pct,
       color: 'text-red-400',
-    },
-    {
-      label: 'Volatility',
-      value: formatPercent(performance.volatility),
-      color: 'text-neutral-300',
     },
     {
       label: 'Sharpe Ratio',
-      value: formatNumber(performance.sharpe_ratio),
-      color: performance.sharpe_ratio > 1 ? 'text-green-400' : 'text-neutral-300',
-    },
-    {
-      label: 'Calmar Ratio',
-      value: formatNumber(performance.calmar_ratio),
-      color: performance.calmar_ratio > 1 ? 'text-green-400' : 'text-neutral-300',
-    },
-    {
-      label: 'Total Trades',
-      value: performance.total_trades.toLocaleString(),
-      color: 'text-blue-400',
+      value: formatNumber(topStrategy.performance_metrics.sharpe_ratio),
+      color:
+        topStrategy.performance_metrics.sharpe_ratio > 1 ? 'text-green-400' : 'text-neutral-300',
     },
     {
       label: 'Win Rate',
-      value: formatPercent(performance.win_rate),
-      color: performance.win_rate > 0.5 ? 'text-green-400' : 'text-red-400',
+      value: topStrategy.performance_metrics.win_rate_pct,
+      color: topStrategy.performance_metrics.win_rate > 50 ? 'text-green-400' : 'text-red-400',
     },
     {
-      label: 'Average Win',
-      value: formatCurrency(performance.avg_win),
-      color: 'text-green-400',
+      label: 'Strategy',
+      value: topStrategy.strategy,
+      color: 'text-blue-400',
     },
     {
-      label: 'Average Loss',
-      value: formatCurrency(performance.avg_loss),
-      color: 'text-red-400',
+      label: 'Currency Pair',
+      value: topStrategy.currency_pair,
+      color: 'text-neutral-300',
     },
     {
-      label: 'Profit Factor',
-      value: formatNumber(performance.profit_factor),
-      color: performance.profit_factor > 1 ? 'text-green-400' : 'text-red-400',
+      label: 'Timeframe',
+      value: topStrategy.timeframe,
+      color: 'text-neutral-300',
+    },
+    {
+      label: 'Category',
+      value: topStrategy.category,
+      color: 'text-purple-400',
     },
   ];
 
@@ -165,13 +183,25 @@ export default function PerformanceMetrics() {
       {/* Performance Summary */}
       <div className="mt-6 pt-4 border-t border-neutral-700">
         <div className="text-xs text-neutral-500">
-          Strategy demonstrates{' '}
-          <span className={performance.annual_return > 0.1 ? 'text-green-400' : 'text-red-400'}>
-            {performance.annual_return > 0.1 ? 'strong' : 'weak'}
+          Top strategy ({topStrategy.strategy}) demonstrates{' '}
+          <span
+            className={
+              topStrategy.performance_metrics.annual_return > 0.1
+                ? 'text-green-400'
+                : 'text-red-400'
+            }
+          >
+            {topStrategy.performance_metrics.annual_return > 0.1 ? 'strong' : 'weak'}
           </span>{' '}
           performance with{' '}
-          <span className={performance.sharpe_ratio > 1.5 ? 'text-green-400' : 'text-neutral-300'}>
-            {performance.sharpe_ratio > 1.5 ? 'excellent' : 'moderate'}
+          <span
+            className={
+              topStrategy.performance_metrics.sharpe_ratio > 1.5
+                ? 'text-green-400'
+                : 'text-neutral-300'
+            }
+          >
+            {topStrategy.performance_metrics.sharpe_ratio > 1.5 ? 'excellent' : 'moderate'}
           </span>{' '}
           risk-adjusted returns
         </div>

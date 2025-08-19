@@ -36,30 +36,67 @@ const MethodologySection = dynamic(() => import('./MethodologySection'), {
 });
 
 interface BacktestSummary {
-  total_strategies: number;
-  avg_annual_return: number;
-  avg_max_drawdown: number;
-  avg_sharpe_ratio: number;
-  winning_percentage: number;
-  timeframe: string;
-  currency_pairs: string[];
+  hero_metrics: {
+    top_annual_return: string;
+    top_sharpe_ratio: number;
+    max_drawdown: string;
+    win_rate: string;
+    strategies_analyzed: number;
+    data_period: string;
+  };
+  top_3_strategies: Array<{
+    rank: number;
+    execution_id: string;
+    currency_pair: string;
+    strategy: string;
+    timeframe: string;
+    performance_metrics: {
+      annual_return: number;
+      annual_return_pct: string;
+      sharpe_ratio: number;
+      max_drawdown: number;
+      max_drawdown_pct: string;
+      win_rate: number;
+      win_rate_pct: string;
+    };
+    category: string;
+    description: string;
+  }>;
+  last_updated: string;
 }
 
 interface PerformanceData {
-  annual_return: number;
-  total_return: number;
-  max_drawdown: number;
-  sharpe_ratio: number;
-  calmar_ratio: number;
-  volatility: number;
-  total_trades: number;
-  win_rate: number;
-  avg_win: number;
-  avg_loss: number;
-  profit_factor: number;
+  total_strategies_analyzed: number;
+  top_performing_strategies: Array<{
+    rank: number;
+    execution_id: string;
+    currency_pair: string;
+    strategy: string;
+    timeframe: string;
+    performance_metrics: {
+      annual_return: number;
+      annual_return_pct: string;
+      sharpe_ratio: number;
+      max_drawdown: number;
+      max_drawdown_pct: string;
+      win_rate: number;
+      win_rate_pct: string;
+    };
+    category: string;
+    description: string;
+  }>;
+  performance_summary: {
+    annual_return_range: string;
+    sharpe_ratio_range: string;
+    max_drawdown_range: string;
+    win_rate_range: string;
+    best_timeframe: string;
+    best_pairs: string[];
+    preferred_risk_profile: string;
+  };
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://157.230.58.248:8000';
 
 /**
  * Main Backtest Dashboard Component
@@ -83,7 +120,8 @@ export default function BacktestDashboard() {
         if (!response.ok) {
           throw new Error(`API not available: ${response.status}`);
         }
-        return response.json();
+        const result = await response.json();
+        return result.data; // Extract data from the response wrapper
       } catch (error) {
         // Fallback to mock data for development
         console.log('Using mock data for summary (API not available)');
@@ -107,7 +145,8 @@ export default function BacktestDashboard() {
         if (!response.ok) {
           throw new Error(`API not available: ${response.status}`);
         }
-        return response.json();
+        const result = await response.json();
+        return result.data; // Extract data from the response wrapper
       } catch (error) {
         // Fallback to mock data for development
         console.log('Using mock data for performance (API not available)');
@@ -147,7 +186,9 @@ export default function BacktestDashboard() {
               <p className="text-sm text-neutral-400">
                 {summaryLoading
                   ? 'Loading...'
-                  : `${summary?.timeframe || '5 years'} of proven MA Unified Strategy performance`}
+                  : `${
+                      summary?.hero_metrics?.data_period || '5 years'
+                    } of proven MA Unified Strategy performance`}
               </p>
             </div>
             <div className="flex items-center space-x-4">
@@ -156,8 +197,8 @@ export default function BacktestDashboard() {
                   Loading...
                 </div>
               ) : (
-                <div className="px-3 py-2 text-sm bg-green-600 rounded-md">
-                  {summary?.total_strategies || 0} Strategies Tested
+                <div className="px-3 py-2 text-sm bg-green-700 rounded-md">
+                  {summary?.hero_metrics?.strategies_analyzed || 0} Strategies Tested
                 </div>
               )}
             </div>
@@ -211,30 +252,39 @@ export default function BacktestDashboard() {
                 ))}
               </div>
             ) : (
-              performance && (
+              performance &&
+              performance.top_performing_strategies?.[0] && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
-                    <h3 className="text-sm font-medium text-neutral-400">Annual Return</h3>
+                    <h3 className="text-sm font-medium text-neutral-400">Top Annual Return</h3>
                     <p className="text-2xl font-bold text-green-400">
-                      {(performance.annual_return * 100).toFixed(1)}%
+                      {
+                        performance.top_performing_strategies[0].performance_metrics
+                          .annual_return_pct
+                      }
                     </p>
                   </div>
                   <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
-                    <h3 className="text-sm font-medium text-neutral-400">Max Drawdown</h3>
+                    <h3 className="text-sm font-medium text-neutral-400">Best Max Drawdown</h3>
                     <p className="text-2xl font-bold text-red-400">
-                      {(performance.max_drawdown * 100).toFixed(1)}%
+                      {
+                        performance.top_performing_strategies[0].performance_metrics
+                          .max_drawdown_pct
+                      }
                     </p>
                   </div>
                   <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
-                    <h3 className="text-sm font-medium text-neutral-400">Sharpe Ratio</h3>
+                    <h3 className="text-sm font-medium text-neutral-400">Top Sharpe Ratio</h3>
                     <p className="text-2xl font-bold text-blue-400">
-                      {performance.sharpe_ratio.toFixed(2)}
+                      {performance.top_performing_strategies[0].performance_metrics.sharpe_ratio.toFixed(
+                        2
+                      )}
                     </p>
                   </div>
                   <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
-                    <h3 className="text-sm font-medium text-neutral-400">Win Rate</h3>
+                    <h3 className="text-sm font-medium text-neutral-400">Best Win Rate</h3>
                     <p className="text-2xl font-bold text-purple-400">
-                      {(performance.win_rate * 100).toFixed(1)}%
+                      {performance.top_performing_strategies[0].performance_metrics.win_rate_pct}
                     </p>
                   </div>
                 </div>

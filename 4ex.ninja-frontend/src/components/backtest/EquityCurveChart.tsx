@@ -19,7 +19,24 @@ interface EquityPoint {
   drawdown: number;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+interface EquityStrategy {
+  dates: string[];
+  equity_values: number[];
+  final_equity: number;
+  total_return: number;
+  max_drawdown: number;
+}
+
+interface EquityDataResponse {
+  generated_date: string;
+  initial_balance: number;
+  period: string;
+  frequency: string;
+  total_weeks: number;
+  equity_curves: Record<string, EquityStrategy>;
+}
+
+const API_BASE = 'http://157.230.58.248:8000';
 
 /**
  * Custom Tooltip Component for the Equity Curve
@@ -49,7 +66,7 @@ export default function EquityCurveChart() {
     data: equityData,
     isLoading,
     error,
-  } = useQuery<EquityPoint[]>({
+  } = useQuery<EquityDataResponse>({
     queryKey: ['backtest-equity-curves'],
     queryFn: async () => {
       try {
@@ -57,7 +74,8 @@ export default function EquityCurveChart() {
         if (!response.ok) {
           throw new Error(`API not available: ${response.status}`);
         }
-        return response.json();
+        const result = await response.json();
+        return result.data; // Extract data from the response wrapper
       } catch (error) {
         // Fallback to mock data for development
         console.log('Using mock data for equity curves (API not available)');
@@ -70,23 +88,44 @@ export default function EquityCurveChart() {
 
   // Process data for chart
   const chartData = useMemo(() => {
-    if (!equityData || equityData.length === 0) return [];
+    if (!equityData || !equityData.equity_curves) return [];
 
-    return equityData.map(point => ({
-      date: point.date,
-      equity: point.equity,
-      drawdown: point.drawdown * 100, // Convert to percentage for display
-      drawdownFill: point.drawdown < -0.05 ? point.drawdown * 100 : null, // Only show significant drawdowns
-    }));
+    // Get the first strategy's data for now (we can enhance later to allow strategy selection)
+    const strategies = Object.values(equityData.equity_curves);
+    if (strategies.length === 0) return [];
+
+    const strategy = strategies[0] as any;
+    const dates = strategy.dates;
+    const equityValues = strategy.equity_values;
+
+    if (!dates || !equityValues) return [];
+
+    return dates.map((date: string, index: number) => {
+      const equity = equityValues[index];
+      const prevEquity = index > 0 ? equityValues[0] : equity;
+      const drawdown = prevEquity > 0 ? (equity - prevEquity) / prevEquity : 0;
+
+      return {
+        date,
+        equity,
+        drawdown: drawdown * 100, // Convert to percentage for display
+        drawdownFill: drawdown < -0.05 ? drawdown * 100 : null, // Only show significant drawdowns
+      };
+    });
   }, [equityData]);
 
   const stats = useMemo(() => {
-    if (!equityData || equityData.length === 0) return null;
+    if (!equityData || !equityData.equity_curves) return null;
 
-    const firstEquity = equityData[0]?.equity || 0;
-    const lastEquity = equityData[equityData.length - 1]?.equity || 0;
-    const maxDrawdown = Math.min(...equityData.map(p => p.drawdown));
-    const totalReturn = firstEquity > 0 ? (lastEquity - firstEquity) / firstEquity : 0;
+    // Get the first strategy's data for stats
+    const strategies = Object.values(equityData.equity_curves);
+    if (strategies.length === 0) return null;
+
+    const strategy = strategies[0];
+    const firstEquity = strategy.equity_values[0] || equityData.initial_balance;
+    const lastEquity = strategy.final_equity;
+    const maxDrawdown = strategy.max_drawdown;
+    const totalReturn = strategy.total_return;
 
     return {
       totalReturn,

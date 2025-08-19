@@ -4,14 +4,15 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { mockVisualData, simulateApiDelay } from './mockData';
 
-interface VisualDataset {
-  title: string;
-  description: string;
-  data: any;
-  chart_type: string;
+interface VisualDatasets {
+  monthly_performance_heatmap: any;
+  drawdown_analysis: any;
+  win_rate_analysis: any;
+  risk_return_scatter: any;
+  comparison_matrix: any;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE = 'http://157.230.58.248:8000';
 
 /**
  * Visual Analytics Component
@@ -26,7 +27,7 @@ export default function VisualAnalytics() {
     data: visualData,
     isLoading,
     error,
-  } = useQuery<VisualDataset[]>({
+  } = useQuery<VisualDatasets>({
     queryKey: ['backtest-visual-datasets'],
     queryFn: async () => {
       try {
@@ -34,7 +35,8 @@ export default function VisualAnalytics() {
         if (!response.ok) {
           throw new Error(`API not available: ${response.status}`);
         }
-        return response.json();
+        const result = await response.json();
+        return result.data; // Extract data from the response wrapper
       } catch (error) {
         // Fallback to mock data for development
         console.log('Using mock data for visual analytics (API not available)');
@@ -72,7 +74,7 @@ export default function VisualAnalytics() {
     );
   }
 
-  if (!visualData || visualData.length === 0) {
+  if (!visualData) {
     return (
       <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
         <h3 className="text-lg font-semibold text-neutral-300 mb-4">Visual Analytics</h3>
@@ -81,11 +83,45 @@ export default function VisualAnalytics() {
     );
   }
 
+  // Convert the object to an array for easier handling
+  const datasets = [
+    {
+      key: 'monthly_performance_heatmap',
+      title: 'Monthly Performance Heatmap',
+      description: 'Seasonal performance patterns across different months',
+      data: visualData.monthly_performance_heatmap,
+    },
+    {
+      key: 'drawdown_analysis',
+      title: 'Drawdown Analysis',
+      description: 'Risk assessment through drawdown periods',
+      data: visualData.drawdown_analysis,
+    },
+    {
+      key: 'win_rate_analysis',
+      title: 'Win Rate Analysis',
+      description: 'Success rate patterns across markets and timeframes',
+      data: visualData.win_rate_analysis,
+    },
+    {
+      key: 'risk_return_scatter',
+      title: 'Risk vs Return Analysis',
+      description: 'Strategy positioning - maximize return while minimizing risk',
+      data: visualData.risk_return_scatter,
+    },
+    {
+      key: 'comparison_matrix',
+      title: 'Strategy Performance Matrix',
+      description: 'Head-to-head comparison across key metrics',
+      data: visualData.comparison_matrix,
+    },
+  ].filter(dataset => dataset.data);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-white">Visual Analytics</h2>
-        <div className="text-sm text-neutral-400">{visualData.length} datasets available</div>
+        <div className="text-sm text-neutral-400">{datasets.length} datasets available</div>
       </div>
 
       {/* Dataset Selection */}
@@ -100,9 +136,9 @@ export default function VisualAnalytics() {
         >
           All Datasets
         </button>
-        {visualData.map((dataset, index) => (
+        {datasets.map(dataset => (
           <button
-            key={index}
+            key={dataset.key}
             onClick={() => setSelectedDataset(dataset.title)}
             className={`px-3 py-1 rounded-md text-sm transition-colors ${
               selectedDataset === dataset.title
@@ -117,20 +153,27 @@ export default function VisualAnalytics() {
 
       {/* Visual Datasets Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {visualData
+        {datasets
           .filter(dataset => selectedDataset === '' || dataset.title === selectedDataset)
-          .map((dataset, index) => (
-            <VisualDatasetCard key={index} dataset={dataset} />
+          .map(dataset => (
+            <VisualDatasetCard key={dataset.key} dataset={dataset} />
           ))}
       </div>
     </div>
   );
 }
 
+interface DatasetCardProps {
+  key: string;
+  title: string;
+  description: string;
+  data: any;
+}
+
 /**
  * Individual Visual Dataset Card Component
  */
-function VisualDatasetCard({ dataset }: { dataset: VisualDataset }) {
+function VisualDatasetCard({ dataset }: { dataset: DatasetCardProps }) {
   const [showRawData, setShowRawData] = useState(false);
 
   const renderChartPreview = () => {
@@ -144,8 +187,6 @@ function VisualDatasetCard({ dataset }: { dataset: VisualDataset }) {
 
     return (
       <div className="space-y-2">
-        <div className="text-xs text-neutral-500 mb-2">Chart Type: {dataset.chart_type}</div>
-
         {Array.isArray(dataset.data) ? (
           <div className="space-y-1">
             {sampleData.map((item: any, idx: number) => (
@@ -214,7 +255,7 @@ function VisualDatasetCard({ dataset }: { dataset: VisualDataset }) {
             Data Points:{' '}
             {Array.isArray(dataset.data) ? dataset.data.length : Object.keys(dataset.data).length}
           </span>
-          <span>Type: {dataset.chart_type}</span>
+          <span>Analytics Dataset</span>
         </div>
       </div>
     </div>
