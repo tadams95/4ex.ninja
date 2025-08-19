@@ -68,17 +68,6 @@ export interface RegimeApiResponse {
   status: string;
 }
 
-// Get API base URL following the existing pattern
-const getApiBaseUrl = async () => {
-  // Force production backend - simplified to avoid any confusion
-  const productionUrl = 'http://157.230.58.248:8000';
-
-  console.log('[CorrelationTrends] FORCED PRODUCTION URL:', productionUrl);
-
-  // Always return production URL since our backend is deployed there
-  return productionUrl;
-};
-
 // Frontend fallback mock data generator
 const generateFrontendMockData = (hoursBack: number): TrendsApiResponse => {
   const pairs = ['EUR/USD', 'GBP/USD', 'USD/JPY', 'AUD/USD'];
@@ -120,8 +109,6 @@ const generateFrontendMockData = (hoursBack: number): TrendsApiResponse => {
   };
 };
 
-let API_BASE_URL = '';
-
 export function useCorrelationTrends(
   refreshInterval: number = 30000,
   hoursBack: number = 168 // 1 week default
@@ -133,35 +120,20 @@ export function useCorrelationTrends(
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
-  // Initialize API URL
-  useEffect(() => {
-    const initializeApi = async () => {
-      API_BASE_URL = await getApiBaseUrl();
-      console.log(`[CorrelationTrends] API Base URL set to: ${API_BASE_URL}`);
-    };
-
-    initializeApi();
-  }, []);
-
   // Fetch trends data
   const fetchTrendsData = useCallback(
     async (retryCount = 0) => {
       try {
         setLoading(true);
 
-        const API_BASE_URL = await getApiBaseUrl();
-        const baseEndpoint = `${API_BASE_URL}/api/risk`;
-
         console.log(
-          `[CorrelationTrends] Fetching from: ${baseEndpoint} (attempt ${retryCount + 1})`
+          `[CorrelationTrends] Fetching via server-side API routes (attempt ${retryCount + 1})`
         );
-        console.log('[CorrelationTrends] API_BASE_URL:', API_BASE_URL);
-        console.log('[CorrelationTrends] baseEndpoint:', baseEndpoint);
 
-        // Try to fetch trends data
+        // Use server-side API routes instead of direct backend calls
         try {
           const trendsResponse = await fetch(
-            `${baseEndpoint}/correlation-trends?hours_back=${hoursBack}`,
+            `/api/risk/correlation-trends?hours_back=${hoursBack}`,
             {
               method: 'GET',
               headers: { 'Content-Type': 'application/json' },
@@ -198,9 +170,9 @@ export function useCorrelationTrends(
           setTrendsData(mockData.trends);
         }
 
-        // Try to fetch forecast data (optional)
+        // Try to fetch forecast data via server-side API route
         try {
-          const forecastResponse = await fetch(`${baseEndpoint}/correlation-forecast`, {
+          const forecastResponse = await fetch(`/api/risk/correlation-forecast`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             signal: AbortSignal.timeout(5000),
