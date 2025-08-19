@@ -15,6 +15,10 @@ const Footer = memo(function Footer() {
           </div>
 
           <div className="flex space-x-4 text-xs text-gray-500">
+            <a href="/backtest" className="hover:text-white transition-colors">
+              Backtest Results
+            </a>
+            <span>•</span>
             <a href="/terms" className="hover:text-white transition-colors">
               Terms of Service
             </a>

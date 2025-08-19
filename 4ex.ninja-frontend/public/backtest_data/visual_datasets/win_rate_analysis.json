@@ -1,0 +1,69 @@
+{
+  "title": "Win Rate Distribution Analysis",
+  "description": "Success rate patterns across markets and timeframes",
+  "currency_pairs": {
+    "EUR_USD": {
+      "average_win_rate": 54.5,
+      "strategy_count": 4,
+      "win_rate_range": [
+        47.0,
+        59.0
+      ],
+      "consistency": 50.3
+    },
+    "GBP_USD": {
+      "average_win_rate": 53.0,
+      "strategy_count": 3,
+      "win_rate_range": [
+        47.0,
+        59.0
+      ],
+      "consistency": 51.0
+    },
+    "USD_JPY": {
+      "average_win_rate": 53.0,
+      "strategy_count": 1,
+      "win_rate_range": [
+        53.0,
+        53.0
+      ],
+      "consistency": 100.0
+    },
+    "AUD_USD": {
+      "average_win_rate": 59.0,
+      "strategy_count": 1,
+      "win_rate_range": [
+        59.0,
+        59.0
+      ],
+      "consistency": 100.0
+    },
+    "USD_CAD": {
+      "average_win_rate": 53.0,
+      "strategy_count": 1,
+      "win_rate_range": [
+        53.0,
+        53.0
+      ],
+      "consistency": 100.0
+    }
+  },
+  "timeframes": {
+    "W": {
+      "average_win_rate": 55.6,
+      "strategy_count": 7,
+      "win_rate_range": [
+        53.0,
+        59.0
+      ]
+    },
+    "D": {
+      "average_win_rate": 51.0,
+      "strategy_count": 3,
+      "win_rate_range": [
+        47.0,
+        59.0
+      ]
+    }
+  }
+}

@@ -11,29 +11,16 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { mockEquityData, simulateApiDelay } from './mockData';
+import {
+  getEquityCurveData,
+  simulateApiDelay,
+  type EquityCurveData,
+} from '../../lib/backtestDataLoader';
 
 interface EquityPoint {
   date: string;
   equity: number;
   drawdown: number;
-}
-
-interface EquityStrategy {
-  dates: string[];
-  equity_values: number[];
-  final_equity: number;
-  total_return: number;
-  max_drawdown: number;
-}
-
-interface EquityDataResponse {
-  generated_date: string;
-  initial_balance: number;
-  period: string;
-  frequency: string;
-  total_weeks: number;
-  equity_curves: Record<string, EquityStrategy>;
 }
 
 const API_BASE = 'http://157.230.58.248:8000';
@@ -66,22 +53,12 @@ export default function EquityCurveChart() {
     data: equityData,
     isLoading,
     error,
-  } = useQuery<EquityDataResponse>({
+  } = useQuery<EquityCurveData>({
     queryKey: ['backtest-equity-curves'],
     queryFn: async () => {
-      try {
-        const response = await fetch(`${API_BASE}/api/v1/backtest/page/equity-curves`);
-        if (!response.ok) {
-          throw new Error(`API not available: ${response.status}`);
-        }
-        const result = await response.json();
-        return result.data; // Extract data from the response wrapper
-      } catch (error) {
-        // Fallback to mock data for development
-        console.log('Using mock data for equity curves (API not available)');
-        await simulateApiDelay();
-        return mockEquityData;
-      }
+      console.log('Loading equity curves from local data');
+      await simulateApiDelay();
+      return getEquityCurveData();
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -123,13 +100,24 @@ export default function EquityCurveChart() {
 
     const strategy = strategies[0];
     const firstEquity = strategy.equity_values[0] || equityData.initial_balance;
-    const lastEquity = strategy.final_equity;
-    const maxDrawdown = strategy.max_drawdown;
-    const totalReturn = strategy.total_return;
+    const lastEquity = strategy.equity_values[strategy.equity_values.length - 1] || firstEquity;
+
+    // Calculate total return
+    const totalReturn = (lastEquity - firstEquity) / firstEquity;
+
+    // Calculate max drawdown
+    let maxEquity = firstEquity;
+    let maxDrawdown = 0;
+
+    for (const equity of strategy.equity_values) {
+      maxEquity = Math.max(maxEquity, equity);
+      const drawdown = (equity - maxEquity) / maxEquity;
+      maxDrawdown = Math.min(maxDrawdown, drawdown);
+    }
 
     return {
       totalReturn,
-      maxDrawdown,
+      maxDrawdown: Math.abs(maxDrawdown),
       finalEquity: lastEquity,
       initialEquity: firstEquity,
     };

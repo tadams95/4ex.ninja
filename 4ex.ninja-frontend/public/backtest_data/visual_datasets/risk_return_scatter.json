@@ -1,0 +1,115 @@
+{
+  "title": "Risk vs Return Analysis",
+  "description": "Strategy positioning - maximize return while minimizing risk",
+  "data": [
+    {
+      "strategy": "EUR_USD Conservative Conservative Weekly",
+      "risk": 4.8,
+      "return": 15.6,
+      "sharpe": 2.08,
+      "category": "Best Risk-Adjusted Returns",
+      "currency_pair": "EUR_USD",
+      "timeframe": "W"
+    },
+    {
+      "strategy": "GBP_USD Conservative Conservative Weekly",
+      "risk": 6.2,
+      "return": 17.2,
+      "sharpe": 1.98,
+      "category": "Best Risk-Adjusted Returns",
+      "currency_pair": "GBP_USD",
+      "timeframe": "W"
+    },
+    {
+      "strategy": "EUR_USD Moderate Conservative Weekly",
+      "risk": 7.5,
+      "return": 23.5,
+      "sharpe": 1.8,
+      "category": "Balanced Performance",
+      "currency_pair": "EUR_USD",
+      "timeframe": "W"
+    },
+    {
+      "strategy": "GBP_USD Moderate Conservative Weekly",
+      "risk": 9.700000000000001,
+      "return": 25.8,
+      "sharpe": 1.71,
+      "category": "High Return Balanced",
+      "currency_pair": "GBP_USD",
+      "timeframe": "W"
+    },
+    {
+      "strategy": "USD_JPY Moderate Conservative Weekly",
+      "risk": 8.200000000000001,
+      "return": 21.099999999999998,
+      "sharpe": 1.76,
+      "category": "Balanced Performance",
+      "currency_pair": "USD_JPY",
+      "timeframe": "W"
+    },
+    {
+      "strategy": "EUR_USD Aggressive Conservative Daily",
+      "risk": 13.600000000000001,
+      "return": 35.6,
+      "sharpe": 1.21,
+      "category": "High Growth",
+      "currency_pair": "EUR_USD",
+      "timeframe": "D"
+    },
+    {
+      "strategy": "GBP_USD Aggressive Conservative Daily",
+      "risk": 17.7,
+      "return": 39.2,
+      "sharpe": 1.15,
+      "category": "High Growth",
+      "currency_pair": "GBP_USD",
+      "timeframe": "D"
+    },
+    {
+      "strategy": "EUR_USD Conservative Conservative Daily",
+      "risk": 6.0,
+      "return": 18.4,
+      "sharpe": 1.67,
+      "category": "Balanced Daily",
+      "currency_pair": "EUR_USD",
+      "timeframe": "D"
+    },
+    {
+      "strategy": "AUD_USD Conservative Conservative Weekly",
+      "risk": 5.7,
+      "return": 16.400000000000002,
+      "sharpe": 1.88,
+      "category": "Best Risk-Adjusted Returns",
+      "currency_pair": "AUD_USD",
+      "timeframe": "W"
+    },
+    {
+      "strategy": "USD_CAD Moderate Conservative Weekly",
+      "risk": 7.5,
+      "return": 22.3,
+      "sharpe": 1.58,
+      "category": "Balanced Performance",
+      "currency_pair": "USD_CAD",
+      "timeframe": "W"
+    }
+  ],
+  "quadrants": {
+    "low_risk_low_return": {
+      "risk_max": 7.5,
+      "return_max": 21.7
+    },
+    "low_risk_high_return": {
+      "risk_max": 7.5,
+      "return_min": 21.7
+    },
+    "high_risk_low_return": {
+      "risk_min": 7.5,
+      "return_max": 21.7
+    },
+    "high_risk_high_return": {
+      "risk_min": 7.5,
+      "return_min": 21.7
+    }
+  },
+  "optimal_zone": "Upper left quadrant (High Return, Low Risk)"
+}

@@ -1,18 +1,30 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { mockVisualData, simulateApiDelay } from './mockData';
-
-interface VisualDatasets {
-  monthly_performance_heatmap: any;
-  drawdown_analysis: any;
-  win_rate_analysis: any;
-  risk_return_scatter: any;
-  comparison_matrix: any;
-}
-
-const API_BASE = 'http://157.230.58.248:8000';
+import React, { useState } from 'react';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  PolarAngleAxis,
+  PolarGrid,
+  PolarRadiusAxis,
+  Radar,
+  RadarChart,
+  ResponsiveContainer,
+  Scatter,
+  ScatterChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import {
+  getVisualDatasets,
+  simulateApiDelay,
+  type VisualDatasets,
+} from '../../lib/backtestDataLoader';
 
 /**
  * Visual Analytics Component
@@ -30,19 +42,9 @@ export default function VisualAnalytics() {
   } = useQuery<VisualDatasets>({
     queryKey: ['backtest-visual-datasets'],
     queryFn: async () => {
-      try {
-        const response = await fetch(`${API_BASE}/api/v1/backtest/page/visual-datasets`);
-        if (!response.ok) {
-          throw new Error(`API not available: ${response.status}`);
-        }
-        const result = await response.json();
-        return result.data; // Extract data from the response wrapper
-      } catch (error) {
-        // Fallback to mock data for development
-        console.log('Using mock data for visual analytics (API not available)');
-        await simulateApiDelay();
-        return mockVisualData;
-      }
+      console.log('Loading visual datasets from local data');
+      await simulateApiDelay();
+      return getVisualDatasets();
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -86,34 +88,34 @@ export default function VisualAnalytics() {
   // Convert the object to an array for easier handling
   const datasets = [
     {
-      key: 'monthly_performance_heatmap',
+      key: 'monthly_heatmap',
       title: 'Monthly Performance Heatmap',
       description: 'Seasonal performance patterns across different months',
-      data: visualData.monthly_performance_heatmap,
+      data: visualData.datasets.monthly_heatmap,
     },
     {
       key: 'drawdown_analysis',
       title: 'Drawdown Analysis',
       description: 'Risk assessment through drawdown periods',
-      data: visualData.drawdown_analysis,
+      data: visualData.datasets.drawdown_analysis,
     },
     {
       key: 'win_rate_analysis',
       title: 'Win Rate Analysis',
       description: 'Success rate patterns across markets and timeframes',
-      data: visualData.win_rate_analysis,
+      data: visualData.datasets.win_rate_analysis,
     },
     {
       key: 'risk_return_scatter',
       title: 'Risk vs Return Analysis',
       description: 'Strategy positioning - maximize return while minimizing risk',
-      data: visualData.risk_return_scatter,
+      data: visualData.datasets.risk_return_scatter,
     },
     {
       key: 'comparison_matrix',
       title: 'Strategy Performance Matrix',
       description: 'Head-to-head comparison across key metrics',
-      data: visualData.comparison_matrix,
+      data: visualData.datasets.comparison_matrix,
     },
   ].filter(dataset => dataset.data);
 
@@ -176,48 +178,37 @@ interface DatasetCardProps {
 function VisualDatasetCard({ dataset }: { dataset: DatasetCardProps }) {
   const [showRawData, setShowRawData] = useState(false);
 
-  const renderChartPreview = () => {
-    // For now, show data structure preview
-    // In a full implementation, this would render actual charts based on chart_type
-    const sampleData = Array.isArray(dataset.data)
-      ? dataset.data.slice(0, 5)
-      : typeof dataset.data === 'object'
-      ? Object.entries(dataset.data).slice(0, 5)
-      : [];
+  const renderChart = () => {
+    if (showRawData) {
+      return (
+        <div className="max-h-48 overflow-y-auto">
+          <pre className="text-xs text-neutral-300 font-mono">
+            {JSON.stringify(dataset.data, null, 2)}
+          </pre>
+        </div>
+      );
+    }
 
-    return (
-      <div className="space-y-2">
-        {Array.isArray(dataset.data) ? (
-          <div className="space-y-1">
-            {sampleData.map((item: any, idx: number) => (
-              <div key={idx} className="text-xs text-neutral-400 font-mono">
-                {typeof item === 'object' ? JSON.stringify(item).slice(0, 60) + '...' : item}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-1">
-            {sampleData.map(([key, value]: [string, any], idx: number) => (
-              <div key={idx} className="text-xs text-neutral-400 font-mono">
-                {key}:{' '}
-                {typeof value === 'object' ? JSON.stringify(value).slice(0, 40) + '...' : value}
-              </div>
-            ))}
-          </div>
-        )}
+    // Render different chart types based on dataset key
+    switch (dataset.key) {
+      case 'risk_return_scatter':
+        return <RiskReturnScatterChart data={dataset.data} />;
 
-        {(Array.isArray(dataset.data) ? dataset.data.length : Object.keys(dataset.data).length) >
-          5 && (
-          <div className="text-xs text-neutral-500">
-            ... and{' '}
-            {(Array.isArray(dataset.data)
-              ? dataset.data.length
-              : Object.keys(dataset.data).length) - 5}{' '}
-            more items
-          </div>
-        )}
-      </div>
-    );
+      case 'monthly_heatmap':
+        return <MonthlyHeatmapChart data={dataset.data} />;
+
+      case 'comparison_matrix':
+        return <ComparisonMatrixChart data={dataset.data} />;
+
+      case 'win_rate_analysis':
+        return <WinRateAnalysisChart data={dataset.data} />;
+
+      case 'drawdown_analysis':
+        return <DrawdownAnalysisChart data={dataset.data} />;
+
+      default:
+        return <DataPreview data={dataset.data} />;
+    }
   };
 
   return (
@@ -231,21 +222,13 @@ function VisualDatasetCard({ dataset }: { dataset: DatasetCardProps }) {
           onClick={() => setShowRawData(!showRawData)}
           className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
         >
-          {showRawData ? 'Hide' : 'Show'} Data
+          {showRawData ? 'Show Chart' : 'Show Data'}
         </button>
       </div>
 
-      {/* Chart Preview Area */}
-      <div className="bg-neutral-900 border border-neutral-600 rounded-lg p-4 min-h-32">
-        {showRawData ? (
-          <div className="max-h-48 overflow-y-auto">
-            <pre className="text-xs text-neutral-300 font-mono">
-              {JSON.stringify(dataset.data, null, 2)}
-            </pre>
-          </div>
-        ) : (
-          renderChartPreview()
-        )}
+      {/* Chart Area */}
+      <div className="bg-neutral-900 border border-neutral-600 rounded-lg p-4 h-64">
+        {renderChart()}
       </div>
 
       {/* Dataset Info */}
@@ -255,9 +238,374 @@ function VisualDatasetCard({ dataset }: { dataset: DatasetCardProps }) {
             Data Points:{' '}
             {Array.isArray(dataset.data) ? dataset.data.length : Object.keys(dataset.data).length}
           </span>
-          <span>Analytics Dataset</span>
+          <span>Interactive Chart</span>
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Risk vs Return Scatter Chart
+ */
+function RiskReturnScatterChart({ data }: { data: any }) {
+  // Extract the data array from the structure
+  const chartData = data?.data || [];
+
+  if (!Array.isArray(chartData)) return <DataPreview data={data} />;
+
+  // Define colors for different categories
+  const categoryColors: Record<string, string> = {
+    'Best Risk-Adjusted Returns': '#10b981', // green
+    'Balanced Performance': '#3b82f6', // blue
+    'High Return Balanced': '#f59e0b', // amber
+    'Moderate Risk Strategies': '#8b5cf6', // purple
+    'High Return High Risk': '#ef4444', // red
+  };
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <ScatterChart margin={{ top: 20, right: 30, bottom: 40, left: 40 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+        <XAxis
+          type="number"
+          dataKey="risk"
+          domain={['dataMin - 1', 'dataMax + 1']}
+          stroke="#9ca3af"
+          fontSize={12}
+          label={{
+            value: 'Risk (Max Drawdown %)',
+            position: 'insideBottom',
+            offset: -5,
+            style: { textAnchor: 'middle', fill: '#9ca3af' },
+          }}
+        />
+        <YAxis
+          type="number"
+          dataKey="return"
+          domain={['dataMin - 2', 'dataMax + 2']}
+          stroke="#9ca3af"
+          fontSize={12}
+          label={{
+            value: 'Annual Return %',
+            angle: -90,
+            position: 'insideLeft',
+            style: { textAnchor: 'middle', fill: '#9ca3af' },
+          }}
+        />
+        <Tooltip
+          content={({ active, payload }) => {
+            if (active && payload && payload.length) {
+              const data = payload[0].payload;
+              return (
+                <div className="bg-neutral-800 border border-neutral-600 rounded-lg p-3 shadow-lg">
+                  <p className="text-white font-semibold text-sm mb-1">{data.strategy}</p>
+                  <p className="text-green-400 text-xs">Return: {data.return.toFixed(1)}%</p>
+                  <p className="text-red-400 text-xs">Risk: {data.risk.toFixed(1)}%</p>
+                  <p className="text-blue-400 text-xs">Sharpe: {data.sharpe.toFixed(2)}</p>
+                  <p className="text-neutral-400 text-xs">{data.category}</p>
+                </div>
+              );
+            }
+            return null;
+          }}
+        />
+        <Scatter data={chartData} fill="#8884d8">
+          {chartData.map((entry: any, index: number) => (
+            <Cell key={`cell-${index}`} fill={categoryColors[entry.category] || '#6b7280'} />
+          ))}
+        </Scatter>
+      </ScatterChart>
+    </ResponsiveContainer>
+  );
+}
+
+/**
+ * Monthly Heatmap Chart (as Bar Chart)
+ */
+function MonthlyHeatmapChart({ data }: { data: any }) {
+  if (!data?.data || typeof data.data !== 'object') return <DataPreview data={data} />;
+
+  // Convert heatmap data to bar chart data
+  const strategies = Object.keys(data.data);
+  if (strategies.length === 0) return <DataPreview data={data} />;
+
+  const firstStrategy = data.data[strategies[0]];
+  if (!firstStrategy.months || !firstStrategy.returns) return <DataPreview data={data} />;
+
+  const chartData = firstStrategy.months.map((month: string, index: number) => ({
+    month,
+    return: firstStrategy.returns[index],
+  }));
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={chartData} margin={{ top: 20, right: 30, bottom: 40, left: 40 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+        <XAxis dataKey="month" stroke="#9ca3af" fontSize={12} />
+        <YAxis
+          stroke="#9ca3af"
+          fontSize={12}
+          label={{
+            value: 'Monthly Return %',
+            angle: -90,
+            position: 'insideLeft',
+            style: { textAnchor: 'middle', fill: '#9ca3af' },
+          }}
+        />
+        <Tooltip
+          content={({ active, payload, label }) => {
+            if (active && payload && payload.length) {
+              const value = payload[0].value as number;
+              return (
+                <div className="bg-neutral-800 border border-neutral-600 rounded-lg p-3 shadow-lg">
+                  <p className="text-white font-semibold text-sm">{label}</p>
+                  <p className={`text-sm ${value >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    Return: {value.toFixed(1)}%
+                  </p>
+                </div>
+              );
+            }
+            return null;
+          }}
+        />
+        <Bar dataKey="return">
+          {chartData.map((entry: any, index: number) => (
+            <Cell key={`cell-${index}`} fill={entry.return >= 0 ? '#10b981' : '#ef4444'} />
+          ))}
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+/**
+ * Comparison Matrix Chart (as Radar Chart)
+ */
+function ComparisonMatrixChart({ data }: { data: any }) {
+  if (!data || !data.strategies || !data.metrics) return <DataPreview data={data} />;
+
+  // Convert matrix data to radar chart format
+  const radarData = data.metrics.map((metric: string, index: number) => {
+    const dataPoint: any = { metric };
+    data.strategies.forEach((strategy: string) => {
+      dataPoint[strategy] = data.data[strategy]?.[index] || 0;
+    });
+    return dataPoint;
+  });
+
+  const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <RadarChart data={radarData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+        <PolarGrid stroke="#374151" />
+        <PolarAngleAxis dataKey="metric" className="text-xs fill-neutral-400" />
+        <PolarRadiusAxis angle={0} domain={[0, 100]} tick={false} />
+        {data.strategies.map((strategy: string, index: number) => (
+          <Radar
+            key={strategy}
+            name={strategy.replace(/_/g, ' ')}
+            dataKey={strategy}
+            stroke={colors[index % colors.length]}
+            fill={colors[index % colors.length]}
+            fillOpacity={0.1}
+            strokeWidth={2}
+          />
+        ))}
+        <Legend wrapperStyle={{ fontSize: '10px' }} iconType="line" />
+      </RadarChart>
+    </ResponsiveContainer>
+  );
+}
+
+/**
+ * Win Rate Analysis Chart
+ */
+function WinRateAnalysisChart({ data }: { data: any }) {
+  // Transform currency_pairs data into chart format
+  const chartData = React.useMemo(() => {
+    if (!data?.currency_pairs) {
+      console.log('WinRateAnalysisChart: No currency_pairs data found', data);
+      return [];
+    }
+
+    return Object.entries(data.currency_pairs).map(([pair, info]: [string, any]) => ({
+      pair,
+      win_rate: info.average_win_rate,
+      strategy_count: info.strategy_count,
+      consistency: info.consistency,
+      win_rate_range: info.win_rate_range,
+    }));
+  }, [data]);
+
+  if (chartData.length === 0) {
+    return <DataPreview data={data} />;
+  }
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={chartData} margin={{ top: 20, right: 30, bottom: 40, left: 40 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+        <XAxis
+          dataKey="pair"
+          stroke="#9ca3af"
+          fontSize={10}
+          angle={-45}
+          textAnchor="end"
+          height={60}
+        />
+        <YAxis
+          stroke="#9ca3af"
+          fontSize={12}
+          domain={[0, 100]}
+          label={{
+            value: 'Win Rate %',
+            angle: -90,
+            position: 'insideLeft',
+            style: { textAnchor: 'middle', fill: '#9ca3af' },
+          }}
+        />
+        <Tooltip
+          content={({ active, payload, label }) => {
+            if (active && payload && payload.length) {
+              const data = payload[0].payload;
+              return (
+                <div className="bg-neutral-800 border border-neutral-600 rounded-lg p-3 shadow-lg">
+                  <p className="text-white font-semibold text-sm mb-1">{label}</p>
+                  <p className="text-green-400 text-xs">Win Rate: {data.win_rate}%</p>
+                  <p className="text-blue-400 text-xs">Strategies: {data.strategy_count}</p>
+                  <p className="text-purple-400 text-xs">Consistency: {data.consistency}%</p>
+                  <p className="text-yellow-400 text-xs">
+                    Range: {data.win_rate_range[0]}% - {data.win_rate_range[1]}%
+                  </p>
+                </div>
+              );
+            }
+            return null;
+          }}
+        />
+        <Bar dataKey="win_rate" fill="#3b82f6" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+/**
+ * Drawdown Analysis Chart
+ */
+function DrawdownAnalysisChart({ data }: { data: any }) {
+  // Transform strategy data into max drawdown summary
+  const chartData = React.useMemo(() => {
+    if (!data?.data) {
+      console.log('DrawdownAnalysisChart: No data.data found', data);
+      return [];
+    }
+
+    return Object.entries(data.data).map(([strategy, info]: [string, any]) => {
+      const drawdowns = info.drawdowns || [];
+      const maxDrawdown = Math.min(...drawdowns);
+      const avgDrawdown =
+        drawdowns.length > 0
+          ? drawdowns.reduce((sum: number, dd: number) => sum + dd, 0) / drawdowns.length
+          : 0;
+
+      return {
+        strategy: strategy.replace(/_/g, ' ').slice(0, 20) + '...',
+        max_drawdown: Math.abs(maxDrawdown),
+        avg_drawdown: Math.abs(avgDrawdown),
+        full_name: strategy,
+      };
+    });
+  }, [data]);
+
+  if (chartData.length === 0) {
+    return <DataPreview data={data} />;
+  }
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={chartData} margin={{ top: 20, right: 30, bottom: 40, left: 40 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+        <XAxis
+          dataKey="strategy"
+          stroke="#9ca3af"
+          fontSize={10}
+          angle={-45}
+          textAnchor="end"
+          height={60}
+        />
+        <YAxis
+          stroke="#9ca3af"
+          fontSize={12}
+          label={{
+            value: 'Max Drawdown %',
+            angle: -90,
+            position: 'insideLeft',
+            style: { textAnchor: 'middle', fill: '#9ca3af' },
+          }}
+        />
+        <Tooltip
+          content={({ active, payload, label }) => {
+            if (active && payload && payload.length) {
+              const data = payload[0].payload;
+              return (
+                <div className="bg-neutral-800 border border-neutral-600 rounded-lg p-3 shadow-lg">
+                  <p className="text-white font-semibold text-sm mb-1">{data.full_name}</p>
+                  <p className="text-red-400 text-xs">
+                    Max Drawdown: {data.max_drawdown.toFixed(2)}%
+                  </p>
+                  <p className="text-amber-400 text-xs">
+                    Avg Drawdown: {data.avg_drawdown.toFixed(2)}%
+                  </p>
+                </div>
+              );
+            }
+            return null;
+          }}
+        />
+        <Bar dataKey="max_drawdown" fill="#ef4444" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+/**
+ * Fallback Data Preview Component
+ */
+function DataPreview({ data }: { data: any }) {
+  const sampleData = Array.isArray(data)
+    ? data.slice(0, 5)
+    : typeof data === 'object'
+    ? Object.entries(data).slice(0, 5)
+    : [];
+
+  return (
+    <div className="space-y-2 h-full overflow-y-auto">
+      {Array.isArray(data) ? (
+        <div className="space-y-1">
+          {sampleData.map((item: any, idx: number) => (
+            <div key={idx} className="text-xs text-neutral-400 font-mono">
+              {typeof item === 'object' ? JSON.stringify(item).slice(0, 60) + '...' : item}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-1">
+          {sampleData.map(([key, value]: [string, any], idx: number) => (
+            <div key={idx} className="text-xs text-neutral-400 font-mono">
+              {key}:{' '}
+              {typeof value === 'object' ? JSON.stringify(value).slice(0, 40) + '...' : value}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {(Array.isArray(data) ? data.length : Object.keys(data).length) > 5 && (
+        <div className="text-xs text-neutral-500">
+          ... and {(Array.isArray(data) ? data.length : Object.keys(data).length) - 5} more items
+        </div>
+      )}
     </div>
   );
 }

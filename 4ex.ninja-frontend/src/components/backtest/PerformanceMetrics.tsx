@@ -1,40 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { mockPerformanceData, simulateApiDelay } from './mockData';
-
-interface PerformanceData {
-  total_strategies_analyzed: number;
-  top_performing_strategies: Array<{
-    rank: number;
-    execution_id: string;
-    currency_pair: string;
-    strategy: string;
-    timeframe: string;
-    performance_metrics: {
-      annual_return: number;
-      annual_return_pct: string;
-      sharpe_ratio: number;
-      max_drawdown: number;
-      max_drawdown_pct: string;
-      win_rate: number;
-      win_rate_pct: string;
-    };
-    category: string;
-    description: string;
-  }>;
-  performance_summary: {
-    annual_return_range: string;
-    sharpe_ratio_range: string;
-    max_drawdown_range: string;
-    win_rate_range: string;
-    best_timeframe: string;
-    best_pairs: string[];
-    preferred_risk_profile: string;
-  };
-}
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://157.230.58.248:8000';
+import type { PerformanceData } from '../../lib/backtestDataLoader';
+import { getPerformanceData, simulateApiDelay } from '../../lib/backtestDataLoader';
 
 /**
  * Performance Metrics Component
@@ -50,19 +18,9 @@ export default function PerformanceMetrics() {
   } = useQuery<PerformanceData>({
     queryKey: ['backtest-performance'],
     queryFn: async () => {
-      try {
-        const response = await fetch(`${API_BASE}/api/v1/backtest/page/performance`);
-        if (!response.ok) {
-          throw new Error(`API not available: ${response.status}`);
-        }
-        const result = await response.json();
-        return result.data; // Extract data from the response wrapper
-      } catch (error) {
-        // Fallback to mock data for development
-        console.log('Using mock data for performance metrics (API not available)');
-        await simulateApiDelay();
-        return mockPerformanceData;
-      }
+      console.log('Loading performance data from local data');
+      await simulateApiDelay();
+      return getPerformanceData();
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });

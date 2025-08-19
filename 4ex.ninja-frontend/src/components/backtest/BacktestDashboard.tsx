@@ -3,8 +3,13 @@
 import { useQuery } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import type { BacktestSummary, PerformanceData } from '../../lib/backtestDataLoader';
+import {
+  getBacktestSummary,
+  getPerformanceData,
+  simulateApiDelay,
+} from '../../lib/backtestDataLoader';
 import { Button } from '../ui/Button';
-import { mockPerformanceData, mockSummaryData, simulateApiDelay } from './mockData';
 
 // Dynamic imports for heavy components
 const PerformanceMetrics = dynamic(() => import('./PerformanceMetrics'), {
@@ -35,69 +40,6 @@ const MethodologySection = dynamic(() => import('./MethodologySection'), {
   ),
 });
 
-interface BacktestSummary {
-  hero_metrics: {
-    top_annual_return: string;
-    top_sharpe_ratio: number;
-    max_drawdown: string;
-    win_rate: string;
-    strategies_analyzed: number;
-    data_period: string;
-  };
-  top_3_strategies: Array<{
-    rank: number;
-    execution_id: string;
-    currency_pair: string;
-    strategy: string;
-    timeframe: string;
-    performance_metrics: {
-      annual_return: number;
-      annual_return_pct: string;
-      sharpe_ratio: number;
-      max_drawdown: number;
-      max_drawdown_pct: string;
-      win_rate: number;
-      win_rate_pct: string;
-    };
-    category: string;
-    description: string;
-  }>;
-  last_updated: string;
-}
-
-interface PerformanceData {
-  total_strategies_analyzed: number;
-  top_performing_strategies: Array<{
-    rank: number;
-    execution_id: string;
-    currency_pair: string;
-    strategy: string;
-    timeframe: string;
-    performance_metrics: {
-      annual_return: number;
-      annual_return_pct: string;
-      sharpe_ratio: number;
-      max_drawdown: number;
-      max_drawdown_pct: string;
-      win_rate: number;
-      win_rate_pct: string;
-    };
-    category: string;
-    description: string;
-  }>;
-  performance_summary: {
-    annual_return_range: string;
-    sharpe_ratio_range: string;
-    max_drawdown_range: string;
-    win_rate_range: string;
-    best_timeframe: string;
-    best_pairs: string[];
-    preferred_risk_profile: string;
-  };
-}
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://157.230.58.248:8000';
-
 /**
  * Main Backtest Dashboard Component
  *
@@ -107,7 +49,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://157.230.58.248:8000'
 export default function BacktestDashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'analytics' | 'methodology'>('overview');
 
-  // Fetch backtest summary
+  // Fetch backtest summary - using local data
   const {
     data: summary,
     isLoading: summaryLoading,
@@ -115,24 +57,14 @@ export default function BacktestDashboard() {
   } = useQuery<BacktestSummary>({
     queryKey: ['backtest-summary'],
     queryFn: async () => {
-      try {
-        const response = await fetch(`${API_BASE}/api/v1/backtest/page/summary`);
-        if (!response.ok) {
-          throw new Error(`API not available: ${response.status}`);
-        }
-        const result = await response.json();
-        return result.data; // Extract data from the response wrapper
-      } catch (error) {
-        // Fallback to mock data for development
-        console.log('Using mock data for summary (API not available)');
-        await simulateApiDelay();
-        return mockSummaryData;
-      }
+      console.log('Loading backtest summary from local data');
+      await simulateApiDelay();
+      return getBacktestSummary();
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Fetch performance metrics
+  // Fetch performance metrics - using local data
   const {
     data: performance,
     isLoading: perfLoading,
@@ -140,19 +72,9 @@ export default function BacktestDashboard() {
   } = useQuery<PerformanceData>({
     queryKey: ['backtest-performance'],
     queryFn: async () => {
-      try {
-        const response = await fetch(`${API_BASE}/api/v1/backtest/page/performance`);
-        if (!response.ok) {
-          throw new Error(`API not available: ${response.status}`);
-        }
-        const result = await response.json();
-        return result.data; // Extract data from the response wrapper
-      } catch (error) {
-        // Fallback to mock data for development
-        console.log('Using mock data for performance (API not available)');
-        await simulateApiDelay();
-        return mockPerformanceData;
-      }
+      console.log('Loading performance data from local data');
+      await simulateApiDelay();
+      return getPerformanceData();
     },
     staleTime: 5 * 60 * 1000,
   });
