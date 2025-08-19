@@ -40,6 +40,13 @@ const MethodologySection = dynamic(() => import('./MethodologySection'), {
   ),
 });
 
+const CurrencyAnalysis = dynamic(() => import('./CurrencyAnalysis'), {
+  ssr: false,
+  loading: () => (
+    <div className="animate-pulse bg-neutral-800 border border-neutral-700 rounded-lg h-64" />
+  ),
+});
+
 /**
  * Main Backtest Dashboard Component
  *
@@ -47,7 +54,9 @@ const MethodologySection = dynamic(() => import('./MethodologySection'), {
  * Following the dark theme aesthetic with responsive grid layouts
  */
 export default function BacktestDashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'analytics' | 'methodology'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'analytics' | 'currencies' | 'methodology'
+  >('overview');
 
   // Fetch backtest summary - using local data
   const {
@@ -135,6 +144,7 @@ export default function BacktestDashboard() {
             {[
               { id: 'overview', label: 'Performance Overview', disabled: perfLoading },
               { id: 'analytics', label: 'Visual Analytics', disabled: false },
+              { id: 'currencies', label: 'Currency Analysis', disabled: false },
               { id: 'methodology', label: 'Methodology', disabled: false },
             ].map(tab => (
               <button
@@ -222,6 +232,8 @@ export default function BacktestDashboard() {
         )}
 
         {activeTab === 'analytics' && <VisualAnalytics />}
+
+        {activeTab === 'currencies' && <CurrencyAnalysis />}
 
         {activeTab === 'methodology' && <MethodologySection />}
       </div>
