@@ -41,6 +41,7 @@
     "react-dom": "^19.0.0",
     "react-window": "^1.8.11",
     "react-window-infinite-loader": "^1.0.10",
+    "recharts": "^3.1.2",
     "viem": "^2.33.3",
     "wagmi": "^2.16.2",
     "web-vitals": "^5.1.0",
