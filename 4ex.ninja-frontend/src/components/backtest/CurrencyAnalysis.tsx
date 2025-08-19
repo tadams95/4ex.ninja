@@ -227,25 +227,27 @@ export default function CurrencyAnalysis() {
             </div>
 
             <div className="space-y-3">
-              <div className="flex justify-between">
+              <div className="grid grid-cols-[1fr,auto] gap-4 items-center">
                 <span className="text-neutral-400">Robustness Score:</span>
                 <span className={`font-bold ${getScoreColor(selectedData.robustnessScore)}`}>
                   {selectedData.robustnessScore}%
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="grid grid-cols-[1fr,auto] gap-4 items-center">
                 <span className="text-neutral-400">Allocation Type:</span>
                 <span className="text-blue-400 font-medium">{selectedData.allocation}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="grid grid-cols-[1fr,auto] gap-4 items-center">
                 <span className="text-neutral-400">Risk Profile:</span>
                 <span className={`font-medium ${getRiskColor(selectedData.riskProfile)}`}>
                   {selectedData.riskProfile}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="grid grid-cols-[1fr,auto] gap-4 items-center">
                 <span className="text-neutral-400">Optimal Strategy:</span>
-                <span className="text-purple-400 font-medium text-sm">{selectedData.strategy}</span>
+                <span className="text-purple-400 font-medium text-sm text-right">
+                  {selectedData.strategy}
+                </span>
               </div>
             </div>
           </div>
@@ -283,8 +285,8 @@ export default function CurrencyAnalysis() {
             <div className="space-y-2">
               {selectedData.insights.map((insight, index) => (
                 <div key={index} className="flex items-start gap-2">
-                  <span className="text-blue-400 mt-1">•</span>
-                  <span className="text-neutral-300 text-sm">{insight}</span>
+                  <span className="text-blue-400 flex-shrink-0">•</span>
+                  <span className="text-neutral-300 text-sm leading-relaxed">{insight}</span>
                 </div>
               ))}
             </div>
