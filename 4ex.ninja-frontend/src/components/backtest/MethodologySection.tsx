@@ -254,6 +254,21 @@ Priority allocation based on 5-year comprehensive backtesting:
                     <div className="text-sm text-neutral-300 leading-relaxed space-y-3">
                       {section.hasContent ? (
                         section.content.split('\n').map((line, pIndex) => {
+                          // Helper function to parse inline bold text
+                          const parseInlineBold = (text: string) => {
+                            const parts = text.split(/(\*\*[^*]+\*\*)/);
+                            return parts.map((part, index) => {
+                              if (part.startsWith('**') && part.endsWith('**')) {
+                                return (
+                                  <strong key={index} className="font-semibold text-yellow-400">
+                                    {part.replace(/\*\*/g, '')}
+                                  </strong>
+                                );
+                              }
+                              return part;
+                            });
+                          };
+
                           // Handle different markdown-style elements
                           if (line.startsWith('# ')) {
                             return (
@@ -282,7 +297,11 @@ Priority allocation based on 5-year comprehensive backtesting:
                               </h4>
                             );
                           }
-                          if (line.startsWith('**') && line.endsWith('**')) {
+                          if (
+                            line.startsWith('**') &&
+                            line.endsWith('**') &&
+                            !line.includes(': ')
+                          ) {
                             return (
                               <p key={pIndex} className="font-semibold text-yellow-400 mb-1">
                                 {line.replace(/\*\*/g, '')}
@@ -290,10 +309,11 @@ Priority allocation based on 5-year comprehensive backtesting:
                             );
                           }
                           if (line.startsWith('- ') || line.startsWith('• ')) {
+                            const content = line.replace(/^[-•] /, '');
                             return (
                               <p key={pIndex} className="ml-4 mb-1 text-neutral-300">
                                 <span className="text-blue-400 mr-2">•</span>
-                                {line.replace(/^[-•] /, '')}
+                                {parseInlineBold(content)}
                               </p>
                             );
                           }
@@ -302,7 +322,7 @@ Priority allocation based on 5-year comprehensive backtesting:
                           }
                           return (
                             <p key={pIndex} className="mb-2 text-neutral-300">
-                              {line}
+                              {parseInlineBold(line)}
                             </p>
                           );
                         })
