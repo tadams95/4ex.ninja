@@ -42,6 +42,16 @@ const CorrelationTrends = dynamic(
   }
 );
 
+const VaRTrendChart = dynamic(
+  () => import('./VaRTrendChart').then(mod => ({ default: mod.default })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="animate-pulse bg-neutral-800 border border-neutral-700 rounded-lg h-64"></div>
+    ),
+  }
+);
+
 /**
  * Risk Dashboard Component
  *
@@ -133,6 +143,11 @@ export default function RiskDashboard() {
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-white mb-2">Risk Analytics</h2>
             <p className="text-sm text-neutral-400">Extended risk analysis and monitoring panels</p>
+          </div>
+
+          {/* VaR Trend Analysis - Full Width */}
+          <div className="mb-6">
+            <VaRTrendChart refreshInterval={30000} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
