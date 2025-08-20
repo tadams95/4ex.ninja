@@ -40,3 +40,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# testing and reports
+/test-results/
+/playwright-report/
+/.lighthouseci/
+*.json
+
+# build cache
+/.swc/
+
+# documentation archive
+/archive/
+
+# performance reports
+performance-budget-report.json
+tree-shaking-report.json
