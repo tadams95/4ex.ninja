@@ -68,19 +68,21 @@ startup_time = time.time()
 async def startup_event():
     """Initialize services on startup."""
     import logging
+
     logging.info("🚀 Starting 4ex.ninja Backend...")
-    
+
     # Start the forex market scheduler
     await scheduler_service.start_scheduler()
     logging.info("✅ All services initialized successfully")
 
 
-@app.on_event("shutdown") 
+@app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup on shutdown."""
     import logging
+
     logging.info("⏹️ Shutting down 4ex.ninja Backend...")
-    
+
     # Stop the scheduler gracefully
     await scheduler_service.stop_scheduler()
     logging.info("✅ All services stopped successfully")
@@ -245,11 +247,11 @@ async def get_scheduler_status():
     """Get forex market scheduler status and job information."""
     try:
         status = scheduler_service.get_scheduler_status()
-        
+
         return {
             "success": True,
             "message": "Scheduler status retrieved successfully",
-            "scheduler": status
+            "scheduler": status,
         }
     except Exception as e:
         raise HTTPException(
@@ -263,11 +265,8 @@ async def restart_scheduler():
     try:
         await scheduler_service.stop_scheduler()
         await scheduler_service.start_scheduler()
-        
-        return {
-            "success": True,
-            "message": "Scheduler restarted successfully"
-        }
+
+        return {"success": True, "message": "Scheduler restarted successfully"}
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Failed to restart scheduler: {str(e)}"
