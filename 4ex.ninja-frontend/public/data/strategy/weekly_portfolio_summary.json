@@ -1,0 +1,41 @@
+{
+  "backtest_type": "weekly_only_ema_crossover",
+  "strategy_name": "Weekly EMA Crossover (20/50) + RSI + ADX",
+  "timeframe": "Weekly",
+  "backtest_date": "2025-08-20T07:53:29.426799+00:00",
+  "total_pairs": 7,
+  "successful_pairs": 7,
+  "portfolio_return": -13.997714285714284,
+  "portfolio_win_rate": 46.15384615384615,
+  "portfolio_sharpe": -3.765194970948756,
+  "portfolio_max_drawdown": 25.426000000000037,
+  "total_trades": 13,
+  "risk_assessment": "Medium",
+  "performance_grade": "D",
+  "top_performers": [
+    {
+      "pair": "USD_JPY",
+      "return": 32.698000000000064,
+      "win_rate": 33.33333333333333,
+      "sharpe": 0.4138346951272595,
+      "trades": 3,
+      "grade": "D"
+    },
+    {
+      "pair": "AUD_USD",
+      "return": 19.823999999999998,
+      "win_rate": 100.0,
+      "sharpe": 1.4901410278986262,
+      "trades": 2,
+      "grade": "B"
+    },
+    {
+      "pair": "GBP_USD",
+      "return": 17.903999999999996,
+      "win_rate": 100.0,
+      "sharpe": 4.300956679627057,
+      "trades": 2,
+      "grade": "B"
+    }
+  ]
+}
