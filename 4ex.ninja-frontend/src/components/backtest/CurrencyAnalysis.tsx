@@ -17,145 +17,187 @@ export default function CurrencyAnalysis() {
       nickname: 'Loonie',
       robustnessScore: 84.4,
       allocation: 'Primary',
-      strategy: 'Moderate Conservative Weekly',
+      strategy: 'Moderate MA Weekly',
+      strategyDetails: 'Moderate risk MA crossover with weekly analysis',
       annualReturn: '23.5%',
       maxDrawdown: '5.2%',
       sharpeRatio: 2.1,
       winRate: '61%',
       signalReliability: '89%',
+      riskProfile: 'Low-Moderate',
       marketCharacteristics: 'Known for its stability and correlation with oil prices',
       tradingSessions: 'Peak performance during London-NY overlap (12:00-17:00 GMT)',
       volatilityPatterns:
         'Lower volatility compared to EUR/GBP pairs, ideal for conservative strategies',
       economicDrivers: 'Bank of Canada policy, oil prices, US economic data',
       seasonalTrends: 'Stronger performance in Q2-Q3 due to commodity cycles',
-      riskProfile: 'Low',
       insights: [
         'Most stable major pair with excellent risk-adjusted returns',
         'Strong correlation with WTI crude oil prices (0.76)',
         'Responds well to Canadian employment data releases',
         'Ideal for risk-averse traders seeking consistent performance',
       ],
+      strategyParams: {
+        stopLoss: '2.0x ATR',
+        takeProfit: '3.0x ATR',
+        signalFreq: '1 per week',
+        riskReward: '1.5:1 minimum',
+      },
     },
     AUD_USD: {
       name: 'AUD/USD',
       nickname: 'Aussie',
       robustnessScore: 83.7,
       allocation: 'Core Position',
-      strategy: 'Conservative Conservative Weekly',
-      annualReturn: '13.6%',
-      maxDrawdown: '6.1%',
-      sharpeRatio: 1.8,
-      winRate: '58%',
+      strategy: 'Conservative MA Weekly',
+      strategyDetails: 'Conservative risk MA crossover with weekly analysis',
+      annualReturn: '16.4%',
+      maxDrawdown: '5.7%',
+      sharpeRatio: 1.88,
+      winRate: '59%',
       signalReliability: '85%',
+      riskProfile: 'Low',
       marketCharacteristics: 'Commodity currency with strong correlation to Asian markets',
       tradingSessions: 'Best during Asian-London overlap (06:00-10:00 GMT)',
       volatilityPatterns: 'Higher volatility than USD/CAD, requires wider stops',
       economicDrivers: 'RBA policy, Chinese economic data, commodity prices',
       seasonalTrends: 'Outperforms in Q4-Q1 due to Chinese New Year flows',
-      riskProfile: 'Moderate',
       insights: [
         'Strong correlation with gold and iron ore prices',
         'Highly sensitive to Chinese economic indicators',
         'Benefits from risk-on market sentiment',
         'Excellent for diversification from USD-centric pairs',
       ],
+      strategyParams: {
+        stopLoss: '1.5x ATR',
+        takeProfit: '2.25x ATR',
+        signalFreq: '1 per week',
+        riskReward: '1.5:1 minimum',
+      },
     },
     USD_CHF: {
       name: 'USD/CHF',
       nickname: 'Swissie',
       robustnessScore: 83.1,
       allocation: 'Diversification',
-      strategy: 'Conservative Conservative Weekly',
+      strategy: 'Conservative MA Weekly',
+      strategyDetails: 'Conservative risk MA crossover with weekly analysis',
       annualReturn: '15.6%',
       maxDrawdown: '4.8%',
       sharpeRatio: 2.2,
       winRate: '62%',
       signalReliability: '92%',
+      riskProfile: 'Low',
       marketCharacteristics: 'Safe-haven currency with inverse correlation to EUR',
       tradingSessions: 'European session optimal (08:00-16:00 GMT)',
       volatilityPatterns: 'Lowest volatility among major pairs, excellent for risk-averse traders',
       economicDrivers: 'SNB intervention, European economic health, safe-haven flows',
       seasonalTrends: 'Stronger during geopolitical uncertainty periods',
-      riskProfile: 'Low',
       insights: [
         'Highest signal reliability at 92%',
         'Natural hedge against EUR exposure',
         'Strong safe-haven characteristics during market stress',
         'SNB intervention risk at extreme levels',
       ],
+      strategyParams: {
+        stopLoss: '1.5x ATR',
+        takeProfit: '2.25x ATR',
+        signalFreq: '1 per week',
+        riskReward: '1.5:1 minimum',
+      },
     },
     EUR_USD: {
       name: 'EUR/USD',
       nickname: 'Fiber',
       robustnessScore: 81.8,
       allocation: 'Secondary',
-      strategy: 'Conservative Conservative Daily',
-      annualReturn: '15.6%',
-      maxDrawdown: '4.8%',
-      sharpeRatio: 2.08,
+      strategy: 'Conservative MA Daily',
+      strategyDetails: 'Conservative risk MA crossover with daily analysis',
+      annualReturn: '18.4%',
+      maxDrawdown: '6.0%',
+      sharpeRatio: 1.67,
       winRate: '59%',
       signalReliability: '87%',
+      riskProfile: 'Low',
       marketCharacteristics: 'Most liquid forex pair with tight spreads',
       tradingSessions: 'London session dominance (08:00-17:00 GMT)',
       volatilityPatterns: 'Moderate volatility with predictable intraday ranges',
       economicDrivers: 'ECB policy, US Federal Reserve, economic data releases',
       seasonalTrends: 'Consistent performance across all quarters',
-      riskProfile: 'Moderate',
       insights: [
         'Highest liquidity provides excellent execution',
         'Responsive to central bank policy divergence',
         'Works well with daily trading strategies',
         'Strong technical pattern recognition',
       ],
+      strategyParams: {
+        stopLoss: '1.5x ATR',
+        takeProfit: '2.25x ATR',
+        signalFreq: '5-7 per week',
+        riskReward: '1.5:1 minimum',
+      },
     },
     USD_JPY: {
       name: 'USD/JPY',
       nickname: 'Gopher',
       robustnessScore: 79.2,
       allocation: 'Portfolio Balance',
-      strategy: 'Conservative Conservative Weekly',
-      annualReturn: '12.8%',
-      maxDrawdown: '7.3%',
-      sharpeRatio: 1.6,
-      winRate: '55%',
+      strategy: 'Moderate MA Weekly',
+      strategyDetails: 'Moderate risk MA crossover with weekly analysis',
+      annualReturn: '21.1%',
+      maxDrawdown: '8.2%',
+      sharpeRatio: 1.76,
+      winRate: '53%',
       signalReliability: '82%',
+      riskProfile: 'Moderate',
       marketCharacteristics: 'Carry trade favorite with strong central bank influence',
       tradingSessions: 'Asian session strength (22:00-08:00 GMT)',
       volatilityPatterns: 'Trending behavior with occasional sharp reversals',
       economicDrivers: 'BoJ intervention, US-Japan yield differentials, risk sentiment',
       seasonalTrends: 'Stronger in risk-on environments, weaker during market stress',
-      riskProfile: 'Moderate-High',
       insights: [
         'Strong trending characteristics during clear moves',
         'Sensitive to US-Japan yield differentials',
         'BoJ intervention risk at extreme levels',
         'Excellent carry trade opportunities',
       ],
+      strategyParams: {
+        stopLoss: '2.0x ATR',
+        takeProfit: '3.0x ATR',
+        signalFreq: '1 per week',
+        riskReward: '1.5:1 minimum',
+      },
     },
     GBP_USD: {
       name: 'GBP/USD',
       nickname: 'Cable',
       robustnessScore: 77.8,
       allocation: 'Complementary',
-      strategy: 'Conservative Conservative Weekly',
-      annualReturn: '14.2%',
-      maxDrawdown: '8.1%',
-      sharpeRatio: 1.5,
-      winRate: '53%',
+      strategy: 'Conservative MA Weekly',
+      strategyDetails: 'Conservative risk MA crossover with weekly analysis',
+      annualReturn: '17.2%',
+      maxDrawdown: '6.2%',
+      sharpeRatio: 1.98,
+      winRate: '59%',
       signalReliability: '78%',
+      riskProfile: 'Moderate',
       marketCharacteristics: 'High volatility with strong intraday ranges',
       tradingSessions: 'London session dominance with NY extension',
-      volatilityPatterns: 'Highest volatility among major pairs, requires careful risk management',
+      volatilityPatterns: 'Higher volatility among major pairs, requires careful risk management',
       economicDrivers: 'BoE policy, Brexit-related flows, UK economic data',
       seasonalTrends: 'Volatile performance with quarterly variations',
-      riskProfile: 'High',
       insights: [
-        'Highest volatility provides greater profit potential',
+        'Strong returns with good risk management',
         'Requires experienced risk management',
         'Strong reaction to UK political developments',
-        'Best for traders comfortable with higher risk',
+        'Good for traders comfortable with moderate risk',
       ],
+      strategyParams: {
+        stopLoss: '1.5x ATR',
+        takeProfit: '2.25x ATR',
+        signalFreq: '1 per week',
+        riskReward: '1.5:1 minimum',
+      },
     },
   };
 
@@ -326,6 +368,58 @@ export default function CurrencyAnalysis() {
             <div>
               <h5 className="text-sm font-medium text-cyan-400 mb-2">Seasonal Trends</h5>
               <p className="text-neutral-300 text-sm">{selectedData.seasonalTrends}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Strategy Details */}
+      <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
+        <h4 className="text-lg font-semibold text-white mb-4">Strategy Configuration</h4>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div>
+              <h5 className="text-sm font-medium text-purple-400 mb-2">Strategy Type</h5>
+              <p className="text-green-400 font-semibold text-lg">{selectedData.strategy}</p>
+              <p className="text-neutral-300 text-sm mt-1">{selectedData.strategyDetails}</p>
+            </div>
+            <div>
+              <h5 className="text-sm font-medium text-blue-400 mb-2">Signal Generation</h5>
+              <p className="text-neutral-300 text-sm">
+                Frequency:{' '}
+                <span className="text-cyan-400 font-medium">
+                  {selectedData.strategyParams.signalFreq}
+                </span>
+              </p>
+              <p className="text-neutral-300 text-sm">
+                Min R/R:{' '}
+                <span className="text-cyan-400 font-medium">
+                  {selectedData.strategyParams.riskReward}
+                </span>
+              </p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <h5 className="text-sm font-medium text-red-400 mb-2">Risk Management</h5>
+              <p className="text-neutral-300 text-sm">
+                Stop Loss:{' '}
+                <span className="text-red-400 font-medium">
+                  {selectedData.strategyParams.stopLoss}
+                </span>
+              </p>
+              <p className="text-neutral-300 text-sm">
+                Take Profit:{' '}
+                <span className="text-green-400 font-medium">
+                  {selectedData.strategyParams.takeProfit}
+                </span>
+              </p>
+            </div>
+            <div>
+              <h5 className="text-sm font-medium text-yellow-400 mb-2">Risk Classification</h5>
+              <p className={`font-semibold ${getRiskColor(selectedData.riskProfile)}`}>
+                {selectedData.riskProfile}
+              </p>
             </div>
           </div>
         </div>
