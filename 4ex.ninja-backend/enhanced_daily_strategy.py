@@ -177,35 +177,59 @@ class EnhancedDailyStrategy:
         return df
 
     def _generate_daily_signal(self, df: pd.DataFrame, pair: str) -> Dict:
-        """Generate trading signal based on Daily timeframe logic."""
-        current = df.iloc[-1]
-        previous = df.iloc[-2]
+        """Generate trading signal based on Daily timeframe logic using H4 data."""
+
+        # Convert H4 data to Daily timeframe for signal analysis
+        daily_df = (
+            df.resample("D")
+            .agg({"open": "first", "high": "max", "low": "min", "close": "last"})
+            .dropna()
+        )
+
+        # Need at least 60 daily candles for reliable signals
+        if len(daily_df) < 60:
+            return {
+                "signal": "NONE",
+                "direction": None,
+                "entry_price": float(df.iloc[-1]["close"].item()),
+                "stop_loss": None,
+                "take_profit": None,
+                "indicators": {
+                    "error": "Insufficient daily data for signal generation"
+                },
+            }
+
+        # Calculate indicators on daily data
+        daily_df = self._calculate_indicators(daily_df)
+
+        current = daily_df.iloc[-1]
+        previous = daily_df.iloc[-2]
 
         signal_data = {
             "signal": "NONE",
             "direction": None,
-            "entry_price": float(current["close"]),
+            "entry_price": float(df.iloc[-1]["close"].item()),  # Use H4 close for entry
             "stop_loss": None,
             "take_profit": None,
             "indicators": {
-                "ema_20": float(current["ema_20"]),
-                "ema_50": float(current["ema_50"]),
-                "rsi": float(current["rsi"]),
-                "atr": float(current["atr"]),
+                "ema_20": float(current["ema_20"].item()),
+                "ema_50": float(current["ema_50"].item()),
+                "rsi": float(current["rsi"].item()),
+                "atr": float(current["atr"].item()),
             },
         }
 
         # EMA Crossover Logic (Daily timeframe proven strategy)
-        ema_20_current = current["ema_20"]
-        ema_50_current = current["ema_50"]
-        ema_20_previous = previous["ema_20"]
-        ema_50_previous = previous["ema_50"]
+        ema_20_current = float(current["ema_20"].item())
+        ema_50_current = float(current["ema_50"].item())
+        ema_20_previous = float(previous["ema_20"].item())
+        ema_50_previous = float(previous["ema_50"].item())
 
         # Bull signal: EMA 20 crosses above EMA 50
         if (
             ema_20_current > ema_50_current
             and ema_20_previous <= ema_50_previous
-            and current["rsi"] > 50
+            and float(current["rsi"].item()) > 50
         ):
 
             signal_data.update(
@@ -213,12 +237,13 @@ class EnhancedDailyStrategy:
                     "signal": "BUY",
                     "direction": "LONG",
                     "stop_loss": float(
-                        current["close"] - (current["atr"] * self.base_stop_loss_atr)
+                        current["close"].item()
+                        - (current["atr"].item() * self.base_stop_loss_atr)
                     ),
                     "take_profit": float(
-                        current["close"]
+                        current["close"].item()
                         + (
-                            current["atr"]
+                            current["atr"].item()
                             * self.base_stop_loss_atr
                             * self.take_profit_ratio
                         )
@@ -230,7 +255,7 @@ class EnhancedDailyStrategy:
         elif (
             ema_20_current < ema_50_current
             and ema_20_previous >= ema_50_previous
-            and current["rsi"] < 50
+            and float(current["rsi"].item()) < 50
         ):
 
             signal_data.update(
@@ -238,12 +263,13 @@ class EnhancedDailyStrategy:
                     "signal": "SELL",
                     "direction": "SHORT",
                     "stop_loss": float(
-                        current["close"] + (current["atr"] * self.base_stop_loss_atr)
+                        current["close"].item()
+                        + (current["atr"].item() * self.base_stop_loss_atr)
                     ),
                     "take_profit": float(
-                        current["close"]
+                        current["close"].item()
                         - (
-                            current["atr"]
+                            current["atr"].item()
                             * self.base_stop_loss_atr
                             * self.take_profit_ratio
                         )
