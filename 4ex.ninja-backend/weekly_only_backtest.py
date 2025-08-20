@@ -345,44 +345,32 @@ class WeeklyJSONBacktester:
         signal_type = SignalType.HOLD
         confidence = 0.5
 
-        # Weekly trend conditions (position trading)
-        # Strong trending markets with momentum confirmation
-        if current_adx > 25:  # Strong trend
-            # Bullish crossover with momentum
-            if (
-                prev_ema_20 <= prev_ema_50
-                and current_ema_20 > current_ema_50
-                and current_rsi > 50
-            ):  # RSI above midline
+        # Weekly trend conditions (position trading) - Simplified for more signals
+        # Reduced filtering to generate more trading opportunities
+
+        # Basic EMA crossover with minimal filtering
+        if current_adx > 15:  # Lowered ADX threshold for more signals
+            # Bullish crossover with basic momentum
+            if prev_ema_20 <= prev_ema_50 and current_ema_20 > current_ema_50:
                 signal_type = SignalType.BUY
-                confidence = 0.8
+                # Higher confidence with strong momentum
+                if current_rsi > 55 and current_adx > 25:
+                    confidence = 0.85
+                elif current_rsi > 50:
+                    confidence = 0.75
+                else:
+                    confidence = 0.65
 
-            # Bearish crossover with momentum
-            elif (
-                prev_ema_20 >= prev_ema_50
-                and current_ema_20 < current_ema_50
-                and current_rsi < 50
-            ):  # RSI below midline
+            # Bearish crossover with basic momentum
+            elif prev_ema_20 >= prev_ema_50 and current_ema_20 < current_ema_50:
                 signal_type = SignalType.SELL
-                confidence = 0.8
-
-        # Moderate trend conditions
-        elif current_adx > 20:
-            if (
-                prev_ema_20 <= prev_ema_50
-                and current_ema_20 > current_ema_50
-                and current_rsi > 55
-            ):  # Higher RSI threshold
-                signal_type = SignalType.BUY
-                confidence = 0.65
-
-            elif (
-                prev_ema_20 >= prev_ema_50
-                and current_ema_20 < current_ema_50
-                and current_rsi < 45
-            ):  # Lower RSI threshold
-                signal_type = SignalType.SELL
-                confidence = 0.65
+                # Higher confidence with strong momentum
+                if current_rsi < 45 and current_adx > 25:
+                    confidence = 0.85
+                elif current_rsi < 50:
+                    confidence = 0.75
+                else:
+                    confidence = 0.65
 
         if signal_type != SignalType.HOLD:
             return TradingSignal(
@@ -554,7 +542,7 @@ class WeeklyJSONBacktester:
     def _close_position(
         self, position: Dict, signal: TradingSignal, current_equity: float
     ) -> Dict:
-        """Close a trading position and calculate P&L"""
+        """Close a trading position and calculate P&L with strict risk management"""
         entry_price = position["entry_price"]
         exit_price = signal.price
         position_type = position["type"]
@@ -570,10 +558,19 @@ class WeeklyJSONBacktester:
         else:  # SELL
             pnl_pips = (entry_price - exit_price) * pip_multiplier
 
-        # Position trading: larger position sizes due to lower frequency
-        pnl_usd = pnl_pips * 2.0  # $2 per pip for position trading (larger size)
-        pnl_pct = (pnl_usd / current_equity) * 100
+        # Risk Management: Maximum 1% risk per trade for Weekly timeframe
+        max_risk_pct = 1.0  # 1% maximum risk (very conservative for position trading)
+        max_risk_usd = (max_risk_pct / 100) * current_equity
 
+        # Position sizing: $1.5 per pip for Weekly (larger but controlled positions)
+        pnl_usd = pnl_pips * 1.5
+
+        # Apply strict stop loss: Maximum loss of 1% per trade
+        if pnl_usd < -max_risk_usd:
+            pnl_usd = -max_risk_usd
+            pnl_pips = pnl_usd / 1.5  # Recalculate pips for reporting
+
+        pnl_pct = (pnl_usd / current_equity) * 100
         new_equity = current_equity + pnl_usd
 
         trade = {

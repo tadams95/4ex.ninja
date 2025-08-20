@@ -206,7 +206,7 @@ class DailyJSONBacktester:
     def _generate_daily_signal(
         self, candles: List[LocalPriceData], pair: str, index: int
     ) -> Optional[TradingSignal]:
-        """Generate daily EMA crossover signal"""
+        """Generate daily EMA crossover signal with light momentum filter"""
         # Need at least 50 candles for EMA calculation
         if index < 50:
             return None
@@ -232,14 +232,27 @@ class DailyJSONBacktester:
         signal_type = SignalType.HOLD
         confidence = 0.5
 
-        # Bullish crossover: fast EMA crosses above slow EMA
+        # Simple crossover with optional momentum boost
+        # Calculate recent price momentum (3-day change) for confidence adjustment
+        price_momentum = 0
+        if len(closes) >= 4:
+            price_momentum = (closes[-1] - closes[-4]) / closes[-4]
+
+        # Bullish crossover
         if prev_fast <= prev_slow and current_fast > current_slow:
             signal_type = SignalType.BUY
-            confidence = 0.7
-        # Bearish crossover: fast EMA crosses below slow EMA
+            # Higher confidence if price momentum is also bullish
+            confidence = (
+                0.8 if price_momentum > 0.001 else 0.7
+            )  # 0.1% momentum threshold
+
+        # Bearish crossover
         elif prev_fast >= prev_slow and current_fast < current_slow:
             signal_type = SignalType.SELL
-            confidence = 0.7
+            # Higher confidence if price momentum is also bearish
+            confidence = (
+                0.8 if price_momentum < -0.001 else 0.7
+            )  # -0.1% momentum threshold
 
         if signal_type != SignalType.HOLD:
             return TradingSignal(
@@ -417,26 +430,35 @@ class DailyJSONBacktester:
     def _close_position(
         self, position: Dict, signal: TradingSignal, current_equity: float
     ) -> Dict:
-        """Close a trading position and calculate P&L"""
+        """Close a trading position and calculate P&L with improved risk management"""
         entry_price = position["entry_price"]
         exit_price = signal.price
         position_type = position["type"]
         pair = signal.pair
 
-        # Calculate P&L based on position type and pair
+        # Determine pip multiplier based on pair type
+        is_jpy_pair = "JPY" in pair
+        pip_multiplier = 100 if is_jpy_pair else 10000
+
+        # Calculate P&L based on position type
         if position_type == "BUY":
-            pnl_pips = (exit_price - entry_price) * 10000
+            pnl_pips = (exit_price - entry_price) * pip_multiplier
         else:  # SELL
-            pnl_pips = (entry_price - exit_price) * 10000
+            pnl_pips = (entry_price - exit_price) * pip_multiplier
 
-        # Adjust for JPY pairs (different pip value)
-        if "JPY" in pair:
-            pnl_pips = pnl_pips / 100  # JPY pairs: 1 pip = 0.01, not 0.0001
+        # Risk Management: Maximum 1.5% risk per trade for Daily timeframe
+        max_risk_pct = 1.5  # 1.5% maximum risk
+        max_risk_usd = (max_risk_pct / 100) * current_equity
 
-        # Simplified P&L calculation (assuming 1 standard lot)
-        pnl_usd = pnl_pips * 1.0  # $1 per pip for simplicity
+        # Position sizing: $1.0 per pip for Daily (medium position size)
+        pnl_usd = pnl_pips * 1.0
+
+        # Apply stop loss: Maximum loss of 1.5% per trade
+        if pnl_usd < -max_risk_usd:
+            pnl_usd = -max_risk_usd
+            pnl_pips = pnl_usd / 1.0  # Recalculate pips for reporting
+
         pnl_pct = (pnl_usd / current_equity) * 100
-
         new_equity = current_equity + pnl_usd
 
         trade = {

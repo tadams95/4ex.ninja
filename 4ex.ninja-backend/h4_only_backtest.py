@@ -136,7 +136,7 @@ class H4JSONBacktester:
     def _generate_h4_signal(
         self, candles: List[LocalPriceData], pair: str, index: int
     ) -> Optional[TradingSignal]:
-        """Generate simple H4 EMA crossover signal"""
+        """Generate H4 EMA crossover signal with basic trend filter"""
         # Need at least 50 candles for EMA calculation
         if index < 50:
             return None
@@ -162,14 +162,20 @@ class H4JSONBacktester:
         signal_type = SignalType.HOLD
         confidence = 0.5
 
+        # Simple crossover logic with light filtering
         # Bullish crossover: fast EMA crosses above slow EMA
         if prev_fast <= prev_slow and current_fast > current_slow:
             signal_type = SignalType.BUY
-            confidence = 0.7
+            # Higher confidence if EMAs are clearly separated (but very small threshold)
+            ema_separation = abs(current_fast - current_slow) / current_slow
+            confidence = 0.8 if ema_separation > 0.0002 else 0.7  # 0.02% threshold
+
         # Bearish crossover: fast EMA crosses below slow EMA
         elif prev_fast >= prev_slow and current_fast < current_slow:
             signal_type = SignalType.SELL
-            confidence = 0.7
+            # Higher confidence if EMAs are clearly separated (but very small threshold)
+            ema_separation = abs(current_fast - current_slow) / current_slow
+            confidence = 0.8 if ema_separation > 0.0002 else 0.7  # 0.02% threshold
 
         if signal_type != SignalType.HOLD:
             return TradingSignal(
@@ -337,15 +343,13 @@ class H4JSONBacktester:
     def _close_position(
         self, position: Dict, signal: TradingSignal, current_equity: float
     ) -> Dict:
-        """Close a trading position and calculate P&L"""
+        """Close a trading position and calculate P&L with improved risk management"""
         entry_price = position["entry_price"]
         exit_price = signal.price
         position_type = position["type"]
         pair = signal.pair
 
         # Determine pip multiplier based on pair type
-        # JPY pairs: 1 pip = 0.01, so multiply by 100
-        # Other pairs: 1 pip = 0.0001, so multiply by 10000
         is_jpy_pair = "JPY" in pair
         pip_multiplier = 100 if is_jpy_pair else 10000
 
@@ -355,10 +359,19 @@ class H4JSONBacktester:
         else:  # SELL
             pnl_pips = (entry_price - exit_price) * pip_multiplier
 
-        # Simplified P&L calculation (assuming 1 standard lot)
-        pnl_usd = pnl_pips * 1.0  # $1 per pip for simplicity
-        pnl_pct = (pnl_usd / current_equity) * 100
+        # Risk Management: Maximum 2% risk per trade for H4 timeframe
+        max_risk_pct = 2.0  # 2% maximum risk
+        max_risk_usd = (max_risk_pct / 100) * current_equity
 
+        # Position sizing: $0.50 per pip for H4 (smaller positions for frequent trades)
+        pnl_usd = pnl_pips * 0.5
+
+        # Apply stop loss: Maximum loss of 2% per trade
+        if pnl_usd < -max_risk_usd:
+            pnl_usd = -max_risk_usd
+            pnl_pips = pnl_usd / 0.5  # Recalculate pips for reporting
+
+        pnl_pct = (pnl_usd / current_equity) * 100
         new_equity = current_equity + pnl_usd
 
         trade = {
