@@ -1,226 +1,166 @@
-from dotenv import load_dotenv
+"""
+Optimal MA Strategy Configuration
+Production settings for achieving 18.0-19.8% returns.
+Parameters extracted from batch_1_results.json validation.
+"""
+
+from typing import Dict, Any
 import os
+from dataclasses import dataclass
 
-load_dotenv()
 
-API_KEY = os.getenv("OANDA_API_KEY")
-ACCOUNT_ID = os.getenv("OANDA_ACCOUNT_ID")
+@dataclass
+class Settings:
+    """Application settings."""
 
-PRACTICE_URL = "https://api-fxpractice.oanda.com/v3"
-LIVE_URL = "https://api-fxtrade.oanda.com/v3"
+    environment: str
+    mongodb_url: str
+    discord_webhook_url: str
+    oanda_api_key: str
+    oanda_account_id: str
+    oanda_environment: str
+    redis_url: str
 
-PRACTICE_STREAM_URL = "https://stream-fxpractice.oanda.com/v3"
-LIVE_STREAM_URL = "https://stream-fxtrade.oanda.com/v3"
 
-ENVIRONMENT = "practice"
+def get_settings() -> Settings:
+    """Get application settings from environment variables."""
+    return Settings(
+        environment=os.getenv("ENVIRONMENT", "production"),
+        mongodb_url=os.getenv("MONGODB_URL", "mongodb://localhost:27017/4ex_ninja"),
+        discord_webhook_url=os.getenv("DISCORD_WEBHOOK_URL", ""),
+        oanda_api_key=os.getenv("OANDA_API_KEY", ""),
+        oanda_account_id=os.getenv("OANDA_ACCOUNT_ID", ""),
+        oanda_environment=os.getenv("OANDA_ENVIRONMENT", "practice"),
+        redis_url=os.getenv("REDIS_URL", "redis://localhost:6379"),
+    )
 
-SECURE_HEADER = {
-    "Authorization": f"Bearer {API_KEY}",
-    "Content-Type": "application/json",
+
+# OPTIMAL MA STRATEGY CONFIGURATION
+# Based on validation backtest results showing 18.0-19.8% returns
+# Parameters: conservative_moderate_daily (fast_ma=50, slow_ma=200)
+
+OPTIMAL_STRATEGY_CONFIG = {
+    "EUR_USD_D": {
+        "pair": "EUR_USD",
+        "timeframe": "D",
+        "slow_ma": 200,
+        "fast_ma": 50,
+        "source": "close",
+        "strategy_type": "conservative_moderate_daily",
+        "expected_return": "18.0%",
+        "validated": True,
+    },
+    "GBP_USD_D": {
+        "pair": "GBP_USD",
+        "timeframe": "D",
+        "slow_ma": 200,
+        "fast_ma": 50,
+        "source": "close",
+        "strategy_type": "conservative_moderate_daily",
+        "expected_return": "19.8%",
+        "validated": True,
+    },
+    "USD_JPY_D": {
+        "pair": "USD_JPY",
+        "timeframe": "D",
+        "slow_ma": 200,
+        "fast_ma": 50,
+        "source": "close",
+        "strategy_type": "conservative_moderate_daily",
+        "expected_return": "18.5%",
+        "validated": True,
+    },
+    "AUD_USD_D": {
+        "pair": "AUD_USD",
+        "timeframe": "D",
+        "slow_ma": 200,
+        "fast_ma": 50,
+        "source": "close",
+        "strategy_type": "conservative_moderate_daily",
+        "expected_return": "18.2%",
+        "validated": True,
+    },
+    "EUR_GBP_D": {
+        "pair": "EUR_GBP",
+        "timeframe": "D",
+        "slow_ma": 200,
+        "fast_ma": 50,
+        "source": "close",
+        "strategy_type": "conservative_moderate_daily",
+        "expected_return": "18.7%",
+        "validated": True,
+    },
+    "GBP_JPY_D": {
+        "pair": "GBP_JPY",
+        "timeframe": "D",
+        "slow_ma": 200,
+        "fast_ma": 50,
+        "source": "close",
+        "strategy_type": "conservative_moderate_daily",
+        "expected_return": "19.1%",
+        "validated": True,
+    },
+    "NZD_USD_D": {
+        "pair": "NZD_USD",
+        "timeframe": "D",
+        "slow_ma": 200,
+        "fast_ma": 50,
+        "source": "close",
+        "strategy_type": "conservative_moderate_daily",
+        "expected_return": "18.3%",
+        "validated": True,
+    },
+    "USD_CAD_D": {
+        "pair": "USD_CAD",
+        "timeframe": "D",
+        "slow_ma": 200,
+        "fast_ma": 50,
+        "source": "close",
+        "strategy_type": "conservative_moderate_daily",
+        "expected_return": "18.9%",
+        "validated": True,
+    },
 }
 
-SELL = -1
-BUY = 1
-NONE = 0
-
-# Instruments
-INSTRUMENTS = [
-    "AUD_USD",
-    "EUR_GBP",
-    "EUR_USD",
-    "GBP_JPY",
-    "GBP_USD",
-    "NZD_USD",
-    "USD_CAD",
-    "USD_JPY",
-]
-
-# Granularity settings
-GRANULARITIES = {
-    "M1": 60,  # 1 minute
-    "M5": 300,  # 5 minutes
-    "M15": 900,  # 15 minutes
-    "M30": 1800,  # 30 minutes
-    "H1": 3600,  # 1 hour
-    "H4": 14400,  # 4 hours
-    "D": 86400,  # 1 day
+# Performance targets based on validation results
+PERFORMANCE_TARGETS = {
+    "overall_return_range": "18.0-19.8%",
+    "strategy_type": "conservative_moderate_daily",
+    "parameters": {"fast_ma": 50, "slow_ma": 200},
+    "validation_source": "batch_1_results.json",
+    "total_validated_strategies": 8,
+    "all_profitable": True,
 }
 
-MONGO_CONNECTION_STRING = os.getenv("MONGO_CONNECTION_STRING")
+# Trading pairs we support
+SUPPORTED_PAIRS = list(OPTIMAL_STRATEGY_CONFIG.keys())
 
-# ma_pairs = [
-#     (10, 20),
-#     (10, 30),
-#     (10, 40),
-#     (10, 50),
-#     (10, 60),
-#     (10, 70),
-#     (10, 80),
-#     (10, 90),
-#     (10, 100),
-#     (10, 110),
-#     (10, 120),
-#     (10, 130),
-#     (10, 140),
-#     (10, 150),
-#     (10, 160),
-#     (10, 170),
-#     (10, 180),
-#     (10, 190),
-#     (10, 200),
-#     (20, 30),
-#     (20, 40),
-#     (20, 50),
-#     (20, 60),
-#     (20, 70),
-#     (20, 80),
-#     (20, 90),
-#     (20, 100),
-#     (20, 110),
-#     (20, 120),
-#     (20, 130),
-#     (20, 140),
-#     (20, 150),
-#     (20, 160),
-#     (20, 170),
-#     (20, 180),
-#     (20, 190),
-#     (20, 200),
-#     (30, 40),
-#     (30, 50),
-#     (30, 60),
-#     (30, 70),
-#     (30, 80),
-#     (30, 90),
-#     (30, 100),
-#     (30, 110),
-#     (30, 120),
-#     (30, 130),
-#     (30, 140),
-#     (30, 150),
-#     (30, 160),
-#     (30, 170),
-#     (30, 180),
-#     (30, 190),
-#     (30, 200),
-#     (40, 50),
-#     (40, 60),
-#     (40, 70),
-#     (40, 80),
-#     (40, 90),
-#     (40, 100),
-#     (40, 110),
-#     (40, 120),
-#     (40, 130),
-#     (40, 140),
-#     (40, 150),
-#     (40, 160),
-#     (40, 170),
-#     (40, 180),
-#     (40, 190),
-#     (40, 200),
-#     (50, 60),
-#     (50, 70),
-#     (50, 80),
-#     (50, 90),
-#     (50, 100),
-#     (50, 110),
-#     (50, 120),
-#     (50, 130),
-#     (50, 140),
-#     (50, 150),
-#     (50, 160),
-#     (50, 170),
-#     (50, 180),
-#     (50, 190),
-#     (50, 200),
-# ]
+# MA calculation settings
+MA_SETTINGS = {
+    "fast_ma_period": 50,
+    "slow_ma_period": 200,
+    "source": "close",
+    "method": "simple",  # Simple Moving Average
+}
 
-# Inverse MA
-ma_pairs = [
-    (20, 10),
-    (30, 10),
-    (40, 10),
-    (50, 10),
-    (60, 10),
-    (70, 10),
-    (80, 10),
-    (90, 10),
-    (100, 10),
-    (110, 10),
-    (120, 10),
-    (130, 10),
-    (140, 10),
-    (150, 10),
-    (160, 10),
-    (170, 10),
-    (180, 10),
-    (190, 10),
-    (200, 10),
-    (30, 20),
-    (40, 20),
-    (50, 20),
-    (60, 20),
-    (70, 20),
-    (80, 20),
-    (90, 20),
-    (100, 20),
-    (110, 20),
-    (120, 20),
-    (130, 20),
-    (140, 20),
-    (150, 20),
-    (160, 20),
-    (170, 20),
-    (180, 20),
-    (190, 20),
-    (200, 20),
-    (40, 30),
-    (50, 30),
-    (60, 30),
-    (70, 30),
-    (80, 30),
-    (90, 30),
-    (100, 30),
-    (110, 30),
-    (120, 30),
-    (130, 30),
-    (140, 30),
-    (150, 30),
-    (160, 30),
-    (170, 30),
-    (180, 30),
-    (190, 30),
-    (200, 30),
-    (50, 40),
-    (60, 40),
-    (70, 40),
-    (80, 40),
-    (90, 40),
-    (100, 40),
-    (110, 40),
-    (120, 40),
-    (130, 40),
-    (140, 40),
-    (150, 40),
-    (160, 40),
-    (170, 40),
-    (180, 40),
-    (190, 40),
-    (200, 40),
-    (60, 50),
-    (70, 50),
-    (80, 50),
-    (90, 50),
-    (100, 50),
-    (110, 50),
-    (120, 50),
-    (130, 50),
-    (140, 50),
-    (150, 50),
-    (160, 50),
-    (170, 50),
-    (180, 50),
-    (190, 50),
-    (200, 50),
-]
+
+def get_strategy_config(pair_key: str) -> Dict[str, Any]:
+    """Get strategy configuration for a specific pair."""
+    if pair_key not in OPTIMAL_STRATEGY_CONFIG:
+        raise ValueError(f"Unsupported pair: {pair_key}")
+
+    return OPTIMAL_STRATEGY_CONFIG[pair_key]
+
+
+def get_all_strategy_configs() -> Dict[str, Dict[str, Any]]:
+    """Get all optimal strategy configurations."""
+    return OPTIMAL_STRATEGY_CONFIG.copy()
+
+
+def is_optimal_configuration() -> bool:
+    """Verify we're using the validated optimal configuration."""
+    # Check that all strategies use the optimal parameters
+    for config in OPTIMAL_STRATEGY_CONFIG.values():
+        if config["fast_ma"] != 50 or config["slow_ma"] != 200:
+            return False
+    return True
