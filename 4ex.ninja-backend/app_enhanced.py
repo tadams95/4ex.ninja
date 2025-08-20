@@ -125,10 +125,15 @@ async def health_check():
 
         return HealthCheckResponse(
             status="healthy" if data_health and enhanced_healthy else "degraded",
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.utcnow().isoformat(),
+            services={
+                "data_service": "healthy" if data_health else "unhealthy",
+                "enhanced_daily": "healthy" if enhanced_healthy else "unhealthy",
+                "scheduler": (
+                    "healthy" if scheduler_status["is_running"] else "unhealthy"
+                ),
+            },
             version="2.0.0",
-            uptime_seconds=time.time() - startup_time,
-            strategy_count=1,  # Enhanced Daily Strategy only
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Health check failed: {str(e)}")
@@ -183,20 +188,21 @@ async def scan_all_pairs():
         )
 
 
-@app.get("/signals")
+@app.get("/signals", response_model=SignalResponse)
 async def get_current_signals():
     """Get current Enhanced Daily Strategy signals."""
     try:
         signals = await enhanced_daily_service.generate_enhanced_signals()
-        return {
-            "success": True,
-            "message": "Enhanced Daily signals generated successfully",
-            "signals": signals,
-            "strategy": "Enhanced Daily Strategy (Phase 1)",
-            "signal_count": len(signals),
-            "active_pairs": enhanced_daily_service.monitored_pairs,
-            "timestamp": datetime.utcnow().isoformat(),
-        }
+        return SignalResponse(
+            success=True,
+            signals=signals,
+            timestamp=datetime.utcnow().isoformat(),
+            metadata={
+                "strategy": "Enhanced Daily Strategy (Phase 1)",
+                "signal_count": len(signals),
+                "active_pairs": enhanced_daily_service.monitored_pairs,
+            },
+        )
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Enhanced Daily signal generation failed: {str(e)}"
@@ -225,26 +231,27 @@ async def get_pair_signals(pair: str):
         )
 
 
-@app.get("/performance")
+@app.get("/performance", response_model=PerformanceResponse)
 async def get_overall_performance():
     """Get Enhanced Daily Strategy overall performance metrics."""
     try:
-        return {
-            "success": True,
-            "message": "Enhanced Daily performance retrieved successfully",
-            "strategy": "Enhanced Daily Strategy (Phase 1)",
-            "live_metrics": enhanced_daily_service.performance_metrics,
-            "active_signals": len(enhanced_daily_service.active_signals),
-            "monitored_pairs": enhanced_daily_service.monitored_pairs,
-            "backtest_performance": {
-                "return_percent": 522.91,
-                "win_rate_percent": 60.87,
-                "max_drawdown_percent": 3.46,
-                "total_trades": 230,
-                "sharpe_ratio": 0.51,
+        return PerformanceResponse(
+            success=True,
+            performance={
+                "strategy": "Enhanced Daily Strategy (Phase 1)",
+                "live_metrics": enhanced_daily_service.performance_metrics,
+                "active_signals": len(enhanced_daily_service.active_signals),
+                "monitored_pairs": enhanced_daily_service.monitored_pairs,
+                "backtest_performance": {
+                    "return_percent": 522.91,
+                    "win_rate_percent": 60.87,
+                    "max_drawdown_percent": 3.46,
+                    "total_trades": 230,
+                    "sharpe_ratio": 0.51,
+                },
             },
-            "timestamp": datetime.utcnow().isoformat(),
-        }
+            timestamp=datetime.utcnow().isoformat(),
+        )
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -338,15 +345,19 @@ async def get_data_health():
 async def test_notifications():
     """Test notification system."""
     try:
-        # Simple test without actual notification service
+        test_message = {
+            "title": "4ex.ninja Enhanced Backend Test",
+            "message": "Enhanced Daily Strategy notification system working!",
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+
+        success = await notification_service.send_notification(test_message)
+
         return {
-            "success": True,
-            "message": "Enhanced Daily Strategy notification system ready",
-            "test_message": {
-                "title": "4ex.ninja Enhanced Backend Test",
-                "message": "Enhanced Daily Strategy notification system working!",
-                "timestamp": datetime.utcnow().isoformat(),
-            },
+            "success": success,
+            "message": (
+                "Test notification sent" if success else "Test notification failed"
+            ),
             "timestamp": datetime.utcnow().isoformat(),
         }
     except Exception as e:
