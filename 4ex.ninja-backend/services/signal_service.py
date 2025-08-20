@@ -195,7 +195,21 @@ class SignalService:
             mongo_url = os.getenv(
                 "MONGO_CONNECTION_STRING", "mongodb://localhost:27017"
             )
-            self.mongo_client = motor.motor_asyncio.AsyncIOMotorClient(mongo_url)
+
+            # Configure SSL settings for MongoDB Atlas
+            if "mongodb+srv://" in mongo_url:
+                # MongoDB Atlas connection with SSL
+                self.mongo_client = motor.motor_asyncio.AsyncIOMotorClient(
+                    mongo_url,
+                    tls=True,
+                    tlsAllowInvalidCertificates=True,  # Allow self-signed certificates
+                    retryWrites=True,
+                    w="majority",
+                )
+            else:
+                # Local MongoDB connection
+                self.mongo_client = motor.motor_asyncio.AsyncIOMotorClient(mongo_url)
+
             self.db = self.mongo_client["4ex_ninja"]
             self.signals_collection = self.db["signals"]
             self.logger.info("MongoDB connection initialized for signals")
