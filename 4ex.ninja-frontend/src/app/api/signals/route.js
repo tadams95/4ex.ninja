@@ -33,7 +33,7 @@ async function connectToDatabase() {
     }
 
     await client.connect();
-    const db = client.db("signals");
+    const db = client.db("4ex_ninja");
 
     cachedClient = client;
     cachedDb = db;
@@ -67,11 +67,11 @@ export async function GET(request) {
     }
 
     const { db } = connection;
-    const collection = db.collection("trades");
+    const collection = db.collection("signals");
 
     // Check if collection exists and has documents
     const count = await collection.countDocuments({});
-    console.log(`Found ${count} documents in collection`);
+    console.log(`Found ${count} documents in signals collection`);
 
     if (count === 0) {
       return NextResponse.json({
@@ -84,23 +84,25 @@ export async function GET(request) {
     // Fetch latest signals
     const signals = await collection
       .find({})
-      .sort({ time: -1 })
+      .sort({ timestamp: -1 })
       .limit(limit)
       .toArray();
 
     // Map MongoDB document to frontend format
     const formattedSignals = signals.map((signal) => ({
       _id: signal._id.toString(),
-      pair: signal.instrument,
-      type: signal.signal === 1 ? "BUY" : "SELL",
+      id: signal.id,
+      pair: signal.pair,
+      type: signal.signal_type, // Now using signal_type from your schema
       timeframe: signal.timeframe,
-      entry: signal.close?.toFixed(5),
-      stopLoss: signal.stop_loss?.toFixed(5),
-      takeProfit: signal.take_profit?.toFixed(5),
-      slPips: signal.sl_pips?.toFixed(1),
-      tpPips: signal.tp_pips?.toFixed(1),
-      riskRewardRatio: signal.risk_reward_ratio?.toFixed(2),
-      timestamp: signal.time,
+      entry: signal.price?.toFixed(5), // Using price field
+      confidence: signal.confidence?.toFixed(2),
+      strategy_type: signal.strategy_type,
+      timestamp: signal.timestamp,
+      created_at: signal.created_at,
+      status: signal.status,
+      fast_ma: signal.fast_ma?.toFixed(5),
+      slow_ma: signal.slow_ma?.toFixed(5),
     }));
 
     return NextResponse.json({ signals: formattedSignals });

@@ -14,19 +14,21 @@ import { Crossover } from '@/types';
 import Link from 'next/link';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-// Define signal type to match the structure from sigcheck
+// Define signal type to match the new database structure
 interface Signal {
   _id: string;
+  id: string;
   pair: string;
-  type: 'BUY' | 'SELL';
+  type: 'BUY' | 'SELL'; // signal_type from database
   timeframe: string;
-  entry: string;
-  stopLoss: string;
-  takeProfit: string;
-  slPips: string;
-  tpPips: string;
-  riskRewardRatio: string;
+  entry: string; // price from database
+  confidence: string;
+  strategy_type: string;
   timestamp: string | Date;
+  created_at: string | Date;
+  status: string;
+  fast_ma: string;
+  slow_ma: string;
   // Map signal properties to crossover-like properties for compatibility
   crossoverType?: 'BULLISH' | 'BEARISH';
 }
@@ -113,13 +115,16 @@ function InsightsPage() {
       pair: signal.pair,
       crossoverType: signal.type === 'BUY' ? 'BULLISH' : ('BEARISH' as 'BULLISH' | 'BEARISH'),
       timeframe: signal.timeframe,
-      fastMA: 20, // Default values for compatibility
-      slowMA: 50,
+      fastMA: parseFloat(signal.fast_ma) || 20, // Use actual fast_ma from signal
+      slowMA: parseFloat(signal.slow_ma) || 50, // Use actual slow_ma from signal
       price: signal.entry,
       timestamp:
         typeof signal.timestamp === 'string' ? new Date(signal.timestamp) : signal.timestamp,
       signal: signal.type === 'BUY' ? 'Buy' : ('Sell' as 'Buy' | 'Sell'),
       close: parseFloat(signal.entry) || 0,
+      confidence: parseFloat(signal.confidence) || 0,
+      strategy_type: signal.strategy_type,
+      status: signal.status,
     }));
 
     const sortedCrossovers = [...mappedCrossovers].sort(

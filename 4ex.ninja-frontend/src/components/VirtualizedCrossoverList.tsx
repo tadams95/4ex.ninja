@@ -71,6 +71,26 @@ const VirtualizedCrossoverItem = memo(
               <p className="text-gray-300">Price:</p>
               <p className="font-medium">{crossover.price}</p>
             </div>
+            {crossover.confidence && (
+              <div className="flex justify-between">
+                <p className="text-gray-300">Confidence:</p>
+                <p className="font-medium text-blue-400">{(crossover.confidence * 100).toFixed(0)}%</p>
+              </div>
+            )}
+            {crossover.strategy_type && (
+              <div className="flex justify-between">
+                <p className="text-gray-300">Strategy:</p>
+                <p className="font-medium text-purple-400">{crossover.strategy_type}</p>
+              </div>
+            )}
+            {crossover.status && (
+              <div className="flex justify-between">
+                <p className="text-gray-300">Status:</p>
+                <p className={`font-medium ${crossover.status === 'ACTIVE' ? 'text-green-400' : 'text-gray-400'}`}>
+                  {crossover.status}
+                </p>
+              </div>
+            )}
             <p className="text-sm text-gray-400 mt-4">{itemData.formattedTimestamp}</p>
           </div>
         </div>
@@ -138,6 +158,26 @@ const NonVirtualizedCrossoverItem = memo(
             <p className="text-gray-300">Price:</p>
             <p className="font-medium">{crossover.price}</p>
           </div>
+          {crossover.confidence && (
+            <div className="flex justify-between">
+              <p className="text-gray-300">Confidence:</p>
+              <p className="font-medium text-blue-400">{(crossover.confidence * 100).toFixed(0)}%</p>
+            </div>
+          )}
+          {crossover.strategy_type && (
+            <div className="flex justify-between">
+              <p className="text-gray-300">Strategy:</p>
+              <p className="font-medium text-purple-400">{crossover.strategy_type}</p>
+            </div>
+          )}
+          {crossover.status && (
+            <div className="flex justify-between">
+              <p className="text-gray-300">Status:</p>
+              <p className={`font-medium ${crossover.status === 'ACTIVE' ? 'text-green-400' : 'text-gray-400'}`}>
+                {crossover.status}
+              </p>
+            </div>
+          )}
           <p className="text-sm text-gray-400 mt-4">{itemData.formattedTimestamp}</p>
         </div>
       </ConditionalMotionDiv>

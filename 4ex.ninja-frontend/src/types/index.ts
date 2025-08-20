@@ -24,6 +24,10 @@ export interface Crossover {
   signal?: 'Buy' | 'Sell';
   close?: number;
   time?: string | Date;
+  // New fields for enhanced signal data
+  confidence?: number;
+  strategy_type?: string;
+  status?: string;
 }
 
 export interface ApiResponse<T = any> {
