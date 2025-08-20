@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { MongoClient } from "mongodb";
+import { MongoClient } from 'mongodb';
+import { NextResponse } from 'next/server';
 
 // Use proper error handling for the connection string
 const uri = process.env.MONGO_CONNECTION_STRING;
@@ -18,7 +18,7 @@ async function connectToDatabase() {
   // Validate connection string
   if (!uri) {
     // Instead of throwing an error, return a helpful response
-    return { error: "MongoDB connection string is not defined" };
+    return { error: 'MongoDB connection string is not defined' };
   }
 
   try {
@@ -33,14 +33,14 @@ async function connectToDatabase() {
     }
 
     await client.connect();
-    const db = client.db("4ex_ninja");
+    const db = client.db('4ex_ninja');
 
     cachedClient = client;
     cachedDb = db;
 
     return { client, db };
   } catch (error) {
-    console.error("MongoDB connection error:", error);
+    console.error('MongoDB connection error:', error);
     return { error: `Unable to connect to MongoDB: ${error.message}` };
   }
 }
@@ -49,17 +49,17 @@ export async function GET(request) {
   try {
     // Extract query parameters
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get("limit") || "20");
+    const limit = parseInt(searchParams.get('limit') || '20');
 
     // Connect to MongoDB - handle connection errors
     const connection = await connectToDatabase();
     if (connection.error) {
-      console.error("Connection error:", connection.error);
+      console.error('Connection error:', connection.error);
       return NextResponse.json(
         {
           signals: [],
           error: connection.error,
-          message: "Database connection issue",
+          message: 'Database connection issue',
           isEmpty: true,
         },
         { status: 500 }
@@ -67,7 +67,7 @@ export async function GET(request) {
     }
 
     const { db } = connection;
-    const collection = db.collection("signals");
+    const collection = db.collection('signals');
 
     // Check if collection exists and has documents
     const count = await collection.countDocuments({});
@@ -76,20 +76,16 @@ export async function GET(request) {
     if (count === 0) {
       return NextResponse.json({
         signals: [],
-        message: "No signals available in database",
+        message: 'No signals available in database',
         isEmpty: true,
       });
     }
 
     // Fetch latest signals
-    const signals = await collection
-      .find({})
-      .sort({ timestamp: -1 })
-      .limit(limit)
-      .toArray();
+    const signals = await collection.find({}).sort({ timestamp: -1 }).limit(limit).toArray();
 
     // Map MongoDB document to frontend format
-    const formattedSignals = signals.map((signal) => ({
+    const formattedSignals = signals.map(signal => ({
       _id: signal._id.toString(),
       id: signal.id,
       pair: signal.pair,
@@ -107,12 +103,12 @@ export async function GET(request) {
 
     return NextResponse.json({ signals: formattedSignals });
   } catch (error) {
-    console.error("Database Error:", error);
+    console.error('Database Error:', error);
     return NextResponse.json(
       {
         signals: [],
         error: error.message,
-        message: "Failed to fetch signals from database",
+        message: 'Failed to fetch signals from database',
         isEmpty: true,
       },
       { status: 500 }

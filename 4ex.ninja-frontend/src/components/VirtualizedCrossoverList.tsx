@@ -74,7 +74,9 @@ const VirtualizedCrossoverItem = memo(
             {crossover.confidence && (
               <div className="flex justify-between">
                 <p className="text-gray-300">Confidence:</p>
-                <p className="font-medium text-blue-400">{(crossover.confidence * 100).toFixed(0)}%</p>
+                <p className="font-medium text-blue-400">
+                  {(crossover.confidence * 100).toFixed(0)}%
+                </p>
               </div>
             )}
             {crossover.strategy_type && (
@@ -86,7 +88,11 @@ const VirtualizedCrossoverItem = memo(
             {crossover.status && (
               <div className="flex justify-between">
                 <p className="text-gray-300">Status:</p>
-                <p className={`font-medium ${crossover.status === 'ACTIVE' ? 'text-green-400' : 'text-gray-400'}`}>
+                <p
+                  className={`font-medium ${
+                    crossover.status === 'ACTIVE' ? 'text-green-400' : 'text-gray-400'
+                  }`}
+                >
                   {crossover.status}
                 </p>
               </div>
@@ -161,7 +167,9 @@ const NonVirtualizedCrossoverItem = memo(
           {crossover.confidence && (
             <div className="flex justify-between">
               <p className="text-gray-300">Confidence:</p>
-              <p className="font-medium text-blue-400">{(crossover.confidence * 100).toFixed(0)}%</p>
+              <p className="font-medium text-blue-400">
+                {(crossover.confidence * 100).toFixed(0)}%
+              </p>
             </div>
           )}
           {crossover.strategy_type && (
@@ -173,7 +181,11 @@ const NonVirtualizedCrossoverItem = memo(
           {crossover.status && (
             <div className="flex justify-between">
               <p className="text-gray-300">Status:</p>
-              <p className={`font-medium ${crossover.status === 'ACTIVE' ? 'text-green-400' : 'text-gray-400'}`}>
+              <p
+                className={`font-medium ${
+                  crossover.status === 'ACTIVE' ? 'text-green-400' : 'text-gray-400'
+                }`}
+              >
                 {crossover.status}
               </p>
             </div>
