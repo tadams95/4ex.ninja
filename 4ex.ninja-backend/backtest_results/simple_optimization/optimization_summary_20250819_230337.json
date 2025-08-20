@@ -1,0 +1,63 @@
+{
+  "optimization_date": "2025-08-19T23:03:37.438264",
+  "total_pairs": 7,
+  "pairs_improved": 1,
+  "significant_improvements": 0,
+  "average_improvement": "0.1%",
+  "average_expected_return": "25.5%",
+  "best_performing_pair": "GBP_JPY",
+  "best_expected_return": "30.0%",
+  "ready_for_live_trading": false,
+  "recommendation": "Limited improvements. Review strategy fundamentals before live trading.",
+  "pair_results": {
+    "EUR_USD": {
+      "original_return": "25.0%",
+      "optimized_return": "25.0%",
+      "improvement": "0.0%",
+      "confidence": "0.00",
+      "status": "Needs Review"
+    },
+    "GBP_USD": {
+      "original_return": "28.0%",
+      "optimized_return": "28.2%",
+      "improvement": "0.7%",
+      "confidence": "0.07",
+      "status": "Needs Review"
+    },
+    "USD_JPY": {
+      "original_return": "26.0%",
+      "optimized_return": "26.0%",
+      "improvement": "0.0%",
+      "confidence": "0.00",
+      "status": "Needs Review"
+    },
+    "AUD_USD": {
+      "original_return": "24.0%",
+      "optimized_return": "24.0%",
+      "improvement": "0.0%",
+      "confidence": "0.00",
+      "status": "Needs Review"
+    },
+    "EUR_GBP": {
+      "original_return": "22.0%",
+      "optimized_return": "22.0%",
+      "improvement": "0.0%",
+      "confidence": "0.00",
+      "status": "Needs Review"
+    },
+    "GBP_JPY": {
+      "original_return": "30.0%",
+      "optimized_return": "30.0%",
+      "improvement": "0.0%",
+      "confidence": "0.00",
+      "status": "Needs Review"
+    },
+    "USD_CAD": {
+      "original_return": "23.0%",
+      "optimized_return": "23.0%",
+      "improvement": "0.0%",
+      "confidence": "0.00",
+      "status": "Needs Review"
+    }
+  }
+}
