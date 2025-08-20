@@ -1,0 +1,41 @@
+{
+  "backtest_type": "daily_only_ema_crossover",
+  "strategy_name": "Daily EMA Crossover (20/50)",
+  "timeframe": "Daily",
+  "backtest_date": "2025-08-20T07:49:49.499506+00:00",
+  "total_pairs": 7,
+  "successful_pairs": 7,
+  "portfolio_return": -4.8692857142856925,
+  "portfolio_win_rate": 31.456953642384107,
+  "portfolio_sharpe": -0.06483245020748012,
+  "portfolio_max_drawdown": 66.66547623299172,
+  "total_trades": 302,
+  "risk_assessment": "High",
+  "performance_grade": "D",
+  "top_performers": [
+    {
+      "pair": "USD_JPY",
+      "return": 42.56100000000008,
+      "win_rate": 50.0,
+      "sharpe": 0.25769725553635653,
+      "trades": 28,
+      "grade": "B"
+    },
+    {
+      "pair": "GBP_USD",
+      "return": 33.96300000000003,
+      "win_rate": 44.44444444444444,
+      "sharpe": 0.22605622346634913,
+      "trades": 36,
+      "grade": "C"
+    },
+    {
+      "pair": "EUR_USD",
+      "return": 10.578000000000065,
+      "win_rate": 33.33333333333333,
+      "sharpe": 0.08054892462466048,
+      "trades": 42,
+      "grade": "D"
+    }
+  ]
+}
