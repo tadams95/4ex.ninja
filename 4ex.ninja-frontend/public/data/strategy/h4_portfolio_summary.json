@@ -1,0 +1,41 @@
+{
+  "backtest_type": "h4_only_ema_crossover",
+  "strategy_name": "H4 EMA Crossover (21/50)",
+  "timeframe": "H4",
+  "backtest_date": "2025-08-20T07:43:48.077175+00:00",
+  "total_pairs": 7,
+  "successful_pairs": 7,
+  "portfolio_return": -4.8398571428570785,
+  "portfolio_win_rate": 30.21680216802168,
+  "portfolio_sharpe": -0.02677515515709917,
+  "portfolio_max_drawdown": 40.15899999999972,
+  "total_trades": 1476,
+  "risk_assessment": "Medium",
+  "performance_grade": "D",
+  "top_performers": [
+    {
+      "pair": "USD_JPY",
+      "return": 24.32100000000006,
+      "win_rate": 29.326923076923077,
+      "sharpe": 0.05535139085323321,
+      "trades": 208,
+      "grade": "D"
+    },
+    {
+      "pair": "GBP_USD",
+      "return": 15.598000000000193,
+      "win_rate": 36.507936507936506,
+      "sharpe": 0.05464593909662566,
+      "trades": 189,
+      "grade": "D"
+    },
+    {
+      "pair": "GBP_JPY",
+      "return": 12.971999999999698,
+      "win_rate": 32.057416267942585,
+      "sharpe": 0.03651465608395107,
+      "trades": 209,
+      "grade": "D"
+    }
+  ]
+}

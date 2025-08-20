@@ -1,0 +1,70 @@
+{
+  "fetch_started": "2025-08-20T07:24:56.956433+00:00",
+  "pairs_requested": [
+    "EUR_USD",
+    "GBP_USD",
+    "USD_JPY",
+    "USD_CHF",
+    "USD_CAD",
+    "AUD_USD",
+    "EUR_GBP",
+    "EUR_JPY",
+    "GBP_JPY",
+    "AUD_JPY"
+  ],
+  "timeframe": "H4",
+  "years": 5,
+  "results": {
+    "EUR_USD": {
+      "success": true,
+      "candle_count": 10950,
+      "error": null
+    },
+    "GBP_USD": {
+      "success": true,
+      "candle_count": 10950,
+      "error": null
+    },
+    "USD_JPY": {
+      "success": true,
+      "candle_count": 10950,
+      "error": null
+    },
+    "USD_CHF": {
+      "success": false,
+      "candle_count": 0,
+      "error": "Unsupported pair: USD_CHF"
+    },
+    "USD_CAD": {
+      "success": true,
+      "candle_count": 10950,
+      "error": null
+    },
+    "AUD_USD": {
+      "success": true,
+      "candle_count": 10950,
+      "error": null
+    },
+    "EUR_GBP": {
+      "success": true,
+      "candle_count": 10950,
+      "error": null
+    },
+    "EUR_JPY": {
+      "success": false,
+      "candle_count": 0,
+      "error": "Unsupported pair: EUR_JPY"
+    },
+    "GBP_JPY": {
+      "success": true,
+      "candle_count": 10950,
+      "error": null
+    },
+    "AUD_JPY": {
+      "success": false,
+      "candle_count": 0,
+      "error": "Unsupported pair: AUD_JPY"
+    }
+  },
+  "fetch_completed": "2025-08-20T07:25:14.094990+00:00"
+}

@@ -1,0 +1,30 @@
+{
+  "strategy_overview": {
+    "name": "Multi-Timeframe Enhanced Strategy",
+    "description": "Advanced forex trading strategy using weekly trend analysis, daily swing setups, and 4-hour execution signals",
+    "timeframes": [
+      "Weekly (EMA 20/50)",
+      "Daily (EMA 21)",
+      "4-Hour (Confluence)"
+    ],
+    "pairs_traded": [
+      "EUR_USD",
+      "GBP_USD",
+      "USD_JPY",
+      "AUD_USD",
+      "EUR_GBP",
+      "GBP_JPY",
+      "USD_CAD"
+    ],
+    "backtest_period": "5 years",
+    "data_quality": "96.6%"
+  },
+  "key_metrics": {
+    "portfolio_return": "-0.03%",
+    "risk_adjusted_return": "Sharpe: 0.0",
+    "maximum_drawdown": "0%",
+    "success_rate": "14.3%",
+    "total_trades": 7
+  },
+  "last_updated": "2025-08-20T07:20:47.652705+00:00"
+}

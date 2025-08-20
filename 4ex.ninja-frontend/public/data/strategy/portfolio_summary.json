@@ -1,0 +1,48 @@
+{
+  "last_updated": "2025-08-20T07:20:47.652705+00:00",
+  "annual_return": -0.03,
+  "sharpe_ratio": 0.0,
+  "max_drawdown": 0,
+  "win_rate": 0.1429,
+  "performance_grade": "D",
+  "risk_level": "High",
+  "top_performers": [
+    {
+      "rank": 1,
+      "pair": "USD_JPY",
+      "annual_return_pct": 0.01,
+      "sharpe_ratio": 0,
+      "sortino_ratio": 0,
+      "win_rate": 1.0,
+      "max_drawdown_pct": 0,
+      "total_trades": 1,
+      "profit_factor": 1.0,
+      "data_quality": 96.6
+    },
+    {
+      "rank": 2,
+      "pair": "EUR_GBP",
+      "annual_return_pct": -0.0,
+      "sharpe_ratio": 0,
+      "sortino_ratio": 0,
+      "win_rate": 0.0,
+      "max_drawdown_pct": 0,
+      "total_trades": 1,
+      "profit_factor": 0.0,
+      "data_quality": 96.6
+    },
+    {
+      "rank": 3,
+      "pair": "GBP_USD",
+      "annual_return_pct": -0.01,
+      "sharpe_ratio": 0,
+      "sortino_ratio": 0,
+      "win_rate": 0.0,
+      "max_drawdown_pct": 0,
+      "total_trades": 1,
+      "profit_factor": 0.0,
+      "data_quality": 96.6
+    }
+  ],
+  "deployment_ready": "False"
+}
