@@ -57,6 +57,9 @@ class DataService:
             "GBP_JPY": "GBP_JPY",
             "NZD_USD": "NZD_USD",
             "USD_CAD": "USD_CAD",
+            "USD_CHF": "USD_CHF",
+            "EUR_JPY": "EUR_JPY",
+            "AUD_JPY": "AUD_JPY",
         }
 
         logging.info(f"🔌 OANDA DataService initialized - Environment: {self.base_url}")

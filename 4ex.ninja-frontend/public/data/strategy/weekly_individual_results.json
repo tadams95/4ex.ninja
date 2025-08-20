@@ -47,6 +47,22 @@
     "signals_generated": 4,
     "performance_grade": "D"
   },
+  "USD_CHF": {
+    "pair": "USD_CHF",
+    "start_date": "2020-08-17",
+    "end_date": "2025-08-18",
+    "total_return": 1.1934950000000026,
+    "total_trades": 3,
+    "winning_trades": 2,
+    "losing_trades": 1,
+    "win_rate": 66.66666666666666,
+    "max_drawdown": 1.000000000000001,
+    "sharpe_ratio": 0.403525777145337,
+    "candles_analyzed": 7775,
+    "weekly_candles": 262,
+    "signals_generated": 3,
+    "performance_grade": "C"
+  },
   "USD_CAD": {
     "pair": "USD_CAD",
     "start_date": "2018-08-13",
@@ -95,6 +111,22 @@
     "signals_generated": 6,
     "performance_grade": "D"
   },
+  "EUR_JPY": {
+    "pair": "EUR_JPY",
+    "start_date": "2020-08-17",
+    "end_date": "2025-08-18",
+    "total_return": -1.0,
+    "total_trades": 1,
+    "winning_trades": 0,
+    "losing_trades": 1,
+    "win_rate": 0.0,
+    "max_drawdown": 0,
+    "sharpe_ratio": 0,
+    "candles_analyzed": 7773,
+    "weekly_candles": 262,
+    "signals_generated": 1,
+    "performance_grade": "D"
+  },
   "GBP_JPY": {
     "pair": "GBP_JPY",
     "start_date": "2018-08-06",
@@ -110,5 +142,21 @@
     "weekly_candles": 368,
     "signals_generated": 3,
     "performance_grade": "D"
+  },
+  "AUD_JPY": {
+    "pair": "AUD_JPY",
+    "start_date": "2020-08-17",
+    "end_date": "2025-08-18",
+    "total_return": 3.8029999999999924,
+    "total_trades": 2,
+    "winning_trades": 1,
+    "losing_trades": 1,
+    "win_rate": 50.0,
+    "max_drawdown": 1.0,
+    "sharpe_ratio": 0.6582081822889693,
+    "candles_analyzed": 7781,
+    "weekly_candles": 262,
+    "signals_generated": 2,
+    "performance_grade": "C"
   }
 }

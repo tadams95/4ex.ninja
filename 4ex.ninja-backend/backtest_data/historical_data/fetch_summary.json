@@ -31,9 +31,9 @@
       "error": null
     },
     "USD_CHF": {
-      "success": false,
-      "candle_count": 0,
-      "error": "Unsupported pair: USD_CHF"
+      "success": true,
+      "candle_count": 7775,
+      "error": null
     },
     "USD_CAD": {
       "success": true,
@@ -51,9 +51,9 @@
       "error": null
     },
     "EUR_JPY": {
-      "success": false,
-      "candle_count": 0,
-      "error": "Unsupported pair: EUR_JPY"
+      "success": true,
+      "candle_count": 7773,
+      "error": null
     },
     "GBP_JPY": {
       "success": true,
@@ -61,9 +61,9 @@
       "error": null
     },
     "AUD_JPY": {
-      "success": false,
-      "candle_count": 0,
-      "error": "Unsupported pair: AUD_JPY"
+      "success": true,
+      "candle_count": 7781,
+      "error": null
     }
   },
   "fetch_completed": "2025-08-20T07:25:14.094990+00:00"
