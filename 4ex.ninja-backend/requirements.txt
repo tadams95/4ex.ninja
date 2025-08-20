@@ -24,3 +24,6 @@ pymongo>=4.6.0
 
 # Production server
 gunicorn>=21.2.0
+
+# Background task scheduling
+apscheduler>=3.11.0

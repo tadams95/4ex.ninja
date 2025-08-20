@@ -31,6 +31,7 @@ from services.ma_strategy_service import MAStrategyService
 from services.signal_service import SignalService
 from services.data_service import DataService
 from services.notification_service import NotificationService
+from services.scheduler_service import ForexSchedulerService
 from config.settings import get_settings, OPTIMAL_STRATEGY_CONFIG
 
 
@@ -55,10 +56,34 @@ ma_strategy_service = MAStrategyService()
 signal_service = SignalService()
 data_service = DataService()
 notification_service = NotificationService()
+scheduler_service = ForexSchedulerService(data_service, signal_service)
 settings = get_settings()
 
 # App startup time for uptime calculation
 startup_time = time.time()
+
+
+# Startup and shutdown events
+@app.on_event("startup")
+async def startup_event():
+    """Initialize services on startup."""
+    import logging
+    logging.info("🚀 Starting 4ex.ninja Backend...")
+    
+    # Start the forex market scheduler
+    await scheduler_service.start_scheduler()
+    logging.info("✅ All services initialized successfully")
+
+
+@app.on_event("shutdown") 
+async def shutdown_event():
+    """Cleanup on shutdown."""
+    import logging
+    logging.info("⏹️ Shutting down 4ex.ninja Backend...")
+    
+    # Stop the scheduler gracefully
+    await scheduler_service.stop_scheduler()
+    logging.info("✅ All services stopped successfully")
 
 
 @app.get("/", response_model=Dict[str, str])
@@ -212,6 +237,40 @@ async def get_active_signals():
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Failed to get active signals: {str(e)}"
+        )
+
+
+@app.get("/scheduler/status")
+async def get_scheduler_status():
+    """Get forex market scheduler status and job information."""
+    try:
+        status = scheduler_service.get_scheduler_status()
+        
+        return {
+            "success": True,
+            "message": "Scheduler status retrieved successfully",
+            "scheduler": status
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to get scheduler status: {str(e)}"
+        )
+
+
+@app.post("/scheduler/restart")
+async def restart_scheduler():
+    """Restart the forex market scheduler."""
+    try:
+        await scheduler_service.stop_scheduler()
+        await scheduler_service.start_scheduler()
+        
+        return {
+            "success": True,
+            "message": "Scheduler restarted successfully"
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to restart scheduler: {str(e)}"
         )
 
 
