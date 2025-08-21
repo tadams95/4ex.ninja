@@ -1,5 +1,5 @@
 {
-  "optimization_date": "2025-08-20T19:20:32.815641",
+  "optimization_date": "2025-08-20T19:45:26.770137",
   "methodology": "Realistic backtesting with 1.5% SL, 3% TP, proper trading costs",
   "optimized_parameters": {
     "USD_JPY": {

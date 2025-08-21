@@ -68,6 +68,7 @@ ENHANCED_DAILY_STRATEGY_CONFIG = {
         "trading_costs": {"spread_pips": 1.0, "slippage_pips": 0.5},
         "validated": True,
         "optimization_date": "2025-08-20",
+        "profitability": "HIGHLY_PROFITABLE",
     },
     "EUR_JPY": {
         "pair": "EUR_JPY",
@@ -92,6 +93,7 @@ ENHANCED_DAILY_STRATEGY_CONFIG = {
         "trading_costs": {"spread_pips": 1.6, "slippage_pips": 0.5},
         "validated": True,
         "optimization_date": "2025-08-20",
+        "profitability": "HIGHLY_PROFITABLE",
     },
     "AUD_JPY": {
         "pair": "AUD_JPY",
@@ -116,6 +118,7 @@ ENHANCED_DAILY_STRATEGY_CONFIG = {
         "trading_costs": {"spread_pips": 1.9, "slippage_pips": 0.5},
         "validated": True,
         "optimization_date": "2025-08-20",
+        "profitability": "PROFITABLE",
     },
     "GBP_JPY": {
         "pair": "GBP_JPY",
@@ -140,6 +143,7 @@ ENHANCED_DAILY_STRATEGY_CONFIG = {
         "trading_costs": {"spread_pips": 2.1, "slippage_pips": 0.5},
         "validated": True,
         "optimization_date": "2025-08-20",
+        "profitability": "PROFITABLE",
     },
     "AUD_USD": {
         "pair": "AUD_USD",
@@ -164,6 +168,7 @@ ENHANCED_DAILY_STRATEGY_CONFIG = {
         "trading_costs": {"spread_pips": 1.3, "slippage_pips": 0.5},
         "validated": True,
         "optimization_date": "2025-08-20",
+        "profitability": "MARGINALLY_PROFITABLE",
     },
 }
 
@@ -372,24 +377,42 @@ MULTI_TIMEFRAME_STRATEGY_CONFIG = {
 
 # Enhanced Daily Strategy Performance Summary
 ENHANCED_DAILY_PERFORMANCE_SUMMARY = {
-    "strategy_name": "Enhanced Daily Strategy - Multi-Pair Optimized",
+    "strategy_name": "Enhanced Daily Strategy - Full 10-Pair Optimization",
     "optimization_date": "2025-08-20",
     "methodology": "Realistic backtesting with trading costs and proper risk management",
-    "total_pairs_optimized": 5,
+    "total_pairs_tested": 10,
+    "profitable_pairs": 5,
+    "unprofitable_pairs": 5,
     "optimization_results": {
         "top_performer": {"pair": "USD_JPY", "win_rate": 70.0, "annual_return": 14.0},
+        "profitable_pairs_summary": {
+            "highly_profitable": ["USD_JPY", "EUR_JPY"],  # >10% return, >65% win rate
+            "profitable": ["AUD_JPY", "GBP_JPY"],  # 2-10% return, >40% win rate
+            "marginally_profitable": ["AUD_USD"],  # 1-2% return
+        },
+        "unprofitable_pairs": {
+            "USD_CAD": {"return": -1.5, "win_rate": 33.3},
+            "GBP_USD": {"return": -3.0, "win_rate": 33.3},
+            "USD_CHF": {"return": -3.6, "win_rate": 28.6},
+            "EUR_GBP": {"return": -4.2, "win_rate": 20.0},
+            "EUR_USD": {"return": -4.6, "win_rate": 25.0},
+        },
         "portfolio_metrics": {
-            "average_win_rate": 54.8,  # Average across all 5 pairs
-            "average_annual_return": 7.0,  # Average across all 5 pairs
-            "jpy_pair_dominance": True,  # 4 out of 5 top pairs are JPY pairs
+            "profitable_pairs_avg_win_rate": 54.8,  # Average across 5 profitable pairs
+            "profitable_pairs_avg_return": 7.0,  # Average across 5 profitable pairs
+            "jpy_pair_dominance": True,  # 4 out of 5 profitable pairs are JPY pairs
+            "jpy_pairs_avg_win_rate": 58.0,  # JPY pairs average
+            "non_jpy_pairs_avg_win_rate": 31.0,  # Non-JPY pairs average
             "optimization_method": "EMA period testing with realistic exit strategy",
         },
     },
     "key_insights": [
-        "JPY pairs significantly outperform other currency pairs",
-        "EMA 20-30/60 configurations most effective",
-        "Realistic win rates 41-70% vs unrealistic 100% expectations",
-        "Trading cost integration critical for accurate backtesting",
+        "JPY pairs massively outperform: 4/5 profitable pairs involve JPY",
+        "EUR_USD surprisingly underperforms despite being most traded pair",
+        "EMA 20/60 and 30/60 configurations consistently optimal",
+        "Trading costs create significant drag on lower-return strategies",
+        "Cross pairs (EUR_GBP) show poor performance in current market conditions",
+        "Major pairs (EUR_USD, GBP_USD) struggle vs JPY pairs",
     ],
     "status": "PRODUCTION_READY",
 }
