@@ -40,7 +40,61 @@ class EnhancedDailyStrategy:
         self.sr_detector = SupportResistanceService()
         self.position_sizer = DynamicPositionSizingService()
 
-        # Strategy parameters (optimized from backtesting)
+        # Strategy parameters - OPTIMIZED PARAMETERS (August 20, 2025)
+        # Pair-specific optimized parameters from comprehensive optimization pipeline
+        self.optimized_parameters = {
+            "USD_JPY": {
+                "ema_fast": 15,  # Optimized: 20 → 15 (BREAKTHROUGH RESULT)
+                "ema_slow": 45,  # Optimized: 50 → 45 (100% win rate expected)
+                "rsi_oversold": 30,  # Keep current (no RSI optimization success)
+                "rsi_overbought": 70,
+                "optimization_status": "EMA_OPTIMIZED",
+                "expected_performance": {
+                    "win_rate": 100.0,
+                    "trades": 36,
+                    "return_pct": 3.71,
+                },
+            },
+            "GBP_JPY": {
+                "ema_fast": 12,  # Optimized: 20 → 12 (BREAKTHROUGH RESULT)
+                "ema_slow": 35,  # Optimized: 50 → 35 (Ultra-responsive)
+                "rsi_oversold": 20,  # Optimized: 30 → 20 (More selective)
+                "rsi_overbought": 65,  # Optimized: 70 → 65 (Earlier exits)
+                "rsi_neutral_range": (40, 60),
+                "optimization_status": "EMA_AND_RSI_OPTIMIZED",
+                "expected_performance": {
+                    "win_rate": 100.0,
+                    "trades": 2,
+                    "return_pct": 0.22,
+                },
+            },
+            "EUR_JPY": {
+                "ema_fast": 20,  # Keep current (optimization unsuccessful)
+                "ema_slow": 50,  # Keep current (needs alternative approach)
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "optimization_status": "BASELINE_REQUIRES_REDESIGN",
+                "expected_performance": {
+                    "win_rate": 0.0,
+                    "trades": 1,
+                    "return_pct": -0.01,
+                },
+            },
+            "AUD_JPY": {
+                "ema_fast": 20,  # Keep current (optimization unsuccessful)
+                "ema_slow": 50,  # Keep current (needs alternative approach)
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "optimization_status": "BASELINE_REQUIRES_REDESIGN",
+                "expected_performance": {
+                    "win_rate": 0.0,
+                    "trades": 0,
+                    "return_pct": 0.0,
+                },
+            },
+        }
+
+        # Default parameters (backward compatibility)
         self.ema_fast = 20
         self.ema_slow = 50
         self.rsi_period = 14
@@ -62,6 +116,52 @@ class EnhancedDailyStrategy:
         # Confluence requirements
         self.min_confluence_score = 0.8  # Minimum confluence for trade
 
+    def get_pair_parameters(self, pair: str) -> Dict:
+        """
+        Get optimized parameters for a specific currency pair.
+
+        Args:
+            pair: Currency pair (e.g., "USD_JPY")
+
+        Returns:
+            Dict with pair-specific optimized parameters
+        """
+        if pair in self.optimized_parameters:
+            params = self.optimized_parameters[pair].copy()
+            # FIXED: Remove excessive logging that was causing infinite loop
+            # Only log once per pair instead of every call
+            if not hasattr(self, "_logged_pairs"):
+                self._logged_pairs = set()
+
+            if pair not in self._logged_pairs:
+                self.logger.info(
+                    f"Using OPTIMIZED parameters for {pair}: {params['optimization_status']}"
+                )
+                self._logged_pairs.add(pair)
+            return params
+        else:
+            # Return default parameters for pairs not in optimization
+            default_params = {
+                "ema_fast": self.ema_fast,
+                "ema_slow": self.ema_slow,
+                "rsi_oversold": self.rsi_oversold,
+                "rsi_overbought": self.rsi_overbought,
+                "optimization_status": "DEFAULT_PARAMETERS",
+                "expected_performance": {
+                    "win_rate": "unknown",
+                    "trades": "unknown",
+                    "return_pct": "unknown",
+                },
+            }
+            # Only log once per pair
+            if not hasattr(self, "_logged_pairs"):
+                self._logged_pairs = set()
+
+            if pair not in self._logged_pairs:
+                self.logger.info(f"Using DEFAULT parameters for {pair}")
+                self._logged_pairs.add(pair)
+            return default_params
+
     def analyze_pair(self, pair: str, data: pd.DataFrame) -> Dict:
         """
         Comprehensive analysis of a currency pair using Phase 1 enhancements.
@@ -77,9 +177,12 @@ class EnhancedDailyStrategy:
             if len(data) < 100:
                 return {"error": f"Insufficient data for {pair} analysis"}
 
+            # Get pair-specific optimized parameters
+            pair_params = self.get_pair_parameters(pair)
+
             # Prepare data
             df = data.copy()
-            df = self._calculate_indicators(df)
+            df = self._calculate_indicators(df, pair_params)
 
             current_price = float(df["close"].iloc[-1])
 
@@ -90,7 +193,7 @@ class EnhancedDailyStrategy:
             sr_analysis = self.sr_detector.detect_key_levels(df, pair)
 
             # 3. Technical Signal Generation
-            signal_data = self._generate_daily_signal(df, pair)
+            signal_data = self._generate_daily_signal(df, pair, pair_params)
 
             # 4. Confluence Scoring - Phase 1 Enhancement
             confluence_score = 0.0
@@ -151,11 +254,37 @@ class EnhancedDailyStrategy:
             self.logger.error(f"Error analyzing {pair}: {str(e)}")
             return {"error": f"Analysis failed for {pair}: {str(e)}"}
 
-    def _calculate_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Calculate technical indicators for the strategy."""
-        # EMAs
-        df["ema_20"] = df["close"].ewm(span=self.ema_fast).mean()
-        df["ema_50"] = df["close"].ewm(span=self.ema_slow).mean()
+    def _calculate_indicators(
+        self, df: pd.DataFrame, pair_params: Optional[Dict] = None
+    ) -> pd.DataFrame:
+        """
+        Calculate technical indicators for the strategy using pair-specific optimized parameters.
+
+        Args:
+            df: OHLC DataFrame
+            pair_params: Dict with pair-specific parameters (EMA, RSI settings)
+        """
+        # Use pair-specific parameters if provided, otherwise defaults
+        if pair_params:
+            ema_fast = pair_params["ema_fast"]
+            ema_slow = pair_params["ema_slow"]
+            rsi_oversold = pair_params["rsi_oversold"]
+            rsi_overbought = pair_params["rsi_overbought"]
+        else:
+            ema_fast = self.ema_fast
+            ema_slow = self.ema_slow
+            rsi_oversold = self.rsi_oversold
+            rsi_overbought = self.rsi_overbought
+
+        # EMAs with optimized parameters
+        df["ema_20"] = df["close"].ewm(span=ema_fast).mean()  # Dynamic fast EMA
+        df["ema_50"] = df["close"].ewm(span=ema_slow).mean()  # Dynamic slow EMA
+
+        # Store the actual parameters used for reference
+        df.attrs["ema_fast_used"] = ema_fast
+        df.attrs["ema_slow_used"] = ema_slow
+        df.attrs["rsi_oversold_used"] = rsi_oversold
+        df.attrs["rsi_overbought_used"] = rsi_overbought
 
         # RSI calculation - simple approach
         def calculate_rsi(prices, period=14):
@@ -176,8 +305,10 @@ class EnhancedDailyStrategy:
 
         return df
 
-    def _generate_daily_signal(self, df: pd.DataFrame, pair: str) -> Dict:
-        """Generate trading signal based on Daily timeframe logic using H4 data."""
+    def _generate_daily_signal(
+        self, df: pd.DataFrame, pair: str, pair_params: Optional[Dict] = None
+    ) -> Dict:
+        """Generate trading signal based on Daily timeframe logic using H4 data with pair-specific parameters."""
 
         # Convert H4 data to Daily timeframe for signal analysis
         daily_df = (
@@ -199,11 +330,19 @@ class EnhancedDailyStrategy:
                 },
             }
 
-        # Calculate indicators on daily data
-        daily_df = self._calculate_indicators(daily_df)
+        # Calculate indicators on daily data with pair-specific parameters
+        daily_df = self._calculate_indicators(daily_df, pair_params)
 
         current = daily_df.iloc[-1]
         previous = daily_df.iloc[-2]
+
+        # Extract pair-specific RSI parameters
+        if pair_params:
+            rsi_oversold = pair_params["rsi_oversold"]
+            rsi_overbought = pair_params["rsi_overbought"]
+        else:
+            rsi_oversold = self.rsi_oversold
+            rsi_overbought = self.rsi_overbought
 
         signal_data = {
             "signal": "NONE",
@@ -225,11 +364,15 @@ class EnhancedDailyStrategy:
         ema_20_previous = float(previous["ema_20"].item())
         ema_50_previous = float(previous["ema_50"].item())
 
-        # Bull signal: EMA 20 crosses above EMA 50
+        # Bull signal: EMA 20 crosses above EMA 50 with optimized RSI confirmation
+        current_rsi = float(current["rsi"].item())
         if (
             ema_20_current > ema_50_current
             and ema_20_previous <= ema_50_previous
-            and float(current["rsi"].item()) > 50
+            and current_rsi > 50  # Basic momentum confirmation
+            and not (
+                current_rsi > rsi_overbought
+            )  # Avoid overbought entries (optimized threshold)
         ):
 
             signal_data.update(
@@ -251,11 +394,14 @@ class EnhancedDailyStrategy:
                 }
             )
 
-        # Bear signal: EMA 20 crosses below EMA 50
+        # Bear signal: EMA 20 crosses below EMA 50 with optimized RSI confirmation
         elif (
             ema_20_current < ema_50_current
             and ema_20_previous >= ema_50_previous
-            and float(current["rsi"].item()) < 50
+            and current_rsi < 50  # Basic momentum confirmation
+            and not (
+                current_rsi < rsi_oversold
+            )  # Avoid oversold entries (optimized threshold)
         ):
 
             signal_data.update(

@@ -98,6 +98,171 @@ class EMAOptimizer:
         # Store optimization results
         self.optimization_results = {}
 
+        # Add realistic trading cost parameters (from realistic_backtester.py)
+        self.spread_costs = {
+            "EUR_USD": 1.2,
+            "GBP_USD": 1.5,
+            "USD_JPY": 1.0,
+            "AUD_USD": 1.3,
+            "USD_CAD": 1.8,
+            "EUR_GBP": 1.4,
+            "GBP_JPY": 2.1,
+            "AUD_JPY": 1.9,
+            "EUR_JPY": 1.6,
+            "CAD_JPY": 2.3,
+        }
+        self.slippage_pips = 0.5  # Additional slippage per trade
+
+        # Risk management parameters
+        self.max_risk_per_trade = 0.02  # 2% max risk per trade
+        self.stop_loss_pct = 0.015  # 1.5% stop loss
+        self.take_profit_pct = 0.03  # 3% take profit (2:1 risk-reward)
+        self.max_leverage = 3.0  # Conservative leverage
+
+    def get_pip_value(self, pair: str, price: float) -> float:
+        """Calculate pip value for position sizing"""
+        if "JPY" in pair:
+            return 0.01  # JPY pairs: 1 pip = 0.01
+        else:
+            return 0.0001  # Other pairs: 1 pip = 0.0001
+
+    def calculate_position_size(
+        self,
+        pair: str,
+        entry_price: float,
+        stop_loss_price: float,
+        current_balance: float,
+    ) -> float:
+        """Calculate position size based on risk management rules"""
+        risk_amount = current_balance * self.max_risk_per_trade
+        pip_value = self.get_pip_value(pair, entry_price)
+
+        # Calculate pips at risk
+        price_diff = abs(entry_price - stop_loss_price)
+        pips_at_risk = price_diff / pip_value
+
+        if pips_at_risk == 0:
+            return 0
+
+        # Position size calculation
+        position_size = risk_amount / (
+            pips_at_risk * pip_value * 100000
+        )  # Standard lot = 100,000
+
+        # Apply leverage limit
+        max_position = (current_balance * self.max_leverage) / (entry_price * 100000)
+        position_size = min(position_size, max_position)
+
+        return position_size
+
+    def calculate_trade_costs(
+        self, pair: str, position_size: float, entry_price: float
+    ) -> float:
+        """Calculate realistic trading costs (spread + slippage)"""
+        spread_pips = self.spread_costs.get(pair, 2.0)
+        total_cost_pips = spread_pips + self.slippage_pips
+
+        pip_value = self.get_pip_value(pair, entry_price)
+        cost_per_unit = total_cost_pips * pip_value
+
+        return cost_per_unit * position_size * 100000  # Convert to USD
+
+    def simulate_realistic_trade(
+        self,
+        entry_data: pd.Series,
+        future_data: pd.DataFrame,
+        direction: str,
+        pair: str,
+        current_balance: float,
+    ) -> Optional[Dict]:
+        """
+        Simulate a realistic trade with proper exit logic
+        CORRECTED: No more perfect timing - uses realistic stop loss/take profit levels
+        """
+        entry_price = entry_data["close"].item()  # Get scalar value from Series
+        entry_time = entry_data.name
+
+        # Calculate stop loss and take profit levels
+        if direction == "LONG":
+            stop_loss = entry_price * (1 - self.stop_loss_pct)
+            take_profit = entry_price * (1 + self.take_profit_pct)
+        else:  # SHORT
+            stop_loss = entry_price * (1 + self.stop_loss_pct)
+            take_profit = entry_price * (1 - self.take_profit_pct)
+
+        # Calculate position size based on risk management
+        position_size = self.calculate_position_size(
+            pair, entry_price, stop_loss, current_balance
+        )
+        if position_size <= 0:
+            return None
+
+        # Calculate trading costs
+        trade_costs = self.calculate_trade_costs(pair, position_size, entry_price)
+
+        # Simulate trade progression through future data
+        for idx, row in future_data.iterrows():
+            high = row["high"].item()  # Get scalar value
+            low = row["low"].item()  # Get scalar value
+            close = row["close"].item()  # Get scalar value
+
+            if direction == "LONG":
+                # Check if stop loss hit first
+                if low <= stop_loss:
+                    exit_price = stop_loss
+                    exit_time = idx
+                    exit_reason = "STOP_LOSS"
+                    break
+                # Check if take profit hit
+                elif high >= take_profit:
+                    exit_price = take_profit
+                    exit_time = idx
+                    exit_reason = "TAKE_PROFIT"
+                    break
+            else:  # SHORT
+                # Check if stop loss hit first
+                if high >= stop_loss:
+                    exit_price = stop_loss
+                    exit_time = idx
+                    exit_reason = "STOP_LOSS"
+                    break
+                # Check if take profit hit
+                elif low <= take_profit:
+                    exit_price = take_profit
+                    exit_time = idx
+                    exit_reason = "TAKE_PROFIT"
+                    break
+        else:
+            # No exit condition met - close at end of period
+            exit_price = future_data.iloc[-1]["close"].item()  # Get scalar value
+            exit_time = future_data.index[-1]
+            exit_reason = "TIME_EXIT"
+
+        # Calculate profit/loss
+        if direction == "LONG":
+            price_change = exit_price - entry_price
+        else:
+            price_change = entry_price - exit_price
+
+        gross_pnl = price_change * position_size * 100000
+        net_pnl = gross_pnl - trade_costs  # Subtract trading costs
+
+        return {
+            "entry_date": entry_time,
+            "exit_date": exit_time,
+            "entry_price": entry_price,
+            "exit_price": exit_price,
+            "direction": direction,
+            "position_size": position_size,
+            "gross_pnl": gross_pnl,
+            "profit_usd": net_pnl,  # Use net PnL for profit_usd
+            "trade_costs": trade_costs,
+            "exit_reason": exit_reason,
+            "profit_pct": net_pnl / current_balance,  # Percentage of account
+            "confidence": 0.5,  # Will be updated later
+            "confluence_score": 0.0,  # Will be updated later
+        }
+
     def load_historical_data(self, pair: str) -> Optional[pd.DataFrame]:
         """Load historical H4 data for optimization."""
         try:
@@ -192,49 +357,39 @@ class EMAOptimizer:
                         "BUY",
                         "SELL",
                     ]:
-                        # Simulate trade execution (simplified)
+                        # CORRECTED: Use realistic trade simulation (no more perfect timing)
                         signal_data = analysis.get("technical_signal", {})
                         if signal_data.get("signal") != "NONE":
-                            # Calculate simple profit/loss simulation
-                            entry_price = float(current_data["close"].iloc[-1])
                             direction = signal_data.get("direction", "LONG")
 
-                            # Look ahead up to 5 days for outcome (simplified)
-                            future_end = min(i + 5, len(daily_data) - 1)
+                            # Get future data for realistic trade simulation (up to 10 days)
+                            future_end = min(i + 10, len(daily_data) - 1)
                             if future_end > i:
                                 future_data = daily_data.iloc[i + 1 : future_end + 1]
 
-                                # Simple profit calculation based on direction
-                                if direction == "LONG":
-                                    exit_price = future_data["high"].max()
-                                    profit_pct = (
-                                        exit_price - entry_price
-                                    ) / entry_price
-                                else:
-                                    exit_price = future_data["low"].min()
-                                    profit_pct = (
-                                        entry_price - exit_price
-                                    ) / entry_price
+                                # Use realistic trade simulation with proper stop loss/take profit
+                                trade_result = self.simulate_realistic_trade(
+                                    daily_data.iloc[i],
+                                    future_data,
+                                    direction,
+                                    pair,
+                                    balance,
+                                )
 
-                                # Simple position sizing (1% risk)
-                                trade_result = {
-                                    "entry_date": current_data.index[-1],
-                                    "entry_price": entry_price,
-                                    "exit_price": exit_price,
-                                    "direction": direction,
-                                    "profit_pct": profit_pct,
-                                    "profit_usd": balance
-                                    * 0.01
-                                    * profit_pct
-                                    * 10,  # 10x leverage simulation
-                                    "confidence": trade_rec.get("confidence", 0.5),
-                                    "confluence_score": analysis.get(
+                                if trade_result:
+                                    # Update trade result with strategy analysis data
+                                    trade_result["confidence"] = trade_rec.get(
+                                        "confidence", 0.5
+                                    )
+                                    trade_result["confluence_score"] = analysis.get(
                                         "confluence_score", 0.0
-                                    ),
-                                }
+                                    )
 
-                                trades.append(trade_result)
-                                balance += trade_result["profit_usd"]
+                                    trades.append(trade_result)
+                                    balance += trade_result["profit_usd"]
+
+                                    # Skip ahead to avoid overlapping trades
+                                    i += 2
 
                 except Exception as e:
                     continue
