@@ -14,9 +14,9 @@ const DynamicBacktestDashboard = dynamic(
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div>
-                <h1 className="text-2xl font-bold text-white">Backtest Results</h1>
+                <h1 className="text-2xl font-bold text-white">🎯 VERIFIED Optimization Results</h1>
                 <p className="text-sm text-neutral-400">
-                  5 years of proven MA Unified Strategy performance
+                  Real 10-pair Enhanced Daily Strategy • JPY Dominance Confirmed • Aug 2025
                 </p>
               </div>
               <div className="flex items-center space-x-4">

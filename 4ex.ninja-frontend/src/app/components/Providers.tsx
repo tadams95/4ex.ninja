@@ -9,6 +9,7 @@ import { wagmiConfig } from '@/lib/wagmi';
 import { BaseComponentProps } from '@/types';
 import { initializeServiceWorker } from '@/utils/service-worker';
 import { OnchainKitProvider } from '@coinbase/onchainkit';
+import '@coinbase/onchainkit/styles.css';
 import { QueryClientProvider } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
@@ -17,10 +18,7 @@ import { base } from 'wagmi/chains';
 
 // Lazy load React Query devtools only in development
 const ReactQueryDevtools = dynamic(
-  () =>
-    import('@tanstack/react-query-devtools').then(mod => ({
-      default: mod.ReactQueryDevtools,
-    })),
+  () => import('@tanstack/react-query-devtools').then(mod => mod.ReactQueryDevtools),
   {
     ssr: false,
     loading: () => null, // No loading state needed for devtools

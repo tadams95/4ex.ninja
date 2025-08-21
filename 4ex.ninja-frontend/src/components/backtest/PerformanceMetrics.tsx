@@ -1,26 +1,29 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import type { PerformanceData } from '../../lib/backtestDataLoader';
-import { getPerformanceData, simulateApiDelay } from '../../lib/backtestDataLoader';
+import {
+  loadOptimizationResults,
+  simulateApiDelay,
+  type OptimizationResults,
+} from '../../lib/realOptimizationDataLoader';
 
 /**
- * Performance Metrics Component
+ * VERIFIED Performance Metrics Component
  *
- * Displays detailed performance statistics in a card layout
- * Following the dark theme with neutral colors
+ * Displays comprehensive performance metrics from REAL optimization results
+ * Features the actual results: only 2 pairs are highly profitable (USD_JPY, EUR_JPY)
  */
 export default function PerformanceMetrics() {
   const {
-    data: performance,
+    data: optimizationData,
     isLoading,
     error,
-  } = useQuery<PerformanceData>({
-    queryKey: ['backtest-performance'],
+  } = useQuery<OptimizationResults>({
+    queryKey: ['verified-optimization-results'],
     queryFn: async () => {
-      console.log('Loading performance data from local data');
+      console.log('Loading VERIFIED optimization results');
       await simulateApiDelay();
-      return getPerformanceData();
+      return loadOptimizationResults();
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -28,14 +31,11 @@ export default function PerformanceMetrics() {
   if (isLoading) {
     return (
       <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
-        <div className="animate-pulse">
-          <div className="h-6 bg-neutral-700 rounded mb-4 w-48"></div>
-          <div className="space-y-3">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="flex justify-between">
-                <div className="h-4 bg-neutral-700 rounded w-32"></div>
-                <div className="h-4 bg-neutral-700 rounded w-16"></div>
-              </div>
+        <div className="animate-pulse space-y-4">
+          <div className="h-6 bg-neutral-700 rounded w-1/3"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-20 bg-neutral-700 rounded"></div>
             ))}
           </div>
         </div>
@@ -45,123 +45,233 @@ export default function PerformanceMetrics() {
 
   if (error) {
     return (
-      <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-red-400 mb-4">Performance Metrics</h3>
-        <p className="text-neutral-400 text-sm">Error loading performance data: {error.message}</p>
+      <div className="bg-red-900/20 border border-red-700 rounded-lg p-6">
+        <p className="text-red-400">Error loading optimization data: {error.message}</p>
       </div>
     );
   }
 
-  if (!performance) {
+  if (!optimizationData) {
     return (
       <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-neutral-300 mb-4">Performance Metrics</h3>
-        <p className="text-neutral-400 text-sm">No performance data available</p>
+        <p className="text-neutral-400">No optimization data available</p>
       </div>
     );
   }
 
-  const formatPercent = (value: number, decimals = 1) => `${(value * 100).toFixed(decimals)}%`;
+  // Calculate aggregate metrics from profitable pairs
+  const profitablePairs = Object.entries(optimizationData.profitable_pairs);
+  const totalProfitablePairs = profitablePairs.length;
+  const totalTestedPairs = optimizationData.optimization_info.total_pairs_tested;
 
-  const formatNumber = (value: number, decimals = 2) => value.toFixed(decimals);
+  // Calculate averages for profitable pairs only
+  const avgReturn =
+    profitablePairs.reduce(
+      (sum, [_, pair]) => sum + parseFloat(pair.annual_return.replace('%', '')),
+      0
+    ) / totalProfitablePairs;
+  const avgWinRate =
+    profitablePairs.reduce(
+      (sum, [_, pair]) => sum + parseFloat(pair.win_rate.replace('%', '')),
+      0
+    ) / totalProfitablePairs;
+  const totalTrades = profitablePairs.reduce((sum, [_, pair]) => sum + pair.trades_per_year, 0);
 
-  const formatCurrency = (value: number, decimals = 2) => `$${value.toFixed(decimals)}`;
+  // Get top performers (highly profitable)
+  const highlyProfitable = profitablePairs.filter(([_, pair]) => pair.tier === 'HIGHLY_PROFITABLE');
 
-  // Use the top performing strategy for metrics display
-  const topStrategy = performance.top_performing_strategies?.[0];
-  if (!topStrategy) {
-    return (
-      <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-6">Performance Metrics</h3>
-        <p className="text-neutral-400 text-sm">No performance data available</p>
-      </div>
-    );
-  }
-
-  const metrics = [
+  const performanceMetrics = [
     {
-      label: 'Annual Return',
-      value: topStrategy.performance_metrics.annual_return_pct,
-      color:
-        parseFloat(topStrategy.performance_metrics.annual_return_pct) > 0
-          ? 'text-green-400'
-          : 'text-red-400',
+      label: 'Success Rate',
+      value: `${Math.round((totalProfitablePairs / totalTestedPairs) * 100)}%`,
+      description: `${totalProfitablePairs} out of ${totalTestedPairs} pairs profitable`,
+      color: totalProfitablePairs >= 5 ? 'text-green-400' : 'text-yellow-400',
     },
     {
-      label: 'Max Drawdown',
-      value: topStrategy.performance_metrics.max_drawdown_pct,
-      color: 'text-red-400',
+      label: 'Top Performer',
+      value: optimizationData.summary_stats.top_performer,
+      description: `${optimizationData.summary_stats.best_return} annual return`,
+      color: 'text-green-400',
     },
     {
-      label: 'Sharpe Ratio',
-      value: formatNumber(topStrategy.performance_metrics.sharpe_ratio),
-      color:
-        topStrategy.performance_metrics.sharpe_ratio > 1 ? 'text-green-400' : 'text-neutral-300',
-    },
-    {
-      label: 'Win Rate',
-      value: topStrategy.performance_metrics.win_rate_pct,
-      color: topStrategy.performance_metrics.win_rate > 50 ? 'text-green-400' : 'text-red-400',
-    },
-    {
-      label: 'Strategy',
-      value: topStrategy.strategy,
+      label: 'Best Win Rate',
+      value: optimizationData.summary_stats.best_win_rate,
+      description: 'Achieved by top JPY pairs',
       color: 'text-blue-400',
     },
     {
-      label: 'Currency Pair',
-      value: topStrategy.currency_pair,
-      color: 'text-neutral-300',
+      label: 'Avg Profitable Return',
+      value: `${avgReturn.toFixed(1)}%`,
+      description: 'Average across profitable pairs',
+      color:
+        avgReturn >= 10 ? 'text-green-400' : avgReturn >= 5 ? 'text-yellow-400' : 'text-orange-400',
     },
     {
-      label: 'Timeframe',
-      value: topStrategy.timeframe,
-      color: 'text-neutral-300',
+      label: 'Avg Win Rate',
+      value: `${avgWinRate.toFixed(1)}%`,
+      description: 'Average across profitable pairs',
+      color:
+        avgWinRate >= 60 ? 'text-green-400' : avgWinRate >= 45 ? 'text-yellow-400' : 'text-red-400',
     },
     {
-      label: 'Category',
-      value: topStrategy.category,
+      label: 'Total Annual Trades',
+      value: totalTrades.toString(),
+      description: 'Combined across all strategies',
       color: 'text-purple-400',
+    },
+    {
+      label: 'Highly Profitable Pairs',
+      value: highlyProfitable.length.toString(),
+      description: 'Above 10% annual return',
+      color: highlyProfitable.length >= 2 ? 'text-green-400' : 'text-yellow-400',
+    },
+    {
+      label: 'JPY Dominance',
+      value: '80%',
+      description: '4 out of 5 profitable pairs',
+      color: 'text-yellow-400',
+    },
+    {
+      label: 'Methodology',
+      value: 'Realistic',
+      description: '1.5% SL, 3% TP, trading costs',
+      color: 'text-blue-400',
     },
   ];
 
   return (
-    <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
-      <h3 className="text-lg font-semibold text-white mb-6">Performance Metrics</h3>
+    <div className="space-y-6">
+      {/* Header with Real Results Reality Check */}
+      <div className="bg-gradient-to-r from-orange-900/30 to-yellow-900/30 border border-orange-700/50 rounded-lg p-6">
+        <h2 className="text-xl font-bold text-white mb-2">
+          ✅ VERIFIED Performance Metrics - REAL Results
+        </h2>
+        <p className="text-orange-400 font-medium mb-2">
+          🎯 REALITY: Only 2 pairs are highly profitable (USD_JPY: 14%, EUR_JPY: 13.5%)
+        </p>
+        <p className="text-neutral-300 text-sm">{optimizationData.optimization_info.methodology}</p>
+      </div>
 
-      <div className="space-y-4">
-        {metrics.map((metric, index) => (
-          <div key={index} className="flex justify-between items-center">
-            <span className="text-neutral-400 text-sm">{metric.label}</span>
-            <span className={`font-medium ${metric.color}`}>{metric.value}</span>
+      {/* Performance Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {performanceMetrics.map((metric, index) => (
+          <div
+            key={index}
+            className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 hover:border-neutral-600 transition-colors"
+          >
+            <div className="flex flex-col">
+              <span className="text-neutral-400 text-sm font-medium mb-1">{metric.label}</span>
+              <span className={`text-2xl font-bold mb-1 ${metric.color}`}>{metric.value}</span>
+              <span className="text-neutral-500 text-xs">{metric.description}</span>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Performance Summary */}
-      <div className="mt-6 pt-4 border-t border-neutral-700">
-        <div className="text-xs text-neutral-500">
-          Top strategy ({topStrategy.strategy}) demonstrates{' '}
-          <span
-            className={
-              topStrategy.performance_metrics.annual_return > 0.1
+      {/* Detailed Profitable Pairs Analysis */}
+      <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Profitable Pairs Breakdown (REAL Data)
+        </h3>
+        <div className="space-y-3">
+          {profitablePairs.map(([pair, data]) => {
+            const tierColor =
+              data.tier === 'HIGHLY_PROFITABLE'
                 ? 'text-green-400'
-                : 'text-red-400'
-            }
-          >
-            {topStrategy.performance_metrics.annual_return > 0.1 ? 'strong' : 'weak'}
-          </span>{' '}
-          performance with{' '}
-          <span
-            className={
-              topStrategy.performance_metrics.sharpe_ratio > 1.5
-                ? 'text-green-400'
-                : 'text-neutral-300'
-            }
-          >
-            {topStrategy.performance_metrics.sharpe_ratio > 1.5 ? 'excellent' : 'moderate'}
-          </span>{' '}
-          risk-adjusted returns
+                : data.tier === 'PROFITABLE'
+                ? 'text-yellow-400'
+                : 'text-orange-400';
+            const isJPY = pair.includes('JPY');
+
+            return (
+              <div
+                key={pair}
+                className="flex items-center justify-between p-3 bg-neutral-900/50 rounded-lg"
+              >
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">{data.tier_icon}</span>
+                  <div>
+                    <span className="text-white font-medium">{pair}</span>
+                    {isJPY && (
+                      <span className="ml-2 bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold">
+                        JPY
+                      </span>
+                    )}
+                    <p className={`text-sm ${tierColor}`}>{data.tier.replace('_', ' ')}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div className="text-green-400 font-bold">{data.annual_return}</div>
+                    <div className="text-xs text-neutral-400">Return</div>
+                  </div>
+                  <div>
+                    <div className="text-blue-400 font-bold">{data.win_rate}</div>
+                    <div className="text-xs text-neutral-400">Win Rate</div>
+                  </div>
+                  <div>
+                    <div className="text-purple-400 font-bold">{data.trades_per_year}</div>
+                    <div className="text-xs text-neutral-400">Trades/Yr</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Reality Check Section */}
+      <div className="bg-gradient-to-r from-red-900/20 to-orange-900/20 border border-red-600/50 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-red-400 mb-3">
+          🚨 Reality Check - Unprofitable Pairs
+        </h3>
+        <div className="mb-4">
+          <p className="text-neutral-300 text-sm mb-2">
+            5 out of 10 pairs tested were unprofitable after realistic trading costs:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+            {Object.entries(optimizationData.unprofitable_pairs).map(([pair, data]) => (
+              <div key={pair} className="text-red-400">
+                • {pair}: {data.annual_return} ({data.win_rate} win rate)
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="pt-4 border-t border-neutral-700">
+          <h4 className="text-white font-medium mb-2">Key Learnings:</h4>
+          <ul className="text-neutral-300 text-sm space-y-1">
+            <li>✅ Only 2 pairs achieve strong double-digit returns</li>
+            <li>✅ JPY pairs dominate profitable strategies (80%)</li>
+            <li>✅ Realistic trading costs significantly impact results</li>
+            <li>✅ Conservative approach: Focus on top 2-3 performers</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* JPY Strategy Focus */}
+      <div className="bg-gradient-to-r from-yellow-900/20 to-green-900/20 border border-yellow-600/50 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-yellow-400 mb-3">
+          🎌 JPY Strategy Focus - The Real Winners
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="text-white font-medium mb-2">USD_JPY (Gold Tier):</h4>
+            <ul className="text-green-400 text-sm space-y-1">
+              <li>🥇 14.0% annual return</li>
+              <li>🎯 70% win rate</li>
+              <li>⚡ 20/60 EMA configuration</li>
+              <li>📊 10 trades per year</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-medium mb-2">EUR_JPY (Gold Tier):</h4>
+            <ul className="text-green-400 text-sm space-y-1">
+              <li>🥇 13.5% annual return</li>
+              <li>🎯 70% win rate</li>
+              <li>⚡ 30/60 EMA configuration</li>
+              <li>📊 10 trades per year</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

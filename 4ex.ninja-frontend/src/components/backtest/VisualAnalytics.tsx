@@ -24,7 +24,7 @@ import {
   getVisualDatasets,
   simulateApiDelay,
   type VisualDatasets,
-} from '../../lib/backtestDataLoader';
+} from '../../lib/realOptimizationDataLoader';
 
 /**
  * Visual Analytics Component
