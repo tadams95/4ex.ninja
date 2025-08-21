@@ -94,11 +94,11 @@ export default function BacktestDashboard() {
       {/* Enhanced Header */}
       <div className="border-b border-neutral-700 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-6">
-            <div>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between py-6 space-y-4 lg:space-y-0">
+            <div className="flex-1">
               <div className="flex items-center space-x-3 mb-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <h1 className="text-3xl font-bold text-white">Enhanced Daily EMA Strategy</h1>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Enhanced Daily EMA Strategy</h1>
               </div>
               <p className="text-neutral-400 text-sm mb-1">
                 {isLoading
@@ -121,9 +121,9 @@ export default function BacktestDashboard() {
             </div>
 
             {/* Key Stats Summary */}
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center justify-center lg:justify-end">
               {isLoading ? (
-                <div className="flex space-x-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   {[1, 2, 3].map(i => (
                     <div
                       key={i}
@@ -133,20 +133,20 @@ export default function BacktestDashboard() {
                 </div>
               ) : (
                 optimizationData && (
-                  <div className="flex space-x-4">
-                    <div className="text-center px-4 py-3 bg-green-900/30 border border-green-700 rounded-lg">
-                      <div className="text-2xl font-bold text-green-400">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <div className="text-center px-4 py-3 bg-green-900/30 border border-green-700 rounded-lg min-w-[6rem]">
+                      <div className="text-xl sm:text-2xl font-bold text-green-400">
                         {optimizationData.optimization_info.success_rate}
                       </div>
                       <div className="text-xs text-green-300">Success Rate</div>
                     </div>
-                    <div className="text-center px-4 py-3 bg-blue-900/30 border border-blue-700 rounded-lg">
-                      <div className="text-2xl font-bold text-blue-400">
+                    <div className="text-center px-4 py-3 bg-blue-900/30 border border-blue-700 rounded-lg min-w-[6rem]">
+                      <div className="text-xl sm:text-2xl font-bold text-blue-400">
                         {optimizationData.summary_stats.best_return}
                       </div>
                       <div className="text-xs text-blue-300">Best Return</div>
                     </div>
-                    <div className="text-center px-4 py-3 bg-purple-900/30 border border-purple-700 rounded-lg">
+                    <div className="text-center px-4 py-3 bg-purple-900/30 border border-purple-700 rounded-lg min-w-[6rem]">
                       <div className="text-lg font-bold text-purple-400">JPY</div>
                       <div className="text-xs text-purple-300">Dominance</div>
                     </div>
@@ -161,11 +161,12 @@ export default function BacktestDashboard() {
       {/* Enhanced Tab Navigation */}
       <div className="border-b border-neutral-700 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8">
+          <nav className="flex overflow-x-auto scrollbar-hide space-x-4 sm:space-x-6 lg:space-x-8">
             {[
               {
                 id: 'overview',
                 label: 'Performance Overview',
+                shortLabel: 'Overview',
                 icon: '📊',
                 disabled: isLoading,
                 description: 'Key metrics and results',
@@ -173,6 +174,7 @@ export default function BacktestDashboard() {
               {
                 id: 'analytics',
                 label: 'Visual Analytics',
+                shortLabel: 'Analytics',
                 icon: '📈',
                 disabled: false,
                 description: 'Charts and data visualization',
@@ -180,6 +182,7 @@ export default function BacktestDashboard() {
               {
                 id: 'currencies',
                 label: 'Currency Analysis',
+                shortLabel: 'Currencies',
                 icon: '💱',
                 disabled: false,
                 description: 'Pair-by-pair breakdown',
@@ -187,6 +190,7 @@ export default function BacktestDashboard() {
               {
                 id: 'methodology',
                 label: 'Strategy Details',
+                shortLabel: 'Strategy',
                 icon: '⚙️',
                 disabled: false,
                 description: 'Implementation and methodology',
@@ -197,7 +201,7 @@ export default function BacktestDashboard() {
                 onClick={() => !tab.disabled && setActiveTab(tab.id as any)}
                 disabled={tab.disabled}
                 className={`
-                  group py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200
+                  group py-4 px-2 sm:px-3 border-b-2 font-medium text-sm transition-all duration-200 whitespace-nowrap min-w-0 flex-shrink-0
                   ${
                     activeTab === tab.id
                       ? 'border-blue-500 text-blue-400'
@@ -207,11 +211,12 @@ export default function BacktestDashboard() {
                   }
                 `}
               >
-                <div className="flex items-center space-x-2">
-                  <span>{tab.icon}</span>
-                  <span>{tab.label}</span>
+                <div className="flex items-center space-x-2 min-h-[44px]">
+                  <span className="text-base">{tab.icon}</span>
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.shortLabel}</span>
                 </div>
-                <div className="text-xs text-neutral-500 group-hover:text-neutral-400 mt-1">
+                <div className="text-xs text-neutral-500 group-hover:text-neutral-400 mt-1 hidden md:block">
                   {tab.description}
                 </div>
               </button>
@@ -282,18 +287,18 @@ function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
   return (
     <div className="space-y-8">
       {/* Strategy Overview Hero */}
-      <div className=" border border-neutral-700 rounded-xl p-8">
-        <div className="flex items-start justify-between">
+      <div className=" border border-neutral-700 rounded-xl p-4 sm:p-6 lg:p-8">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between space-y-4 lg:space-y-0">
           <div className="flex-1">
-            <h2 className="text-2xl font-bold text-white mb-3">Strategy Performance Summary</h2>
-            <p className="text-neutral-300 mb-4 max-w-3xl">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">Strategy Performance Summary</h2>
+            <p className="text-neutral-300 mb-4 text-sm sm:text-base max-w-3xl">
               Comprehensive optimization results for the Enhanced Daily EMA Strategy across{' '}
               {optimizationData.optimization_info.total_pairs_tested} major currency pairs. Our
               systematic approach identified{' '}
               {optimizationData.optimization_info.profitable_pairs_count} consistently profitable
               pairs with a realistic {optimizationData.optimization_info.success_rate} success rate.
             </p>
-            <div className="flex items-center space-x-6 text-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2 sm:space-y-0 text-sm">
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span className="text-neutral-400">
@@ -314,8 +319,8 @@ function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
               </div>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-3xl font-bold text-green-400 mb-1">
+          <div className="text-center lg:text-right">
+            <div className="text-2xl sm:text-3xl font-bold text-green-400 mb-1">
               {optimizationData.summary_stats.best_return}
             </div>
             <div className="text-sm text-neutral-400">Peak Annual Return</div>
@@ -328,7 +333,7 @@ function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
       </div>
 
       {/* Enhanced Key Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <MetricCard
           icon="🎯"
           title="Strategy Success Rate"
@@ -367,9 +372,9 @@ function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
       </div>
 
       {/* Performance Breakdown Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
         {/* Profitable Pairs */}
-        <div className="lg:col-span-2">
+        <div className="xl:col-span-2">
           <ProfitablePairsSection profitable_pairs={optimizationData.profitable_pairs} />
         </div>
 
@@ -380,7 +385,7 @@ function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         <PerformanceMetrics />
         <EquityCurveChart />
       </div>

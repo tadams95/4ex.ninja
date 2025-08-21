@@ -42,6 +42,18 @@
   }
 }
 
+/* Mobile Responsive Utilities */
+@layer utilities {
+  /* Hide scrollbars while maintaining functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+}
+
 :root {
   /* === FONT FAMILY VARIABLES === */
   --font-exo: 'Exo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
