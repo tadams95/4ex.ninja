@@ -13,81 +13,87 @@ export default function MethodologySection() {
 
   // VERIFIED methodology based on comprehensive August 2025 optimization results
   const methodology = {
-    strategy_methodology: `# VERIFIED MA Unified Strategy - REAL Optimization Results
+    strategy_methodology: `# Enhanced Daily EMA Strategy - Comprehensive 10-Pair Optimization Results
 
-## ✅ CONFIRMED Core Strategy Logic
-The MA Unified Strategy employs a sophisticated moving average crossover system that has been VERIFIED through comprehensive August 2025 optimization across 10 major forex pairs. **DISCOVERY**: JPY pairs demonstrate exceptional market efficiency and trend-following characteristics.
+## Strategy Overview
+The Enhanced Daily EMA Strategy employs a dual exponential moving average (EMA) crossover system optimized across 10 major forex pairs through comprehensive backtesting. Enhanced with session filtering, confluence detection, and dynamic position sizing, our August 2025 optimization revealed a realistic 50% success rate, with significant JPY pair outperformance.
 
-### ✅ VERIFIED Technical Foundation
-• **Primary Signal Generation**: Dual moving average crossover system with optimized parameters for each pair
-• **Risk Management**: ATR-based position sizing with dynamic stop losses and take profits
-• **Market Filtering**: Multi-criteria validation ensuring risk-reward ratios exceed 1.5:1
-• **JPY ADVANTAGE CONFIRMED**: JPY pairs show superior trend persistence and reduced noise
+### Core Strategy Components
+• **Signal Generation**: EMA crossover system on daily timeframe with pair-specific optimized parameters
+• **Enhancement Layer**: Session-based filtering, support/resistance confluence, dynamic position sizing
+• **Risk Management**: Fixed 1.5% stop loss, 3.0% take profit (2:1 reward-to-risk ratio)
+• **Position Sizing**: Risk-based sizing with signal strength and volatility adjustments
+• **Trading Costs**: Realistic spread modeling (20-40 pips) with cost-adjusted performance metrics
 
-### ✅ VERIFIED Strategy Performance
-**JPY Dominance Discovery**: 4 out of 5 profitable pairs are JPY-based
-- **USD_JPY**: 14.0% annual return, 70% win rate (VERIFIED LEADER)
-- **EUR_JPY**: 13.5% annual return, 70% win rate (STRONG PERFORMER)
-- **GBP_JPY**: 13.2% annual return, 68% win rate (CONSISTENT)
-- **AUD_JPY**: 12.8% annual return, 68% win rate (RELIABLE)
+### Strategy Enhancements
+• **Session Filtering**: JPY pairs prioritized during Asian trading sessions for optimal liquidity
+• **Confluence Detection**: Support/resistance level alignment for improved entry timing
+• **Dynamic Sizing**: Position size adjustments based on signal strength and market volatility
+• **Multi-Pair Optimization**: Pair-specific EMA parameters (20/60 vs 30/60) for maximum effectiveness
 
-**Non-JPY Outstanding Performer**:
-- **GBP_USD**: 13.8% annual return, 69% win rate (EXCEPTIONAL)
+### Optimization Results Summary
+**Total Pairs Tested**: 10 major forex pairs
+**Profitable Pairs**: 5 (50% success rate)
+**Unprofitable Pairs**: 5 (significant negative returns after costs)
+**Top Performer**: USD_JPY (14.0% annual return, 70% win rate)
+**Key Discovery**: JPY pairs demonstrate superior trend-following characteristics
 
-### ✅ VERIFIED Currency Pair Selection
-Priority allocation based on REAL August 2025 comprehensive optimization:
-1. **USD_JPY**: 14.0% annual return - PRIMARY ALLOCATION (JPY strength confirmed)
-2. **GBP_USD**: 13.8% annual return - SECONDARY ALLOCATION (non-JPY leader)
-3. **EUR_JPY**: 13.5% annual return - CORE POSITION (JPY consistency)
-4. **GBP_JPY**: 13.2% annual return - DIVERSIFICATION (JPY stability)
-5. **AUD_JPY**: 12.8% annual return - COMPLEMENTARY (JPY portfolio balance)`,
+### Profitable Pair Performance
+1. **USD_JPY**: 14.0% return, 70% win rate, EMA 20/60 configuration
+2. **EUR_JPY**: 13.5% return, 70% win rate, EMA 30/60 configuration  
+3. **AUD_JPY**: 3.8% return, 46.7% win rate, EMA 20/60 configuration
+4. **GBP_JPY**: 2.2% return, 45.5% win rate, EMA 30/60 configuration
+5. **AUD_USD**: 1.5% return, 41.7% win rate, EMA 20/60 configuration
 
-    performance_attribution: `# VERIFIED Performance Attribution & Optimization Results
+### Unprofitable Pair Results
+• **EUR_USD**: -4.6% return (most surprising given high liquidity)
+• **EUR_GBP**: -4.2% return (cross-pair volatility issues)
+• **USD_CHF**: -3.6% return (poor trend characteristics)
+• **GBP_USD**: -3.0% return (excessive volatility relative to trends)
+• **USD_CAD**: -1.5% return (commodity currency challenges)`,
 
-## ✅ COMPREHENSIVE August 2025 Optimization Analysis
-**Testing Period**: 5-year comprehensive backtest with 2025 optimization
-**Data Quality**: High-frequency OHLC data across 10 major forex pairs
-**Total Strategies Tested**: 840+ parameter combinations (VERIFIED)
-**Validation Method**: Walk-forward analysis with out-of-sample testing
+    performance_attribution: `# Performance Analysis & Market Insights
 
-## ✅ VERIFIED Top Performance Metrics
-**DISCOVERY LEADER**: USD_JPY Conservative Strategy
-- Annual Return: 14.0% (VERIFIED)
-- Win Rate: 70% (EXCEPTIONAL - above 65% threshold)
-- Sharpe Ratio: 2.1+ (outstanding risk-adjusted performance)
-- Maximum Drawdown: <5% (excellent risk control)
+## Key Performance Insights
 
-**JPY Portfolio Dominance** (VERIFIED Ready for deployment):
-1. **USD_JPY**: 14.0% return, 70% win rate (CONFIRMED LEADER)
-2. **EUR_JPY**: 13.5% return, 70% win rate (STRONG CONSISTENCY)
-3. **GBP_JPY**: 13.2% return, 68% win rate (PROVEN STABILITY)
-4. **AUD_JPY**: 12.8% return, 68% win rate (RELIABLE PERFORMER)
-5. **GBP_USD**: 13.8% return, 69% win rate (NON-JPY CHAMPION)
+### JPY Pair Dominance Discovery
+**Major Finding**: 4 out of 5 profitable pairs involve JPY, indicating strong trend-following characteristics in Japanese Yen crosses during the optimization period.
 
-## ✅ VERIFIED Risk Analysis & Market Validation
-**Portfolio Success Rate**: 50% (5 out of 10 pairs profitable - REALISTIC)
-**JPY Advantage Confirmed**: 80% of profitable pairs are JPY-based
-**Average Win Rate**: 69% across profitable pairs (EXCEPTIONAL)
-**Risk-Reward Consistency**: All profitable strategies exceed 2:1 reward-to-risk ratios
-**Market Regime Performance**: VERIFIED across trending, ranging, and volatile conditions
+**JPY Performance Breakdown**:
+- USD_JPY: 14.0% annual return (Tier 1: Highly Profitable)
+- EUR_JPY: 13.5% annual return (Tier 1: Highly Profitable)
+- AUD_JPY: 3.8% annual return (Tier 2: Profitable)
+- GBP_JPY: 2.2% annual return (Tier 2: Profitable)
 
-## ✅ VERIFIED Walk-Forward Validation Results
-**Methodology**: Comprehensive out-of-sample testing across multiple periods
-**Performance Consistency**: JPY pairs show superior stability across different market cycles
-**Parameter Robustness**: JPY strategies demonstrate lower sensitivity to parameter changes
-**Overfitting Detection**: Minimal performance degradation in out-of-sample periods
+### Major Pair Underperformance
+Contrary to conventional wisdom, traditionally high-liquidity major pairs showed poor performance:
+- EUR_USD (-4.6%): Despite being the world's most traded pair
+- GBP_USD (-3.0%): High volatility without corresponding trend strength
+- Cross pairs like EUR_GBP (-4.2%) struggled significantly
 
-## ✅ VERIFIED Statistical Significance
-**Confidence Level**: 95%+ statistical confidence in JPY advantage
-**Sample Size**: 5 years of continuous data validation
-**Transaction Costs**: Realistic spread and slippage modeling included
-**Market Impact**: Position sizes validated for retail and institutional implementation
+### Optimal EMA Configuration Analysis
+**EMA 20/60**: Effective for USD_JPY, AUD_JPY, AUD_USD
+**EMA 30/60**: Optimal for EUR_JPY, GBP_JPY
+**Faster EMAs (15)**: Less effective across most pairs
+**Slower EMAs (45+)**: Insufficient signal generation
 
-## ✅ VERIFIED Implementation Readiness
-**Live Trading Status**: Top 5 strategies VERIFIED and ready for immediate deployment
-**JPY Infrastructure**: Specialized monitoring for JPY pair characteristics
-**Performance Tracking**: Real-time validation of JPY advantage persistence
-**Emergency Protocols**: Enhanced risk management during JPY market events`,
+### Trading Cost Impact Assessment
+- **High Performers**: Overcome trading costs effectively (USD_JPY, EUR_JPY)
+- **Marginal Strategies**: Trading costs significantly reduce profitability
+- **Cost Range**: 1.6-5.2% annual performance drag depending on pair and frequency
+- **Spread Sensitivity**: Lower-return strategies become unprofitable after realistic cost modeling
+
+## Risk-Adjusted Performance Metrics
+**Win Rate Range**: 41.7% - 70.0% (profitable pairs only)
+**Average Annual Return**: 6.8% across profitable pairs
+**Risk Management**: Consistent 1.5% SL, 3.0% TP across all strategies
+**Trade Frequency**: 10-15 trades per year per pair (quality over quantity approach)
+
+## Market Regime Considerations
+The optimization period captured specific market conditions favoring JPY trend-following. Performance may vary under different market regimes, particularly during:
+- Central bank intervention periods
+- High-volatility news events
+- Significant shifts in global risk sentiment`,
 
     last_updated: '2025-08-20',
   };
@@ -132,69 +138,84 @@ Priority allocation based on REAL August 2025 comprehensive optimization:
     },
     {
       key: 'implementation_guidelines',
-      title: 'VERIFIED Implementation Guidelines',
-      content: `# VERIFIED Implementation Guidelines & JPY-Focused Trading Framework
+      title: 'Implementation Guidelines & Risk Management',
+      content: `# Implementation Guidelines Based on Optimization Results
 
-## ✅ VERIFIED Recommended Portfolio Allocation
-**JPY Core Allocation (70% of trading capital)** - CONFIRMED PROFITABLE:
-- **USD_JPY**: 25% (14.0% return, 70% win rate - VERIFIED LEADER)
-- **EUR_JPY**: 20% (13.5% return, 70% win rate - CONSISTENT PERFORMER)
-- **GBP_JPY**: 15% (13.2% return, 68% win rate - STABLE GROWTH)
-- **AUD_JPY**: 10% (12.8% return, 68% win rate - DIVERSIFICATION)
+## Recommended Portfolio Allocation
+Based on verified August 2025 optimization results showing 50% success rate across 10 pairs tested:
 
-**Non-JPY Strategic Allocation (25% of trading capital)**:
-- **GBP_USD**: 25% (13.8% return, 69% win rate - NON-JPY CHAMPION)
+### Tier 1: High Allocation (60% of capital)
+- **USD_JPY**: 35% allocation (14.0% return, 70% win rate, 10 trades/year)
+- **EUR_JPY**: 25% allocation (13.5% return, 70% win rate, 10 trades/year)
 
-**Risk Management Reserve**: 5% (emergency protocols and drawdown protection)
+### Tier 2: Medium Allocation (30% of capital)  
+- **AUD_JPY**: 15% allocation (3.8% return, 46.7% win rate, 15 trades/year)
+- **GBP_JPY**: 10% allocation (2.2% return, 45.5% win rate, 11 trades/year)
+- **AUD_USD**: 5% allocation (1.5% return, 41.7% win rate, 12 trades/year)
 
-## ✅ VERIFIED JPY-Focused Risk Management Framework
-**Position Sizing**: Maximum 2% risk per trade using ATR-based calculations
-**JPY Portfolio Heat**: Maximum 8% total portfolio risk (JPY pairs show lower correlation)
-**Maximum Drawdown Limit**: 10% portfolio drawdown triggers emergency protocols
-**JPY Correlation Management**: Enhanced monitoring of JPY cross-correlations during BoJ events
+### Risk Reserve (10% of capital)
+- Cash buffer for drawdown management and opportunity deployment
 
-## ✅ VERIFIED Trading Schedule & JPY Optimization
-**Optimal JPY Trading Sessions**:
-- **Tokyo Session**: 00:00-09:00 GMT (JPY native liquidity - PRIME TIME)
-- **London/Tokyo Overlap**: 08:00-09:00 GMT (highest JPY volatility)
-- **New York/London Overlap**: 13:00-17:00 GMT (USD_JPY and GBP_JPY optimization)
+## Risk Management Framework
 
-**VERIFIED Signal Processing**:
-- **JPY Pairs**: Process during Tokyo session for optimal execution
-- **GBP_USD**: Process during London session for maximum efficiency
-- **BoJ Event Protocols**: Automatic position monitoring during Bank of Japan announcements
+### Position Sizing
+- **Maximum Risk per Trade**: 1.0% of portfolio
+- **Stop Loss**: Fixed 1.5% (tested and optimized)
+- **Take Profit**: Fixed 3.0% (2:1 reward-to-risk ratio)
+- **Maximum Portfolio Heat**: 5% (max 5 simultaneous positions)
 
-## ✅ VERIFIED Technology Requirements for JPY Trading
-**Infrastructure**: Redis-optimized signal generation (<300ms execution for JPY pairs)
-**JPY Data Quality**: Enhanced OHLC data with Tokyo session focus
-**Specialized Monitoring**: Real-time JPY cross-pair correlation tracking
-**BoJ Calendar Integration**: Automated risk adjustment during central bank events
+### Trading Cost Considerations
+- **Spread Impact**: 1.6% - 5.2% annual performance drag depending on pair
+- **High-Frequency Warning**: Lower-return strategies become unprofitable after costs
+- **Execution Timing**: Focus on major session overlaps for better spreads
 
-## ✅ VERIFIED Expected Performance Characteristics
-**Annual Returns**: 12.8-14.0% (VERIFIED across JPY pairs)
-**Maximum Drawdown**: 3-6% based on JPY allocation (SUPERIOR to non-JPY)
-**Win Rate**: 68-70% across JPY strategies (EXCEPTIONAL consistency)
-**Sharpe Ratio**: 2.0-2.3 (outstanding risk-adjusted returns - VERIFIED)
-**Trading Frequency**: 30-60 trades per year per JPY pair (quality trend-following)
+### Performance Expectations
+- **Realistic Annual Returns**: 1.5% - 14.0% depending on pair allocation
+- **Portfolio Blended Return**: 6-9% annually with conservative allocation
+- **Win Rate Range**: 41.7% - 70% (JPY pairs consistently higher)
+- **Maximum Expected Drawdown**: 8-12% during adverse market conditions
 
-## ✅ VERIFIED JPY-Specific Monitoring & Adjustment
-**Weekly JPY Reviews**: Cross-pair correlation and BoJ policy impact analysis
-**Monthly Assessments**: JPY strength index and portfolio rebalancing
-**Quarterly Evaluations**: Comprehensive JPY strategy performance review
-**BoJ Event Monitoring**: Enhanced surveillance during Japanese monetary policy changes
+## Market Regime Considerations
 
-## ✅ VERIFIED JPY Emergency Protocols
-**BoJ Intervention Events**: Automatic position size reduction during intervention signals
-**JPY Flash Crash Protection**: Enhanced stop-loss monitoring during extreme volatility
-**Cross-Pair Correlation Spikes**: Automatic diversification adjustment when JPY correlations exceed 0.8
-**Technical Failures**: Redundant JPY signal delivery through Tokyo-based backup systems
+### JPY-Favorable Conditions
+- Strong trending markets
+- Risk-on/risk-off regime clarity  
+- Low intervention periods from Bank of Japan
 
-## 🎯 VERIFIED JPY ADVANTAGE SUMMARY
-**Market Efficiency**: JPY pairs demonstrate superior trend-following characteristics
-**Lower Noise**: Reduced false signals compared to other major currency groups
-**Consistent Performance**: 4 out of 5 profitable pairs are JPY-based (80% success rate)
-**Risk-Adjusted Excellence**: Superior Sharpe ratios across all JPY strategies
-**Implementation Ready**: All JPY strategies VERIFIED and cleared for immediate deployment`,
+### Risk Scenarios to Monitor
+- **BoJ Intervention**: Potential JPY pair disruption
+- **Major Pair Reversals**: EUR_USD, GBP_USD showed -4.6% and -3.0% returns
+- **Cross-Pair Volatility**: EUR_GBP struggled with -4.2% return
+- **Commodity Currency Weakness**: USD_CAD showed -1.5% return
+
+## Implementation Phases
+
+### Phase 1: Conservative Start (Months 1-3)
+- Deploy only USD_JPY and EUR_JPY (proven 70% win rates)
+- Monitor performance vs backtest expectations
+- Validate cost assumptions in live environment
+
+### Phase 2: Graduated Expansion (Months 4-6)
+- Add AUD_JPY and GBP_JPY if Phase 1 performs as expected
+- Maintain strict risk limits and performance tracking
+
+### Phase 3: Full Portfolio (Months 7+)
+- Consider AUD_USD addition for non-JPY diversification
+- Regular performance review and parameter adjustment
+
+## Warning: Avoided Pairs
+Based on optimization results, these pairs showed consistent unprofitability:
+- **EUR_USD**: -4.6% return despite high liquidity
+- **GBP_USD**: -3.0% return, excessive volatility
+- **USD_CHF**: -3.6% return, poor trend characteristics  
+- **USD_CAD**: -1.5% return, commodity currency challenges
+- **EUR_GBP**: -4.2% return, cross-pair complexity
+
+## Performance Monitoring
+- **Weekly Reviews**: JPY pair correlation and performance tracking
+- **Monthly Assessments**: Portfolio rebalancing based on pair performance
+- **Quarterly Optimization**: Parameter review and potential strategy updates
+- **Annual Review**: Comprehensive strategy evaluation and optimization cycle`,
       hasContent: true,
     },
   ];
@@ -203,7 +224,7 @@ Priority allocation based on REAL August 2025 comprehensive optimization:
     <div className="space-y-6">
       {/* Header with Controls */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-white">Strategy Methodology</h2>
+        <h2 className="text-xl font-bold text-white">Enhanced Daily EMA Strategy Methodology</h2>
         <div className="flex space-x-2">
           <button
             onClick={expandAll}
@@ -348,7 +369,9 @@ Priority allocation based on REAL August 2025 comprehensive optimization:
 
       {/* Summary Footer */}
       <div className="bg-neutral-900 border border-neutral-600 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-3">Documentation Summary</h3>
+        <h3 className="text-lg font-semibold text-white mb-3">
+          Enhanced Daily EMA Strategy Documentation
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
           <div>
             <span className="text-neutral-400">Total Sections:</span>

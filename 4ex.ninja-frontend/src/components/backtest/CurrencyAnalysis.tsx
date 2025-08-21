@@ -8,10 +8,11 @@ import {
 } from '../../lib/realOptimizationDataLoader';
 
 /**
- * VERIFIED Currency Analysis Component
+ * Enhanced Daily EMA Strategy - Currency Analysis Component
  *
- * Displays detailed analysis of all 5 profitable currency pairs
- * Features real optimization data and JPY advantage insights
+ * Displays detailed analysis of profitable currency pairs from our comprehensive
+ * 10-pair optimization study using the Enhanced Daily EMA Strategy.
+ * Shows real performance data with JPY dominance insights.
  */
 export default function CurrencyAnalysis() {
   const {
@@ -19,9 +20,11 @@ export default function CurrencyAnalysis() {
     isLoading,
     error,
   } = useQuery<CurrencyData[]>({
-    queryKey: ['verified-currency-analysis'],
+    queryKey: ['enhanced-daily-ema-currency-analysis'],
     queryFn: async () => {
-      console.log('Loading VERIFIED currency analysis from optimization results');
+      console.log(
+        'Loading Enhanced Daily EMA Strategy currency analysis from optimization results'
+      );
       await simulateApiDelay();
       return getCurrencyAnalysis();
     },
@@ -61,27 +64,30 @@ export default function CurrencyAnalysis() {
 
   // Helper function to get tier-based styling
   const getTierStyling = (tier: string) => {
-    switch (tier.toLowerCase()) {
-      case 'gold':
+    switch (tier.toUpperCase()) {
+      case 'HIGHLY_PROFITABLE':
         return {
-          border: 'border-yellow-400',
-          bg: 'bg-gradient-to-r from-yellow-900/20 to-yellow-800/20',
-          text: 'text-yellow-400',
+          border: 'border-emerald-400',
+          bg: 'bg-gradient-to-r from-emerald-900/20 to-emerald-800/20',
+          text: 'text-emerald-400',
           icon: '🥇',
+          label: 'Highly Profitable',
         };
-      case 'silver':
+      case 'PROFITABLE':
         return {
-          border: 'border-gray-400',
-          bg: 'bg-gradient-to-r from-gray-700/20 to-gray-600/20',
-          text: 'text-gray-300',
+          border: 'border-blue-400',
+          bg: 'bg-gradient-to-r from-blue-900/20 to-blue-800/20',
+          text: 'text-blue-400',
           icon: '🥈',
+          label: 'Profitable',
         };
-      case 'bronze':
+      case 'MARGINALLY_PROFITABLE':
         return {
-          border: 'border-amber-600',
+          border: 'border-amber-400',
           bg: 'bg-gradient-to-r from-amber-900/20 to-amber-800/20',
           text: 'text-amber-400',
           icon: '🥉',
+          label: 'Marginally Profitable',
         };
       default:
         return {
@@ -89,6 +95,7 @@ export default function CurrencyAnalysis() {
           bg: 'bg-neutral-800/50',
           text: 'text-neutral-300',
           icon: '⭐',
+          label: 'Profitable',
         };
     }
   };
@@ -99,25 +106,55 @@ export default function CurrencyAnalysis() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Discovery Summary */}
-      <div className="bg-gradient-to-r from-green-900/30 to-blue-900/30 border border-green-700/50 rounded-lg p-6">
-        <h2 className="text-xl font-bold text-white mb-2">🌍 VERIFIED Currency Pair Analysis</h2>
-        <p className="text-green-400 font-medium mb-2">
-          🎯 JPY DOMINANCE DISCOVERY: {jpyPairs.length} out of {currencyData.length} profitable
-          pairs are JPY-based
-        </p>
-        <p className="text-neutral-300 text-sm">
-          Comprehensive analysis of all profitable pairs from August 2025 optimization
-        </p>
+      {/* Header with Strategy Introduction */}
+      <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-700/50 rounded-lg p-6">
+        <h2 className="text-xl font-bold text-white mb-3">
+          📊 Enhanced Daily EMA Strategy - Currency Analysis
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <h3 className="text-emerald-400 font-medium mb-2">Strategy Overview</h3>
+            <ul className="text-neutral-300 text-sm space-y-1">
+              <li>• Daily timeframe EMA crossover system</li>
+              <li>• Pair-specific optimization (EMA 20/60 vs 30/60)</li>
+              <li>• Enhanced with session filtering & confluence</li>
+              <li>• Fixed 1.5% SL, 3.0% TP (2:1 risk-reward)</li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-blue-400 font-medium mb-2">Optimization Results</h3>
+            <ul className="text-neutral-300 text-sm space-y-1">
+              <li>• 10 major forex pairs tested</li>
+              <li>• 50% success rate (5 profitable pairs)</li>
+              <li>• Realistic trading cost modeling</li>
+              <li>• {jpyPairs.length}/5 profitable pairs are JPY-based</li>
+            </ul>
+          </div>
+        </div>
+        <div className="bg-emerald-900/20 border border-emerald-700/50 rounded-lg p-4">
+          <p className="text-emerald-400 font-medium mb-1">🎯 Key Discovery:</p>
+          <p className="text-neutral-300 text-sm">
+            JPY pairs demonstrate superior trend-following characteristics, achieving
+            {jpyPairs.length > 0
+              ? ` consistent win rates of ${Math.round(
+                  jpyPairs.reduce((sum, p) => sum + p.win_rate, 0) / jpyPairs.length
+                )}%`
+              : ' strong performance'}
+            compared to traditional major pairs like EUR_USD (-4.6%) and GBP_USD (-3.0%).
+          </p>
+        </div>
       </div>
 
       {/* JPY Pairs Section */}
       {jpyPairs.length > 0 && (
         <div className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <h3 className="text-lg font-semibold text-yellow-400">🎌 JPY Pairs - Market Leaders</h3>
-            <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold">
-              {jpyPairs.length} PAIRS
+          <div className="flex items-center space-x-3">
+            <h3 className="text-lg font-semibold text-emerald-400">🎌 JPY Pairs Performance</h3>
+            <span className="bg-emerald-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+              {jpyPairs.length} PAIRS PROFITABLE
+            </span>
+            <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs">
+              Enhanced Daily EMA Optimized
             </span>
           </div>
 
@@ -142,13 +179,13 @@ export default function CurrencyAnalysis() {
                         <h4 className="text-xl font-bold text-white">
                           {currency.pair}
                           {isTopPerformer && (
-                            <span className="ml-2 bg-green-500 text-black px-2 py-1 rounded text-xs font-bold">
-                              TOP PERFORMER
+                            <span className="ml-2 bg-emerald-500 text-black px-2 py-1 rounded text-xs font-bold">
+                              STRATEGY LEADER
                             </span>
                           )}
                         </h4>
                         <p className={`text-sm font-medium ${styling.text}`}>
-                          {currency.tier} Tier • {currency.ema_config}
+                          {styling.label} • EMA {currency.ema_config}
                         </p>
                       </div>
                     </div>
@@ -175,18 +212,30 @@ export default function CurrencyAnalysis() {
                     </div>
                   </div>
 
-                  {/* JPY-specific insights */}
+                  {/* Strategy-specific insights */}
                   <div className="mt-4 pt-4 border-t border-neutral-700">
-                    <h5 className="text-white font-medium mb-2">JPY Pair Characteristics:</h5>
+                    <h5 className="text-white font-medium mb-2">
+                      Enhanced Daily EMA Strategy - JPY Advantages:
+                    </h5>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                      <div className="text-neutral-300">
-                        • Superior trend persistence vs other major pairs
+                      <div className="flex items-center space-x-2">
+                        <span className="text-emerald-400">✓</span>
+                        <span className="text-neutral-300">Optimal EMA crossover response</span>
                       </div>
-                      <div className="text-neutral-300">
-                        • Optimal response to moving average signals
+                      <div className="flex items-center space-x-2">
+                        <span className="text-emerald-400">✓</span>
+                        <span className="text-neutral-300">Strong daily timeframe trends</span>
                       </div>
-                      <div className="text-neutral-300">• Lower noise, higher signal clarity</div>
-                      <div className="text-neutral-300">• Consistent risk-reward performance</div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-emerald-400">✓</span>
+                        <span className="text-neutral-300">Low noise-to-signal ratio</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-emerald-400">✓</span>
+                        <span className="text-neutral-300">
+                          Consistent 2:1 risk-reward achievement
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -199,12 +248,13 @@ export default function CurrencyAnalysis() {
       {/* Non-JPY Pairs Section */}
       {nonJpyPairs.length > 0 && (
         <div className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <h3 className="text-lg font-semibold text-blue-400">
-              🌟 Non-JPY Pairs - Exception Performers
-            </h3>
-            <span className="bg-blue-400 text-black px-2 py-1 rounded text-xs font-bold">
-              {nonJpyPairs.length} PAIR
+          <div className="flex items-center space-x-3">
+            <h3 className="text-lg font-semibold text-blue-400">🌟 Non-JPY Profitable Pairs</h3>
+            <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+              {nonJpyPairs.length} PAIR PROFITABLE
+            </span>
+            <span className="bg-amber-600 text-white px-3 py-1 rounded-full text-xs">
+              Exception Performance
             </span>
           </div>
 
@@ -224,11 +274,11 @@ export default function CurrencyAnalysis() {
                         <h4 className="text-xl font-bold text-white">
                           {currency.pair}
                           <span className="ml-2 bg-blue-500 text-white px-2 py-1 rounded text-xs font-bold">
-                            NON-JPY CHAMPION
+                            NON-JPY SUCCESS
                           </span>
                         </h4>
                         <p className={`text-sm font-medium ${styling.text}`}>
-                          {currency.tier} Tier • {currency.ema_config}
+                          {styling.label} • EMA {currency.ema_config}
                         </p>
                       </div>
                     </div>
@@ -255,16 +305,30 @@ export default function CurrencyAnalysis() {
                     </div>
                   </div>
 
-                  {/* Non-JPY specific insights */}
+                  {/* Non-JPY strategy insights */}
                   <div className="mt-4 pt-4 border-t border-neutral-700">
-                    <h5 className="text-white font-medium mb-2">Why This Non-JPY Pair Succeeds:</h5>
+                    <h5 className="text-white font-medium mb-2">
+                      Why This Non-JPY Pair Succeeds with Enhanced Daily EMA:
+                    </h5>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                      <div className="text-neutral-300">
-                        • Exceptional volatility characteristics
+                      <div className="flex items-center space-x-2">
+                        <span className="text-blue-400">✓</span>
+                        <span className="text-neutral-300">Strong EMA parameter response</span>
                       </div>
-                      <div className="text-neutral-300">• Strong London/NY session correlation</div>
-                      <div className="text-neutral-300">• Optimal EMA parameter response</div>
-                      <div className="text-neutral-300">• Consistent trend-following behavior</div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-blue-400">✓</span>
+                        <span className="text-neutral-300">Optimal London/NY session behavior</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-blue-400">✓</span>
+                        <span className="text-neutral-300">Overcomes trading cost hurdle</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-blue-400">✓</span>
+                        <span className="text-neutral-300">
+                          Consistent trend-following behavior
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -274,22 +338,22 @@ export default function CurrencyAnalysis() {
         </div>
       )}
 
-      {/* Market Insights Summary */}
+      {/* Strategy Performance Summary */}
       <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Market Insights Summary</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div>
-            <h4 className="text-yellow-400 font-medium mb-2">🎯 Success Rate</h4>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Enhanced Daily EMA Strategy - Performance Summary
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="text-center">
+            <h4 className="text-emerald-400 font-medium mb-2">✅ Strategy Success Rate</h4>
             <p className="text-2xl font-bold text-white mb-1">
               {Math.round((currencyData.length / 10) * 100)}%
             </p>
-            <p className="text-neutral-400 text-sm">
-              {currencyData.length} out of 10 pairs profitable
-            </p>
+            <p className="text-neutral-400 text-sm">{currencyData.length} of 10 pairs profitable</p>
           </div>
 
-          <div>
-            <h4 className="text-green-400 font-medium mb-2">📈 Avg Return</h4>
+          <div className="text-center">
+            <h4 className="text-blue-400 font-medium mb-2">📈 Average Return</h4>
             <p className="text-2xl font-bold text-white mb-1">
               {(
                 currencyData.reduce((sum, curr) => sum + curr.annual_return, 0) /
@@ -297,31 +361,65 @@ export default function CurrencyAnalysis() {
               ).toFixed(1)}
               %
             </p>
-            <p className="text-neutral-400 text-sm">Average across profitable pairs</p>
+            <p className="text-neutral-400 text-sm">Profitable pairs average</p>
           </div>
 
-          <div>
-            <h4 className="text-blue-400 font-medium mb-2">🎌 JPY Advantage</h4>
+          <div className="text-center">
+            <h4 className="text-purple-400 font-medium mb-2">🎯 Average Win Rate</h4>
+            <p className="text-2xl font-bold text-white mb-1">
+              {Math.round(
+                currencyData.reduce((sum, curr) => sum + curr.win_rate, 0) / currencyData.length
+              )}
+              %
+            </p>
+            <p className="text-neutral-400 text-sm">Across profitable pairs</p>
+          </div>
+
+          <div className="text-center">
+            <h4 className="text-yellow-400 font-medium mb-2">🎌 JPY Dominance</h4>
             <p className="text-2xl font-bold text-white mb-1">
               {Math.round((jpyPairs.length / currencyData.length) * 100)}%
             </p>
-            <p className="text-neutral-400 text-sm">JPY pairs dominate profitable strategies</p>
+            <p className="text-neutral-400 text-sm">JPY pairs in profitable set</p>
           </div>
         </div>
 
+        {/* Strategy Insights */}
         <div className="mt-6 pt-6 border-t border-neutral-700">
-          <h4 className="text-white font-medium mb-3">Key Discoveries:</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <ul className="text-neutral-300 text-sm space-y-2">
-              <li>✅ JPY pairs show superior trend-following characteristics</li>
-              <li>✅ Consistent 68-70% win rates across JPY strategies</li>
-              <li>✅ Lower correlation between JPY pairs reduces portfolio risk</li>
-            </ul>
-            <ul className="text-neutral-300 text-sm space-y-2">
-              <li>✅ Tokyo session provides optimal execution for JPY pairs</li>
-              <li>✅ EMA crossover signals more reliable on JPY pairs</li>
-              <li>✅ Risk-adjusted returns exceed non-JPY alternatives</li>
-            </ul>
+          <h4 className="text-white font-medium mb-3">Enhanced Daily EMA Strategy Key Insights:</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h5 className="text-emerald-400 font-medium mb-2">✅ What Works</h5>
+              <ul className="text-neutral-300 text-sm space-y-1">
+                <li>• JPY pairs show superior EMA crossover reliability</li>
+                <li>• Daily timeframe provides optimal signal clarity</li>
+                <li>• 2:1 risk-reward consistently achievable</li>
+                <li>• Session filtering enhances JPY pair performance</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-red-400 font-medium mb-2">❌ Strategy Limitations</h5>
+              <ul className="text-neutral-300 text-sm space-y-1">
+                <li>• EUR_USD (-4.6%) despite high liquidity</li>
+                <li>• GBP_USD (-3.0%) too volatile for this approach</li>
+                <li>• Cross pairs like EUR_GBP (-4.2%) struggle</li>
+                <li>• Trading costs significantly impact lower performers</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Implementation Note */}
+        <div className="mt-6 pt-6 border-t border-neutral-700">
+          <div className="bg-blue-900/20 border border-blue-700/50 rounded-lg p-4">
+            <h5 className="text-blue-400 font-medium mb-2">📋 Implementation Strategy</h5>
+            <p className="text-neutral-300 text-sm">
+              Based on these results, the Enhanced Daily EMA Strategy recommends prioritizing JPY
+              pairs (USD_JPY, EUR_JPY) for primary allocation, with careful position sizing and
+              realistic performance expectations. The strategy's strength lies in its systematic
+              approach to trend-following with proper risk management rather than high-frequency
+              trading.
+            </p>
           </div>
         </div>
       </div>

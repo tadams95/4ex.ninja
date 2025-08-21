@@ -53,27 +53,27 @@ const VirtualizedCrossoverItem = memo(
     return (
       <div style={style} className="px-2">
         <div
-          className={`bg-gray-700 rounded-lg p-6 shadow-lg border-l-4 ${itemData.borderColor} cursor-pointer hover:bg-gray-600 transition-colors duration-200 mb-4`}
+          className={`bg-neutral-800 rounded-lg p-6 shadow-lg border-l-4 ${itemData.borderColor} cursor-pointer hover:bg-neutral-700 transition-colors duration-200 mb-4 border border-neutral-600`}
           onClick={handleClick}
         >
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">{crossover.pair}</h2>
-            <span className={`px-3 py-1 rounded-full text-sm ${itemData.badgeStyle}`}>
+            <h2 className="text-xl font-bold text-white">{crossover.pair}</h2>
+            <span className={`px-3 py-1 rounded-full text-sm font-medium ${itemData.badgeStyle}`}>
               {crossover.crossoverType}
             </span>
           </div>
           <div className="space-y-2">
             <div className="flex justify-between">
-              <p className="text-gray-300">Timeframe:</p>
-              <p className="font-medium">{crossover.timeframe}</p>
+              <p className="text-neutral-400">Timeframe:</p>
+              <p className="font-medium text-white">{crossover.timeframe}</p>
             </div>
             <div className="flex justify-between">
-              <p className="text-gray-300">Price:</p>
-              <p className="font-medium">{crossover.price}</p>
+              <p className="text-neutral-400">Price:</p>
+              <p className="font-medium text-white">{crossover.price}</p>
             </div>
             {crossover.confidence && (
               <div className="flex justify-between">
-                <p className="text-gray-300">Confidence:</p>
+                <p className="text-neutral-400">Confidence:</p>
                 <p className="font-medium text-blue-400">
                   {(crossover.confidence * 100).toFixed(0)}%
                 </p>
@@ -81,23 +81,23 @@ const VirtualizedCrossoverItem = memo(
             )}
             {crossover.strategy_type && (
               <div className="flex justify-between">
-                <p className="text-gray-300">Strategy:</p>
+                <p className="text-neutral-400">Strategy:</p>
                 <p className="font-medium text-purple-400">{crossover.strategy_type}</p>
               </div>
             )}
             {crossover.status && (
               <div className="flex justify-between">
-                <p className="text-gray-300">Status:</p>
+                <p className="text-neutral-400">Status:</p>
                 <p
                   className={`font-medium ${
-                    crossover.status === 'ACTIVE' ? 'text-green-400' : 'text-gray-400'
+                    crossover.status === 'ACTIVE' ? 'text-green-400' : 'text-neutral-500'
                   }`}
                 >
                   {crossover.status}
                 </p>
               </div>
             )}
-            <p className="text-sm text-gray-400 mt-4">{itemData.formattedTimestamp}</p>
+            <p className="text-sm text-neutral-500 mt-4">{itemData.formattedTimestamp}</p>
           </div>
         </div>
       </div>
@@ -146,27 +146,27 @@ const NonVirtualizedCrossoverItem = memo(
           transition: { duration: 0.3, delay: index * 0.1 },
         }}
         fallbackClassName={`animate-slide-up animate-stagger-${itemData.staggerDelay}`}
-        className={`bg-gray-700 rounded-lg p-6 shadow-lg border-l-4 ${itemData.borderColor} cursor-pointer hover:bg-gray-600 transition-colors duration-200`}
+        className={`bg-neutral-800 rounded-lg p-6 shadow-lg border-l-4 ${itemData.borderColor} cursor-pointer hover:bg-neutral-700 transition-colors duration-200 border border-neutral-600`}
         onClick={handleClick}
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">{crossover.pair}</h2>
-          <span className={`px-3 py-1 rounded-full text-sm ${itemData.badgeStyle}`}>
+          <h2 className="text-xl font-bold text-white">{crossover.pair}</h2>
+          <span className={`px-3 py-1 rounded-full text-sm font-medium ${itemData.badgeStyle}`}>
             {crossover.crossoverType}
           </span>
         </div>
         <div className="space-y-2">
           <div className="flex justify-between">
-            <p className="text-gray-300">Timeframe:</p>
-            <p className="font-medium">{crossover.timeframe}</p>
+            <p className="text-neutral-400">Timeframe:</p>
+            <p className="font-medium text-white">{crossover.timeframe}</p>
           </div>
           <div className="flex justify-between">
-            <p className="text-gray-300">Price:</p>
-            <p className="font-medium">{crossover.price}</p>
+            <p className="text-neutral-400">Price:</p>
+            <p className="font-medium text-white">{crossover.price}</p>
           </div>
           {crossover.confidence && (
             <div className="flex justify-between">
-              <p className="text-gray-300">Confidence:</p>
+              <p className="text-neutral-400">Confidence:</p>
               <p className="font-medium text-blue-400">
                 {(crossover.confidence * 100).toFixed(0)}%
               </p>
@@ -174,23 +174,23 @@ const NonVirtualizedCrossoverItem = memo(
           )}
           {crossover.strategy_type && (
             <div className="flex justify-between">
-              <p className="text-gray-300">Strategy:</p>
+              <p className="text-neutral-400">Strategy:</p>
               <p className="font-medium text-purple-400">{crossover.strategy_type}</p>
             </div>
           )}
           {crossover.status && (
             <div className="flex justify-between">
-              <p className="text-gray-300">Status:</p>
+              <p className="text-neutral-400">Status:</p>
               <p
                 className={`font-medium ${
-                  crossover.status === 'ACTIVE' ? 'text-green-400' : 'text-gray-400'
+                  crossover.status === 'ACTIVE' ? 'text-green-400' : 'text-neutral-500'
                 }`}
               >
                 {crossover.status}
               </p>
             </div>
           )}
-          <p className="text-sm text-gray-400 mt-4">{itemData.formattedTimestamp}</p>
+          <p className="text-sm text-neutral-500 mt-4">{itemData.formattedTimestamp}</p>
         </div>
       </ConditionalMotionDiv>
     );
@@ -253,14 +253,16 @@ const VirtualizedCrossoverList: React.FC<VirtualizedCrossoverListProps> = memo(
     }, [crossovers.length, shouldVirtualize, containerHeight, itemHeight]);
 
     if (crossovers.length === 0) {
-      return <div className="text-center py-8 text-gray-500">No crossover signals available.</div>;
+      return (
+        <div className="text-center py-8 text-neutral-500">No crossover signals available.</div>
+      );
     }
 
     if (shouldVirtualize) {
       return (
         <div className="space-y-4">
           {/* Virtualized list for large datasets */}
-          <div className="bg-gray-800 rounded-lg overflow-hidden">
+          <div className="bg-neutral-800 rounded-lg overflow-hidden">
             <List
               ref={listRef}
               height={containerHeight}
@@ -268,7 +270,7 @@ const VirtualizedCrossoverList: React.FC<VirtualizedCrossoverListProps> = memo(
               itemSize={itemHeight}
               itemData={itemData}
               width="100%"
-              className="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+              className="scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-neutral-800"
             >
               {VirtualizedCrossoverItem}
             </List>
@@ -276,7 +278,7 @@ const VirtualizedCrossoverList: React.FC<VirtualizedCrossoverListProps> = memo(
 
           {/* Performance info in development */}
           {renderMetrics && (
-            <div className="text-xs text-gray-400 bg-gray-800 rounded p-2 border-l-4 border-blue-500">
+            <div className="text-xs text-neutral-400 bg-neutral-800 rounded p-2 border-l-4 border-blue-500">
               <div className="font-semibold mb-1">Virtualization Performance:</div>
               <div>Total Items: {renderMetrics.totalItems}</div>
               <div>Rendered: {renderMetrics.memoryEstimate}</div>
@@ -301,7 +303,7 @@ const VirtualizedCrossoverList: React.FC<VirtualizedCrossoverListProps> = memo(
 
         {/* Performance info in development */}
         {renderMetrics && (
-          <div className="text-xs text-gray-400 bg-gray-800 rounded p-2 border-l-4 border-green-500">
+          <div className="text-xs text-neutral-400 bg-neutral-800 rounded p-2 border-l-4 border-green-500">
             <div className="font-semibold mb-1">Standard Rendering:</div>
             <div>Total Items: {renderMetrics.totalItems}</div>
             <div>Status: {renderMetrics.memoryEstimate}</div>
