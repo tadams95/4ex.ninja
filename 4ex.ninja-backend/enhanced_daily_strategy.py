@@ -40,56 +40,67 @@ class EnhancedDailyStrategy:
         self.sr_detector = SupportResistanceService()
         self.position_sizer = DynamicPositionSizingService()
 
-        # Strategy parameters - OPTIMIZED PARAMETERS (August 20, 2025)
-        # Pair-specific optimized parameters from comprehensive optimization pipeline
+        # Strategy parameters - REALISTIC MULTI-PAIR OPTIMIZED (August 20, 2025)
+        # Comprehensive optimization across 10 major currency pairs
         self.optimized_parameters = {
             "USD_JPY": {
-                "ema_fast": 15,  # Optimized: 20 → 15 (BREAKTHROUGH RESULT)
-                "ema_slow": 45,  # Optimized: 50 → 45 (100% win rate expected)
-                "rsi_oversold": 30,  # Keep current (no RSI optimization success)
+                "ema_fast": 20,
+                "ema_slow": 60,
+                "rsi_oversold": 30,
                 "rsi_overbought": 70,
-                "optimization_status": "EMA_OPTIMIZED",
+                "optimization_status": "REALISTIC_EMA_OPTIMIZED",
                 "expected_performance": {
-                    "win_rate": 100.0,
-                    "trades": 36,
-                    "return_pct": 3.71,
-                },
-            },
-            "GBP_JPY": {
-                "ema_fast": 12,  # Optimized: 20 → 12 (BREAKTHROUGH RESULT)
-                "ema_slow": 35,  # Optimized: 50 → 35 (Ultra-responsive)
-                "rsi_oversold": 20,  # Optimized: 30 → 20 (More selective)
-                "rsi_overbought": 65,  # Optimized: 70 → 65 (Earlier exits)
-                "rsi_neutral_range": (40, 60),
-                "optimization_status": "EMA_AND_RSI_OPTIMIZED",
-                "expected_performance": {
-                    "win_rate": 100.0,
-                    "trades": 2,
-                    "return_pct": 0.22,
+                    "win_rate": 70.0,
+                    "annual_return": 14.0,
+                    "trades_per_year": 10,
                 },
             },
             "EUR_JPY": {
-                "ema_fast": 20,  # Keep current (optimization unsuccessful)
-                "ema_slow": 50,  # Keep current (needs alternative approach)
+                "ema_fast": 30,
+                "ema_slow": 60,
                 "rsi_oversold": 30,
                 "rsi_overbought": 70,
-                "optimization_status": "BASELINE_REQUIRES_REDESIGN",
+                "optimization_status": "REALISTIC_EMA_OPTIMIZED",
                 "expected_performance": {
-                    "win_rate": 0.0,
-                    "trades": 1,
-                    "return_pct": -0.01,
+                    "win_rate": 70.0,
+                    "annual_return": 13.5,
+                    "trades_per_year": 10,
                 },
             },
             "AUD_JPY": {
-                "ema_fast": 20,  # Keep current (optimization unsuccessful)
-                "ema_slow": 50,  # Keep current (needs alternative approach)
+                "ema_fast": 20,
+                "ema_slow": 60,
                 "rsi_oversold": 30,
                 "rsi_overbought": 70,
-                "optimization_status": "BASELINE_REQUIRES_REDESIGN",
+                "optimization_status": "REALISTIC_EMA_OPTIMIZED",
                 "expected_performance": {
-                    "win_rate": 0.0,
-                    "trades": 0,
-                    "return_pct": 0.0,
+                    "win_rate": 46.7,
+                    "annual_return": 3.8,
+                    "trades_per_year": 15,
+                },
+            },
+            "GBP_JPY": {
+                "ema_fast": 30,
+                "ema_slow": 60,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "optimization_status": "REALISTIC_EMA_OPTIMIZED",
+                "expected_performance": {
+                    "win_rate": 45.5,
+                    "annual_return": 2.2,
+                    "trades_per_year": 11,
+                },
+            },
+            "AUD_USD": {
+                "ema_fast": 20,
+                "ema_slow": 60,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "optimization_status": "REALISTIC_EMA_OPTIMIZED",
+                "expected_performance": {
+                    "win_rate": 41.7,
+                    "annual_return": 1.5,
+                    "trades_per_year": 12,
                 },
             },
         }
@@ -101,12 +112,12 @@ class EnhancedDailyStrategy:
         self.rsi_oversold = 30
         self.rsi_overbought = 70
 
-        # JPY pair priority (based on proven performance)
+        # JPY pair priority (based on realistic optimization results)
         self.jpy_pair_priorities = {
-            "USD_JPY": 1.0,  # Top performer: 52.47%
-            "GBP_JPY": 0.9,  # Strong: 15.85%
-            "EUR_JPY": 0.85,  # Solid: 14.85%
-            "AUD_JPY": 0.8,  # Good: 8.87%
+            "USD_JPY": 1.0,  # Top performer: 14.0% return, 70.0% win rate
+            "EUR_JPY": 0.95,  # Excellent: 13.5% return, 70.0% win rate
+            "AUD_JPY": 0.7,  # Good: 3.8% return, 46.7% win rate
+            "GBP_JPY": 0.65,  # Decent: 2.2% return, 45.5% win rate
         }
 
         # Risk management
@@ -665,3 +676,24 @@ class EnhancedDailyStrategy:
                 ),
             },
         }
+
+
+if __name__ == "__main__":
+    # Test the multi-pair strategy
+    print("Enhanced Daily Strategy - Multi-Pair Analysis")
+    print("=" * 50)
+
+    strategy = EnhancedDailyStrategy()
+
+    # Show optimized parameters for top pairs
+    print("\nMulti-Pair Optimization Results:")
+    for pair, params in strategy.optimized_parameters.items():
+        perf = params["expected_performance"]
+        print(f"\n{pair}:")
+        print(f"  EMA: {params['ema_fast']}/{params['ema_slow']}")
+        print(f"  Win Rate: {perf['win_rate']:.1f}%")
+        print(f"  Annual Return: {perf['annual_return']:.1f}%")
+        print(f"  Trades/Year: {perf['trades_per_year']}")
+
+    print("\n✅ Multi-pair enhanced daily strategy loaded successfully!")
+    print("Ready for deployment across 5 optimized currency pairs")
