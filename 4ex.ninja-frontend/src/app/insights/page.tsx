@@ -358,7 +358,7 @@ function InsightsPage() {
             {/* Signals Header */}
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold text-white">Active Market Signals</h2>
+                <h2 className="text-xl font-semibold text-white">Active Market Insights</h2>
                 <p className="text-neutral-400 text-sm">
                   {processedData.crossovers.length} signal
                   {processedData.crossovers.length !== 1 ? 's' : ''} detected

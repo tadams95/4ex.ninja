@@ -98,7 +98,9 @@ export default function BacktestDashboard() {
             <div className="flex-1">
               <div className="flex items-center space-x-3 mb-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Enhanced Daily EMA Strategy</h1>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+                  Enhanced Daily EMA Strategy
+                </h1>
               </div>
               <p className="text-neutral-400 text-sm mb-1">
                 {isLoading
@@ -290,7 +292,9 @@ function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
       <div className=" border border-neutral-700 rounded-xl p-4 sm:p-6 lg:p-8">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between space-y-4 lg:space-y-0">
           <div className="flex-1">
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">Strategy Performance Summary</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">
+              Strategy Performance Summary
+            </h2>
             <p className="text-neutral-300 mb-4 text-sm sm:text-base max-w-3xl">
               Comprehensive optimization results for the Enhanced Daily EMA Strategy across{' '}
               {optimizationData.optimization_info.total_pairs_tested} major currency pairs. Our

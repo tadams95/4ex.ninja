@@ -143,9 +143,7 @@ export default function PerformanceMetrics() {
     <div className="space-y-6">
       {/* Header with Real Results Reality Check */}
       <div className="bg-gradient-to-r from-orange-900/30 to-yellow-900/30 border border-orange-700/50 rounded-lg p-6">
-        <h2 className="text-xl font-bold text-white mb-2">
-          ✅ VERIFIED Performance Metrics - REAL Results
-        </h2>
+        <h2 className="text-xl font-bold text-white mb-2">✅ Performance Metrics - REAL Results</h2>
         <p className="text-orange-400 font-medium mb-2">
           🎯 REALITY: Only 2 pairs are highly profitable (USD_JPY: 14%, EUR_JPY: 13.5%)
         </p>
@@ -170,9 +168,7 @@ export default function PerformanceMetrics() {
 
       {/* Detailed Profitable Pairs Analysis */}
       <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">
-          Profitable Pairs Breakdown (REAL Data)
-        </h3>
+        <h3 className="text-lg font-semibold text-white mb-4">Profitable Pairs Breakdown</h3>
         <div className="space-y-3">
           {profitablePairs.map(([pair, data]) => {
             const tierColor =

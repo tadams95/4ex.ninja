@@ -97,9 +97,7 @@ export default function EquityCurveChart() {
     <div className="space-y-6">
       {/* Header with USD_JPY Focus */}
       <div className="bg-gradient-to-r from-blue-900/30 to-green-900/30 border border-blue-700/50 rounded-lg p-6">
-        <h2 className="text-xl font-bold text-white mb-2">
-          📈 VERIFIED Equity Curve - USD_JPY Strategy
-        </h2>
+        <h2 className="text-xl font-bold text-white mb-2">📈 Equity Curve - USD_JPY Strategy</h2>
         <p className="text-blue-400 font-medium mb-2">
           🎯 REAL Performance: 14.0% Annual Return, 70% Win Rate
         </p>
@@ -227,7 +225,7 @@ export default function EquityCurveChart() {
           <div>
             <h4 className="text-white font-medium mb-2">Strategy Highlights:</h4>
             <ul className="text-neutral-300 text-sm space-y-1">
-              <li>✅ 14.0% annual return (VERIFIED)</li>
+              <li>✅ 14.0% annual return</li>
               <li>✅ 70% win rate consistency</li>
               <li>✅ Superior trend-following performance</li>
               <li>✅ Low correlation with other major pairs</li>
