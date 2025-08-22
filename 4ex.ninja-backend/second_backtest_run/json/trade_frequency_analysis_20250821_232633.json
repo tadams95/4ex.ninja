@@ -1,0 +1,38 @@
+{
+  "monthly_estimates": {
+    "EUR_USD": 8.0,
+    "GBP_USD": 7.8,
+    "USD_JPY": 7.7,
+    "GBP_JPY": 7.6,
+    "EUR_JPY": 5.7,
+    "AUD_JPY": 6.0,
+    "EUR_GBP": 8.2,
+    "AUD_USD": 8.6,
+    "USD_CAD": 8.6,
+    "USD_CHF": 5.8
+  },
+  "yearly_projections": {
+    "EUR_USD": 96.4,
+    "GBP_USD": 93.4,
+    "USD_JPY": 92.4,
+    "GBP_JPY": 91.0,
+    "EUR_JPY": 68.2,
+    "AUD_JPY": 71.8,
+    "EUR_GBP": 98.4,
+    "AUD_USD": 102.8,
+    "USD_CAD": 103.2,
+    "USD_CHF": 69.6
+  },
+  "signal_density": {
+    "EUR_USD": 44.0,
+    "GBP_USD": 42.6,
+    "USD_JPY": 42.2,
+    "GBP_JPY": 41.6,
+    "EUR_JPY": 31.1,
+    "AUD_JPY": 32.8,
+    "EUR_GBP": 44.9,
+    "AUD_USD": 46.9,
+    "USD_CAD": 47.1,
+    "USD_CHF": 31.8
+  }
+}

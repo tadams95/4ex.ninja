@@ -1,0 +1,55 @@
+{
+  "deployment_date": "2025-08-21",
+  "strategy_version": "Enhanced_Daily_v2.0",
+  "validated_pairs": [
+    {
+      "pair": "USD_JPY",
+      "priority": 1,
+      "expected_win_rate": 65.0,
+      "expected_monthly_trades": 7.7,
+      "risk_management": {
+        "stop_loss_pips": 25,
+        "take_profit_pips": 50,
+        "max_consecutive_losses": 9
+      }
+    },
+    {
+      "pair": "EUR_GBP",
+      "priority": 2,
+      "expected_win_rate": 60.0,
+      "expected_monthly_trades": 8.2,
+      "risk_management": {
+        "stop_loss_pips": 25,
+        "take_profit_pips": 50,
+        "max_consecutive_losses": 6
+      }
+    },
+    {
+      "pair": "AUD_JPY",
+      "priority": 3,
+      "expected_win_rate": 60.0,
+      "expected_monthly_trades": 6.0,
+      "risk_management": {
+        "stop_loss_pips": 35,
+        "take_profit_pips": 70,
+        "max_consecutive_losses": 5
+      }
+    }
+  ],
+  "risk_parameters": {
+    "max_risk_per_trade": 0.02,
+    "max_daily_risk": 0.06,
+    "max_pairs_active": 3,
+    "stop_trading_after_losses": 5
+  },
+  "monitoring_requirements": {
+    "daily_review": true,
+    "weekly_performance_report": true,
+    "monthly_strategy_review": true,
+    "performance_threshold": {
+      "min_win_rate": 50.0,
+      "min_profit_factor": 1.5,
+      "max_consecutive_losses": 10
+    }
+  }
+}
