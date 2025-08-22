@@ -88,7 +88,7 @@ async def shutdown_event():
     logging.info("✅ All services stopped successfully")
 
 
-@app.get("/", response_model=Dict[str, str])
+@app.get("/")
 async def root():
     """Root endpoint."""
     return {
@@ -445,6 +445,163 @@ async def get_system_status():
         raise HTTPException(
             status_code=500, detail=f"Failed to get system status: {str(e)}"
         )
+
+
+    return response
+
+
+# ====================================================================
+# Enhanced Daily Strategy V2 Endpoints (Parallel Deployment)
+# ====================================================================
+
+@app.get("/api/v2/signals")
+async def get_v2_signals():
+    """Get current signals from Enhanced Daily Strategy V2"""
+    try:
+        from enhanced_daily_strategy_v2 import EnhancedDailyStrategyV2
+        
+        strategy = EnhancedDailyStrategyV2()
+        
+        # Get signals for priority pairs
+        priority_pairs = ['USD_JPY', 'EUR_GBP', 'AUD_JPY']
+        signals = []
+        
+        for pair in priority_pairs:
+            try:
+                # Get recent data (would normally come from data service)
+                # For now, return basic signal info
+                signal_info = {
+                    'pair': pair,
+                    'signal': 'no_signal',
+                    'strategy_version': '2.0.0',
+                    'timestamp': datetime.utcnow().isoformat(),
+                    'message': 'V2 parallel deployment - signals pending market data integration'
+                }
+                signals.append(signal_info)
+            except Exception as e:
+                signals.append({
+                    'pair': pair,
+                    'error': str(e),
+                    'strategy_version': '2.0.0'
+                })
+        
+        return {
+            'version': '2.0.0',
+            'strategy': 'Enhanced Daily Strategy V2',
+            'timestamp': datetime.utcnow().isoformat(),
+            'signals': signals,
+            'status': 'parallel_deployment_active',
+            'deployment_mode': 'parallel_with_v1'
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"V2 signal generation error: {str(e)}")
+
+
+@app.get("/api/v2/status")
+async def get_v2_status():
+    """Get Enhanced Daily Strategy V2 status"""
+    try:
+        from enhanced_daily_strategy_v2 import EnhancedDailyStrategyV2
+        from confidence_risk_manager_v2 import ConfidenceAnalysisRiskManager
+        
+        strategy = EnhancedDailyStrategyV2()
+        risk_manager = ConfidenceAnalysisRiskManager()
+        
+        strategy_info = strategy.get_strategy_info()
+        risk_status = risk_manager.get_risk_status()
+        
+        return {
+            'strategy': 'Enhanced Daily Strategy V2',
+            'version': '2.0.0',
+            'status': 'running',
+            'deployment_mode': 'parallel_with_v1',
+            'deployment_date': '2025-08-22',
+            'validation_source': 'comprehensive_10_pair_test (4,436 trades)',
+            'supported_pairs': strategy_info.get('supported_pairs', []),
+            'risk_management': {
+                'position_sizing': '0.5% per trade',
+                'emergency_mode': risk_status.get('emergency_status', {}).get('emergency_mode', False),
+                'max_risk_per_trade': '0.5%'
+            },
+            'expected_performance': {
+                'win_rate_range': '45-55%',
+                'profit_factor_range': '1.8-2.5',
+                'monthly_trades': '20-30',
+                'confidence_level': '75%'
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"V2 status error: {str(e)}")
+
+
+@app.get("/api/v2/performance")
+async def get_v2_performance():
+    """Get Enhanced Daily Strategy V2 performance metrics"""
+    try:
+        from confidence_risk_manager_v2 import ConfidenceAnalysisRiskManager
+        
+        risk_manager = ConfidenceAnalysisRiskManager()
+        performance = risk_manager.get_risk_status()
+        
+        return {
+            'strategy': 'Enhanced Daily Strategy V2',
+            'version': '2.0.0',
+            'deployment_date': '2025-08-22',
+            'live_performance': {
+                'total_trades': performance.get('performance_tracking', {}).get('total_trades', 0),
+                'winning_trades': performance.get('performance_tracking', {}).get('winning_trades', 0),
+                'live_win_rate': performance.get('performance_tracking', {}).get('live_win_rate', 0.0),
+                'live_profit_factor': performance.get('performance_tracking', {}).get('live_profit_factor', 0.0),
+                'current_drawdown': performance.get('performance_tracking', {}).get('current_drawdown', 0.0)
+            },
+            'validation_performance': {
+                'backtest_trades': 4436,
+                'backtest_win_rate': 62.4,
+                'realistic_win_rate': 50.0,
+                'confidence_adjustment': -12.4
+            },
+            'comparison_status': 'parallel_deployment_active',
+            'note': '30-day comparison period with V1 strategy'
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"V2 performance error: {str(e)}")
+
+
+@app.get("/api/v2/comparison")
+async def get_v1_v2_comparison():
+    """Compare V1 and V2 strategy performance"""
+    try:
+        return {
+            'comparison_period': 'Active since 2025-08-22',
+            'v1_strategy': {
+                'name': 'Enhanced Daily Strategy V1',
+                'deployment_date': '2025-08-21',
+                'live_trades': 'TBD',
+                'live_win_rate': 'TBD',
+                'endpoint': '/signals'
+            },
+            'v2_strategy': {
+                'name': 'Enhanced Daily Strategy V2',
+                'deployment_date': '2025-08-22',
+                'live_trades': 'TBD',
+                'live_win_rate': 'TBD',
+                'endpoint': '/api/v2/signals'
+            },
+            'comparison_criteria': {
+                'win_rate': 'Target: V2 > 45%',
+                'profit_factor': 'Target: V2 > 1.8',
+                'signal_quality': 'Consistent generation',
+                'risk_management': 'Lower drawdown'
+            },
+            'decision_timeline': '30 days from deployment',
+            'status': 'In progress - collecting performance data'
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Comparison error: {str(e)}")
 
 
 # Exception handler for better error responses

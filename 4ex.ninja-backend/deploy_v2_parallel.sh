@@ -9,9 +9,9 @@ echo "Parallel Deployment Mode"
 echo "========================================"
 
 # Set deployment variables
-DROPLET_IP="YOUR_DROPLET_IP"
+DROPLET_IP="165.227.5.89"
 DROPLET_USER="root"
-DEPLOYMENT_PATH="/opt/4ex-ninja"
+DEPLOYMENT_PATH="/opt/4ex-ninja-backend"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
 echo "🚀 Starting V2 parallel deployment..."
@@ -26,47 +26,15 @@ scp enhanced_daily_strategy_v2.py $DROPLET_USER@$DROPLET_IP:$DEPLOYMENT_PATH/
 scp enhanced_daily_strategy_v2_config.json $DROPLET_USER@$DROPLET_IP:$DEPLOYMENT_PATH/
 scp confidence_risk_manager_v2.py $DROPLET_USER@$DROPLET_IP:$DEPLOYMENT_PATH/
 
-# Create V2 monitoring endpoints
-echo "🔧 Setting up V2 monitoring endpoints..."
-ssh $DROPLET_USER@$DROPLET_IP "cd $DEPLOYMENT_PATH && cat >> app.py << 'EOF'
+# Upload updated app.py with V2 endpoints
+echo "� Uploading updated app.py with V2 endpoints..."
+scp app.py $DROPLET_USER@$DROPLET_IP:$DEPLOYMENT_PATH/
 
-# Enhanced Daily Strategy V2 Endpoints
-@app.route('/api/v2/signals', methods=['GET'])
-def get_v2_signals():
-    try:
-        from enhanced_daily_strategy_v2 import EnhancedDailyStrategyV2
-        strategy = EnhancedDailyStrategyV2()
-        
-        # Get current market data and generate signals
-        signals = strategy.get_current_signals()
-        
-        return jsonify({
-            'version': '2.0.0',
-            'timestamp': datetime.now().isoformat(),
-            'signals': signals,
-            'status': 'active'
-        })
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+# Upload updated service file (fixed V1 import path)
+echo "📤 Uploading updated enhanced_daily_production_service.py..."
+scp services/enhanced_daily_production_service.py $DROPLET_USER@$DROPLET_IP:$DEPLOYMENT_PATH/services/
 
-@app.route('/api/v2/status', methods=['GET'])
-def get_v2_status():
-    return jsonify({
-        'strategy': 'Enhanced Daily Strategy V2',
-        'version': '2.0.0',
-        'status': 'running',
-        'deployment_mode': 'parallel',
-        'validation_source': 'comprehensive_10_pair_test'
-    })
-
-@app.route('/api/v2/performance', methods=['GET'])
-def get_v2_performance():
-    # TODO: Implement V2 performance tracking
-    return jsonify({
-        'message': 'V2 performance tracking - coming soon',
-        'deployment_date': '2025-08-21'
-    })
-EOF"
+echo "✅ V2 monitoring endpoints integrated into app.py"
 
 # Install V2 dependencies
 echo "📦 Installing V2 dependencies..."

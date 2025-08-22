@@ -12,7 +12,7 @@ from typing import Dict, List, Optional
 import logging
 import pandas as pd
 
-from enhanced_daily_strategy import EnhancedDailyStrategy
+from deployed_strategies.enhanced_daily_strategy import EnhancedDailyStrategy
 from services.data_service import DataService
 from services.enhanced_discord_service import get_enhanced_discord_service, SignalPriority
 from services.notification_service import NotificationService
