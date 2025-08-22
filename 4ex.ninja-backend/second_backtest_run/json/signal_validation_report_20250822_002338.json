@@ -1,0 +1,38 @@
+{
+  "validation_date": "2025-08-22T00:23:38.484730",
+  "test_type": "signal_generation_validation",
+  "strategy_version": "2.0.0",
+  "final_status": "\u2705 VALIDATION PASSED",
+  "decision": "Enhanced Daily Strategy V2 signal generation matches comprehensive test patterns.",
+  "recommendation": "PROCEED to production deployment phase.",
+  "pair_validations": {
+    "USD_JPY": {
+      "comprehensive_monthly": 7.7,
+      "expected_6_months": 46.2,
+      "actual_6_months": 40,
+      "variance_percent": -13.419913419913426,
+      "status": "\u2705 VALIDATED"
+    },
+    "EUR_GBP": {
+      "comprehensive_monthly": 8.2,
+      "expected_6_months": 49.199999999999996,
+      "actual_6_months": 40,
+      "variance_percent": -18.69918699186991,
+      "status": "\u2705 VALIDATED"
+    },
+    "AUD_JPY": {
+      "comprehensive_monthly": 6.0,
+      "expected_6_months": 36.0,
+      "actual_6_months": 54,
+      "variance_percent": 50.0,
+      "status": "\u26a0\ufe0f  ACCEPTABLE"
+    }
+  },
+  "summary": {
+    "validated_pairs": 2,
+    "acceptable_pairs": 1,
+    "total_pairs": 3,
+    "total_signals": 134,
+    "avg_variance": 27.373033470594446
+  }
+}

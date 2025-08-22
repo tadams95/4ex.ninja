@@ -1,0 +1,222 @@
+{
+  "strategy_info": {
+    "name": "Enhanced Daily Strategy V2",
+    "version": "2.0.0",
+    "validation_date": "2025-08-21",
+    "validation_trades": 4436,
+    "validation_source": "comprehensive_10_pair_test.py",
+    "deployment_date": "2025-08-21",
+    "status": "development"
+  },
+  "supported_pairs": {
+    "USD_JPY": {
+      "ema_fast": 10,
+      "ema_slow": 20,
+      "timeframe": "H4",
+      "priority": 1,
+      "sl_pips": 25,
+      "tp_pips": 50,
+      "pip_value": 0.01,
+      "spread_adjustment": 1.5,
+      "expected_performance": {
+        "backtest_win_rate": 68.0,
+        "realistic_win_rate": 55.0,
+        "confidence_adjustment": -13.0,
+        "backtest_profit_factor": 4.14,
+        "realistic_profit_factor": 2.5,
+        "monthly_trades": 8,
+        "confidence_level": 80
+      }
+    },
+    "EUR_GBP": {
+      "ema_fast": 10,
+      "ema_slow": 20,
+      "timeframe": "H4",
+      "priority": 2,
+      "sl_pips": 25,
+      "tp_pips": 50,
+      "pip_value": 0.0001,
+      "spread_adjustment": 1.2,
+      "expected_performance": {
+        "backtest_win_rate": 63.4,
+        "realistic_win_rate": 51.0,
+        "confidence_adjustment": -12.4,
+        "backtest_profit_factor": 4.02,
+        "realistic_profit_factor": 2.3,
+        "monthly_trades": 8,
+        "confidence_level": 75
+      }
+    },
+    "AUD_JPY": {
+      "ema_fast": 10,
+      "ema_slow": 20,
+      "timeframe": "H4",
+      "priority": 3,
+      "sl_pips": 35,
+      "tp_pips": 70,
+      "pip_value": 0.01,
+      "spread_adjustment": 2.0,
+      "expected_performance": {
+        "backtest_win_rate": 63.2,
+        "realistic_win_rate": 50.0,
+        "confidence_adjustment": -13.2,
+        "backtest_profit_factor": 3.88,
+        "realistic_profit_factor": 2.2,
+        "monthly_trades": 6,
+        "confidence_level": 70
+      }
+    },
+    "GBP_JPY": {
+      "ema_fast": 10,
+      "ema_slow": 20,
+      "timeframe": "H4",
+      "priority": 4,
+      "sl_pips": 40,
+      "tp_pips": 80,
+      "pip_value": 0.01,
+      "spread_adjustment": 2.5,
+      "expected_performance": {
+        "backtest_win_rate": 54.8,
+        "realistic_win_rate": 45.0,
+        "confidence_adjustment": -9.8,
+        "backtest_profit_factor": 2.12,
+        "realistic_profit_factor": 1.5,
+        "monthly_trades": 5,
+        "confidence_level": 65
+      }
+    },
+    "EUR_USD": {
+      "ema_fast": 10,
+      "ema_slow": 20,
+      "timeframe": "H4",
+      "priority": 5,
+      "sl_pips": 20,
+      "tp_pips": 40,
+      "pip_value": 0.0001,
+      "spread_adjustment": 0.8,
+      "expected_performance": {
+        "backtest_win_rate": 59.3,
+        "realistic_win_rate": 48.0,
+        "confidence_adjustment": -11.3,
+        "backtest_profit_factor": 2.85,
+        "realistic_profit_factor": 1.8,
+        "monthly_trades": 7,
+        "confidence_level": 70
+      }
+    }
+  },
+  "risk_management": {
+    "position_sizing": {
+      "method": "fixed_risk",
+      "risk_per_trade_percent": 0.5,
+      "min_position_size": 0.01,
+      "max_position_size": 1.0,
+      "account_balance_requirement": 1000
+    },
+    "exit_rules": {
+      "max_consecutive_losses": 10,
+      "max_daily_risk_percent": 1.5,
+      "emergency_exit_drawdown_percent": 20,
+      "stop_trading_conditions": [
+        "10_consecutive_losses",
+        "20_percent_drawdown",
+        "monthly_target_exceeded"
+      ]
+    },
+    "trade_management": {
+      "partial_profit_taking": false,
+      "trailing_stop": false,
+      "break_even_move": false,
+      "trade_timeout_hours": 72
+    }
+  },
+  "validation_results": {
+    "comprehensive_test_summary": {
+      "total_trades": 4436,
+      "total_pairs_tested": 10,
+      "test_period": "2020-2025 (5 years)",
+      "overall_win_rate": 62.4,
+      "overall_profit_factor": 3.51,
+      "profitable_pairs": 10,
+      "profitable_pair_percentage": 100.0
+    },
+    "confidence_analysis": {
+      "reality_adjustment_factor": -0.14,
+      "spread_impact": -0.05,
+      "slippage_impact": -0.03,
+      "market_regime_risk": -0.06,
+      "confidence_level": 75,
+      "recommendation": "Deploy with conservative expectations"
+    },
+    "top_performing_pairs": [
+      {
+        "pair": "USD_JPY",
+        "win_rate": 68.0,
+        "profit_factor": 4.14,
+        "total_trades": 462,
+        "confidence": "High"
+      },
+      {
+        "pair": "EUR_GBP", 
+        "win_rate": 63.4,
+        "profit_factor": 4.02,
+        "total_trades": 445,
+        "confidence": "High"
+      },
+      {
+        "pair": "AUD_JPY",
+        "win_rate": 63.2,
+        "profit_factor": 3.88,
+        "total_trades": 367,
+        "confidence": "Medium-High"
+      }
+    ]
+  },
+  "deployment_configuration": {
+    "environment": "production_parallel",
+    "deployment_type": "parallel_v2",
+    "api_endpoints": {
+      "v2_signals": "/api/v2/signals",
+      "v2_status": "/api/v2/status",
+      "v2_performance": "/api/v2/performance"
+    },
+    "monitoring": {
+      "performance_tracking": true,
+      "signal_logging": true,
+      "risk_monitoring": true,
+      "comparison_with_v1": true
+    },
+    "testing_phase": {
+      "paper_trading_duration_days": 30,
+      "minimum_trades_for_validation": 50,
+      "migration_criteria": {
+        "min_win_rate": 45.0,
+        "min_profit_factor": 1.5,
+        "max_consecutive_losses": 10,
+        "consistent_signal_generation": true
+      }
+    }
+  },
+  "performance_targets": {
+    "30_day_validation": {
+      "target_win_rate_range": [45, 55],
+      "target_profit_factor_range": [1.8, 2.5],
+      "target_monthly_trades": [20, 30],
+      "max_acceptable_consecutive_losses": 10
+    },
+    "migration_decision": {
+      "proceed_if_win_rate_above": 45,
+      "proceed_if_profit_factor_above": 1.5,
+      "proceed_if_consecutive_losses_below": 10,
+      "proceed_if_signal_consistency": true
+    }
+  },
+  "metadata": {
+    "created_date": "2025-08-21T23:40:00Z",
+    "created_by": "Enhanced Daily Strategy V2 Implementation",
+    "based_on_validation": "comprehensive_10_pair_test.py",
+    "confidence_analysis": "confidence_analysis_detailed_20250821_233306.json",
+    "deployment_strategy": "DEPLOYMENT_STRATEGY_DECISION.md",
+    "last_updated": "2025-08-21T23:40:00Z"
+  }
+}
