@@ -14,7 +14,9 @@ import pandas as pd
 
 from enhanced_daily_strategy import EnhancedDailyStrategy
 from services.data_service import DataService
-from models.signal_models import PriceData
+from services.enhanced_discord_service import get_enhanced_discord_service, SignalPriority
+from services.notification_service import NotificationService
+from models.signal_models import PriceData, TradingSignal, SignalType, SignalStatus
 
 
 class EnhancedDailyProductionService:
@@ -24,11 +26,17 @@ class EnhancedDailyProductionService:
         self.logger = logging.getLogger(__name__)
         self.data_service = DataService()
         self.strategy = EnhancedDailyStrategy()
+        
+        # Initialize Discord integration
+        self.discord_service = get_enhanced_discord_service()
+        self.notification_service = NotificationService()
 
         # Track performance and signals
         self.active_signals = {}
         self.performance_metrics = {
             "total_signals_generated": 0,
+            "signals_sent_to_discord": 0,
+            "discord_delivery_success_rate": 0.0,
             "session_filtered_signals": 0,
             "confluence_enhanced_signals": 0,
             "dynamic_sized_signals": 0,
@@ -69,6 +77,10 @@ class EnhancedDailyProductionService:
 
             # Convert opportunities to production signals
             signals = await self._convert_to_production_signals(scan_results)
+
+            # Send signals to Discord if any were generated
+            if signals:
+                await self._send_signals_to_discord(signals)
 
             self.logger.info(
                 f"Generated {len(signals)} enhanced signals with Phase 1 improvements"
@@ -223,6 +235,125 @@ class EnhancedDailyProductionService:
 
         except Exception as e:
             self.logger.error(f"Error updating performance metrics: {str(e)}")
+
+    async def _send_signals_to_discord(self, signals: List[Dict]) -> None:
+        """Send generated signals to Discord with multi-tier routing."""
+        try:
+            if not signals:
+                return
+                
+            discord_signals_sent = 0
+            discord_delivery_failures = 0
+            
+            for signal in signals:
+                try:
+                    # Determine signal priority based on confluence and strength
+                    priority = self._determine_signal_priority(signal)
+                    
+                    # Convert to enhanced signal format for Discord
+                    enhanced_signal = self._convert_to_enhanced_signal(signal)
+                    
+                    # Send to Discord with appropriate tier routing
+                    success = await self.discord_service.send_enhanced_signal(
+                        enhanced_signal, priority
+                    )
+                    
+                    if success:
+                        discord_signals_sent += 1
+                        self.logger.info(f"Signal sent to Discord: {signal['pair']} - {signal['trade_recommendation']['recommendation']}")
+                    else:
+                        discord_delivery_failures += 1
+                        self.logger.warning(f"Failed to send Discord signal for {signal['pair']}")
+                        
+                except Exception as e:
+                    discord_delivery_failures += 1
+                    self.logger.error(f"Error sending signal to Discord for {signal['pair']}: {str(e)}")
+            
+            # Update Discord delivery metrics
+            self.performance_metrics["signals_sent_to_discord"] += discord_signals_sent
+            total_attempts = discord_signals_sent + discord_delivery_failures
+            if total_attempts > 0:
+                success_rate = discord_signals_sent / total_attempts
+                self.performance_metrics["discord_delivery_success_rate"] = round(success_rate, 3)
+            
+            self.logger.info(f"Discord delivery: {discord_signals_sent} sent, {discord_delivery_failures} failed")
+            
+        except Exception as e:
+            self.logger.error(f"Error in Discord signal delivery: {str(e)}")
+
+    def _determine_signal_priority(self, signal: Dict) -> SignalPriority:
+        """Determine signal priority based on Enhanced Daily Strategy analysis."""
+        try:
+            confluence_score = signal.get("confluence_score", 0.0)
+            signal_strength = signal.get("signal_strength", "weak")
+            confidence = signal.get("trade_recommendation", {}).get("confidence", 0.0)
+            
+            # High priority: Strong confluence + high confidence
+            if confluence_score >= 1.5 and confidence >= 0.8 and signal_strength in ["confluence", "very_strong"]:
+                return SignalPriority.HIGH
+            
+            # Medium priority: Good confluence or strong signal
+            elif confluence_score >= 0.8 or confidence >= 0.6 or signal_strength in ["strong", "very_strong"]:
+                return SignalPriority.MEDIUM
+            
+            # Low priority: Basic signals
+            else:
+                return SignalPriority.LOW
+                
+        except Exception as e:
+            self.logger.warning(f"Error determining signal priority: {str(e)}")
+            return SignalPriority.LOW
+
+    def _convert_to_enhanced_signal(self, signal: Dict) -> Dict:
+        """Convert Enhanced Daily Strategy signal to enhanced Discord format."""
+        try:
+            # Extract key data
+            pair = signal.get("pair", "UNKNOWN")
+            trade_rec = signal.get("trade_recommendation", {})
+            technical_signal = signal.get("technical_signal", {})
+            session_analysis = signal.get("session_analysis", {})
+            
+            # Build enhanced signal for Discord
+            enhanced_signal = {
+                "pair": pair,
+                "signal_type": technical_signal.get("signal", "NONE"),
+                "direction": technical_signal.get("direction", "NONE"),
+                "price": signal.get("current_price", 0.0),
+                "entry_price": technical_signal.get("entry_price", 0.0),
+                "stop_loss": technical_signal.get("stop_loss", 0.0),
+                "take_profit": technical_signal.get("take_profit", 0.0),
+                "confidence": trade_rec.get("confidence", 0.0),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                
+                # Phase 1 Enhancement Details
+                "confluence_score": signal.get("confluence_score", 0.0),
+                "signal_strength": signal.get("signal_strength", "unknown"),
+                "session_quality": session_analysis.get("session_quality_multiplier", 1.0),
+                "is_optimal_session": session_analysis.get("is_optimal_session", False),
+                "phase1_score": trade_rec.get("phase1_score", {}),
+                
+                # Technical Indicators
+                "indicators": technical_signal.get("indicators", {}),
+                
+                # Recommendations
+                "recommendation": trade_rec.get("recommendation", "WAIT"),
+                "filters_passed": trade_rec.get("filters_passed", []),
+                "filters_failed": trade_rec.get("filters_failed", []),
+                
+                # Strategy identification
+                "strategy_type": "Enhanced Daily Strategy (Phase 1)",
+                "timeframe": "D"
+            }
+            
+            return enhanced_signal
+            
+        except Exception as e:
+            self.logger.error(f"Error converting signal to enhanced format: {str(e)}")
+            return {
+                "pair": signal.get("pair", "UNKNOWN"),
+                "signal_type": "ERROR",
+                "error": str(e)
+            }
 
     async def get_enhanced_market_analysis(self) -> Dict:
         """Get comprehensive market analysis with Phase 1 enhancements."""

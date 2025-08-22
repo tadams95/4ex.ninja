@@ -221,8 +221,16 @@ class NotificationService:
     async def _send_discord_webhook(self, payload: NotificationPayload) -> bool:
         """Send payload to Discord webhook."""
         try:
+            import ssl
+            # Create SSL context for Discord API
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            connector = aiohttp.TCPConnector(ssl=ssl_context)
             timeout = aiohttp.ClientTimeout(total=10)
-            async with aiohttp.ClientSession(timeout=timeout) as session:
+            
+            async with aiohttp.ClientSession(connector=connector, timeout=timeout) as session:
                 async with session.post(
                     self.webhook_url, json=payload.dict()
                 ) as response:

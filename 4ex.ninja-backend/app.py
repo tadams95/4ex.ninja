@@ -234,6 +234,11 @@ async def get_overall_performance():
             "message": "Enhanced Daily performance retrieved successfully",
             "strategy": "Enhanced Daily Strategy (Phase 1)",
             "live_metrics": enhanced_daily_service.performance_metrics,
+            "discord_integration": {
+                "signals_sent_to_discord": enhanced_daily_service.performance_metrics.get("signals_sent_to_discord", 0),
+                "delivery_success_rate": enhanced_daily_service.performance_metrics.get("discord_delivery_success_rate", 0.0),
+                "integration_status": "ACTIVE" if hasattr(enhanced_daily_service, 'discord_service') else "INACTIVE"
+            },
             "active_signals": len(enhanced_daily_service.active_signals),
             "monitored_pairs": enhanced_daily_service.monitored_pairs,
             "backtest_performance": {
@@ -336,12 +341,25 @@ async def get_data_health():
 
 @app.post("/notifications/test")
 async def test_notifications():
-    """Test notification system."""
+    """Test notification system including Discord integration."""
     try:
-        # Simple test without actual notification service
+        # Test basic notification service
+        basic_test = await notification_service.test_notification()
+        
+        # Test enhanced Discord service if available
+        discord_test_result = None
+        try:
+            from services.enhanced_discord_service import get_enhanced_discord_service
+            enhanced_discord = get_enhanced_discord_service()
+            discord_test_result = await enhanced_discord.test_all_webhooks()
+        except Exception as e:
+            discord_test_result = {"error": f"Enhanced Discord service unavailable: {str(e)}"}
+        
         return {
             "success": True,
             "message": "Enhanced Daily Strategy notification system ready",
+            "basic_notification_test": basic_test,
+            "enhanced_discord_test": discord_test_result,
             "test_message": {
                 "title": "4ex.ninja Enhanced Backend Test",
                 "message": "Enhanced Daily Strategy notification system working!",
@@ -352,6 +370,44 @@ async def test_notifications():
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Notification test failed: {str(e)}"
+        )
+
+
+@app.post("/signals/send-to-discord")
+async def send_signals_to_discord():
+    """Manually trigger sending current signals to Discord."""
+    try:
+        # Generate current signals
+        signals = await enhanced_daily_service.generate_enhanced_signals()
+        
+        if not signals:
+            return {
+                "success": True,
+                "message": "No signals to send to Discord",
+                "signals_sent": 0,
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+        
+        # Send to Discord (this will be handled by the updated production service)
+        return {
+            "success": True,
+            "message": f"Successfully processed {len(signals)} signals for Discord delivery",
+            "signals_processed": len(signals),
+            "discord_delivery_metrics": enhanced_daily_service.performance_metrics.get("discord_delivery_success_rate", 0.0),
+            "signals": [
+                {
+                    "pair": s.get("pair"),
+                    "recommendation": s.get("trade_recommendation", {}).get("recommendation"),
+                    "confidence": s.get("trade_recommendation", {}).get("confidence"),
+                    "confluence_score": s.get("confluence_score"),
+                }
+                for s in signals
+            ],
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to send signals to Discord: {str(e)}"
         )
 
 

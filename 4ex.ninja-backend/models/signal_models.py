@@ -21,6 +21,7 @@ class SignalStatus(str, Enum):
     """Signal processing status."""
 
     PENDING = "PENDING"
+    ACTIVE = "ACTIVE"
     PROCESSED = "PROCESSED"
     FAILED = "FAILED"
     SENT = "SENT"
