@@ -340,7 +340,7 @@ function OverviewTab({ optimizationData, confidenceData, isLoading }: OverviewTa
     <div className="space-y-8">
       {/* Confidence Disclaimer Banner */}
       {confidenceData && (
-        <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/20 border border-yellow-700 rounded-xl p-4">
+        <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/20 border border-yellow-700 rounded-lg p-4">
           <div className="flex items-start space-x-3">
             <div className="text-2xl">⚠️</div>
             <div className="flex-1">
@@ -377,7 +377,7 @@ function OverviewTab({ optimizationData, confidenceData, isLoading }: OverviewTa
       )}
 
       {/* Strategy Overview Hero */}
-      <div className=" border border-neutral-700 rounded-xl p-4 sm:p-6 lg:p-8">
+      <div className=" border border-neutral-700 rounded-lg p-4 sm:p-6 lg:p-8">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between space-y-4 lg:space-y-0">
           <div className="flex-1">
             <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">
@@ -519,7 +519,7 @@ function MetricCard({ icon, title, value, subtitle, color, trend }: MetricCardPr
 
   return (
     <div
-      className={`p-6 rounded-xl border transition-all duration-200 hover:scale-105 ${colorClasses[color]}`}
+      className={`p-6 rounded-lg border transition-all duration-200 hover:scale-105 ${colorClasses[color]}`}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="text-2xl">{icon}</div>
@@ -569,7 +569,7 @@ function ProfitablePairsSection({ profitable_pairs }: ProfitablePairsSectionProp
   };
 
   return (
-    <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
+    <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-white flex items-center space-x-2">
           <span>✅</span>
@@ -661,7 +661,7 @@ interface UnprofitablePairsSectionProps {
 
 function UnprofitablePairsSection({ unprofitable_pairs }: UnprofitablePairsSectionProps) {
   return (
-    <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
+    <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-white flex items-center space-x-2">
           <span>❌</span>

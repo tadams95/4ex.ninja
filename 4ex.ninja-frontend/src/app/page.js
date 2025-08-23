@@ -106,7 +106,7 @@ export default function Home() {
                   <ConnectWallet
                     className="bg-green-700 hover:bg-green-800 active:bg-green-900
                       text-white border border-green-600 hover:border-green-500 
-                      hover:text-green-100 font-semibold rounded-xl 
+                      hover:text-green-100 font-semibold rounded-lg 
                       transition-all duration-300 ease-out px-4 py-2.5 text-sm 
                       cursor-pointer outline-none hover:shadow-lg 
                       hover:shadow-green-500/25 hover:scale-[1.02] active:scale-[0.98]

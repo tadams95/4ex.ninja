@@ -185,7 +185,7 @@ function InsightsPage() {
         {/* Loading Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="space-y-8">
-            <div className="animate-pulse bg-neutral-800 border border-neutral-700 rounded-xl h-32"></div>
+            <div className="animate-pulse bg-neutral-800 border border-neutral-700 rounded-lg h-32"></div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[1, 2, 3].map(i => (
                 <div
@@ -222,7 +222,7 @@ function InsightsPage() {
         {/* Error Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <div className="bg-red-900/20 border border-red-700 rounded-xl p-8 max-w-md mx-auto">
+            <div className="bg-red-900/20 border border-red-700 rounded-lg p-8 max-w-md mx-auto">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-16 w-16 mx-auto mb-4 text-red-400"
@@ -323,7 +323,7 @@ function InsightsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Signals Grid */}
         {processedData.isEmpty || processedData.crossovers.length === 0 ? (
-          <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-12 text-center">
+          <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-12 text-center">
             <div className="max-w-md mx-auto">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
