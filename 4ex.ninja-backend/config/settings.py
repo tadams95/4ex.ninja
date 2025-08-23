@@ -12,6 +12,10 @@ Legacy MA 50/200 strategy removed (theoretical, untested).
 from typing import Dict, Any, List
 import os
 from dataclasses import dataclass
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 @dataclass

@@ -1,0 +1,23 @@
+2025-08-23 16:32:04,598 - INFO - 🚀 ENHANCED DAILY STRATEGY V2.0 - PRODUCTION DEPLOYMENT
+2025-08-23 16:32:04,598 - INFO - =================================================================
+2025-08-23 16:32:04,599 - INFO - Enhanced Daily Strategy V2 initialized
+2025-08-23 16:32:04,599 - INFO - Account Balance: $10,000.00
+2025-08-23 16:32:04,599 - INFO - Risk Per Trade: 0.5%
+2025-08-23 16:32:04,599 - INFO - Supported Pairs: ['USD_JPY', 'EUR_GBP', 'AUD_JPY']
+2025-08-23 16:32:04,599 - INFO - Confidence Analysis Risk Manager initialized
+2025-08-23 16:32:04,599 - INFO - Account Balance: $10,000.00
+2025-08-23 16:32:04,599 - INFO - Conservative Risk Per Trade: 0.5%
+2025-08-23 16:32:04,619 - INFO - 🔌 OANDA DataService initialized - Environment: https://api-fxpractice.oanda.com
+2025-08-23 16:32:04,619 - INFO - 📊 API Key: None (masked)
+2025-08-23 16:32:04,619 - INFO - 🏦 Account: 
+2025-08-23 16:32:04,619 - INFO - 🔌 OANDA DataService initialized - Environment: https://api-fxpractice.oanda.com
+2025-08-23 16:32:04,619 - INFO - 📊 API Key: ... (masked)
+2025-08-23 16:32:04,619 - INFO - 🏦 Account: 
+2025-08-23 16:32:04,619 - INFO - ✅ All production services initialized
+2025-08-23 16:32:04,619 - INFO - 📊 Tier 1 Pairs: ['USD_JPY', 'EUR_GBP']
+2025-08-23 16:32:04,619 - INFO - 🛡️ Risk per trade: 0.5%
+2025-08-23 16:32:04,619 - INFO - 🎯 STARTING LIVE TRADING - Enhanced Daily Strategy V2.0
+2025-08-23 16:32:04,619 - INFO - ⏰ Started at: 2025-08-23T23:32:04.619771+00:00
+2025-08-23 16:32:04,619 - WARNING - 🚨 No OANDA API key configured - using fallback data
+2025-08-23 16:32:04,625 - WARNING - 🚨 No OANDA API key configured - using fallback data
+2025-08-23 16:32:04,626 - INFO - ⏳ Waiting for next H4 candle close (4 hours)...

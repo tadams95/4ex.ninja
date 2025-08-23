@@ -30,17 +30,19 @@ echo ""
 echo "🔍 Pre-deployment validation..."
 
 # Check if we're in the right directory
-if [ ! -f "enhanced_daily_strategy.py" ]; then
+if [ ! -f "enhanced_daily_strategy_v2.py" ]; then
     echo "❌ Error: Must run from 4ex.ninja-backend directory"
     exit 1
 fi
 
 # Check if Discord integration files exist
 REQUIRED_FILES=(
-    "services/enhanced_daily_production_service.py"
+    "enhanced_daily_strategy_v2.py"
+    "confidence_risk_manager_v2.py"
+    "production_deployment.py"
+    "oanda_live_bridge.py"
+    "services/data_service.py"
     "services/enhanced_discord_service.py"
-    "services/signal_discord_integration.py"
-    "services/notification_service.py"
     "app.py"
     ".env"
     "requirements.txt"

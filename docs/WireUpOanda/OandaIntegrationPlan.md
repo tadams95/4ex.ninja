@@ -16,8 +16,8 @@ This document outlines the comprehensive plan for integrating our proven Enhance
 
 ### **Already Configured - Ready to Use:**
 - ✅ **Oanda Credentials** (`.env`): Demo account configured
-  - `OANDA_API_KEY=0430ae4a846b210322ad7022f9e99772-bb552e517fb737ab6536952ae9f21ce1`
-  - `OANDA_ACCOUNT_ID=101-001-4266824-002`
+  - `OANDA_API_KEY=[REDACTED]`
+  - `OANDA_ACCOUNT_ID=[REDACTED]`
   - `OANDA_ENVIRONMENT=practice`
 - ✅ **Enhanced Daily Strategy v2.0** (`enhanced_daily_strategy_v2.py`)
 - ✅ **Confidence Risk Manager** (`confidence_risk_manager_v2.py`)
@@ -62,8 +62,8 @@ This document outlines the comprehensive plan for integrating our proven Enhance
 #### 1.1 Oanda Account & API Setup ✅ **ALREADY CONFIGURED**
 ```bash
 # Demo Account - READY TO USE
-Account ID: 101-001-4266824-002
-API Key: 0430ae4a846b210322ad7022f9e99772-bb552e517fb737ab6536952ae9f21ce1
+Account ID: [CONFIGURED_IN_ENV]
+API Key: [CONFIGURED_IN_ENV]
 Environment: practice (demo)
 Source: /.env file (lines 6-8)
 ```

@@ -140,7 +140,7 @@ class OandaLiveTradingBridge:
                         data = await self.data_service.get_historical_data(
                             pair=pair, 
                             timeframe="H4", 
-                            limit=50  # Get enough data for EMA calculations
+                            count=50  # Get enough data for EMA calculations
                         )
                         
                         if data and len(data) > 20:  # Ensure we have enough data

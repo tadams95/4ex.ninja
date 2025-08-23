@@ -5,7 +5,7 @@
 
 ### 1. Oanda Demo Account Verification ✅ **SUCCESS**
 ```bash
-Account ID: 101-001-4266824-002
+Account ID: [CONFIGURED_IN_ENV]
 Balance: $9,576.64
 Environment: practice (demo)
 Status: Active and accessible via API
