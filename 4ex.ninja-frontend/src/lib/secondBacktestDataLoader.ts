@@ -149,9 +149,13 @@ export interface EnhancedOptimizationResults {
   confidence_analysis?: ConfidenceAnalysis;
 }
 
-// Cache for performance
+// Cache for performance - reset when data loader is imported
 let cachedSecondBacktestData: EnhancedOptimizationResults | null = null;
 let cachedConfidenceData: ConfidenceAnalysis | null = null;
+
+// Clear cache on module load to ensure fresh data
+cachedSecondBacktestData = null;
+cachedConfidenceData = null;
 
 /**
  * Determine tier based on profit factor
@@ -199,12 +203,14 @@ function estimateAnnualReturn(winRate: number, profitFactor: number, totalTrades
 async function loadSecondBacktestResults(): Promise<SecondBacktestResults[]> {
   try {
     const response = await fetch(
-      '/data/second_backtest_run/json/comprehensive_test_results_20250821_231850.json'
+      `/data/second_backtest_run/json/comprehensive_test_results_20250821_231850.json?v=${Date.now()}`
     );
     if (!response.ok) {
       throw new Error(`Failed to fetch second backtest results: ${response.statusText}`);
     }
-    return await response.json();
+    const data = await response.json();
+    console.log('Successfully loaded second backtest data:', data.length, 'pairs');
+    return data;
   } catch (error) {
     console.warn('Failed to load second backtest results:', error);
     throw error;
@@ -221,13 +227,14 @@ async function loadConfidenceAnalysis(): Promise<ConfidenceAnalysis | null> {
 
   try {
     const response = await fetch(
-      '/data/second_backtest_run/json/confidence_analysis_detailed_20250821_233306.json'
+      `/data/second_backtest_run/json/confidence_analysis_detailed_20250821_233306.json?v=${Date.now()}`
     );
     if (!response.ok) {
       console.warn('Failed to fetch confidence analysis, continuing without it');
       return null;
     }
     cachedConfidenceData = await response.json();
+    console.log('Successfully loaded confidence analysis data');
     return cachedConfidenceData;
   } catch (error) {
     console.warn('Error loading confidence analysis:', error);
@@ -239,7 +246,12 @@ async function loadConfidenceAnalysis(): Promise<ConfidenceAnalysis | null> {
  * Transform second backtest results into enhanced optimization format
  */
 export async function loadEnhancedOptimizationResults(): Promise<EnhancedOptimizationResults> {
+  console.log(
+    'loadEnhancedOptimizationResults called - attempting to load second_backtest_run data'
+  );
+
   if (cachedSecondBacktestData) {
+    console.log('Returning cached second backtest data');
     return cachedSecondBacktestData;
   }
 
@@ -325,43 +337,27 @@ export async function loadEnhancedOptimizationResults(): Promise<EnhancedOptimiz
       confidence_analysis: confidenceAnalysis || undefined,
     };
 
+    console.log('Successfully created enhanced optimization results from second_backtest_run data');
+    console.log(
+      'Total trades:',
+      totalTrades,
+      'USD_JPY trades:',
+      backtestResults.find(p => p.pair === 'USD_JPY')?.total_trades
+    );
+    console.log('USD_JPY data:', profitable_pairs['USD_JPY']);
+
     cachedSecondBacktestData = result;
     return result;
   } catch (error) {
     console.error('Failed to load second backtest data:', error);
-    // Fallback to original data loader if second backtest fails
-    const { loadOptimizationResults } = await import('./realOptimizationDataLoader');
-    const fallbackData = await loadOptimizationResults();
+    console.error(
+      'Fetch URL:',
+      '/data/second_backtest_run/json/comprehensive_test_results_20250821_231850.json'
+    );
 
-    // Convert to enhanced format for compatibility
-    const enhancedProfitablePairs: { [key: string]: any } = {};
-    Object.entries(fallbackData.profitable_pairs).forEach(([pair, data]) => {
-      enhancedProfitablePairs[pair] = {
-        ...data,
-        total_trades: data.trades_per_year * 5, // Estimate
-        profit_factor: 2.5, // Default estimate
-        total_pips: 5000, // Default estimate
-        avg_win: 50, // Default estimate
-        avg_loss: -25, // Default estimate
-        max_consecutive_losses: 5, // Default estimate
-      };
-    });
-
-    return {
-      ...fallbackData,
-      optimization_info: {
-        ...fallbackData.optimization_info,
-        total_trades: 0,
-        strategy_version: 'v1.0',
-      },
-      profitable_pairs: enhancedProfitablePairs,
-      summary_stats: {
-        ...fallbackData.summary_stats,
-        total_trades: 0,
-        total_pips: 0,
-        avg_profit_factor: 0,
-      },
-    };
+    // DO NOT USE FALLBACK - We want to see second_backtest_run data only
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Second backtest data unavailable: ${errorMessage}`);
   }
 }
 
