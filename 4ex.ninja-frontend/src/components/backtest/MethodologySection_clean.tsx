@@ -13,28 +13,28 @@ export default function MethodologySection() {
 
   // ENHANCED Daily Strategy v2.0 methodology - ALL 10 pairs profitable breakthrough
   const methodology = {
-    strategy_methodology: `# Enhanced Daily Strategy v2.0 - Profitability Breakthrough
+    strategy_methodology: `# Enhanced Daily Strategy v2.0 - 100% Profitability Breakthrough
 
 ## Revolutionary Forex Trading Algorithm
 
 ### Core Strategy Framework
-Enhanced Daily Strategy v2.0 represents a breakthrough in automated forex trading, achieving **profitability across all 10 major currency pairs** tested. This enhanced system builds upon our original framework with significant algorithmic improvements and optimization.
+Enhanced Daily Strategy v2.0 represents a breakthrough in automated forex trading, achieving **100% profitability across all 10 major currency pairs** tested. This enhanced system builds upon our original framework with significant algorithmic improvements and optimization.
 
 ### Key Methodology Components
 
-**1. Enhanced Technical Analysis Framework**
+#### 1. Enhanced Technical Analysis Framework
 • **Primary Signals**: 21-period and 50-period Exponential Moving Averages (EMA)
 • **Trend Confirmation**: EMA crossover validation with enhanced signal filtering
 • **Market Structure**: Support/resistance level identification and trend analysis
 • **Volume Analysis**: Integration of volume-weighted price action signals
 
-**2. Advanced Risk Management System**
+#### 2. Advanced Risk Management System
 • **Position Sizing**: Dynamic lot sizing based on account balance and risk tolerance
 • **Stop Loss Strategy**: Adaptive stops based on Average True Range (ATR) calculations
 • **Take Profit Optimization**: Multiple profit target system with trailing stops
 • **Drawdown Protection**: Maximum consecutive loss limits and account protection
 
-**3. Enhanced Signal Generation Process**
+#### 3. Enhanced Signal Generation Process
 • **Entry Criteria**: EMA crossover + trend confirmation + volume validation
 • **Exit Strategy**: Profit target achievement OR opposite EMA crossover signal
 • **Signal Filtering**: Time-based filters and market session optimization
@@ -42,28 +42,28 @@ Enhanced Daily Strategy v2.0 represents a breakthrough in automated forex tradin
 
 ### Optimization Results Summary - v2.0
 **Total Pairs Tested**: 10 major forex pairs
-**Profitable Pairs**: 10 (achieving profitability across all pairs - BREAKTHROUGH)
+**Profitable Pairs**: 10 (100% success rate - BREAKTHROUGH)
 **Unprofitable Pairs**: 0 (complete elimination of losing strategies)
 **Top Performer**: USD_JPY (4.14x profit factor, 68.0% win rate)
 **Major Discovery**: Enhanced algorithm achieves profitability across all major currency classes
 
 ### Enhanced v2.0 Performance Tiers
 
-**🥇 Gold Tier (Profit Factor ≥ 4.0x)**
-1. **USD_JPY**: 4.14x PF, 68.0% WR, 462 trades - Top Performer
-2. **AUD_JPY**: 4.04x PF, 63.2% WR, 435 trades - Consistent Excellence
+#### 🥇 Gold Tier (Profit Factor ≥ 4.0x)
+1. **USD_JPY**: 4.14x PF, 68.0% WR, 462 trades - *Top Performer*
+2. **AUD_JPY**: 4.04x PF, 63.2% WR, 435 trades - *Consistent Excellence*
 
-**🥈 Silver Tier (Profit Factor 3.5x - 3.99x)**
-3. **EUR_USD**: 3.53x PF, 62.7% WR, 482 trades - Major Pair Success
-4. **GBP_JPY**: 3.52x PF, 61.8% WR, 455 trades - JPY Cross Strong
-5. **EUR_GBP**: 3.49x PF, 63.4% WR, 456 trades - Cross Pair Breakthrough
-6. **AUD_USD**: 3.47x PF, 61.5% WR, 471 trades - Commodity Currency Success
+#### 🥈 Silver Tier (Profit Factor 3.5x - 3.99x)
+3. **EUR_USD**: 3.53x PF, 62.7% WR, 482 trades - *Major Pair Success*
+4. **GBP_JPY**: 3.52x PF, 61.8% WR, 455 trades - *JPY Cross Strong*
+5. **EUR_GBP**: 3.49x PF, 63.4% WR, 456 trades - *Cross Pair Breakthrough*
+6. **AUD_USD**: 3.47x PF, 61.5% WR, 471 trades - *Commodity Currency Success*
 
-**🥉 Bronze Tier (Profit Factor 3.1x - 3.49x)**
-7. **GBP_USD**: 3.10x PF, 59.7% WR, 467 trades - Cable Profitability
-8. **EUR_JPY**: 3.46x PF, 62.4% WR, 443 trades - JPY Excellence
-9. **USD_CHF**: 3.42x PF, 60.9% WR, 464 trades - Safe Haven Success
-10. **USD_CAD**: 3.37x PF, 60.4% WR, 459 trades - Commodity Pair Profit`,
+#### 🥉 Bronze Tier (Profit Factor 3.1x - 3.49x)
+7. **GBP_USD**: 3.10x PF, 59.7% WR, 467 trades - *Cable Profitability*
+8. **EUR_JPY**: 3.46x PF, 62.4% WR, 443 trades - *JPY Excellence*
+9. **USD_CHF**: 3.42x PF, 60.9% WR, 464 trades - *Safe Haven Success*
+10. **USD_CAD**: 3.37x PF, 60.4% WR, 459 trades - *Commodity Pair Profit*`,
 
     performance_attribution: `# Enhanced v2.0 Performance Analysis & Market Insights
 
@@ -81,21 +81,21 @@ Enhanced Daily Strategy v2.0 represents a breakthrough in automated forex tradin
 
 ### Performance Tier Analysis
 
-**🥇 Gold Tier Performance (≥4.0x Profit Factor)**
+#### 🥇 Gold Tier Performance (≥4.0x Profit Factor)
 **USD_JPY & AUD_JPY Excellence**:
 - Both pairs exceed 4.0x profit factor threshold
 - Win rates above 63% demonstrate consistent signal quality  
 - Combined 897 trades provide robust statistical significance
 - JPY strength during optimization period (2018-2025) well-captured
 
-**🥈 Silver Tier Consistency (3.5x - 3.99x PF)**
+#### 🥈 Silver Tier Consistency (3.5x - 3.99x PF)
 **Broad Currency Coverage Success**:
 - EUR_USD: Major pair finally profitable (previous version failed at -4.6%)
 - GBP_JPY: JPY cross excellence continues with enhanced algorithm
 - EUR_GBP: Cross-pair volatility successfully managed 
 - AUD_USD: Commodity currency strength properly captured
 
-**🥉 Bronze Tier Profitability (3.1x - 3.49x PF)**
+#### 🥉 Bronze Tier Profitability (3.1x - 3.49x PF)
 **Universal Profitability Achievement**:
 - GBP_USD: Cable pair overcome with enhanced signal processing
 - EUR_JPY: Maintains JPY cross strength with improved risk management
@@ -104,18 +104,18 @@ Enhanced Daily Strategy v2.0 represents a breakthrough in automated forex tradin
 
 ### Enhanced Algorithm Improvements Analysis
 
-**Signal Quality Enhancement**
+#### Signal Quality Enhancement
 **Win Rate Improvement**: All pairs now exceed 59.7% win rate (vs previous 41.7% minimum)
 **False Signal Reduction**: Enhanced validation eliminates low-probability setups
 **Entry Timing**: Multi-timeframe confirmation improves entry precision by 35%
 
-**Risk Management Evolution**  
+#### Risk Management Evolution  
 **Adaptive Sizing**: Position sizes adjust to pair-specific volatility characteristics
 **Correlation Management**: Portfolio heat considers inter-pair correlations
 **Dynamic Stops**: Stop loss levels adapt to market volatility conditions
 **Enhanced Take Profits**: Profit targets optimize for each pair's average move characteristics
 
-**Market Regime Adaptability**
+#### Market Regime Adaptability
 **Trending Markets**: Algorithm excels in strong directional moves (USD_JPY, AUD_JPY)
 **Range-bound Periods**: Enhanced exit logic protects profits during consolidation
 **Volatility Management**: High-vol pairs (GBP crosses) successfully contained

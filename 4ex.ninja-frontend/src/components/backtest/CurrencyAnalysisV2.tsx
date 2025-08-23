@@ -99,8 +99,8 @@ export default function CurrencyAnalysisV2() {
 
   // Helper function to get tier-based styling for enhanced tiers
   const getTierStyling = (tier: string) => {
-    switch (tier.toUpperCase()) {
-      case 'GOLD_TIER':
+    switch (tier) {
+      case 'HIGHLY_PROFITABLE':
         return {
           border: 'border-yellow-400',
           bg: 'bg-gradient-to-r from-yellow-900/20 to-yellow-800/20',
@@ -108,7 +108,7 @@ export default function CurrencyAnalysisV2() {
           icon: '🥇',
           label: 'Gold Tier',
         };
-      case 'SILVER_TIER':
+      case 'PROFITABLE':
         return {
           border: 'border-gray-400',
           bg: 'bg-gradient-to-r from-gray-700/20 to-gray-600/20',
@@ -116,7 +116,7 @@ export default function CurrencyAnalysisV2() {
           icon: '🥈',
           label: 'Silver Tier',
         };
-      case 'BRONZE_TIER':
+      case 'MARGINALLY_PROFITABLE':
         return {
           border: 'border-orange-400',
           bg: 'bg-gradient-to-r from-orange-900/20 to-orange-800/20',
@@ -436,7 +436,7 @@ export default function CurrencyAnalysisV2() {
               <div className="text-2xl mb-2">🥇</div>
               <h5 className="text-yellow-400 font-medium">Gold Tier</h5>
               <p className="text-2xl font-bold text-white">
-                {currencyData.filter(p => p.tier.toUpperCase() === 'GOLD_TIER').length}
+                {currencyData.filter(p => p.tier === 'HIGHLY_PROFITABLE').length}
               </p>
               <p className="text-xs text-neutral-400">Exceptional performers</p>
             </div>
@@ -444,7 +444,7 @@ export default function CurrencyAnalysisV2() {
               <div className="text-2xl mb-2">🥈</div>
               <h5 className="text-gray-300 font-medium">Silver Tier</h5>
               <p className="text-2xl font-bold text-white">
-                {currencyData.filter(p => p.tier.toUpperCase() === 'SILVER_TIER').length}
+                {currencyData.filter(p => p.tier === 'PROFITABLE').length}
               </p>
               <p className="text-xs text-neutral-400">Strong performers</p>
             </div>
@@ -452,7 +452,7 @@ export default function CurrencyAnalysisV2() {
               <div className="text-2xl mb-2">🥉</div>
               <h5 className="text-orange-400 font-medium">Bronze Tier</h5>
               <p className="text-2xl font-bold text-white">
-                {currencyData.filter(p => p.tier.toUpperCase() === 'BRONZE_TIER').length}
+                {currencyData.filter(p => p.tier === 'MARGINALLY_PROFITABLE').length}
               </p>
               <p className="text-xs text-neutral-400">Solid performers</p>
             </div>

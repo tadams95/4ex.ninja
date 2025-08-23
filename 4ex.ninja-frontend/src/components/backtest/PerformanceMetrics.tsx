@@ -118,9 +118,9 @@ export default function PerformanceMetrics() {
   const totalPips = profitablePairs.reduce((sum, [_, pair]) => sum + pair.total_pips, 0);
 
   // Get tier breakdown
-  const goldTier = profitablePairs.filter(([_, pair]) => pair.tier === 'GOLD_TIER');
-  const silverTier = profitablePairs.filter(([_, pair]) => pair.tier === 'SILVER_TIER');
-  const bronzeTier = profitablePairs.filter(([_, pair]) => pair.tier === 'BRONZE_TIER');
+  const goldTier = profitablePairs.filter(([_, pair]) => pair.tier === 'HIGHLY_PROFITABLE');
+  const silverTier = profitablePairs.filter(([_, pair]) => pair.tier === 'PROFITABLE');
+  const bronzeTier = profitablePairs.filter(([_, pair]) => pair.tier === 'MARGINALLY_PROFITABLE');
 
   // Find top performer
   const topPerformer = profitablePairs.reduce((top, [pair, data]) => {
@@ -260,9 +260,9 @@ export default function PerformanceMetrics() {
         <div className="space-y-3">
           {profitablePairs.map(([pair, data]) => {
             const tierColor =
-              data.tier === 'GOLD_TIER'
+              data.tier === 'HIGHLY_PROFITABLE'
                 ? 'text-yellow-400'
-                : data.tier === 'SILVER_TIER'
+                : data.tier === 'PROFITABLE'
                 ? 'text-gray-300'
                 : 'text-orange-400';
             const isJPY = pair.includes('JPY');
