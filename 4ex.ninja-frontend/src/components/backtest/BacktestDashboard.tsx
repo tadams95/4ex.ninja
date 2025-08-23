@@ -3,8 +3,15 @@
 import { useQuery } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import type { OptimizationResults } from '../../lib/realOptimizationDataLoader';
-import { loadOptimizationResults, simulateApiDelay } from '../../lib/realOptimizationDataLoader';
+import type {
+  ConfidenceAnalysis,
+  EnhancedOptimizationResults,
+} from '../../lib/secondBacktestDataLoader';
+import {
+  getConfidenceAnalysis,
+  loadEnhancedOptimizationResults,
+  simulateApiDelay,
+} from '../../lib/secondBacktestDataLoader';
 import { Button } from '../ui/Button';
 
 // Dynamic imports for heavy components
@@ -44,30 +51,42 @@ const CurrencyAnalysis = dynamic(() => import('./CurrencyAnalysis'), {
 });
 
 /**
- * Enhanced Daily EMA Strategy - Backtest Dashboard
+ * Enhanced Daily Strategy v2.0 - Backtest Dashboard
  *
- * Professional dashboard displaying comprehensive optimization results
- * for the Enhanced Daily EMA Strategy across 10 major currency pairs
+ * Professional dashboard displaying comprehensive second backtest run results
+ * for the Enhanced Daily Strategy v2.0 across 10 major currency pairs
+ * Features 4,436 total trades with 100% profitable pairs and confidence analysis
  */
 export default function BacktestDashboard() {
   const [activeTab, setActiveTab] = useState<
     'overview' | 'analytics' | 'currencies' | 'methodology'
   >('overview');
 
-  // Fetch optimization results from verified data
+  // Fetch enhanced optimization results from second backtest run
   const {
     data: optimizationData,
     isLoading,
     error,
-  } = useQuery<OptimizationResults>({
-    queryKey: ['optimization-results'],
+  } = useQuery<EnhancedOptimizationResults>({
+    queryKey: ['enhanced-optimization-results'],
     queryFn: async () => {
-      console.log('Loading Enhanced Daily EMA Strategy optimization results');
+      console.log('Loading Enhanced Daily Strategy v2.0 optimization results');
       await simulateApiDelay();
-      return loadOptimizationResults();
+      return loadEnhancedOptimizationResults();
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
+
+  // Fetch confidence analysis separately
+  const { data: confidenceData, isLoading: confidenceLoading } =
+    useQuery<ConfidenceAnalysis | null>({
+      queryKey: ['confidence-analysis'],
+      queryFn: async () => {
+        await simulateApiDelay(300);
+        return getConfidenceAnalysis();
+      },
+      staleTime: 5 * 60 * 1000,
+    });
 
   if (error) {
     return (
@@ -99,30 +118,48 @@ export default function BacktestDashboard() {
               <div className="flex items-center space-x-3 mb-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
-                  Enhanced Daily EMA Strategy
+                  Enhanced Daily Strategy v2.0
                 </h1>
+                {optimizationData?.optimization_info.strategy_version && (
+                  <span className="px-2 py-1 text-xs bg-blue-900/30 border border-blue-700 rounded text-blue-400">
+                    {optimizationData.optimization_info.strategy_version}
+                  </span>
+                )}
               </div>
               <p className="text-neutral-400 text-sm mb-1">
                 {isLoading
-                  ? 'Loading optimization results...'
+                  ? 'Loading comprehensive validation results...'
                   : optimizationData?.optimization_info.methodology ||
-                    'Comprehensive backtesting results'}
+                    'Comprehensive 4,436-trade validation across 10 currency pairs'}
               </p>
-              <p className="text-neutral-500 text-xs">
-                Optimization Date:{' '}
-                {isLoading
-                  ? 'Loading...'
-                  : optimizationData?.optimization_info.date
-                  ? new Date(optimizationData.optimization_info.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })
-                  : 'August 20, 2025'}
-              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-1 sm:space-y-0">
+                <p className="text-neutral-500 text-xs">
+                  Validation Date:{' '}
+                  {isLoading
+                    ? 'Loading...'
+                    : optimizationData?.optimization_info.date
+                    ? new Date(optimizationData.optimization_info.date).toLocaleDateString(
+                        'en-US',
+                        {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        }
+                      )
+                    : 'August 21, 2025'}
+                </p>
+                {optimizationData?.optimization_info.total_trades && (
+                  <p className="text-neutral-500 text-xs">
+                    Total Trades:{' '}
+                    <span className="text-blue-400 font-medium">
+                      {optimizationData.optimization_info.total_trades.toLocaleString()}
+                    </span>
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* Key Stats Summary */}
+            {/* Enhanced Key Stats Summary */}
             <div className="flex items-center justify-center lg:justify-end">
               {isLoading ? (
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -140,17 +177,25 @@ export default function BacktestDashboard() {
                       <div className="text-xl sm:text-2xl font-bold text-green-400">
                         {optimizationData.optimization_info.success_rate}
                       </div>
-                      <div className="text-xs text-green-300">Success Rate</div>
+                      <div className="text-xs text-green-300">Backtest Success</div>
+                      {confidenceData && (
+                        <div className="text-xs text-yellow-400 mt-1">48-52% Live*</div>
+                      )}
                     </div>
                     <div className="text-center px-4 py-3 bg-blue-900/30 border border-blue-700 rounded-lg min-w-[6rem]">
                       <div className="text-xl sm:text-2xl font-bold text-blue-400">
-                        {optimizationData.summary_stats.best_return}
+                        {optimizationData.summary_stats.avg_profit_factor?.toFixed(2) ||
+                          optimizationData.summary_stats.best_return}
                       </div>
-                      <div className="text-xs text-blue-300">Best Return</div>
+                      <div className="text-xs text-blue-300">Avg Profit Factor</div>
                     </div>
                     <div className="text-center px-4 py-3 bg-purple-900/30 border border-purple-700 rounded-lg min-w-[6rem]">
-                      <div className="text-lg font-bold text-purple-400">JPY</div>
-                      <div className="text-xs text-purple-300">Dominance</div>
+                      <div className="text-lg font-bold text-purple-400">
+                        {optimizationData.summary_stats.total_trades?.toLocaleString() || 'JPY'}
+                      </div>
+                      <div className="text-xs text-purple-300">
+                        {optimizationData.summary_stats.total_trades ? 'Total Trades' : 'Dominance'}
+                      </div>
                     </div>
                   </div>
                 )
@@ -230,7 +275,11 @@ export default function BacktestDashboard() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeTab === 'overview' && (
-          <OverviewTab optimizationData={optimizationData} isLoading={isLoading} />
+          <OverviewTab
+            optimizationData={optimizationData}
+            confidenceData={confidenceData}
+            isLoading={isLoading}
+          />
         )}
         {activeTab === 'analytics' && <VisualAnalytics />}
         {activeTab === 'currencies' && <CurrencyAnalysis />}
@@ -244,11 +293,12 @@ export default function BacktestDashboard() {
  * Enhanced Overview Tab Component
  */
 interface OverviewTabProps {
-  optimizationData?: OptimizationResults;
+  optimizationData?: EnhancedOptimizationResults;
+  confidenceData?: ConfidenceAnalysis | null;
   isLoading: boolean;
 }
 
-function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
+function OverviewTab({ optimizationData, confidenceData, isLoading }: OverviewTabProps) {
   if (isLoading) {
     return (
       <div className="space-y-8">
@@ -288,6 +338,44 @@ function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
 
   return (
     <div className="space-y-8">
+      {/* Confidence Disclaimer Banner */}
+      {confidenceData && (
+        <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/20 border border-yellow-700 rounded-xl p-4">
+          <div className="flex items-start space-x-3">
+            <div className="text-2xl">⚠️</div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-yellow-400 mb-2">
+                Live Trading Reality Check
+              </h3>
+              <p className="text-neutral-300 text-sm mb-3">
+                While backtest shows 100% profitable pairs, realistic live trading expectations are
+                48-52% win rates due to spreads, slippage, and market regime changes.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div className="bg-neutral-800/50 rounded-lg p-3">
+                  <div className="text-green-400 font-medium">High Confidence (85-95%)</div>
+                  <div className="text-neutral-400 mt-1">
+                    Strategy methodology, data quality, JPY dominance
+                  </div>
+                </div>
+                <div className="bg-neutral-800/50 rounded-lg p-3">
+                  <div className="text-yellow-400 font-medium">Moderate Confidence (70-80%)</div>
+                  <div className="text-neutral-400 mt-1">
+                    Directional profitability, pair rankings
+                  </div>
+                </div>
+                <div className="bg-neutral-800/50 rounded-lg p-3">
+                  <div className="text-red-400 font-medium">Low Confidence (40-60%)</div>
+                  <div className="text-neutral-400 mt-1">
+                    Exact performance replication in live trading
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Strategy Overview Hero */}
       <div className=" border border-neutral-700 rounded-xl p-4 sm:p-6 lg:p-8">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between space-y-4 lg:space-y-0">
@@ -296,24 +384,24 @@ function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
               Strategy Performance Summary
             </h2>
             <p className="text-neutral-300 mb-4 text-sm sm:text-base max-w-3xl">
-              Comprehensive optimization results for the Enhanced Daily EMA Strategy across{' '}
+              Comprehensive validation results for the Enhanced Daily Strategy v2.0 across{' '}
               {optimizationData.optimization_info.total_pairs_tested} major currency pairs. Our
-              systematic approach identified{' '}
-              {optimizationData.optimization_info.profitable_pairs_count} consistently profitable
-              pairs with a realistic {optimizationData.optimization_info.success_rate} success rate.
+              systematic approach achieved {optimizationData.optimization_info.success_rate}{' '}
+              backtest success rate across{' '}
+              {optimizationData.optimization_info.total_trades?.toLocaleString()} total trades, with
+              realistic live trading expectations of 48-52% win rates.
             </p>
             <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2 sm:space-y-0 text-sm">
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span className="text-neutral-400">
-                  Profitable Pairs: {Object.keys(optimizationData.profitable_pairs).length}
+                  Profitable Pairs: {Object.keys(optimizationData.profitable_pairs).length}/10
+                  (Backtest)
                 </span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                <span className="text-neutral-400">
-                  Unprofitable Pairs: {Object.keys(optimizationData.unprofitable_pairs).length}
-                </span>
+                <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                <span className="text-neutral-400">Expected Live: 4-6 pairs profitable</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -325,13 +413,18 @@ function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
           </div>
           <div className="text-center lg:text-right">
             <div className="text-2xl sm:text-3xl font-bold text-green-400 mb-1">
-              {optimizationData.summary_stats.best_return}
+              {optimizationData.summary_stats.avg_profit_factor?.toFixed(2)}x
             </div>
-            <div className="text-sm text-neutral-400">Peak Annual Return</div>
+            <div className="text-sm text-neutral-400">Avg Profit Factor</div>
             <div className="text-lg font-semibold text-blue-400 mt-2">
               {optimizationData.summary_stats.top_performer}
             </div>
             <div className="text-xs text-neutral-500">Top Performing Pair</div>
+            {optimizationData.summary_stats.total_trades && (
+              <div className="mt-3 text-sm text-purple-400 font-medium">
+                {optimizationData.summary_stats.total_trades.toLocaleString()} trades
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -340,37 +433,37 @@ function OverviewTab({ optimizationData, isLoading }: OverviewTabProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <MetricCard
           icon="🎯"
-          title="Strategy Success Rate"
+          title="Backtest Success Rate"
           value={optimizationData.optimization_info.success_rate}
-          subtitle={`${optimizationData.optimization_info.profitable_pairs_count} of ${optimizationData.optimization_info.total_pairs_tested} pairs profitable`}
+          subtitle={`All ${optimizationData.optimization_info.total_pairs_tested} pairs profitable in backtest`}
           color="green"
           trend="neutral"
         />
 
         <MetricCard
+          icon="⚠️"
+          title="Live Trading Expectation"
+          value="48-52%"
+          subtitle="Realistic win rate with real costs"
+          color="yellow"
+          trend="down"
+        />
+
+        <MetricCard
           icon="🥇"
-          title="Best Performance"
-          value={optimizationData.summary_stats.best_return}
-          subtitle={`${optimizationData.summary_stats.top_performer} leading`}
+          title="Average Profit Factor"
+          value={`${optimizationData.summary_stats.avg_profit_factor?.toFixed(2)}x`}
+          subtitle={`Range: 3.1x - 4.14x across pairs`}
           color="blue"
           trend="up"
         />
 
         <MetricCard
-          icon="🎌"
-          title="JPY Advantage"
-          value="4/5"
-          subtitle="JPY pairs dominate profitable results"
+          icon="📊"
+          title="Total Validation Trades"
+          value={optimizationData.summary_stats.total_trades?.toLocaleString() || '4,436'}
+          subtitle="Comprehensive 5-year historical test"
           color="purple"
-          trend="up"
-        />
-
-        <MetricCard
-          icon="⚡"
-          title="Top Win Rate"
-          value={optimizationData.summary_stats.best_win_rate}
-          subtitle="Achieved by top performers"
-          color="yellow"
           trend="up"
         />
       </div>
@@ -445,7 +538,7 @@ function MetricCard({ icon, title, value, subtitle, color, trend }: MetricCardPr
  * Profitable Pairs Section
  */
 interface ProfitablePairsSectionProps {
-  profitable_pairs: OptimizationResults['profitable_pairs'];
+  profitable_pairs: EnhancedOptimizationResults['profitable_pairs'];
 }
 
 function ProfitablePairsSection({ profitable_pairs }: ProfitablePairsSectionProps) {
@@ -515,18 +608,24 @@ function ProfitablePairsSection({ profitable_pairs }: ProfitablePairsSectionProp
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 text-sm">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
                 <div>
                   <div className="text-neutral-400">Win Rate</div>
                   <div className="font-semibold">{data.win_rate}</div>
                 </div>
                 <div>
-                  <div className="text-neutral-400">EMA Config</div>
-                  <div className="font-semibold">{data.ema_config}</div>
+                  <div className="text-neutral-400">Profit Factor</div>
+                  <div className="font-semibold text-blue-400">{data.profit_factor}x</div>
                 </div>
                 <div>
-                  <div className="text-neutral-400">Trades/Year</div>
-                  <div className="font-semibold">{data.trades_per_year}</div>
+                  <div className="text-neutral-400">Total Trades</div>
+                  <div className="font-semibold">{data.total_trades}</div>
+                </div>
+                <div>
+                  <div className="text-neutral-400">Total Pips</div>
+                  <div className="font-semibold text-green-400">
+                    {Math.round(data.total_pips).toLocaleString()}
+                  </div>
                 </div>
               </div>
 
@@ -555,7 +654,7 @@ function ProfitablePairsSection({ profitable_pairs }: ProfitablePairsSectionProp
  * Unprofitable Pairs Section
  */
 interface UnprofitablePairsSectionProps {
-  unprofitable_pairs: OptimizationResults['unprofitable_pairs'];
+  unprofitable_pairs: EnhancedOptimizationResults['unprofitable_pairs'];
 }
 
 function UnprofitablePairsSection({ unprofitable_pairs }: UnprofitablePairsSectionProps) {
