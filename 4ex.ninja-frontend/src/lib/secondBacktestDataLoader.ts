@@ -1,8 +1,8 @@
 'use client';
 
 // Direct imports for reliable data loading
-import comprehensiveResults from '../../public/data/second_backtest_run/json/comprehensive_test_results_20250821_231850.json';
-import confidenceAnalysisData from '../../public/data/second_backtest_run/json/confidence_analysis_detailed_20250821_233306.json';
+import comprehensiveResults from '../data/second_backtest_run/json/comprehensive_test_results_20250821_231850.json';
+import confidenceAnalysisData from '../data/second_backtest_run/json/confidence_analysis_detailed_20250821_233306.json';
 
 /**
  * SECOND BACKTEST RUN DATA LOADER
