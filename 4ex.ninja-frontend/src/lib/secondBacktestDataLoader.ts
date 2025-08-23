@@ -203,7 +203,7 @@ function estimateAnnualReturn(winRate: number, profitFactor: number, totalTrades
 async function loadSecondBacktestResults(): Promise<SecondBacktestResults[]> {
   try {
     const response = await fetch(
-      `/data/second_backtest_run/json/comprehensive_test_results_20250821_231850.json?v=${Date.now()}`
+      `/data/second_backtest_run/json/comprehensive_test_results_20250821_231850.json`
     );
     if (!response.ok) {
       throw new Error(`Failed to fetch second backtest results: ${response.statusText}`);
