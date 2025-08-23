@@ -1,8 +1,8 @@
 'use client';
 
-// Direct imports for reliable data loading
-import comprehensiveResults from '../data/second_backtest_run/json/comprehensive_test_results_20250821_231850.json';
-import confidenceAnalysisData from '../data/second_backtest_run/json/confidence_analysis_detailed_20250821_233306.json';
+// Direct imports for reliable data loading - TypeScript modules for Vercel compatibility
+import { comprehensiveTestResults } from '../data/second_backtest_run/comprehensive-test-results';
+import { confidenceAnalysisData } from '../data/second_backtest_run/confidence-analysis';
 
 /**
  * SECOND BACKTEST RUN DATA LOADER
@@ -208,10 +208,10 @@ async function loadSecondBacktestResults(): Promise<SecondBacktestResults[]> {
   console.log('✅ Using direct import for second backtest data');
   console.log(
     'Loaded',
-    comprehensiveResults.length,
+    comprehensiveTestResults.length,
     'currency pairs from comprehensive test results'
   );
-  return comprehensiveResults as SecondBacktestResults[];
+  return [...comprehensiveTestResults] as SecondBacktestResults[];
 }
 
 /**
