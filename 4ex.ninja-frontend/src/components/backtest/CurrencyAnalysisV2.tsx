@@ -8,7 +8,18 @@ import {
   simulateApiDelay,
 } from '../../lib/secondBacktestDataLoader';
 
-// Enhanced interface for second backtest run data
+// Enhanced interfac            <p className="text-yellow-400 text-sm leading-relaxed">
+              <strong>Important:</strong> While our backtest shows exceptional results with 100%
+              profitable pairs, live trading typically experiences{' '}
+              {confidenceData.reality_adjustments?.total_adjustment
+                ? `${Math.abs(confidenceData.reality_adjustments.total_adjustment)}% performance reduction`
+                : '20-30% performance reduction '}
+              {'  '}
+              due to real-world factors.{' '}
+              {confidenceData.reality_adjustments?.realistic_expectations
+                ? `Expect realistic live performance: ${confidenceData.reality_adjustments.realistic_expectations.win_rate}% win rate, ${confidenceData.reality_adjustments.realistic_expectations.profit_factor}x profit factor.`
+                : 'Expect more modest but still profitable returns in live conditions.'}
+            </p>nd backtest run data
 interface EnhancedCurrencyData {
   pair: string;
   annual_return: number;
@@ -240,7 +251,8 @@ export default function CurrencyAnalysisV2() {
               <strong>Important:</strong> While our backtest shows exceptional results with 100%
               profitable pairs, live trading typically experiences{' '}
               {confidenceData.reality_adjustments?.total_adjustment ||
-                '20-30% performance reduction'}{' '}
+                '20-30% performance reduction '}
+              {'  '}
               due to real-world factors.
               {confidenceData.reality_adjustments?.realistic_expectation ||
                 'Expect more modest but still profitable returns in live conditions.'}

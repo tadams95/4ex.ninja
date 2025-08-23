@@ -147,6 +147,17 @@ function determineTier(profitFactor: number): { tier: string; tier_icon: string 
 }
 
 /**
+ * Convert pips to percentage return
+ * Standard forex calculation: (pips / 10,000) * leverage * position_size
+ * For conservative calculation, assume 1:10 leverage with 10% position sizing
+ */
+function convertPipsToPercentage(pips: number): number {
+  // Conservative calculation: 1 pip = 0.01% return for major pairs
+  // This assumes standard 10k position with 1:10 effective leverage
+  return pips * 0.01;
+}
+
+/**
  * Convert win rate percentage to annual return estimate
  * Based on average risk/reward and trade frequency
  */
@@ -257,9 +268,9 @@ export async function loadEnhancedOptimizationResults(): Promise<EnhancedOptimiz
         ema_config: '10/20',
         tier: tierInfo.tier,
         tier_icon: tierInfo.tier_icon,
-        gross_return: pair.gross_profit,
+        gross_return: convertPipsToPercentage(pair.gross_profit),
         trading_costs: 0, // Not modeled in backtest
-        net_return: pair.gross_profit - pair.gross_loss,
+        net_return: convertPipsToPercentage(pair.total_pips),
       };
     });
 

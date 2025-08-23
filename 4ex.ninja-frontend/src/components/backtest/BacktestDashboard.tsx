@@ -633,13 +633,15 @@ function ProfitablePairsSection({ profitable_pairs }: ProfitablePairsSectionProp
               <div className="mt-3 pt-3 border-t border-neutral-600">
                 <div className="flex justify-between text-xs">
                   <span className="text-neutral-400">
-                    Gross Return: <span className="text-green-400">{data.gross_return}%</span>
+                    Gross Return:{' '}
+                    <span className="text-green-400">{data.gross_return.toFixed(1)}%</span>
                   </span>
                   <span className="text-neutral-400">
-                    Trading Costs: <span className="text-red-400">-{data.trading_costs}%</span>
+                    Trading Costs:{' '}
+                    <span className="text-red-400">-{data.trading_costs.toFixed(1)}%</span>
                   </span>
                   <span className="text-neutral-400">
-                    Net Return: <span className="text-blue-400">{data.net_return}%</span>
+                    Net Return: <span className="text-blue-400">{data.net_return.toFixed(1)}%</span>
                   </span>
                 </div>
               </div>
