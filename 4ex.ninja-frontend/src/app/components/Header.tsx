@@ -144,7 +144,7 @@ const HeaderComponent = memo(function HeaderComponent() {
               <li className="py-3 md:py-0">
                 <div
                   className="bg-gradient-to-r from-neutral-800 via-neutral-700 to-neutral-800 
-                  animate-shimmer rounded-xl px-4 py-2.5 w-32 h-10 
+                  animate-shimmer rounded-lg px-4 py-2.5 w-32 h-10 
                   bg-[length:200%_100%] flex items-center justify-center
                   border border-neutral-700"
                 >
@@ -159,7 +159,7 @@ const HeaderComponent = memo(function HeaderComponent() {
                     className="bg-green-700 hover:bg-green-800 active:bg-green-900
                       text-white border border-green-600 hover:border-green-500 
                       hover:text-green-100 font-semibold 
-                      rounded-xl transition-all duration-300 ease-out 
+                      rounded-lg transition-all duration-300 ease-out 
                       px-4 py-2.5 text-sm cursor-pointer outline-none 
                       hover:shadow-lg hover:shadow-green-500/25 hover:scale-[1.02] 
                       active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-green-500 

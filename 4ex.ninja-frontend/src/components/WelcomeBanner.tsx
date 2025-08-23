@@ -24,7 +24,7 @@ export default function WelcomeBanner() {
   }
 
   return (
-    <div className="bg-gradient-to-r from-green-900/20 to-green-800/20 border border-green-700/30 rounded-xl p-6 mb-8">
+    <div className="bg-gradient-to-r from-green-900/20 to-green-800/20 border border-green-700/30 rounded-lg p-6 mb-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-3">
@@ -104,7 +104,7 @@ export default function WelcomeBanner() {
             href="/insights"
             className="bg-green-700 hover:bg-green-800 active:bg-green-900
               text-white border border-green-600 hover:border-green-500 
-              hover:text-green-100 font-semibold rounded-xl 
+              hover:text-green-100 font-semibold rounded-lg 
               transition-all duration-300 ease-out px-4 py-2.5 text-sm 
               cursor-pointer outline-none hover:shadow-lg 
               hover:shadow-green-500/25 hover:scale-[1.02] active:scale-[0.98]
