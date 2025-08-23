@@ -32,7 +32,7 @@ interface EnhancedCurrencyData {
  * second backtest run with 4,436 actual trades executed.
  * Shows real performance data with enhanced tier classification and confidence analysis.
  */
-export default function CurrencyAnalysis() {
+export default function CurrencyAnalysisV2() {
   const {
     data: currencyData,
     isLoading: currencyLoading,

@@ -196,7 +196,9 @@ export default function PerformanceMetrics() {
         {confidenceData && (
           <div className="mt-4 p-3 bg-yellow-900/20 border border-yellow-700 rounded-lg">
             <p className="text-yellow-400 text-sm font-medium">
-              ⚠️ Confidence Analysis: {confidenceData.reality_adjustments.realistic_expectation}
+              ⚠️ Confidence Analysis:{' '}
+              {confidenceData?.reality_adjustments?.realistic_expectation ||
+                'Live trading performance may differ from backtest results due to real-world factors.'}
             </p>
           </div>
         )}
