@@ -8,18 +8,7 @@ import {
   simulateApiDelay,
 } from '../../lib/secondBacktestDataLoader';
 
-// Enhanced interfac            <p className="text-yellow-400 text-sm leading-relaxed">
-              <strong>Important:</strong> While our backtest shows exceptional results with 100%
-              profitable pairs, live trading typically experiences{' '}
-              {confidenceData.reality_adjustments?.total_adjustment
-                ? `${Math.abs(confidenceData.reality_adjustments.total_adjustment)}% performance reduction`
-                : '20-30% performance reduction '}
-              {'  '}
-              due to real-world factors.{' '}
-              {confidenceData.reality_adjustments?.realistic_expectations
-                ? `Expect realistic live performance: ${confidenceData.reality_adjustments.realistic_expectations.win_rate}% win rate, ${confidenceData.reality_adjustments.realistic_expectations.profit_factor}x profit factor.`
-                : 'Expect more modest but still profitable returns in live conditions.'}
-            </p>nd backtest run data
+// Enhanced interface for second backtest run data
 interface EnhancedCurrencyData {
   pair: string;
   annual_return: number;
@@ -217,13 +206,18 @@ export default function CurrencyAnalysisV2() {
                 <div className="flex justify-between">
                   <span className="text-neutral-300">Live Trading Expectation:</span>
                   <span className="text-amber-400 font-bold">
-                    {confidenceData.adjusted_projections?.win_rate || '48-52%'}
+                    {confidenceData.realistic_projections?.live_trading_expectations?.win_rate_range
+                      ? `${confidenceData.realistic_projections.live_trading_expectations.win_rate_range.min}-${confidenceData.realistic_projections.live_trading_expectations.win_rate_range.max}%`
+                      : '48-52%'}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-neutral-300">Realistic Profit Factor:</span>
                   <span className="text-amber-400 font-bold">
-                    {confidenceData.adjusted_projections?.profit_factor || '1.8-2.4x'}
+                    {confidenceData.realistic_projections?.live_trading_expectations
+                      ?.profit_factor_range
+                      ? `${confidenceData.realistic_projections.live_trading_expectations.profit_factor_range.min}-${confidenceData.realistic_projections.live_trading_expectations.profit_factor_range.max}x`
+                      : '1.8-2.4x'}
                   </span>
                 </div>
               </div>
@@ -232,11 +226,13 @@ export default function CurrencyAnalysisV2() {
             <div>
               <h4 className="text-white font-medium mb-2">🎯 Key Risk Factors</h4>
               <ul className="text-neutral-300 text-sm space-y-1">
-                {confidenceData.reality_adjustments?.factors?.slice(0, 4).map((factor, index) => (
-                  <li key={index}>
-                    • {factor.factor}: {factor.impact}
-                  </li>
-                )) || [
+                {confidenceData.reality_adjustments?.degradation_factors
+                  ?.slice(0, 4)
+                  .map((factor, index) => (
+                    <li key={index}>
+                      • {factor.factor}: {factor.impact_percent}%
+                    </li>
+                  )) || [
                   <li key="1">• Spread costs not modeled in backtest</li>,
                   <li key="2">• Slippage and execution delays</li>,
                   <li key="3">• Market regime dependencies</li>,
@@ -250,12 +246,16 @@ export default function CurrencyAnalysisV2() {
             <p className="text-amber-300 text-sm">
               <strong>Important:</strong> While our backtest shows exceptional results with 100%
               profitable pairs, live trading typically experiences{' '}
-              {confidenceData.reality_adjustments?.total_adjustment ||
-                '20-30% performance reduction '}
+              {confidenceData.reality_adjustments?.total_adjustment
+                ? `${Math.abs(
+                    confidenceData.reality_adjustments.total_adjustment
+                  )}% performance reduction`
+                : '20-30% performance reduction '}
               {'  '}
-              due to real-world factors.
-              {confidenceData.reality_adjustments?.realistic_expectation ||
-                'Expect more modest but still profitable returns in live conditions.'}
+              due to real-world factors.{' '}
+              {confidenceData.reality_adjustments?.realistic_expectations
+                ? `Expect realistic live performance: ${confidenceData.reality_adjustments.realistic_expectations.win_rate}% win rate, ${confidenceData.reality_adjustments.realistic_expectations.profit_factor}x profit factor.`
+                : 'Expect more modest but still profitable returns in live conditions.'}
             </p>
           </div>
         </div>

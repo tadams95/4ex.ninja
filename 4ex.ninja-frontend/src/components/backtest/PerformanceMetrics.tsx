@@ -48,6 +48,20 @@ export default function PerformanceMetrics() {
   const isLoading = isLoadingOptimization || isLoadingConfidence;
   const error = optimizationError || confidenceError;
 
+  // Debug confidence data structure
+  if (confidenceData) {
+    console.log('Confidence data loaded:', {
+      hasRealityAdjustments: !!confidenceData.reality_adjustments,
+      realityAdjustmentsKeys: confidenceData.reality_adjustments
+        ? Object.keys(confidenceData.reality_adjustments)
+        : [],
+      hasRealisticExpectations: !!confidenceData.reality_adjustments?.realistic_expectations,
+      realisticExpectationsKeys: confidenceData.reality_adjustments?.realistic_expectations
+        ? Object.keys(confidenceData.reality_adjustments.realistic_expectations)
+        : [],
+    });
+  }
+
   if (isLoading) {
     return (
       <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6">
@@ -197,8 +211,11 @@ export default function PerformanceMetrics() {
           <div className="mt-4 p-3 bg-yellow-900/20 border border-yellow-700 rounded-lg">
             <p className="text-yellow-400 text-sm font-medium">
               ⚠️ Confidence Analysis:{' '}
-              {confidenceData?.reality_adjustments?.realistic_expectation ||
-                'Live trading performance may differ from backtest results due to real-world factors.'}
+              {confidenceData?.reality_adjustments?.realistic_expectations?.win_rate &&
+              confidenceData?.reality_adjustments?.realistic_expectations?.profit_factor &&
+              confidenceData?.reality_adjustments?.realistic_expectations?.confidence_level
+                ? `Live trading expectation: ${confidenceData.reality_adjustments.realistic_expectations.win_rate}% win rate, ${confidenceData.reality_adjustments.realistic_expectations.profit_factor}x profit factor (${confidenceData.reality_adjustments.realistic_expectations.confidence_level}% confidence)`
+                : 'Live trading performance may differ from backtest results due to real-world factors.'}
             </p>
           </div>
         )}

@@ -194,8 +194,11 @@ export default function VisualAnalytics() {
           <div className="p-4 bg-yellow-900/20 border border-yellow-700 rounded-lg">
             <p className="text-yellow-400 text-sm font-medium">
               ⚠️ Live Trading Reality Check: While backtest shows exceptional results, confidence
-              analysis suggests {confidenceData?.adjusted_projections?.win_rate || '48-52%'} win
-              rates in live trading due to spreads, slippage, and market conditions.
+              analysis suggests{' '}
+              {confidenceData?.realistic_projections?.live_trading_expectations?.win_rate_range
+                ? `${confidenceData.realistic_projections.live_trading_expectations.win_rate_range.min}-${confidenceData.realistic_projections.live_trading_expectations.win_rate_range.max}%`
+                : '48-52%'}{' '}
+              win rates in live trading due to spreads, slippage, and market conditions.
             </p>
           </div>
         )}

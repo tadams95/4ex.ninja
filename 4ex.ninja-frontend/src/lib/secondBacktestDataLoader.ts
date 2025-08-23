@@ -61,20 +61,40 @@ export interface ConfidenceAnalysis {
     };
   };
   reality_adjustments: {
-    factors: Array<{
+    degradation_factors: Array<{
       factor: string;
-      impact: string;
+      impact_percent: number;
       reasoning: string;
+      typical_range?: string;
+      risk_level?: string;
+      mitigation?: string;
     }>;
-    total_adjustment: string;
-    realistic_expectation: string;
+    total_adjustment: number;
+    realistic_expectations: {
+      win_rate: number;
+      profit_factor: number;
+      confidence_level: number;
+    };
   };
-  adjusted_projections: {
-    win_rate: string;
-    profit_factor: string;
-    monthly_trades: string;
-    overall_profitability: string;
-    drawdown_periods: string;
+  realistic_projections: {
+    live_trading_expectations: {
+      win_rate_range: {
+        min: number;
+        max: number;
+        target: number;
+      };
+      profit_factor_range: {
+        min: number;
+        max: number;
+        target: number;
+      };
+      monthly_trades_per_pair: {
+        min: number;
+        max: number;
+        average: number;
+      };
+      profitability_confidence: number;
+    };
   };
 }
 
