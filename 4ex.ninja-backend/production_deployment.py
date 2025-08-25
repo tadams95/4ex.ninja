@@ -131,8 +131,8 @@ class EnhancedDailyStrategyProduction:
             if position_data.get('allowed', False):
                 logger.info(f"✅ Signal validated - Position size: {position_data}")
                 
-                # Send Discord notification
-                await self.discord_service.send_enhanced_signal(signal, position_data)
+                # Send Discord notification with proper parameters
+                await self.discord_service.send_enhanced_signal(signal)
                 
                 self.signals_processed += 1
             else:

@@ -165,9 +165,21 @@ class EnhancedDiscordService:
     ) -> Dict[str, Any]:
         """Create rich Discord embed for enhanced signal."""
         
+        # Handle both V2 format and legacy format
         trade_rec = signal_data.get("trade_recommendation", {})
-        signal_direction = trade_rec.get("signal_direction", "UNKNOWN")
-        confidence = trade_rec.get("confidence", 0.0)
+        signal_direction = (
+            signal_data.get("direction") or  # V2 format
+            trade_rec.get("signal_direction") or  # Legacy format
+            signal_data.get("signal", "UNKNOWN")  # Fallback
+        )
+        
+        # Convert BUY/SELL to LONG/SHORT for consistency
+        if signal_direction == "BUY":
+            signal_direction = "LONG"
+        elif signal_direction == "SELL":
+            signal_direction = "SHORT"
+            
+        confidence = trade_rec.get("confidence", signal_data.get("confidence", 0.0))
         
         # Determine embed color based on signal direction and priority
         if signal_direction == "LONG":
@@ -202,7 +214,7 @@ class EnhancedDiscordService:
             },
             {
                 "name": "💹 Price",
-                "value": f"**{signal_data.get('current_price', 0):.5f}**",
+                "value": f"**{signal_data.get('entry_price', signal_data.get('current_price', 0)):.5f}**",
                 "inline": True
             }
         ])
@@ -338,7 +350,17 @@ class EnhancedDiscordService:
         }
         
         emoji = priority_emoji.get(priority, "📢")
-        direction = signal_data.get("trade_recommendation", {}).get("signal_direction", "SIGNAL")
+        direction = (
+            signal_data.get("direction") or  # V2 format
+            signal_data.get("trade_recommendation", {}).get("signal_direction") or  # Legacy format
+            signal_data.get("signal", "SIGNAL")  # Fallback
+        )
+        
+        # Convert BUY/SELL to LONG/SHORT
+        if direction == "BUY":
+            direction = "LONG"
+        elif direction == "SELL":
+            direction = "SHORT"
         pair = signal_data.get("pair", "UNKNOWN")
         
         return f"{emoji} **{direction} {pair}** - Enhanced Daily Strategy Signal"
@@ -367,9 +389,20 @@ class EnhancedDiscordService:
             if not webhook_config or not webhook_config["url"]:
                 return False
             
-            # Group signals by direction
-            long_signals = [s for s in signals_data if s.get("trade_recommendation", {}).get("signal_direction") == "LONG"]
-            short_signals = [s for s in signals_data if s.get("trade_recommendation", {}).get("signal_direction") == "SHORT"]
+            # Group signals by direction - handle both V2 and legacy formats
+            long_signals = []
+            short_signals = []
+            
+            for s in signals_data:
+                direction = (
+                    s.get("direction") or 
+                    s.get("trade_recommendation", {}).get("signal_direction") or 
+                    s.get("signal", "")
+                )
+                if direction in ["LONG", "BUY"]:
+                    long_signals.append(s)
+                elif direction in ["SHORT", "SELL"]:
+                    short_signals.append(s)
             
             embeds = []
             
